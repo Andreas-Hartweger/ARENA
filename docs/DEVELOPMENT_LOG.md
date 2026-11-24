@@ -29,3 +29,14 @@ Codex ergänzte sechs reine TypeScript-Module für 2D-Mathematik, Zahlenvalidier
 - Der Build meldet weiterhin das bestehende Browserbundle mit 753,00 kB (200,81 kB gzip) oberhalb der Vite-Warnschwelle. Der Core ist für FD-001 headless geprüft und wird noch nicht vom Startbildschirm geladen. Ein neuer Browser- oder GitHub-CI-Lauf für FD-001 wurde nicht ausgeführt.
 
 Das menschliche FD-001-Review und die vollständige Foundation-Abnahme stehen aus. Git-Integration erfolgt durch die Entwickler. FD-002 wurde nicht begonnen.
+
+## FD-002 · Vehicle Foundation & Controls
+
+Der Auftraggeber meldete für FD-001 den Commit `6651800`, 35 erfolgreiche Tests und erfolgreiche GitHub Actions für PR #1. Für FD-002 erteilte er eine gesonderte, ausschließlich lokale Ausnahme auf `feature/fd-002-vehicle-controls`. Beim Start war der Working Tree sauber. HEAD `361ac2318922dd2790ab4294d3906026ab235d97` enthält den FD-001-Commit über PR #1 und hat denselben Dateibaum. Die lokale Ausnahme erteilt keine Freigabe für einen Merge in main oder für FD-003. D00-Abnahme und gegenseitiges Review bleiben offen.
+
+Codex ergänzte die GT-01-Definition und Kalibrierungsdaten in SI-Einheiten, validierte unabhängige Fahrzeuginstanzen, den gemeinsamen Steuerungsvertrag und das 18-Tick-Richtungsgate. Hinzu kamen die reine 60-Hz-Tastaturverarbeitung und der Browseradapter für beide Tastenschemata, Pause, Fokus und Listener-Freigabe. Der Architekturvertrag beschreibt die Übergabe an FD-003 und FD-004 sowie das Risiko von Teilmutationen bei Tick-Ausnahmen. Es wurden keine Abhängigkeiten installiert.
+
+- Mit Node.js 24.22.1 und npm 11.19.1 bestand der Ausgangslauf mit 35 Tests. `npm.cmd run check` führte Typprüfung, Lint, Formatprüfung, Vitest und Produktionsbuild erfolgreich aus. Vitest meldete 79 bestandene Tests in acht Dateien, darunter 44 FD-002-Fälle und alle bisherigen 35 Tests.
+- 11 reine TypeScript-Module (Core, Fahrzeuge und Eingabelogik ohne Browseradapter) bestanden eine zusätzliche strikte Typprüfung ausschließlich mit ES2022-Standardtypen. Die Browseradapter-Tests verwendeten simulierte Ereignisse über Node EventTarget, darunter `blur` und `visibilitychange`.
+- Der lokale Foundation-Preview lieferte HTML, JavaScript und CSS mit HTTP 200 aus. Das JavaScript-Bundle blieb bei 753,00 kB (200,81 kB gzip) und erzeugte die bestehende Vite-Größenwarnung.
+- Ein manueller Browserlauf, ein tatsächlicher OS-Alt+Tab und GitHub-CI für FD-002 wurden nicht ausgeführt. Die offenen D00-Prüfungen auf dem zweiten Gerät und die Browser-Sonderfallprüfung bleiben ausstehend. Die physik- und integrationsabhängigen VEH-/CTRL-Kriterien stehen im [Testkatalog](first-drive/FIRST_DRIVE_TESTS.md).
