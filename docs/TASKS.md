@@ -17,4 +17,10 @@ Prüfergebnisse stehen im [Entwicklungsprotokoll](DEVELOPMENT_LOG.md). Der näch
 
 Lokal umgesetzt auf `feature/fd-001-simulation-core` mit ausdrücklich genehmigter G-07-Ausnahme nach gemeldeter erfolgreicher PC-Prüfung und GitHub-CI. Abnahmekriterien sind die 60-Hz-Tick-API, Überlastbehandlung, Pause und Einzelstep, Headless-Ausführung, reproduzierbarer Zufallszustand, 2D-Mathematik und Tests ohne Browser oder GPU.
 
-Das gegenseitige Review und die vollständige Foundation-Abnahme stehen aus. FD-002 und alle weiteren Aufträge bleiben gesperrt. Siehe [First-Drive-Plan](first-drive/FIRST_DRIVE_TASKS.md).
+FD-001 ist in der lokalen Basis über PR #1 enthalten. Laut Auftraggeber war der GitHub-Actions-Lauf erfolgreich. Das gegenseitige Review und die vollständige Foundation-Abnahme stehen aus.
+
+## FD-002 – Vehicle Foundation & Controls
+
+Lokal umgesetzt auf `feature/fd-002-vehicle-controls` unter der separat erteilten FD-002-Ausnahme. Abnahmekriterien für dieses Paket sind validierte GT-01-Daten, unabhängige Instanzen, gemeinsame Steuergrenzen, Richtungsgate, 60-Hz-Tastaturverarbeitung und Browseradapter mit Ereignis- und Listener-Tests. Physikabhängige Kriterien sind im [Testkatalog](first-drive/FIRST_DRIVE_TESTS.md) ausgewiesen.
+
+Review und vollständige Foundation-Abnahme stehen aus. Die Ausnahme erteilt keine Freigabe für einen Merge in main. FD-003 und alle weiteren Pakete bleiben gesperrt. Siehe [First-Drive-Plan](first-drive/FIRST_DRIVE_TASKS.md).

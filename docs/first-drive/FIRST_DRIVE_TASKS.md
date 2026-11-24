@@ -1,6 +1,6 @@
 # ARENA — First Drive: Implementierungsplan (Revision 0.7.1)
 
-**Plan bestätigt. FD-001 lokal unter der G-07-Ausnahme freigegeben und umgesetzt.** Grundlage: FIRST_DRIVE_SPEC.md, FIRST_DRIVE_TESTS.md und Masterplan v0.7. D00-Gate gemäß Abschnitt 10 der Spezifikation. Der Nutzer hat FD-001 nach gemeldeter erfolgreicher PC-Prüfung und CI ausdrücklich lokal freigegeben. Das gegenseitige Review steht aus. Schätzungen sind aktive Teamstunden, nicht Codex-Laufzeit. A/B = Rollen, konkrete Zuordnung frei. Je Auftrag eigener Feature-Branch und PR, gegenseitiges Review, CI; keine automatischen Pushes oder Merges. Keine neuen Abhängigkeiten ohne Genehmigung. Bei parallelen Aufgaben Schnittstellen vorab fixieren, keine gleichzeitige Bearbeitung gemeinsamer Dateien.
+**Plan bestätigt. FD-001 und FD-002 wurden mit getrennten lokalen Ausnahmen freigegeben.** Grundlage: FIRST_DRIVE_SPEC.md, FIRST_DRIVE_TESTS.md und Masterplan v0.7. D00-Gate gemäß Abschnitt 10 der Spezifikation. Das gegenseitige Review steht aus. Schätzungen sind aktive Teamstunden, nicht Codex-Laufzeit. A/B = Rollen, konkrete Zuordnung frei. Je Auftrag eigener Feature-Branch und PR, gegenseitiges Review, CI; keine automatischen Pushes oder Merges. Keine neuen Abhängigkeiten ohne Genehmigung. Bei parallelen Aufgaben Schnittstellen vorab fixieren, keine gleichzeitige Bearbeitung gemeinsamer Dateien.
 
 | Auftrag                      | Abhängigkeit                                          | Rolle |   min–max h | Ergebnis                                                        |
 | ---------------------------- | ----------------------------------------------------- | ----- | ----------: | --------------------------------------------------------------- |
@@ -54,4 +54,4 @@ FD-001/Teil FD-002/003/005/007 in F-PHY (16–39,5 h), FD-004 in F-TRK (4–9 h)
 
 ## Aktueller Stand
 
-FD-FINAL G-01 bis G-06 sind bestätigt. FD-001 ist unter G-07 auf dem lokalen Branch `feature/fd-001-simulation-core` umgesetzt. Die vollständige Foundation-Abnahme und das Review durch den zweiten Entwickler sind ausstehend. Ab FD-002 sind alle Aufgaben weiterhin gesperrt. Rollen A/B sind keine feste Zuweisung.
+FD-FINAL G-01 bis G-06 sind bestätigt. FD-001 (`6651800`, PR #1) ist Teil des FD-002-Basisstands. Laut Auftraggeber war die CI für PR #1 grün. FD-002 wurde unter der gesonderten Ausnahme lokal auf `feature/fd-002-vehicle-controls` umgesetzt. Die vollständige Foundation-Abnahme und das Review durch den zweiten Entwickler sind ausstehend. Die lokale Ausnahme gilt nur für FD-002 und erteilt keine Merge-Freigabe. Ab FD-003 sind alle Aufgaben gesperrt. Rollen A/B sind keine feste Zuweisung.
