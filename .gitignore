@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.idea/
+.vscode/
+*.iml
+coverage/
+.npm-cache/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+/secrets/
+/credentials/
+.npmrc

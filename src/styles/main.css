@@ -1,0 +1,55 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #0d1015;
+  color: #f3f5f8;
+}
+
+body {
+  margin: 0;
+}
+main {
+  width: min(70rem, calc(100% - 2rem));
+  margin: clamp(2rem, 9vh, 6rem) auto;
+}
+header {
+  padding-inline-start: 1rem;
+  border-inline-start: 0.25rem solid #ef795c;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 5rem);
+  line-height: 1;
+}
+.milestone {
+  margin: 0 0 0.65rem;
+  color: #ff9d82;
+  font-weight: 650;
+}
+.subtitle {
+  margin: 0.75rem 0 0;
+  color: #c1c7d1;
+}
+.preview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 2rem;
+  border: 1px solid #373e4d;
+}
+canvas,
+.error {
+  grid-area: 1 / 1;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: clamp(14rem, 55vh, 32rem);
+}
+.error {
+  z-index: 1;
+  place-self: center;
+  margin: 1rem;
+  padding: 1rem;
+  background: #202530;
+  max-width: 32rem;
+}
