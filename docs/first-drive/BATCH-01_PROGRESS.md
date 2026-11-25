@@ -24,3 +24,9 @@ FD-005 implementiert SAT für konvexe Vierecke, konservative Swept-Hüllen, getr
 Acht gezielte Tests einschließlich 2-cm-Wand mit 250 km/h, Gegenverkehr, Restüberlappung, Impulsenergie, Mehrfachkontakt, unabhängigen Kandidaten und Fehler in der zweiten Fahrzeugberechnung bestanden. Im Selbstreview wurde die Rücknahme von Ereignissen aus verworfenen Bewegungsteilschritten ergänzt. Nächster Schritt: Weltframes an die First-Drive-Darstellung anbinden.
 
 FD-005 hat den Status **Automatisch geprüft**. Vollständiger Check 124/124 in 16 Dateien. Die separate FD-003-Kalibrierung reproduziert alle fünf Messwerte. Commit und Remote-SHA folgen nach Sicherung.
+
+## FD-006
+
+FD-005 ist auf GitHub gesichert (Remote- und lokaler SHA 3c2cdf569f0e671e42b2ec9b48466ea09313991c). FD-006 ist **Automatisch geprüft**. App, CSS und index.html verbinden die Tastatur, Uhr, Weltsimulation und Drei-Kamera-Ansicht. src/rendering enthält GT-01, Streckenmesh, Kameramathematik, Diagnosegeometrie, Lebenszyklus und das auf 10 Hz begrenzte HUD. tests/rendering prüft die vier Achsenrichtungen, Zoom/Fit, Vorausschau und Erzeugung der Streckengeometrie. Der vollständige Check bestand mit 127 Tests in 17 Dateien.
+
+Produktions-Preview und tatsächlicher Headless-Chrome: Gas bis 55 km/h, Bremse auf 29 km/h, Rechtskurve, Gras an beiden Achsen und Abbremsen an der inneren Begrenzung. R setzte auf Asphalt und 0 km/h zurück. Esc hielt Tick 3768 fest. C und V wählten Frei bzw. Übersicht. Die Uhr startete an der Startlinie. Screenshotkontrolle von Follow, Übersicht und schmalem Fenster. Ein 404 für favicon.ico wurde durch eine lokale Data-URL behoben. Vollständige Browser-Runden und menschlicher Fahrtest sind offen. Nach Sicherung folgt FD-007 mit Zeitbasis, Mehrfahrzeugregression, Offline-/Performanceprüfung und Bericht.
