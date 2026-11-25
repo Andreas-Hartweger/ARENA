@@ -1,0 +1,187 @@
+import { useMemo, useState } from 'react';
+import type { Brain } from '../ai/network';
+import { registry } from '../ai/schema';
+import { standardProfile } from '../ai/profile';
+import type { Telemetry } from '../rendering/firstDrive';
+const channels = registry();
+const fmt = (x: number | undefined | null) => (x == null ? '–' : x.toFixed(4));
+export function Inspector({
+  hud,
+  brain,
+  onPause,
+  onStep,
+}: {
+  hud: Telemetry;
+  brain?: Brain;
+  onPause: () => void;
+  onStep: () => void;
+}) {
+  const [channel, setChannel] = useState(0),
+    [layer, setLayer] = useState(0),
+    [neuron, setNeuron] = useState(0),
+    [source, setSource] = useState(0);
+  const params = useMemo(() => brain?.parameters(), [brain]);
+  const ai = hud.ai,
+    obs = ai?.observation;
+  const dims = brain?.dimensions ?? [],
+    width = dims[layer + 1] ?? 0,
+    fan = dims[layer] ?? 0;
+  let offset = 0;
+  for (let l = 0; l < layer; l++) offset += (dims[l] + 1) * dims[l + 1];
+  const entry = ai?.layers[layer];
+  const points =
+    obs?.rays.flatMap((r) => [
+      r.origin,
+      {
+        x: r.origin.x + r.direction.x * (r.barrier ?? r.vehicle ?? r.range),
+        y: r.origin.y + r.direction.y * (r.barrier ?? r.vehicle ?? r.range),
+      },
+    ]) ?? [];
+  const minX = Math.min(...points.map((p) => p.x)),
+    maxX = Math.max(...points.map((p) => p.x)),
+    minY = Math.min(...points.map((p) => p.y)),
+    maxY = Math.max(...points.map((p) => p.y));
+  return (
+    <div className="ai-inspector">
+      <button onClick={onPause}>{hud.paused ? 'Fortsetzen' : 'Pause'}</button>
+      <button disabled={!hud.paused} onClick={onStep}>
+        Einzeltick
+      </button>
+      <h2>Sensor Inspector</h2>
+      <p>
+        {standardProfile.id} · Messtick {obs?.index ?? '–'} · Alter{' '}
+        {obs ? hud.index - obs.index : '–'} Ticks
+      </p>
+      {obs && (
+        <svg
+          aria-label="Sichtstrahlen am Messframe"
+          viewBox={[minX - 2, -maxY - 2, maxX - minX + 4, maxY - minY + 4].join(
+            ' ',
+          )}
+        >
+          {obs.rays.map((r, i) => (
+            <g key={i}>
+              <line
+                x1={r.origin.x}
+                y1={-r.origin.y}
+                x2={points[2 * i + 1].x}
+                y2={-points[2 * i + 1].y}
+                stroke="#54cdca"
+              />
+              {[r.edge, r.vehicle, r.barrier].map(
+                (d, j) =>
+                  d !== null && (
+                    <circle
+                      key={j}
+                      cx={r.origin.x + d * r.direction.x}
+                      cy={-r.origin.y - d * r.direction.y}
+                      r="1.5"
+                      fill={['white', 'orange', 'red'][j]}
+                    />
+                  ),
+              )}
+            </g>
+          ))}
+          {obs.points.map(
+            (p, i) =>
+              p && (
+                <circle
+                  key={i}
+                  cx={p.position.x}
+                  cy={-p.position.y}
+                  r="1.5"
+                  fill="lime"
+                />
+              ),
+          )}
+        </svg>
+      )}
+      <label>
+        Kanal{' '}
+        <select value={channel} onChange={(e) => setChannel(+e.target.value)}>
+          {channels.map((c, i) => (
+            <option key={c.id} value={i}>
+              {i} · {c.id}
+            </option>
+          ))}
+        </select>
+      </label>
+      <p>
+        Rohwert {fmt(obs?.raw[channel])} {channels[channel].unit} · Normiert{' '}
+        {fmt(obs?.values[channel])}
+      </p>
+      <details>
+        <summary>Strahlen am Messtick</summary>
+        {obs?.rays.map((r, i) => (
+          <p key={i}>
+            {standardProfile.rays[i].id} · ({fmt(r.origin.x)}, {fmt(r.origin.y)}
+            ) m · {standardProfile.rays[i].angle}° · Reichweite {r.range} m ·
+            Rand {fmt(r.edge)} · Barriere {fmt(r.barrier)} · Fahrzeug{' '}
+            {fmt(r.vehicle)} · Material {r.material ?? '–'}
+          </p>
+        ))}
+      </details>
+      <h2>Brain Inspector</h2>
+      <p>
+        {dims.join(' → ')} · {brain?.activation} · Seed {brain?.seed} ·
+        Eingabetick {ai?.inputTick ?? '–'} · Entscheidungstick{' '}
+        {ai?.decisionTick ?? '–'}
+      </p>
+      <label>
+        Schicht{' '}
+        <select
+          value={layer}
+          onChange={(e) => {
+            setLayer(+e.target.value);
+            setNeuron(0);
+            setSource(0);
+          }}
+        >
+          {dims.slice(1).map((n, i) => (
+            <option key={i} value={i}>
+              {i + 1} · {n} Neuronen
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Neuron{' '}
+        <select value={neuron} onChange={(e) => setNeuron(+e.target.value)}>
+          {Array.from({ length: width }, (_, i) => (
+            <option key={i}>{i}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Verbindung von{' '}
+        <select value={source} onChange={(e) => setSource(+e.target.value)}>
+          {Array.from({ length: fan }, (_, i) => (
+            <option key={i} value={i}>
+              {layer === 0 ? channels[i].id : i}
+            </option>
+          ))}
+        </select>
+      </label>
+      <p>
+        Gewicht {fmt(params?.[offset + neuron * fan + source])} · Bias{' '}
+        {fmt(params?.[offset + fan * width + neuron])} · Eingang{' '}
+        {fmt(
+          layer === 0
+            ? ai?.decisionInput?.[source]
+            : ai?.layers[layer - 1]?.values[source],
+        )}{' '}
+        · Summe {fmt(entry?.sums[neuron])} · Aktivierung{' '}
+        {fmt(entry?.values[neuron])}
+      </p>
+      <p>
+        {entry ? '' : 'Noch kein Trace. '}Rohoutput{' '}
+        {ai?.output.map(fmt).join(' / ')} · Tanh{' '}
+        {ai?.output.map((x) => fmt(Math.tanh(x))).join(' / ')}
+      </p>
+      <p>
+        Ziel {JSON.stringify(ai?.target)} · Angewandt (Tick {hud.index}){' '}
+        {JSON.stringify(hud.applied)}
+      </p>
+    </div>
+  );
+}

@@ -287,6 +287,7 @@ export function createTrack(input: TrackDefinition = academy) {
     sample,
     project,
     stations,
+    segments,
     barriers,
     gates,
     surfaceQuery,

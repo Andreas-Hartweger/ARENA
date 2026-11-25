@@ -373,3 +373,27 @@ footer button {
 .field[data-camera='Übersicht'] progress {
   display: none;
 }
+
+.ai-tools {
+  max-width: 100%;
+  padding: 8px 12px;
+  color: #edf2ef;
+  background: #20282c;
+  overflow: auto;
+  max-height: 46vh;
+}
+.ai-tools button,
+.ai-tools select {
+  max-width: 100%;
+  margin: 4px;
+}
+.ai-inspector {
+  overflow-wrap: anywhere;
+}
+.ai-inspector svg {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: 160px;
+  background: #10171a;
+}
