@@ -4,6 +4,29 @@ import { registry } from '../ai/schema';
 import { standardProfile } from '../ai/profile';
 import type { Telemetry } from '../rendering/firstDrive';
 const channels = registry();
+const groupLabels = {
+  ego: 'Eigenes Fahrzeug',
+  ray: 'Sensorstrahlen',
+  local: 'Lokale Orientierung',
+  preview: 'Vorschaupunkte',
+  object: 'Erkannte Fahrzeuge',
+};
+const channelOptions = Object.entries(groupLabels).map(([prefix, label]) => (
+  <optgroup label={label} key={prefix}>
+    {channels.map(
+      (channel, i) =>
+        channel.id.startsWith(prefix) && (
+          <option key={channel.id} value={i}>
+            {i} · {channel.id}
+          </option>
+        ),
+    )}
+  </optgroup>
+));
+const percent = new Intl.NumberFormat('de-AT', {
+  style: 'percent',
+  maximumFractionDigits: 1,
+});
 const fmt = (x: number | undefined | null) => (x == null ? '–' : x.toFixed(4));
 export function Inspector({
   hud,
@@ -99,11 +122,7 @@ export function Inspector({
       <label>
         Kanal{' '}
         <select value={channel} onChange={(e) => setChannel(+e.target.value)}>
-          {channels.map((c, i) => (
-            <option key={c.id} value={i}>
-              {i} · {c.id}
-            </option>
-          ))}
+          {channelOptions}
         </select>
       </label>
       <p>
@@ -155,11 +174,13 @@ export function Inspector({
       <label>
         Verbindung von{' '}
         <select value={source} onChange={(e) => setSource(+e.target.value)}>
-          {Array.from({ length: fan }, (_, i) => (
-            <option key={i} value={i}>
-              {layer === 0 ? channels[i].id : i}
-            </option>
-          ))}
+          {layer === 0
+            ? channelOptions
+            : Array.from({ length: fan }, (_, i) => (
+                <option key={i} value={i}>
+                  {i}
+                </option>
+              ))}
         </select>
       </label>
       <svg
@@ -209,10 +230,49 @@ export function Inspector({
         {ai?.output.map(fmt).join(' / ')} · Tanh{' '}
         {ai?.output.map((x) => fmt(Math.tanh(x))).join(' / ')}
       </p>
-      <p>
-        Ziel {JSON.stringify(ai?.target)} · Angewandt (Tick {hud.index}){' '}
-        {JSON.stringify(hud.applied)}
-      </p>
+      <table aria-label="Fahrbefehle">
+        <thead>
+          <tr>
+            <th scope="col">Fahrbefehl</th>
+            <th scope="col">Gas</th>
+            <th scope="col">Bremse</th>
+            <th scope="col">Lenkung</th>
+            <th scope="col">Richtung</th>
+          </tr>
+        </thead>
+        <tbody>
+          {(
+            [
+              ['KI-Ziel', ai?.target, ai?.decisionTick],
+              ['Angewandt', hud.applied, hud.index],
+            ] as const
+          ).map(([label, command, tick]) => (
+            <tr key={label}>
+              <th scope="row">
+                {label}
+                {tick != null && <small>Tick {tick}</small>}
+              </th>
+              <td>{command ? percent.format(command.throttle) : '–'}</td>
+              <td>{command ? percent.format(command.brake) : '–'}</td>
+              <td>
+                {command
+                  ? command.steering === 0
+                    ? 'Gerade'
+                    : percent.format(Math.abs(command.steering)) +
+                      (command.steering < 0 ? ' links' : ' rechts')
+                  : '–'}
+              </td>
+              <td>
+                {command
+                  ? command.direction === 'forward'
+                    ? 'Vorwärts'
+                    : 'Rückwärts'
+                  : '–'}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

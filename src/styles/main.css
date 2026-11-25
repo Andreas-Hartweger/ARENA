@@ -397,3 +397,27 @@ footer button {
   height: 160px;
   background: #10171a;
 }
+
+.ai-inspector table {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.ai-inspector th,
+.ai-inspector td {
+  text-align: left;
+  padding: 0.35em 0.5em;
+  border-bottom: 1px solid #405159;
+}
+.ai-inspector th small {
+  display: block;
+  font-weight: normal;
+}
+@media (max-width: 480px) {
+  .ai-inspector table {
+    font-size: 0.8rem;
+  }
+  .ai-inspector th,
+  .ai-inspector td {
+    padding: 0.3em;
+  }
+}

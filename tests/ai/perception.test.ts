@@ -176,3 +176,13 @@ it('OBS-004 rejects a missing numeric channel', () => {
   delete raw[0];
   expect(() => normalize(raw, registry())).toThrow();
 });
+
+it('OBS-004 rejects material without an edge and simultaneous opaque returns', () => {
+  const raw = observe(track, walls, [], v, v.state, 0).raw;
+  const noEdge = raw.slice();
+  noEdge.splice(12, 9, 0, 0, 0, 0, 0, 0, 1, 0, 1);
+  expect(() => normalize(noEdge, registry())).toThrow(/ray00/);
+  const doubleHit = raw.slice();
+  doubleHit.splice(12, 9, 0, 0, 5, 1, 6, 1, 0, 0, 0);
+  expect(() => normalize(doubleHit, registry())).toThrow(/ray00/);
+});

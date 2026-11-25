@@ -151,7 +151,15 @@ export function normalize(
   }
   oneHot(6, 1);
   oneHot(9, 1);
-  for (let i = 12; i < 156; i += 9) oneHot(i + 6, raw[i + 8]);
+  for (let i = 12; i < 156; i += 9) {
+    const edgeValid = raw[i + 1],
+      barrierValid = raw[i + 3],
+      vehicleValid = raw[i + 5],
+      materialValid = raw[i + 8];
+    oneHot(i + 6, materialValid);
+    if ((materialValid && !edgeValid) || (barrierValid && vehicleValid))
+      throw Error('Inconsistent measurement at ' + channels[i].id);
+  }
   for (let i = 160; i < 216; i += 8)
     if (!raw[i + 2] && (raw[i + 5] || raw[i + 7]))
       throw Error('Invalid preview masks');
