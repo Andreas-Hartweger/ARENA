@@ -37,6 +37,7 @@ export interface Telemetry {
 }
 export function startDrive(
   canvas: HTMLCanvasElement,
+  track: ReturnType<typeof createTrack>,
   report: (v: Telemetry) => void,
   onError: (s: string) => void,
 ) {
@@ -47,8 +48,7 @@ export function startDrive(
     context: gl,
     antialias: true,
   });
-  const track = createTrack(),
-    spawn = startGrid(track, 1, GT_01.lengthM, GT_01.widthM)[0];
+  const spawn = startGrid(track, 1, GT_01.lengthM, GT_01.widthM)[0];
   const appearance = { color: '#397ac4', startNumber: 7 };
   const world = new DriveWorld(track, [
     {
@@ -101,6 +101,7 @@ export function startDrive(
   const keys = attachBrowserKeyboard(window, document, pause);
   function pause(value: boolean) {
     paused = value;
+    if (paused) requestReset = false;
     keys.setPaused(value);
     if (value) clock.pause();
     else clock.resume();
@@ -147,7 +148,7 @@ export function startDrive(
     dragging = false;
   }
   function move(e: PointerEvent) {
-    if (mode === 'Frei' && dragging)
+    if (mode === 'Frei' && dragging && canvas.clientWidth > 0)
       center = {
         x: center.x - (e.movementX * freeWidth) / canvas.clientWidth,
         y: center.y + (e.movementY * freeWidth) / canvas.clientWidth,
@@ -226,7 +227,8 @@ export function startDrive(
       model.group.position.set(p.x, 0, -p.y);
       model.group.rotation.y = heading;
       model.update(state.steeringAngleRad, racer.input.brake > 0);
-      const aspect = canvas.clientWidth / Math.max(1, canvas.clientHeight),
+      const aspect =
+          Math.max(1, canvas.clientWidth) / Math.max(1, canvas.clientHeight),
         width = viewWidth(mode, aspect, freeWidth, size);
       if (mode === 'Follow')
         center = follow(center, p, state.velocityMps, dt, snap);

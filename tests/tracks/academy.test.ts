@@ -117,3 +117,13 @@ it('orders multiple gates crossed in one straight movement', () => {
   expect(lap.next).toBe(4);
   expect(lap.laps).toBe(0);
 });
+it('invalidates forward shortcuts inside a corner while leaving the runoff drivable', () => {
+  const s = 100,
+    from = track.sample(s, -8).position,
+    to = track.sample(s + 3, -8).position;
+  expect(track.surfaceQuery(to)).toBe('grass');
+  const lap = { ...initialLap(s), started: 0, valid: true, next: 2 };
+  expect(
+    recordTravel(track, lap, { from, to, startTime: 3, endTime: 3.2 }).valid,
+  ).toBe(false);
+});

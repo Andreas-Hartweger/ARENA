@@ -186,7 +186,7 @@ export function createTrack(input: TrackDefinition = academy) {
     requireFinite(p.x, 'world x');
     requireFinite(p.y, 'world y');
     let best = Infinity,
-      result = { s: 0, lateral: 0, distance: 0 };
+      result = { s: 0, lateral: 0, distance: 0, curvature: 0 };
     for (const seg of segments) {
       const { forward, left } = headingAxes(seg.heading);
       const delta = difference(p, seg.start);
@@ -218,7 +218,12 @@ export function createTrack(input: TrackDefinition = academy) {
       }
       if (distance < best) {
         best = distance;
-        result = { s, lateral: dot(off, pose.normal), distance };
+        result = {
+          s,
+          lateral: dot(off, pose.normal),
+          distance,
+          curvature: seg.curvature,
+        };
       }
     }
     if (!Number.isFinite(best)) throw Error('No local projection');

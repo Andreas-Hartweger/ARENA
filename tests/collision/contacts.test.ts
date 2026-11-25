@@ -140,3 +140,14 @@ it('preserves free motion across the asphalt edge and safely recovers without la
   expect(world.frame.cars[0].state.positionM.y).toBeGreaterThan(76);
   expect(world.frame.events).toHaveLength(0);
 });
+it('separates coincident GT-01 start positions without velocity or lap travel', () => {
+  const bodies = [car('a', 0, 0), car('b', 0, 0)];
+  const result = solveContacts(bodies, [], 1);
+  expect(result.fallback).toBe(false);
+  expect(
+    sat(corners(bodies[0]), corners(bodies[1]))?.depth ?? 0,
+  ).toBeLessThanOrEqual(0.011);
+  expect(bodies.map(energy)).toEqual([0, 0]);
+  for (const paths of result.paths)
+    for (const path of paths) expect(path.from).toEqual(path.to);
+});

@@ -51,8 +51,15 @@ export function recordTravel(
       shift(move.from, delta, i / count),
       result.s,
     );
+    const cuttingInside =
+      projection.s > result.s + 1e-8 &&
+      projection.lateral * projection.curvature > 0 &&
+      projection.distance > track.def.width / 2 + 1e-7;
     result.s = projection.s;
-    if (projection.distance > track.def.width / 2 + track.def.runoff + 1e-7)
+    if (
+      cuttingInside ||
+      projection.distance > track.def.width / 2 + track.def.runoff + 1e-7
+    )
       return invalidateLap(result, track.project(move.to, result.s).s);
   }
   const hits = track.gates

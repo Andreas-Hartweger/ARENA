@@ -63,3 +63,7 @@ FD-002 ist in der Basis `a865f03` enthalten. Die gesonderte Freigabe für `recov
 ## Development Batch 01
 
 Die gesonderte Freigabe bündelt FD-004 bis FD-007 auf einem Entwicklungsbranch mit einem PR und geprüften Zwischencommits je Paket. Die Ausnahme vom bisherigen Einzelauftrag gilt bis einschließlich FD-007. G-07 bleibt offen. Siehe [Auftrag](BATCH-01_CODEX_PROMPT.md) und [Fortschritt](BATCH-01_PROGRESS.md).
+
+## Ergebnis des Development Batch 01
+
+Die Pakete FD-004, FD-005, FD-006 und FD-007 bilden den integrierten Kandidaten 0.2.0-rc.1. Paketprüfungen und Sicherungsstand stehen im [Fortschrittsprotokoll](BATCH-01_PROGRESS.md). Für das gegenseitige Review dienen die Prüftabelle und der Einstieg in die Implementierung im [Abschlussbericht](BATCH-01_COMPLETION_REPORT.md).

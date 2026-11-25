@@ -33,7 +33,15 @@ export function solveContacts(
   walls: ReturnType<typeof compileWalls>,
   tick: number,
   shared = true,
-) {
+): { events: CollisionEvent[]; paths: Travel[][]; fallback: boolean } {
+  if (!shared && bodies.length > 1) {
+    const results = bodies.map((body) => solveContacts([body], walls, tick));
+    return {
+      events: results.flatMap((r) => r.events),
+      paths: results.map((r) => r.paths[0]),
+      fallback: results.some((r) => r.fallback),
+    };
+  }
   const events: CollisionEvent[] = [],
     paths = bodies.map(() => [] as Travel[]);
   let fallback = false,

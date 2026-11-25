@@ -157,7 +157,14 @@ export function respond(a: Body, b: Body | null, c: Contact) {
       max = (b ? 0.25 : 0.3) * j;
     impulse(t, Math.max(-max, Math.min(max, -dot(rel(), t) / denominator(t))));
   }
-  const correction = Math.min(0.25, Math.max(0, c.depth - 0.01)) / mass;
+  // Six passes must also separate two stationary GT bodies spawned at the same point.
+  const resting =
+    a.velocity.x === 0 &&
+    a.velocity.y === 0 &&
+    a.yaw === 0 &&
+    (!b || (b.velocity.x === 0 && b.velocity.y === 0 && b.yaw === 0));
+  const correction =
+    Math.min(resting ? 0.6 : 0.25, Math.max(0, c.depth - 0.01)) / mass;
   a.position = shift(a.position, n, -correction * a.invMass);
   if (b) b.position = shift(b.position, n, correction * b.invMass);
   return { normalSpeed: vn, impulse: j };

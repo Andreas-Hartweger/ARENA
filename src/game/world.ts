@@ -77,7 +77,9 @@ export class DriveWorld {
       events: [],
       fallback: false,
       cars: this.#vehicles.map((v) => {
-        const s = track.project(v.state.positionM, 0).s,
+        const distance = track.project(v.state.positionM).s;
+        const s =
+            distance > track.length / 2 ? distance - track.length : distance,
           pose = {
             position: v.state.positionM,
             heading: v.state.headingRad,
@@ -91,7 +93,7 @@ export class DriveWorld {
           lap: initialLap(s),
           history: safePose(track, pose, []) ? [pose] : [],
           keyboard: NEUTRAL_KEYBOARD_STATE,
-          input: neutralControl('forward'),
+          input: neutralControl(v.state.drive.direction),
           recovery: 'none' as const,
         };
       }),

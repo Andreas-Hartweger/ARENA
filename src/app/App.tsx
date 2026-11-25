@@ -11,10 +11,15 @@ const mapPath =
       return (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + (-p.y).toFixed(1);
     })
     .join(' ') + 'Z';
-const duration = (s: number | null | undefined) =>
-  s == null
-    ? '—:—.——'
-    : Math.floor(s / 60) + ':' + (s % 60).toFixed(2).padStart(5, '0');
+function duration(seconds: number | null | undefined) {
+  if (seconds == null) return '—:—.——';
+  const hundredths = Math.round(seconds * 100);
+  return (
+    Math.floor(hundredths / 6000) +
+    ':' +
+    ((hundredths % 6000) / 100).toFixed(2).padStart(5, '0')
+  );
+}
 export function App() {
   const canvas = useRef<HTMLCanvasElement>(null),
     controller = useRef<ReturnType<typeof startDrive> | null>(null);
@@ -22,7 +27,12 @@ export function App() {
     [error, setError] = useState('');
   useEffect(() => {
     try {
-      controller.current = startDrive(canvas.current!, setHud, setError);
+      controller.current = startDrive(
+        canvas.current!,
+        course,
+        setHud,
+        setError,
+      );
     } catch (e) {
       setError(String(e));
     }
@@ -41,7 +51,8 @@ export function App() {
         </div>
         <span className="edition">FIRST DRIVE</span>
         <div className="session">
-          <b /> {hud?.paused ? 'PAUSE' : 'TRAINING'} <span> / </span> GT-01
+          <b /> {error ? 'ANGEHALTEN' : hud?.paused ? 'PAUSE' : 'TRAINING'}{' '}
+          <span> / </span> GT-01
         </div>
       </header>
       <section
@@ -57,7 +68,10 @@ export function App() {
           <div className="eyebrow">ACADEMY</div>
           <h1>Training Circuit</h1>
           <div className="track-meta">
-            659,91 m <span>·</span> Uhrzeigersinn
+            {course.length.toLocaleString('de-AT', {
+              maximumFractionDigits: 2,
+            })}{' '}
+            m <span>·</span> Uhrzeigersinn
           </div>
           <svg
             className="map"
