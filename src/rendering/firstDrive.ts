@@ -146,7 +146,7 @@ export function startDrive(
       ev.metaKey ||
       document.hidden ||
       (ev.target as HTMLElement)?.closest?.(
-        'input,textarea,select,[contenteditable=true]',
+        '.ai-tools,input,textarea,select,[contenteditable=true]',
       )
     )
       return;
@@ -224,12 +224,14 @@ export function startDrive(
     );
     requestReset = false;
     if (now.cars[0].recovery !== 'none') {
+      lastReport = -1;
       resetExpires = now.index + 180;
       resetMessage =
         now.cars[0].recovery === 'accepted'
           ? 'Zurückgesetzt'
           : 'Rücksetzen blockiert';
     }
+    if (now.index === resetExpires) lastReport = -1;
     if (now.cars[0].state.discontinuity) {
       prior = now;
       snap = true;

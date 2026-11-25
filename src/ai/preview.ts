@@ -1,3 +1,4 @@
+import { GT_01 } from '../vehicles/vehicleDefinition';
 import { dot, headingAxes, type Vector2 } from '../core/math';
 import { shift, difference, wrap, type Track } from '../tracks/track';
 import {
@@ -92,6 +93,24 @@ export function preview(
   const sign = Math.sign(align),
     start = anchor.station;
   const sample = (d: number) => track.sample(start + sign * d);
+  // Orientation requires a visible tangent neighborhood, even when the anchor itself is visible.
+  const before = sample(-0.25).position,
+    after = sample(0.25).position;
+  if (
+    !clear(
+      position,
+      before,
+      anchor.sample.position,
+      0.25 ** 2 / (4 * track.def.width),
+    ) ||
+    !clear(
+      position,
+      anchor.sample.position,
+      after,
+      0.25 ** 2 / (4 * track.def.width),
+    )
+  )
+    return { local: null, points };
   const local = {
     heading: anchor.sample.heading + (sign < 0 ? Math.PI : 0),
     offset:
@@ -108,7 +127,7 @@ export function preview(
   function certify(lo: number, hi: number, depth = 0): boolean {
     const a = sample(lo).position,
       b = sample(hi).position;
-    // Across smooth joins, all supported arcs have radius greater than half the road width.
+    // Intervals are split at every join. The bound on chord error is |curvature| * length² / 8.
     const k = Math.abs(curvature((lo + hi) / 2)),
       pad = (k * (hi - lo) ** 2) / 8;
     const deltaA = difference(a, eye),
@@ -117,10 +136,14 @@ export function preview(
       Math.min(dot(deltaA, axes.forward), dot(deltaB, axes.forward)) - pad;
     // Local orientation covers the short connection under the nose. Occlusion is still checked from the eye.
     const near =
-      hi <= 5 &&
-      Math.max(Math.hypot(deltaA.x, deltaA.y), Math.hypot(deltaB.x, deltaB.y)) +
-        pad <=
-        2.21;
+      hi <= distances[0] &&
+      [a, b].every((p) => {
+        const local = difference(p, position);
+        return (
+          Math.abs(dot(local, axes.forward)) + pad <= GT_01.lengthM / 2 &&
+          Math.abs(dot(local, axes.left)) + pad <= GT_01.widthM / 2
+        );
+      });
     const inRange =
       Math.max(Math.hypot(deltaA.x, deltaA.y), Math.hypot(deltaB.x, deltaB.y)) +
         pad <=
@@ -128,7 +151,8 @@ export function preview(
     if (
       (minProjection >= -tolerance || near) &&
       inRange &&
-      clear(eye, a, b, pad)
+      clear(eye, a, b, pad) &&
+      (!near || clear(position, a, b, pad))
     )
       return true;
     if (depth >= 12 || hi - lo < 0.005) return false;
@@ -160,6 +184,12 @@ export function preview(
     if (!visible(last, d)) break;
     const target = sample(d),
       neighborhood = visible(d - 0.5, d + 0.5);
+    const delta = difference(target.position, eye);
+    if (
+      dot(delta, axes.forward) < -tolerance ||
+      Math.hypot(delta.x, delta.y) > 150 + tolerance
+    )
+      break;
     points[i] = {
       position: target.position,
       heading: neighborhood ? target.heading + (sign < 0 ? Math.PI : 0) : null,

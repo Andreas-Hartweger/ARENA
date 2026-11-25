@@ -3,7 +3,7 @@ import type { DriveDirection } from '../input/controlInput';
 import type { Track } from '../tracks/track';
 import { Brain } from './network';
 import { observe } from './perception';
-import { period, standardProfile } from './profile';
+import { profile as defineProfile, period, standardProfile } from './profile';
 import { registry, signature } from './schema';
 import type { Polygon, wallIndex } from './geometry';
 export function targets(
@@ -13,14 +13,23 @@ export function targets(
   if (output.length !== 3 || !output.every(Number.isFinite))
     throw Error('Invalid controller output');
   const [pedal, steering, d] = output.map(Math.tanh);
-  const direction: DriveDirection =
-    d >= 0.5 ? 'forward' : d <= -0.5 ? 'reverse' : previous;
+  const direction = directionRequest(d, previous);
   return {
     throttle: Math.max(0, pedal),
     brake: Math.max(0, -pedal),
     steering,
     direction,
   };
+}
+export function directionRequest(
+  normalized: number,
+  previous: DriveDirection,
+): DriveDirection {
+  return normalized >= 0.5
+    ? 'forward'
+    : normalized <= -0.5
+      ? 'reverse'
+      : previous;
 }
 export interface AiState {
   observation: ReturnType<typeof observe>;
@@ -42,7 +51,11 @@ export function driver(
   track: Track,
   walls: ReturnType<typeof wallIndex>,
 ) {
-  const { brain, profile = standardProfile, decisionHz = 30 } = options;
+  const { brain, decisionHz = 30 } = options;
+  const source = options.profile ?? standardProfile;
+  if (source.id !== standardProfile.id)
+    throw Error('Unknown perception profile');
+  const profile = defineProfile(source.rays, source.hz);
   const sensorPeriod = period(profile.hz),
     decisionPeriod = period(decisionHz),
     channels = registry(profile);

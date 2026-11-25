@@ -88,7 +88,15 @@ export function registry(profile = standardProfile) {
   for (const d of distances)
     group('preview', 'preview' + String(d).padStart(3, '0'));
   for (let i = 0; i < 4; i++) group('object', 'object0' + i);
-  return Object.freeze(channels.map((c) => Object.freeze(c)));
+  const indices = new Map(channels.map((c, i) => [c.id, i]));
+  if (indices.size !== channels.length) throw Error('Duplicate channel ID');
+  return Object.freeze(
+    channels.map((c) => {
+      const maskIndex = c.mask ? indices.get(c.mask) : -1;
+      if (maskIndex === undefined) throw Error('Unknown mask ' + c.mask);
+      return Object.freeze({ ...c, maskIndex });
+    }),
+  );
 }
 export function canonical(v: unknown): string {
   if (Array.isArray(v)) return '[' + v.map(canonical).join(',') + ']';
@@ -149,11 +157,7 @@ export function normalize(
       throw Error('Invalid preview masks');
   for (let i = 0; i < values.length; i++) {
     const c = channels[i];
-    if (
-      c.mask &&
-      raw[i] !== 0 &&
-      raw[channels.findIndex((x) => x.id === c.mask)] === 0
-    )
+    if (c.mask && raw[i] !== 0 && raw[c.maskIndex] === 0)
       throw Error('Missing mask for ' + c.id);
   }
   return { values, clamped };

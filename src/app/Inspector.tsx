@@ -162,6 +162,37 @@ export function Inspector({
           ))}
         </select>
       </label>
+      <svg
+        viewBox="0 0 320 54"
+        aria-label="Ausgewählte neuronale Verbindung"
+        style={{ height: 64 }}
+      >
+        <line
+          x1="38"
+          x2="282"
+          y1="27"
+          y2="27"
+          stroke={
+            (params?.[offset + neuron * fan + source] ?? 0) < 0
+              ? '#ff9266'
+              : '#7ccfdb'
+          }
+          strokeWidth="3"
+        />
+        <circle cx="38" cy="27" r="17" fill="#334653" />
+        <circle cx="282" cy="27" r="17" fill="#334653" />
+        <g fill="white" textAnchor="middle" fontSize="11">
+          <text x="38" y="31">
+            {source}
+          </text>
+          <text x="282" y="31">
+            {neuron}
+          </text>
+          <text x="160" y="19">
+            {fmt(params?.[offset + neuron * fan + source])}
+          </text>
+        </g>
+      </svg>
       <p>
         Gewicht {fmt(params?.[offset + neuron * fan + source])} · Bias{' '}
         {fmt(params?.[offset + fan * width + neuron])} · Eingang{' '}

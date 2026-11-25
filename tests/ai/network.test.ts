@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 import { Brain, activate, denseLayer } from '../../src/ai/network';
-import { targets } from '../../src/ai/driver';
+import { targets, directionRequest } from '../../src/ai/driver';
 import { SeededRandom } from '../../src/core/random';
 import {
   stepKeyboardControls,
@@ -57,6 +57,8 @@ it('NN-005–007 exact seed stream, overflow, independent trace', () => {
   ).toThrow();
 });
 it('CTL-001–005 same effective controls and reversal gate', () => {
+  expect(directionRequest(-0.5, 'forward')).toBe('reverse');
+  expect(directionRequest(0.5, 'reverse')).toBe('forward');
   for (const p of [-0.6, 0, 0.6]) {
     const t = targets([Math.atanh(p), Math.atanh(p), 0]);
     expect(t.throttle).toBeCloseTo(Math.max(0, p));

@@ -175,13 +175,17 @@ export function measure(
       (roots[i + 1] === undefined ? 1 : roots[i + 1] - t) / 3,
       (i === 0 ? 1 : t - roots[i - 1]) / 3,
     );
+    const remaining = Math.min(limit, ray.range) - t;
+    const afterGap = remaining > tolerance ? Math.min(gap, remaining / 2) : gap;
     const before = track.surfaceQuery(
         shift(ray.origin, ray.direction, t - gap),
       ),
-      after = track.surfaceQuery(shift(ray.origin, ray.direction, t + gap));
+      after = track.surfaceQuery(
+        shift(ray.origin, ray.direction, t + afterGap),
+      );
     if (before !== after) {
       edge = t;
-      if (t + gap < Math.min(limit, ray.range)) material = after;
+      if (remaining > tolerance) material = after;
       break;
     }
   }
