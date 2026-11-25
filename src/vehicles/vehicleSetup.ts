@@ -5,6 +5,16 @@ import {
   type VehicleDefinition,
 } from './vehicleDefinition';
 
+// Solver constants shared by all GT-01 instances; independent of the nominal vehicle data.
+export const DYNAMICS_PARAMETERS = Object.freeze({
+  relaxationSeconds: 0.12,
+  minimumPowerSpeedMps: 1,
+  minimumSlipSpeedMps: 1,
+  numericalRestSpeedMps: 1e-9,
+  lateralDampingPerSecond: 0.5,
+  yawDampingPerSecond: 0.7,
+});
+
 export type SurfaceId = 'asphalt' | 'grass';
 
 export interface SurfaceSetup {

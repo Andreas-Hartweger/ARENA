@@ -52,6 +52,10 @@ Sämtliche Pakete zusammenführen, Zielwerte isoliert messen, Academy mehrere Ru
 
 FD-001/Teil FD-002/003/005/007 in F-PHY (16–39,5 h), FD-004 in F-TRK (4–9 h), Input in F-CTL (2–4 h); FD-006: F-ART Basis 4–9 h, F-UI HUD 1–3 h. Rest F-ART 3–8 h, Rest F-UI 3,5–8 h erst Complete Foundation. Gesamtrelease neue Schätzung 73,75–181 h; 35 h bestätigtes Startbudget, zusätzliche Freizeit offen. Alte Schätzwerte sind im Excel archiviert. Keine Ist-Zeiten ableiten.
 
-## Aktueller Stand
+## Stand zum Abschluss von FD-002
 
-FD-FINAL G-01 bis G-06 sind bestätigt. FD-001 (`6651800`, PR #1) ist Teil des FD-002-Basisstands. Laut Auftraggeber war die CI für PR #1 grün. FD-002 wurde unter der gesonderten Ausnahme lokal auf `feature/fd-002-vehicle-controls` umgesetzt. Die vollständige Foundation-Abnahme und das Review durch den zweiten Entwickler sind ausstehend. Die lokale Ausnahme gilt nur für FD-002 und erteilt keine Merge-Freigabe. Ab FD-003 sind alle Aufgaben gesperrt. Rollen A/B sind keine feste Zuweisung.
+FD-FINAL G-01 bis G-06 sind bestätigt. FD-001 (`6651800`, PR #1) ist Teil des FD-002-Basisstands. Laut Auftraggeber war die CI für PR #1 grün. FD-002 wurde unter der gesonderten Ausnahme lokal auf `feature/fd-002-vehicle-controls` umgesetzt. Die vollständige Foundation-Abnahme und das Review durch den zweiten Entwickler sind ausstehend. Die lokale Ausnahme gilt nur für FD-002 und erteilt keine Merge-Freigabe. Zu diesem Zeitpunkt waren ab FD-003 alle Aufgaben gesperrt. Rollen A/B sind keine feste Zuweisung.
+
+## Stand nach der Recovery-Freigabe
+
+FD-002 ist in der Basis `a865f03` enthalten. Die gesonderte Freigabe für `recovery/fd-003-vehicle-physics` erlaubt die lokale funktionale Neuimplementierung von FD-003. Stufe a bestand vor Beginn der Lenkungsarbeit die Geradeausmessungen. Stufe b bestand die Lenktests, Stufe c die Reifen- und Griptests. Stufe d ergänzt die Materialübergänge und Stabilisierung. Kalibrierung, Fehlerpfad und Headless-Prüfung sind abgeschlossen. Beide Entwickler prüfen den lokalen Stand. Ab FD-004 bleibt eine eigene Freigabe erforderlich. Siehe [Abschlussbericht](../DEVELOPMENT_LOG.md#fd-003--recovery-der-fahrzeugphysik).

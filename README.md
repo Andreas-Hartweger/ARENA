@@ -25,3 +25,7 @@ npm run dev
 Für ein freigegebenes Arbeitspaket einen Branch vom aktuellen `main` erstellen. Vor dem Pull Request `npm run check` ausführen und Änderungen sowie offene Prüfungen dokumentieren. Der zweite Entwickler installiert mit `npm ci`, prüft Code und Darstellung und gibt Rückmeldung im Pull Request. Änderungen werden gegenseitig überprüft. Beide Entwickler müssen die Foundation ausdrücklich freigeben, bevor weitere Spielmechaniken umgesetzt werden.
 
 Siehe [Projektübersicht](docs/PROJECT_OVERVIEW.md), [Architektur](docs/ARCHITECTURE.md) und [Aufgaben](docs/TASKS.md).
+
+## FD-003 lokal prüfen
+
+`npm run calibrate` führt den GT-01 in Node.js auf definierten Testuntergründen aus und gibt die Messwerte als JSON aus. `npm run check` prüft zusätzlich den Simulationskern mit ausschließlich ES2022-Standardtypen. Die lokale Recovery umfasst die freie Bewegung eines Fahrzeugs. Der Browser zeigt weiterhin die Foundation-Testszene. Messwerte, Review-Einstieg und offene Abnahmen stehen im [Entwicklungsprotokoll](docs/DEVELOPMENT_LOG.md#fd-003--recovery-der-fahrzeugphysik).

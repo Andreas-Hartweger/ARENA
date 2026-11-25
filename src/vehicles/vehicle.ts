@@ -25,6 +25,8 @@ export interface AxleSurfaceState {
   surface: SurfaceId | null;
   previousSurface: SurfaceId | null;
   transitionElapsedSeconds: number;
+  transitionFromFriction?: number;
+  transitionFromRollingResistance?: number;
 }
 
 export interface VehicleState {
@@ -134,6 +136,16 @@ export function validateVehicleState(
     throw new RangeError('Invalid reset state');
   }
   for (const axle of [state.frontAxle, state.rearAxle]) {
+    for (const coefficient of [
+      axle.transitionFromFriction,
+      axle.transitionFromRollingResistance,
+    ]) {
+      if (
+        coefficient !== undefined &&
+        requireFinite(coefficient, 'surface transition coefficient') < 0
+      )
+        throw new RangeError('Negative surface transition coefficient');
+    }
     for (const surface of [axle.surface, axle.previousSurface]) {
       if (surface !== null && surface !== 'asphalt' && surface !== 'grass') {
         throw new RangeError('Invalid axle surface');
