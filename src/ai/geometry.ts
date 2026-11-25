@@ -55,6 +55,7 @@ export function wallIndex(track: Track) {
   const root = tree(all.slice());
   return {
     all,
+    roadBoundaries: compileRoadBoundaries(track),
     query(box: Bounds) {
       const hits: Polygon[] = [];
       function visit(n: Node) {
@@ -98,33 +99,75 @@ export function hit(ray: Ray, p: Polygon) {
   }
   return pos && neg ? near : 0;
 }
-// Intersect both analytic offset curves. Sample open intervals between ordered roots to discard tangencies.
-export function roadEdges(track: Track, ray: Ray) {
-  const roots: number[] = [];
-  for (const s of track.segments) {
-    const start = track.sample(s.offset - track.def.startDistance);
+type RoadBoundary =
+  | { kind: 'line'; a: Vector2; b: Vector2 }
+  | {
+      kind: 'arc';
+      center: Vector2;
+      radius: number;
+      tangent: Vector2;
+      normal: Vector2;
+      curvature: number;
+      length: number;
+    };
+
+function compileRoadBoundaries(track: Track) {
+  const edges: RoadBoundary[] = [];
+  for (const piece of track.segments) {
+    const start = track.sample(piece.offset - track.def.startDistance);
     for (const side of [-track.def.width / 2, track.def.width / 2]) {
-      if (!s.curvature) {
+      if (piece.curvature === 0) {
         const a = shift(start.position, start.normal, side);
-        roots.push(segment(ray, a, shift(a, start.tangent, s.length)));
+        edges.push({
+          kind: 'line',
+          a,
+          b: shift(a, start.tangent, piece.length),
+        });
       } else {
-        const center = shift(start.position, start.normal, 1 / s.curvature),
-          r = Math.abs(1 / s.curvature - side);
-        const v = difference(ray.origin, center),
-          b = dot(v, ray.direction),
-          disc = b * b - dot(v, v) + r * r;
-        if (disc < 0) continue;
-        for (const t of [-b - Math.sqrt(disc), -b + Math.sqrt(disc)]) {
-          const delta = difference(shift(ray.origin, ray.direction, t), center);
-          const angle = Math.atan2(
-            s.curvature * dot(delta, start.tangent),
-            -s.curvature * dot(delta, start.normal),
-          );
-          const station = angle / s.curvature;
-          if (station >= -tolerance && station <= s.length + tolerance)
-            roots.push(t);
-        }
+        edges.push({
+          kind: 'arc',
+          center: shift(start.position, start.normal, 1 / piece.curvature),
+          radius: Math.abs(1 / piece.curvature - side),
+          tangent: start.tangent,
+          normal: start.normal,
+          curvature: piece.curvature,
+          length: piece.length,
+        });
       }
+    }
+  }
+  return edges;
+}
+
+// The exhaustive path reconstructs the primitives. The indexed path reuses track geometry.
+export function roadEdges(
+  track: Track,
+  ray: Ray,
+  edges: readonly RoadBoundary[] = compileRoadBoundaries(track),
+) {
+  const roots: number[] = [];
+  for (const edge of edges) {
+    if (edge.kind === 'line') {
+      roots.push(segment(ray, edge.a, edge.b));
+      continue;
+    }
+    const v = difference(ray.origin, edge.center),
+      b = dot(v, ray.direction),
+      disc = b * b - dot(v, v) + edge.radius * edge.radius;
+    if (disc < 0) continue;
+    const root = Math.sqrt(disc);
+    for (const t of [-b - root, -b + root]) {
+      const delta = difference(
+        shift(ray.origin, ray.direction, t),
+        edge.center,
+      );
+      const angle = Math.atan2(
+        edge.curvature * dot(delta, edge.tangent),
+        -edge.curvature * dot(delta, edge.normal),
+      );
+      const station = angle / edge.curvature;
+      if (station >= -tolerance && station <= edge.length + tolerance)
+        roots.push(t);
     }
   }
   return roots
@@ -174,7 +217,11 @@ export function measure(
     origin: shift(ray.origin, ray.direction, -probeSpan),
     range: ray.range + 2 * probeSpan,
   };
-  const roots = roadEdges(track, extended).map((t) => t - probeSpan);
+  const roots = roadEdges(
+    track,
+    extended,
+    reference ? undefined : index.roadBoundaries,
+  ).map((t) => t - probeSpan);
   for (let i = 0; i < roots.length; i++) {
     if (roots[i] < -tolerance) continue;
     if (roots[i] > ray.range + tolerance) break;
