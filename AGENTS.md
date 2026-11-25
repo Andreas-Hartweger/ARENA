@@ -21,3 +21,7 @@ WebStorm ist die gemeinsame Entwicklungsumgebung. Änderungen werden gegenseitig
 ## Ausnahme für Development Batch 01
 
 Der Auftraggeber gibt FD-004 bis FD-007 trotz offener gemeinsamer G-07-Abnahme zur zusammenhängenden vorläufigen Entwicklung frei. Nach vollständiger Prüfung sind Commits eigener Änderungen, Pushes mit `git push -u origin HEAD` ausschließlich auf `feature/batch-01-complete-first-drive`, ein gemeinsamer PR nach main und das Abfragen der CI erlaubt. Die Fortsetzung innerhalb dieser vier Pakete erfolgt automatisch. Menschliches Review und Merge-Freigabe bleiben separat. Force-Push, destruktive Git-Befehle, Release-Tagging, neue Abhängigkeiten und First Intelligence sind ausgeschlossen.
+
+## Development Batch 02A
+
+Nach der gemeinsamen D00/G07-Abnahme sind PRE-01–03 und FI-001–012 freigegeben. B dokumentiert Tests, offene Entscheidungen und Übergaben unter docs/team. Geprüfte eigene Änderungen dürfen ausschließlich auf feature/batch-02a-ai-perception-brain mit git push -u origin HEAD gesichert werden. Ein gemeinsamer PR nach main und CI-Prüfung sind erlaubt. Review und Merge-Freigabe erfolgen separat. Neue Abhängigkeiten, Force-Push, Tags und Batch 02B sind ausgeschlossen.
