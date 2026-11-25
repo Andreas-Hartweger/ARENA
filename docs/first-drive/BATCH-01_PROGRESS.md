@@ -14,3 +14,13 @@ Commit- und Push-Nachweise werden nach den Paketprüfungen ergänzt. Gegenseitig
 ## FD-004
 
 Analytische Academy-Segmente, Offsets, geschlossene Barrieren, Achsoberflächen, lokale Projektion, Gitter/Recovery und gerichtete Rundenwertung in src/tracks. Acht TRK-Fixtures in tests/tracks, zwei vollständige synthetische Runden und echte FD-003-Achsabfrage. Im ersten Test war die äußerste Bogensehne 1,399 m lang. Der Schritt berücksichtigt jetzt den größten Offsetradius. Alle acht gezielten Tests und der vollständige Qualitätslauf mit 116 Tests bestanden. Annahmen: konservative Belegungshülle bei Recovery, außerhalb des Auslaufs ungültige Runde, Sprünge explizit invalidieren. Commit und Remote-Nachweis folgen im nächsten Protokolleintrag. Nächster Schritt gemeinsam verarbeitete Kontakte und tatsächliche Bewegungspfade.
+
+## FD-005
+
+FD-004 ist auf GitHub gesichert. Der Remote-Ref ergab 46666e794fc020a487dd3336dc239cc9f9849ea2. Der GitHub-Connector meldete beim Erstellen des Entwurfs-PR HTTP 403 („Resource not accessible by integration“), gh ist nicht installiert. Die Git-Authentifizierung funktioniert für Branch-Sicherungen.
+
+FD-005 implementiert SAT für konvexe Vierecke, konservative Swept-Hüllen, getrennte Normal-/Reibimpulse mit Hebelarmen, Bewegungsteilschritte und sechs Kontaktiterationen in src/collision. Die Welt in src/game berechnet neue Fahrer-, Kontakt- und Rundenzustände vor einer gemeinsamen Veröffentlichung. Der gemeinsame FD-003-Vorbereitungsschritt erhält beide bisherigen Inputpfade. Korrekturbewegungen erhalten keine Torgutschrift. Die letzten sicheren Posen werden alle 15 Ticks auf Asphalt gesammelt. Der diagnostizierte Fallback stoppt die Körper am Ende des letzten akzeptierten Teilschritts, wenn 32 Teilschritte oder die Kontaktauflösung nicht ausreichen. Das ist keine allgemeine CCD-Garantie.
+
+Acht gezielte Tests einschließlich 2-cm-Wand mit 250 km/h, Gegenverkehr, Restüberlappung, Impulsenergie, Mehrfachkontakt, unabhängigen Kandidaten und Fehler in der zweiten Fahrzeugberechnung bestanden. Im Selbstreview wurde die Rücknahme von Ereignissen aus verworfenen Bewegungsteilschritten ergänzt. Nächster Schritt: Weltframes an die First-Drive-Darstellung anbinden.
+
+FD-005 hat den Status **Automatisch geprüft**. Vollständiger Check 124/124 in 16 Dateien. Die separate FD-003-Kalibrierung reproduziert alle fünf Messwerte. Commit und Remote-SHA folgen nach Sicherung.

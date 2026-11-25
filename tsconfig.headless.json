@@ -11,6 +11,8 @@
     "src/input/controlInput.ts",
     "src/input/keyboardControls.ts",
     "src/physics/**/*.ts",
-    "src/tracks/**/*.ts"
+    "src/tracks/**/*.ts",
+    "src/game/**/*.ts",
+    "src/collision/**/*.ts"
   ]
 }
