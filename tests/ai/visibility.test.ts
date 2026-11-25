@@ -95,3 +95,44 @@ it('SEN-020/021 four nearest detected slots; rotating frame relative speed', () 
   expect(o.raw[219]).toBeCloseTo(5, 12);
   expect(o.raw[220]).toBeCloseTo(-3, 12);
 });
+
+it('SEN-013/018/019 all seven visible stations on a long straight, ambiguous and out of range cases', () => {
+  const long = createTrack({
+    ...academy,
+    pieces: academy.pieces.map((p, i) =>
+      i === 0 || i === 4 ? { kind: 'line', length: 360 } : p,
+    ),
+  });
+  const p = preview(long, wallIndex(long), [], { x: 0, y: 70 }, 0);
+  expect(p.points.map((point) => point?.position.x)).toEqual([
+    5, 10, 20, 40, 60, 100, 150,
+  ]);
+  for (const point of p.points) {
+    expect(point?.position.y).toBe(70);
+    expect(point?.heading).toBe(0);
+    expect(point?.curvature).toBe(0);
+  }
+  // Two equally near, distinct centerlines are an ambiguous local anchor.
+  const narrow = createTrack({
+    ...academy,
+    width: 2,
+    runoff: 1,
+    barrierThickness: 0.1,
+    pieces: [
+      { kind: 'line', length: 100 },
+      { kind: 'arc', radius: 5, turnRad: -Math.PI },
+      { kind: 'line', length: 100 },
+      { kind: 'arc', radius: 5, turnRad: -Math.PI },
+    ],
+  });
+  const unobstructed = { ...narrow, barriers: [] };
+  expect(
+    preview(unobstructed, wallIndex(unobstructed), [], { x: -25, y: 65 }, 0)
+      .local,
+  ).toBeNull();
+  expect(
+    preview(track, idx, [], { x: 500, y: 500 }, 0).points.every(
+      (point) => point === null,
+    ),
+  ).toBe(true);
+});

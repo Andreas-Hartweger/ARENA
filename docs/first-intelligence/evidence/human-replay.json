@@ -1,0 +1,23 @@
+{
+  "reset": {
+    "hud": "Tick 2 · 60.0 FPS · Grip-Auslastung VA 0 % (– N) / HA 0 % (– N)",
+    "message": "Zurückgesetzt"
+  },
+  "at179": {
+    "hud": "Tick 179 · 60.0 FPS · Grip-Auslastung VA 0 % (7971 N) / HA 0 % (7971 N)",
+    "message": "Zurückgesetzt"
+  },
+  "exact179": {
+    "hud": "Tick 181 · 60.0 FPS · Grip-Auslastung VA 0 % (7971 N) / HA 0 % (7971 N)",
+    "message": "Zurückgesetzt"
+  },
+  "paused": {
+    "hud": "Tick 181 · 60.0 FPS · Grip-Auslastung VA 0 % (7971 N) / HA 0 % (7971 N)",
+    "message": "Zurückgesetzt"
+  },
+  "at180": {
+    "hud": "Tick 182 · 60.0 FPS · Grip-Auslastung VA 0 % (7971 N) / HA 0 % (7971 N)",
+    "message": ""
+  },
+  "lap": "RUNDE 02\n0:07.52\nLETZTE RUNDE\n1:05.93"
+}

@@ -1,0 +1,22 @@
+{
+  "browser": "158.0.8127.89",
+  "renderer": "SwiftShader",
+  "dpr": 1,
+  "closed": {
+    "elapsedMs": 1116,
+    "ticks": 66,
+    "fps": "49 FPS"
+  },
+  "opened": {
+    "elapsedMs": 1118,
+    "ticks": 71,
+    "fps": "56 FPS"
+  },
+  "before": 165,
+  "after": 166,
+  "mobileOverflow": 0,
+  "recovery": "Zurückgesetzt",
+  "errors": [],
+  "trace": "FortsetzenEinzeltick\nSensor Inspector\n\narena.perception.standard.v1 · Messtick 164 · Alter 2 Ticks\n\n",
+  "brain": " 0.0000 · Bias 0.6931 · Eingang 0.0000 · Summe 0.6931 · Aktivierung 0.6931\n\nRohoutput 0.6931 / 0.0000 / 1.0000 · Tanh 0.6000 / 0.0000 / 0.7616\n\nZiel {\"throttle\":0.6,\"brake\":0,\"steering\":0,\"direction\":\"forward\"} · Angewandt (Tick 166) {\"throttle\":0.6,\"brake\":0,\"steering\":0,\"direction\":\"forward\"}"
+}
