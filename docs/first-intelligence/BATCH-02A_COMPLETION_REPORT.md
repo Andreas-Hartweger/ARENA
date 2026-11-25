@@ -95,6 +95,8 @@ Bei einem weiteren Browserlauf meldete WebGL den nativen Renderer Intel Arc 140T
 
 Im direkten Vergleich zwischen der First-Drive-Basis und `efb62ef` stimmten alle 36.000 vollständigen veröffentlichten Weltframes exakt überein. Drei Seeds steuerten je zwei Fahrzeuge mit Tastatur- und Analogbefehlen, Richtungswechseln, Graskontakt und Recovery. Über die drei Läufe wurden 104 Kollisionsereignisse und 30 angenommene Rücksetzungen verglichen. [Regressionsvergleich](evidence/first-drive-parity.json)
 
+Im 20-minütigen Chrome-Dauerlauf auf dem gesondert ausgewiesenen Stand `a19140f` wechselte der Inspector alle fünf Minuten zwischen offen und geschlossen. Der Stand stieg von Tick 10 auf 71.999. Alle 21 Stichproben kamen an, ohne JavaScript-Fehler oder Seitenabsturz. Bei geschlossenem Inspector wurden nach Garbage Collection in Minute 5, 15 und 20 jeweils 204 DOM-Knoten gezählt. Der belegte JS-Heap lag dabei bei 8,36, 8,07 und 7,73 MB. Diese Messung gilt für die getestete Sitzung. [Zeitreihe](evidence/browser-endurance.json)
+
 ## K · Offene Punkte
 
 Das Entwicklerreview für Batch 02A und die gesonderte Merge-Entscheidung stehen aus. Die Benchmarkwerte hängen von Hardware, Runtime und Last ab. Die Seed-Modelle sind untrainiert. Die sichtbare Qualität ihrer Fahrentscheidungen war kein Abnahmekriterium. 02B hat keine Umsetzungsfreigabe.
