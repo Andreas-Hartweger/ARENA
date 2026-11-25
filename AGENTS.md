@@ -17,3 +17,7 @@
 15. Beginne nach Abschluss keine weitere Aufgabe ohne ausdrückliche Freigabe.
 
 WebStorm ist die gemeinsame Entwicklungsumgebung. Änderungen werden gegenseitig überprüft. Die Entwickler müssen die Foundation vor der Umsetzung weiterer Spielmechaniken ausdrücklich freigeben.
+
+## Ausnahme für Development Batch 01
+
+Der Auftraggeber gibt FD-004 bis FD-007 trotz offener gemeinsamer G-07-Abnahme zur zusammenhängenden vorläufigen Entwicklung frei. Nach vollständiger Prüfung sind Commits eigener Änderungen, Pushes mit `git push -u origin HEAD` ausschließlich auf `feature/batch-01-complete-first-drive`, ein gemeinsamer PR nach main und das Abfragen der CI erlaubt. Die Fortsetzung innerhalb dieser vier Pakete erfolgt automatisch. Menschliches Review und Merge-Freigabe bleiben separat. Force-Push, destruktive Git-Befehle, Release-Tagging, neue Abhängigkeiten und First Intelligence sind ausgeschlossen.
