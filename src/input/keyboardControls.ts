@@ -66,15 +66,6 @@ export function stepKeyboardControls(
   }
 
   const base = sample.reset ? NEUTRAL_KEYBOARD_STATE : previous;
-  const previousThrottle = requireFinite(base.throttle, 'keyboard throttle');
-  const previousSteering = requireFinite(base.steering, 'keyboard steering');
-  if (
-    previousThrottle < 0 ||
-    previousThrottle > 1 ||
-    Math.abs(previousSteering) > 1
-  ) {
-    throw new RangeError('Keyboard state is out of range');
-  }
   const { forward, reverse, left, right } = sample.buttons;
   const braking = forward && reverse;
   const propulsion = forward !== reverse;
@@ -84,6 +75,38 @@ export function stepKeyboardControls(
       : 'reverse'
     : drive.direction;
   const steeringTarget = Number(right) - Number(left);
+  return stepTargetControls(
+    base,
+    {
+      throttle: Number(propulsion),
+      brake: Number(braking),
+      direction,
+      steering: steeringTarget,
+    },
+    drive,
+    velocityMps,
+    sensitivity,
+    sample.reset || sample.holdInterrupted,
+  );
+}
+export function stepTargetControls(
+  base: KeyboardControlState,
+  target: ControlInput,
+  drive: DirectionState,
+  velocityMps: Vector2,
+  sensitivity = 1,
+  interrupted = false,
+) {
+  const previousThrottle = requireFinite(base.throttle, 'keyboard throttle');
+  const previousSteering = requireFinite(base.steering, 'keyboard steering');
+  if (
+    previousThrottle < 0 ||
+    previousThrottle > 1 ||
+    Math.abs(previousSteering) > 1
+  ) {
+    throw new RangeError('Keyboard state is out of range');
+  }
+  const steeringTarget = target.steering;
   const steeringSeconds =
     steeringTarget === 0 ? STEERING_FALL_SECONDS : STEERING_RISE_SECONDS;
   const steering = moveToward(
@@ -92,20 +115,17 @@ export function stepKeyboardControls(
     (TICK_SECONDS / steeringSeconds) * sensitivity,
   );
   const resolved = resolveControlTick(
-    {
-      throttle: Number(propulsion),
-      brake: Number(braking),
-      steering,
-      direction,
-    },
+    { ...target, steering },
     drive,
     velocityMps,
-    sample.reset || sample.holdInterrupted,
+    interrupted,
   );
 
   const throttleTarget = resolved.input.throttle;
   const throttleSeconds =
-    throttleTarget === 0 ? THROTTLE_FALL_SECONDS : THROTTLE_RISE_SECONDS;
+    throttleTarget < previousThrottle
+      ? THROTTLE_FALL_SECONDS
+      : THROTTLE_RISE_SECONDS;
   // Clear the pedal on a brake or accepted reversal so thrust cannot carry across directions.
   const throttle =
     resolved.input.brake > 0

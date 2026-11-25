@@ -1,0 +1,29 @@
+{
+  "before": {
+    "raf": 1,
+    "key": [
+      ["canvaspointermove", 1],
+      ["canvaswebglcontextlost", 2],
+      ["canvaswheel", 1],
+      ["documentfocusin", 1],
+      ["documentvisibilitychange", 1],
+      ["windowblur", 1],
+      ["windowkeydown", 2],
+      ["windowkeyup", 1]
+    ]
+  },
+  "after": {
+    "raf": 1,
+    "key": [
+      ["canvaspointermove", 1],
+      ["canvaswebglcontextlost", 2],
+      ["canvaswheel", 1],
+      ["documentfocusin", 1],
+      ["documentvisibilitychange", 1],
+      ["windowblur", 1],
+      ["windowkeydown", 2],
+      ["windowkeyup", 1]
+    ]
+  },
+  "errors": []
+}

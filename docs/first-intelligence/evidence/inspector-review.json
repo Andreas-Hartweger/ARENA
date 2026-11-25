@@ -1,0 +1,67 @@
+{
+  "implementation": "efb62ef",
+  "chrome": "158.0.8127.89",
+  "cases": [
+    {
+      "width": 390,
+      "mode": "fixture",
+      "pausedAt": 10,
+      "steppedTo": 15,
+      "overflow": 0,
+      "groups": [12, 144, 4, 56, 32],
+      "commands": "Fahrbefehl\tGas\tBremse\tLenkung\tRichtung\nKI-Ziel\nTick 14\n\t60 %\t0 %\tGerade\tVorwärts\nAngewandt\nTick 15\n\t60 %\t0 %\tGerade\tVorwärts",
+      "origin": "Vorgegebene Gewichte"
+    },
+    {
+      "width": 390,
+      "mode": "seed",
+      "pausedAt": 6,
+      "steppedTo": 11,
+      "overflow": 0,
+      "groups": [12, 144, 4, 56, 32],
+      "commands": "Fahrbefehl\tGas\tBremse\tLenkung\tRichtung\nKI-Ziel\nTick 10\n\t40,9 %\t0 %\t38,3 % rechts\tVorwärts\nAngewandt\nTick 11\n\t40,9 %\t0 %\t38,3 % rechts\tVorwärts",
+      "origin": "Seed 42"
+    },
+    {
+      "width": 768,
+      "mode": "fixture",
+      "pausedAt": 6,
+      "steppedTo": 11,
+      "overflow": 0,
+      "groups": [12, 144, 4, 56, 32],
+      "commands": "Fahrbefehl\tGas\tBremse\tLenkung\tRichtung\nKI-Ziel\nTick 10\n\t60 %\t0 %\tGerade\tVorwärts\nAngewandt\nTick 11\n\t60 %\t0 %\tGerade\tVorwärts",
+      "origin": "Vorgegebene Gewichte"
+    },
+    {
+      "width": 768,
+      "mode": "seed",
+      "pausedAt": 6,
+      "steppedTo": 11,
+      "overflow": 0,
+      "groups": [12, 144, 4, 56, 32],
+      "commands": "Fahrbefehl\tGas\tBremse\tLenkung\tRichtung\nKI-Ziel\nTick 10\n\t40,9 %\t0 %\t38,3 % rechts\tVorwärts\nAngewandt\nTick 11\n\t40,9 %\t0 %\t38,3 % rechts\tVorwärts",
+      "origin": "Seed 42"
+    },
+    {
+      "width": 1280,
+      "mode": "fixture",
+      "pausedAt": 7,
+      "steppedTo": 12,
+      "overflow": 0,
+      "groups": [12, 144, 4, 56, 32],
+      "commands": "Fahrbefehl\tGas\tBremse\tLenkung\tRichtung\nKI-Ziel\nTick 10\n\t60 %\t0 %\tGerade\tVorwärts\nAngewandt\nTick 12\n\t60 %\t0 %\tGerade\tVorwärts",
+      "origin": "Vorgegebene Gewichte"
+    },
+    {
+      "width": 1280,
+      "mode": "seed",
+      "pausedAt": 6,
+      "steppedTo": 11,
+      "overflow": 0,
+      "groups": [12, 144, 4, 56, 32],
+      "commands": "Fahrbefehl\tGas\tBremse\tLenkung\tRichtung\nKI-Ziel\nTick 10\n\t40,9 %\t0 %\t38,3 % rechts\tVorwärts\nAngewandt\nTick 11\n\t40,9 %\t0 %\t38,3 % rechts\tVorwärts",
+      "origin": "Seed 42"
+    }
+  ],
+  "errors": []
+}

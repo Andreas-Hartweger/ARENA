@@ -1,3 +1,5 @@
+import { driver, type AiState, type DriverOptions } from '../ai/driver';
+import { obstacle, wallIndex } from '../ai/geometry';
 import { dot, headingAxes } from '../core/math';
 import { TICKS_PER_SECOND } from '../core/ticks';
 import { requireNonNegativeInteger } from '../core/validation';
@@ -33,6 +35,7 @@ import {
 import { recoveryCandidate, safePose, type SafePosition } from '../tracks/grid';
 import type { Track } from '../tracks/track';
 export interface Racer {
+  ai?: AiState;
   id: string;
   state: VehicleState;
   lap: LapState;
@@ -55,12 +58,19 @@ export interface DriverCommand {
 export class DriveWorld {
   readonly #vehicles;
   readonly #walls;
+  readonly #drivers;
+  trace = false;
   readonly #track: Track;
   readonly #shared: boolean;
   #frame: WorldFrame;
   #failed = false;
   #busy = false;
-  constructor(track: Track, options: readonly VehicleOptions[], shared = true) {
+  constructor(
+    track: Track,
+    options: readonly VehicleOptions[],
+    shared = true,
+    ai: ReadonlyMap<string, DriverOptions> = new Map(),
+  ) {
     this.#track = track;
     this.#walls = compileWalls(track.barriers);
     this.#shared = shared;
@@ -72,6 +82,13 @@ export class DriveWorld {
       new Set(this.#vehicles.map((v) => v.id)).size !== options.length
     )
       throw Error('Invalid world vehicle IDs');
+    const geometry = ai.size ? wallIndex(track) : undefined;
+    this.#drivers = this.#vehicles.map((v) => {
+      const opts = ai.get(v.id);
+      return opts && geometry ? driver(opts, v, track, geometry) : undefined;
+    });
+    if (this.#drivers.filter(Boolean).length !== ai.size)
+      throw Error('Unknown AI driver');
     this.#frame = freezeTree({
       index: 0,
       events: [],
@@ -108,13 +125,36 @@ export class DriveWorld {
     try {
       const previous = this.#frame,
         index = requireNonNegativeInteger(previous.index + 1, 'world tick');
+      const obstacles =
+        this.#shared && this.#vehicles.length > 1 && this.#drivers.some(Boolean)
+          ? previous.cars.map((c, i) =>
+              obstacle({
+                position: c.state.positionM,
+                heading: c.state.headingRad,
+                velocity: c.state.velocityMps,
+                id: c.id,
+                lengthM: this.#vehicles[i].definition.lengthM,
+                widthM: this.#vehicles[i].definition.widthM,
+              }),
+            )
+          : [];
       const cars: Racer[] = previous.cars.map((old, i) => {
-        const cmd = commands.get(old.id)?.command ?? {
-          kind: 'analog',
-          request: neutralControl(old.state.drive.direction),
-        };
+        const ai = this.#drivers[i]?.(
+          previous.index,
+          old.state,
+          obstacles.filter((p) => p.id !== old.id),
+          old.ai,
+          this.trace,
+        );
+        const cmd: TickCommand = ai
+          ? { kind: 'target', request: ai.target }
+          : (commands.get(old.id)?.command ?? {
+              kind: 'analog',
+              request: neutralControl(old.state.drive.direction),
+            });
         return {
           ...old,
+          ...(ai ? { ai } : {}),
           ...prepareVehicleTick(
             this.#vehicles[i],
             old.state,
@@ -184,6 +224,7 @@ export class DriveWorld {
             car.input = neutralControl('forward');
             car.keyboard = NEUTRAL_KEYBOARD_STATE;
             car.physics = undefined;
+            delete car.ai;
             car.recovery = 'accepted';
           } else car.recovery = 'blocked';
         } else if (index % 15 === 0 && safePose(this.#track, body, others)) {

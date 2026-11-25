@@ -1,0 +1,23 @@
+# KI-Steuerung und Integration – D09.4 / TF-13–15
+
+## Outputvertrag
+
+Rohoutput [pedal,steering,direction] endlich; p=tanh(o0), s=tanh(o1), d=tanh(o2). Zielgas=max(p,0), Zielbremse=max(-p,0), Lenkziel=s (negativ links), keine zusätzliche Deadzone. d>=+0.5 → requested forward, d<=−0.5 → requested reverse, sonst letzte Anforderung (initial forward). Schaltschwellen nach Tanh, nicht Rohwert. Tatsächliche Richtung getrennt. Adapterzustand ist kein neuronales Gedächtnis.
+
+## Gemeinsame Steuercharakteristik und bestehender Vertrag
+
+`resolveControlTick` existiert: nur bei brake===0 && throttle>0 darf Gegenrichtungswechsel beginnen; solange Gegenrichtung und nicht umgeschaltet, brake=1, throttle=0. Haltezeit 18 aufeinanderfolgende 60-Hz-Ticks mit Geschwindigkeit hypot(vx,vy)<=0.05 m/s; bei Überschreitung, Brake/Neutral oder Abbruch Timer 0. Bei 18. Tick Richtung übernehmen, Gasaufbau neu ab 0. Dieses bestehende Verhalten bleibt auch bei KI. Ein Richtungswert ohne positive Pedalanforderung wechselt nicht. Bremse hat Vorrang, nie Gas+Bremse gleichzeitig.
+
+Bestehende Tastatur-Glättung nicht doppelt anwenden: gemeinsamen reinen Helper aus `keyboardControls.ts` für Zielbefehl/State ableiten bzw. konsistent wiederverwenden; Lenkanforderung moveToward(current,target,dt/0.25) für Nichtnullziel, bei target=0 dt/0.20; Tastatursensitivität wie bisher, KI Referenz 1. Gas moveToward mit dt/0.25 bei steigendem Ziel, dt/0.12 bei fallendem Ziel (für volle Tastaturziele 0/1 identisch; analoger Zwischenwert als technische Präzisierung). Bei Bremse sofort Gas=0, bei akzeptierter Umkehr ab 0. Brake direkt. Physik begrenzt Zielwinkel wie bisher (Geschwindigkeit, 120°/s physischer Lenkrate); Geometriezeichen einmal umsetzen, kein doppeltes Filter. Bestehendes `kind: analog` für Kalibrierung und bisherige Referenztests unverändert lassen; neuer KI-/Player-Zielpfad nutzt gemeinsame Aufbereitung und genau einen DirectionResolver pro Tick. Kein Cheat-ABS, automatisches Hindernisbremsen oder Gripvorteil. Kein KI-`recover:true` zur automatischen Befreiung; nur ausdrücklicher Test-/Benutzerreset nach bestehenden Regeln.
+
+## Tick und Zustände
+
+Frame 0: neue Beobachtung und Entscheidung vor erster Bewegung (0→1); bei tickIndex % (60/sensorHz)==0 neue Sensorbeobachtung; falls decision fällig, diese neue oder zuletzt vollständig gültige Beobachtung verwenden; sonst letzten Zielbefehl halten. Frequenzen aus positiven ganzzahligen Teilern von 60 (1,2,3,4,5,6,10,12,15,20,30,60); Standard 30/30; keine Renderzeitabhängigkeit. Aktuator- und DirectionState 60 Hz. Cache trägt Mess-/Entscheidungstick; nicht fällige Komponenten verändern sich nicht. Jede Instanz eigene Cache-/Adapter-/Scratch-Daten; Modellparameter können gemeinsam unveränderlich genutzt werden. Keine Sensor-/Gehirnmutation des Ausgangsframes.
+
+Bei Weltstep n: alle Kandidaten aus demselben vorherigen WorldFrame, dann gemeinsame Bewegung/Kontakte/Progression und Validierung. Refactoring möglich, solange bestehende Welttransaktion erhalten bleibt. Veröffentliche Welt- und KI-Frames gemeinsam erst nach erfolgreicher Berechnung und Validierung aller Teilnehmer; kein Commit einer KI-Cacheänderung vor erfolgreichem Weltstep; eine nach Weltpublish noch fehlschlagende KI-Validierung ist unzulässig. Bei Fehler: letzten publizierten Welt-/KI-Zustand behalten, Session sperren; Diagnose getrennt, Modellkennung, Fahrzeug-ID (nur Diagnose), Tick, Kanal/Layer, Ursache. Kein stiller Ersatz mit 0, kein Resume nach technischem Fehler außer neuer Session. In D11/D12 Kandidatenisolation separat.
+
+Pause friert sämtliche Physik-/KI-Ticks; Resume unverändert (menschliche Tasten wie bisher zurücksetzen). Start/Neustart und akzeptierter externer Recovery: Cache/Trace/Timer/Zielbefehle/Scratch-Ownership zurücksetzen, initial Richtung vorwärts entsprechend tatsächlicher Reset-Pose; frische Beobachtung vor nächster Entscheidung unabhängig vom Modulo. Bei abgelehntem Recovery nichts resetten. Kein Gewichtewechsel. Einzeltick aus Pause führt exakt einen 60-Hz-Tick inkl. fälliger Sensor-/KI-Berechnungen aus; kein Wallclock-Aufholen danach.
+
+## Laufzeit und sichtbarer Testmodus
+
+Headless API ohne Browserimports; interne Testansicht im bestehenden App-Kontext mit klarer Unterscheidung menschlich / mathematisches Testmodell / Seed-Modell (untrainiert); Wechsel kontrollierter Neustart. Menschlicher Modus standardmäßig erhalten. Eingaben und Recover-/Pause-Tasten nicht unbeabsichtigt im Inspector auslösen. Keine neuen öffentlichen Menüs oder Spielmodi. Mehrfahrzeug-Tests in gemeinsamer und isolierter Welt, keine Rennen-UI. Kein Fitness/Training. Browser-Sichtprüfung und 30/60/144-FPS-/headless-Gleichheit gleicher tickbasierter Eingaben.

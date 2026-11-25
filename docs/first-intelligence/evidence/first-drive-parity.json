@@ -1,0 +1,32 @@
+{
+  "base": "68e8d1051a5ea01d544cc1496917568c25b59b92",
+  "implementation": "efb62ef8f6c6751628a385401649976d08e2502f",
+  "node": "v24.22.3",
+  "comparison": "Deep strict equality of each complete published human-mode world frame",
+  "rows": [
+    {
+      "seed": 0,
+      "worldFramesCompared": 12000,
+      "vehicles": 2,
+      "impacts": 64,
+      "recoveries": 10,
+      "vehicleTicksOnGrass": 19181
+    },
+    {
+      "seed": 1,
+      "worldFramesCompared": 12000,
+      "vehicles": 2,
+      "impacts": 26,
+      "recoveries": 10,
+      "vehicleTicksOnGrass": 19200
+    },
+    {
+      "seed": 42,
+      "worldFramesCompared": 12000,
+      "vehicles": 2,
+      "impacts": 14,
+      "recoveries": 10,
+      "vehicleTicksOnGrass": 19035
+    }
+  ]
+}

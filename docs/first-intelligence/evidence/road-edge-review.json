@@ -1,0 +1,9 @@
+{
+  "implementation": "a19140f",
+  "seeds": [0, 1, 42, 2026],
+  "geometry": "Academy top straight; independent intersections with y=56,64,76,84 m",
+  "minAbsLateralDirection": 0.000001,
+  "maxAbsLateralDirection": 1,
+  "raysChecked": 11909,
+  "maxAbsoluteDistanceErrorM": 6.6878751425747396e-9
+}

@@ -1,0 +1,15 @@
+{
+  "grass": {
+    "surface": "VA\nGras\nHA\nGras",
+    "forces": "Tick 206 · 60.0 FPS · Grip-Auslastung VA 100 % (2869 N) / HA 100 % (2869 N)"
+  },
+  "barrier": {
+    "approach": [25.508193752141604, -57.89252177510602],
+    "after48": [26.30318726804789, -57.71774571966121]
+  },
+  "first": "Zurückgesetzt",
+  "renewed": "Zurückgesetzt",
+  "expired": "",
+  "cameras": ["Frei", "Übersicht", "Follow"],
+  "message": "Simulation angehalten\n\nError: WebGL 2 ist auf diesem Gerät nicht verfügbar."
+}

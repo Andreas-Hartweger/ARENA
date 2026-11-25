@@ -32,6 +32,12 @@ W oder ↑ gibt Gas. S oder ↓ bremst und schaltet nach gehaltenem Gegenbefehl 
 
 Die gesonderte Batch-Freigabe, Browserfahrten, Messungen und offenen menschlichen Prüfungen stehen im [Abschlussbericht](docs/first-drive/BATCH-01_COMPLETION_REPORT.md).
 
+## KI-Testfahrt und Inspector
+
+Die Fahrt startet mit menschlicher Steuerung. Drücke **F3**, wähle unter **Interner Test · Fahrer** das **Mathematische Testmodell** und klicke auf **Inspector öffnen**. Bei diesem Modell beträgt das Zielgas konstant 60 %. In der Tabelle **Fahrbefehle** stehen KI-Ziel und angewandter Befehl mit ihrem jeweiligen Tick. Mit **Pause** und **Einzeltick** lässt sich die Simulation schrittweise prüfen. Der erste Einzeltick nach dem Öffnen enthält nur dann neue Netzwerte, wenn eine Entscheidung fällig ist.
+
+**Seed 42 · untrainiert** verwendet reproduzierbare Zufallsgewichte. Der Sensor Inspector zeigt die Sichtstrahlen und die Messwerte am angegebenen Messtick. Im Brain Inspector lassen sich Schicht, Neuron und Eingangsverbindung auswählen. Ein Wechsel zurück auf **Mensch** startet eine frische Fahrt. Die Messergebnisse und offenen Freigaben stehen im [Bericht zu Batch 02A](docs/first-intelligence/BATCH-02A_COMPLETION_REPORT.md).
+
 ## Fahrzeugphysik lokal prüfen
 
 `npm run calibrate` führt den GT-01 in Node.js auf definierten Testuntergründen aus und gibt die Messwerte als JSON aus. `npm run check` prüft zusätzlich den Simulationskern mit ausschließlich ES2022-Standardtypen. Die Kalibrierung isoliert die freie Bewegung auf definiertem Untergrund. Im Browser verarbeitet der Welttick zusätzlich Streckenkontakte, Tore und Recovery. Messwerte, Review-Einstieg und offene Abnahmen stehen im [Entwicklungsprotokoll](docs/DEVELOPMENT_LOG.md#fd-003--recovery-der-fahrzeugphysik).

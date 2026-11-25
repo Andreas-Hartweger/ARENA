@@ -1,3 +1,9 @@
+import { Brain } from '../ai/network';
+import { signature } from '../ai/schema';
+import type { AiState } from '../ai/driver';
+import { createVehicle } from '../vehicles/vehicle';
+import type { ControlInput } from '../input/controlInput';
+export type DriverMode = 'human' | 'fixture' | 'seed';
 import * as THREE from 'three';
 import { FixedStepClock } from '../core/fixedStepClock';
 import {
@@ -14,6 +20,8 @@ import { follow, mapPoint, viewWidth, zoom, type CameraMode } from './camera';
 import { circuitMesh, trackGuides } from './circuitMesh';
 import { carMesh } from './carMesh';
 export interface Telemetry {
+  ai?: AiState;
+  applied: ControlInput;
   x: number;
   y: number;
   speed: number;
@@ -31,6 +39,8 @@ export interface Telemetry {
   debug: boolean;
   frontGrip: number;
   rearGrip: number;
+  frontGripN?: number;
+  rearGripN?: number;
   recovery: string;
   fallback: boolean;
   laps: number;
@@ -40,6 +50,7 @@ export function startDrive(
   track: ReturnType<typeof createTrack>,
   report: (v: Telemetry) => void,
   onError: (s: string) => void,
+  driverMode: DriverMode = 'human',
 ) {
   const gl = canvas.getContext('webgl2', { antialias: true });
   if (!gl) throw Error('WebGL 2 ist auf diesem Gerät nicht verfügbar.');
@@ -50,13 +61,26 @@ export function startDrive(
   });
   const spawn = startGrid(track, 1, GT_01.lengthM, GT_01.widthM)[0];
   const appearance = { color: '#397ac4', startNumber: 7 };
-  const world = new DriveWorld(track, [
-    {
-      id: 'player',
-      ...appearance,
-      initialState: { positionM: spawn.position, headingRad: spawn.heading },
-    },
-  ]);
+  const options = {
+    id: 'player',
+    ...appearance,
+    initialState: { positionM: spawn.position, headingRad: spawn.heading },
+  };
+  let brain: Brain | undefined;
+  if (driverMode !== 'human') {
+    const key = signature(createVehicle(options));
+    if (driverMode === 'fixture') {
+      const params = new Float64Array(8547);
+      params.set([Math.atanh(0.6), 0, 1], 8544);
+      brain = new Brain(key, 0, [32, 16], 'tanh', params);
+    } else brain = new Brain(key, 42);
+  }
+  const world = new DriveWorld(
+    track,
+    [options],
+    true,
+    brain ? new Map([['player', { brain }]]) : undefined,
+  );
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(track.def.colors.grass);
   const model = carMesh(GT_01, appearance),
@@ -83,7 +107,7 @@ export function startDrive(
   const clock = new FixedStepClock();
   let paused = false,
     mode: CameraMode = 'Follow',
-    debug = false,
+    debug = driverMode !== 'human',
     requestReset = false,
     center = spawn.position,
     freeWidth = 45,
@@ -97,7 +121,8 @@ export function startDrive(
     lastTime = 0,
     lastReport = -1,
     fps = 0,
-    resetMessage = '';
+    resetMessage = '',
+    resetExpires = 0;
   const keys = attachBrowserKeyboard(window, document, pause);
   function pause(value: boolean) {
     paused = value;
@@ -121,7 +146,7 @@ export function startDrive(
       ev.metaKey ||
       document.hidden ||
       (ev.target as HTMLElement)?.closest?.(
-        'input,textarea,select,[contenteditable=true]',
+        '.ai-tools,input,textarea,select,[contenteditable=true]',
       )
     )
       return;
@@ -184,6 +209,34 @@ export function startDrive(
   canvas.addEventListener('pointercancel', up);
   canvas.addEventListener('wheel', wheel, { passive: false });
   window.addEventListener('keydown', key);
+  function tick() {
+    prior = now;
+    now = world.step(
+      new Map([
+        [
+          'player',
+          {
+            command: { kind: 'keyboard', sample: keys.readSample() },
+            recover: requestReset,
+          },
+        ],
+      ]),
+    );
+    requestReset = false;
+    if (now.cars[0].recovery !== 'none') {
+      lastReport = -1;
+      resetExpires = now.index + 180;
+      resetMessage =
+        now.cars[0].recovery === 'accepted'
+          ? 'Zurückgesetzt'
+          : 'Rücksetzen blockiert';
+    }
+    if (now.index === resetExpires) lastReport = -1;
+    if (now.cars[0].state.discontinuity) {
+      prior = now;
+      snap = true;
+    }
+  }
   function draw(ms: number) {
     if (closed || failed) return;
     try {
@@ -191,30 +244,7 @@ export function startDrive(
         dt = lastTime ? time - lastTime : 0;
       lastTime = time;
       if (dt > 0) fps = fps ? fps * 0.9 + 0.1 / dt : 1 / dt;
-      const timing = clock.advanceFrame(time, () => {
-        prior = now;
-        now = world.step(
-          new Map([
-            [
-              'player',
-              {
-                command: { kind: 'keyboard', sample: keys.readSample() },
-                recover: requestReset,
-              },
-            ],
-          ]),
-        );
-        requestReset = false;
-        if (now.cars[0].recovery !== 'none')
-          resetMessage =
-            now.cars[0].recovery === 'accepted'
-              ? 'Zurückgesetzt'
-              : 'Rücksetzen blockiert';
-        if (now.cars[0].state.discontinuity) {
-          prior = now;
-          snap = true;
-        }
-      });
+      const timing = clock.advanceFrame(time, tick);
       const racer = now.cars[0],
         state = racer.state,
         old = prior.cars[0].state,
@@ -279,6 +309,8 @@ export function startDrive(
       if (time - lastReport >= 0.1) {
         lastReport = time;
         report({
+          ai: world.trace ? racer.ai : undefined,
+          applied: racer.input,
           x: p.x,
           y: p.y,
           speed: 3.6 * Math.hypot(state.velocityMps.x, state.velocityMps.y),
@@ -299,7 +331,9 @@ export function startDrive(
           debug,
           frontGrip: racer.physics?.front.utilization ?? 0,
           rearGrip: racer.physics?.rear.utilization ?? 0,
-          recovery: resetMessage,
+          frontGripN: racer.physics?.front.gripN,
+          rearGripN: racer.physics?.rear.gripN,
+          recovery: now.index < resetExpires ? resetMessage : '',
           fallback: now.fallback,
           laps: racer.lap.laps,
         });
@@ -313,6 +347,23 @@ export function startDrive(
   }
   frameId = requestAnimationFrame(draw);
   return {
+    brain,
+    inspect: (enabled: boolean) => {
+      world.trace = enabled;
+      lastReport = -1;
+    },
+    step: () => {
+      if (paused && !failed) {
+        try {
+          clock.stepOnce(tick);
+          prior = now;
+          lastReport = -1;
+        } catch (error) {
+          failed = true;
+          onError(String(error));
+        }
+      }
+    },
     pause: () => pause(!paused),
     setMode,
     recover: () => {

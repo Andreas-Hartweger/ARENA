@@ -1,0 +1,65 @@
+# ARENA – First-Drive-Abnahmebericht von Entwickler B
+
+**25.11.2026 · 0.2.0-rc.1 · Technische Prüfung abgeschlossen · gemeinsame Abnahme offen**
+
+Der vollständige Qualitätslauf und die Fahrzeugkalibrierung bestanden. Die spielbare Anwendung wurde unabhängig auf B’s Rechner geprüft. B meldete für seine persönliche Fahrprobe **PASS** und beschrieb das Fahrgefühl mit „war nicht schön“. Die beiden unten genannten Rundenzeiten stammen aus dem automatisierten Browser-Replay. Die gemeinsame D00-/G-07-Abnahme und das gegenseitige Review erfordern die Entscheidung beider Entwickler.
+
+## Prüfstand
+
+- `main` lokal und auf GitHub bei `68e8d1051a5ea01d544cc1496917568c25b59b92`. Batch-Head `b4cf90d2cf8987799edf73aed30ce5a8b53bb21c` ist über PR #4 gemergt. Beide GitHub-CI-Läufe waren erfolgreich. [PR #4](https://github.com/Andreas-Hartweger/ARENA/pull/4) · [CI Batch](https://github.com/Andreas-Hartweger/ARENA/actions/runs/45613019129/job/139201154318) · [CI main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/45613045498/job/139201246965)
+- Windows 11 Pro Build 26300, Intel Core Ultra 7 255H, Intel Arc 140T laut Systemabfrage. Verwendet wurden Chrome/Headless Chrome 158, der In-App-Browser von ChatGPT und lokale Vite-Server auf `127.0.0.1`.
+- Git `2.56.1.windows.1`, GitHub CLI `2.105.0`, Node.js `24.22.3`, npm `11.19.1`. Codex nutzte die vorhandene Node.js-Installation über den expliziten Pfad. Der Git-Arbeitsbaum war am Ende sauber.
+
+## Regression und Kalibrierung
+
+- `npm ci` beim Übergabelauf erfolgreich. 194 Pakete installiert, npm meldete keine bekannten Schwachstellen.
+- `npm run check` im Abnahmelauf erneut erfolgreich. TypeScript einschließlich Headless-Konfiguration, ESLint, Prettier, **134 von 134 Vitest-Tests in 18 Dateien** und Vite-Build bestanden.
+- Gezielter Wiederholungslauf für Strecke, Welt, Browser-Tastaturadapter und Rendering. **28 von 28 Tests in vier Dateien** bestanden. Enthalten sind ausgelassene Tore, falsche Richtung, Abkürzungen, Fokusverlust, Eingabefelder und deterministische Weltticks.
+- Vite meldete die bekannte Warnung zur Chunkgröße von **815,07 kB JS** (222,07 kB gzip).
+
+| Fahrzeugmessung       |    `npm run calibrate` | Abnahmewert           |
+| --------------------- | ---------------------: | --------------------- |
+| 0–100 km/h            | 3,816667 s / 229 Ticks | 3,5–4,1 s             |
+| Höchstgeschwindigkeit |        248,341174 km/h | 245–255 km/h          |
+| Bremsweg 100–0 km/h   |            31,174882 m | 29–35 m               |
+| Bremsdauer 100–0 km/h | 2,283333 s / 137 Ticks | Referenz reproduziert |
+| Rückwärtsspitze       |         29,675641 km/h | Höchstens 30 km/h     |
+
+Die freie Bewegung des GT-01 wurde separat kalibriert. Aussagen zu Strecke und Kontakten stützen sich auf den Welttest und die folgenden Fahrproben. [First-Drive-Spezifikation](https://github.com/Andreas-Hartweger/ARENA/blob/68e8d1051a5ea01d544cc1496917568c25b59b92/docs/first-drive/FIRST_DRIVE_SPEC.md#9-abnahme-und-teststrategie)
+
+## Praktische Prüfung
+
+Die normalen Chrome-Proben verwenden echte Browser-Eingaben und normale Animationszeit. Für Runden und reproduzierbare Kontaktsituationen wurden DOM-Tastaturereignisse und kontrollierte 60-Hz-Animationsschritte verwendet.
+
+| Bereich                                | Ergebnis und Nachweis                                                                                                                                                                                                                                                                                                                                                                             |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Startbild und HUD                      | **PASS.** Academy, GT-01, Karte, Pedale, Torfortschritt, Rundenuhr und F3-Diagnose sichtbar. Die normale Browserkonsole meldete im Abschlusslauf keine JavaScript-Fehler. Beobachtete HTTP-Ressourcen kamen vom lokalen Server.                                                                                                                                                                   |
+| Gas, Bremse, Rückwärts und Lenkung     | **PASS.** W brachte den Wagen aus dem Stand auf 19 km/h, S bremste auf 0–1 km/h. Pfeil hoch beschleunigte auf 21–22 km/h. Pfeil runter bremste, schaltete im Stand um und fuhr rückwärts. Die Live-HUD-Spitze rückwärts war gerundet 30 km/h. Rechts- und Linksbefehl führten zur inneren bzw. äußeren Barriere. Der Adaptertest deckt beide vollständigen Tastaturschemata ab.                   |
+| Zwei vollständige Runden               | **PASS – Browser-Replay.** Gewertet mit **1:05,93** und **1:06,10**. Das HUD wechselte auf Runde 03.                                                                                                                                                                                                                                                                                              |
+| Falsche Richtung und ausgelassenes Tor | **PASS.** Im Browser vorwärts über Start/Ziel gefahren und rückwärts zurück. Laufende Zeit wurde verworfen, letzte Runde blieb leer. Der absichtliche Torauslass und die Abkürzung durchs Infield bestanden im gezielten Headless-Streckentest.                                                                                                                                                   |
+| Asphalt und Gras                       | **PASS.** Die Anzeige wechselte auf beiden Seiten zuerst auf „VA Gras / HA Asphalt“, danach auf Gras an beiden Achsen. Die Kalibrierung meldet 7.970,625 N auf Asphalt und 2.869,425 N auf Gras je Achse.                                                                                                                                                                                         |
+| Innere und äußere Barriere             | **PASS – kontrollierte Stichproben.** Tempo stieg vor Kontakt bis auf 41 km/h und fiel am Rand unter 3 km/h. Die Fahrzeugmitte stoppte bei y ≈ 58,35 m bzw. 81,65 m. Kein Durchfahren und keine plötzliche Beschleunigung in diesen Versuchen.                                                                                                                                                    |
+| Recovery                               | **PASS.** `R` setzte in beiden Barrierenproben auf eine frühere Asphaltposition bei 0 km/h zurück. Laufende Runde verworfen, keine Rundengutschrift. Der Hinweis blieb nach der Weiterfahrt sichtbar (siehe Befund 1).                                                                                                                                                                            |
+| Pause, Resume und Browser-Tab          | **PASS.** Mit gehaltenem Gas pausiert. Tick 30 blieb über 350 ms konstant. Nach Resume fiel Gas auf 0, ein neuer Pfeil-hoch-Druck gab wieder Gas. Der echte Browser-Tabwechsel meldete in Chrome ein vertrauenswürdiges Blur-Ereignis und hielt Tick 15.853 während der Probe konstant. Der gezielte Adaptertest deckt auch `visibilitychange` und das Löschen der Tasten ab.                     |
+| Windows-Alt+Tab                        | **OFFEN.** Ein Computer-Use-Tastaturversuch im automatisierten Fenster ergab kein messbares Fokusereignis. Im anschließend separat gestarteten nativen Chrome war die Anwendung sichtbar. Die Sicherheitsprüfung von Computer Use blockierte dann die F3-Eingabe, weil sie die aktuelle Browser-URL nicht ausreichend sicher zuordnen konnte. Damit fehlt der native Alt+Tab-Nachweis.            |
+| Kameras und Layout                     | **PASS.** C/V wechselte zwischen Frei, Übersicht und Follow. In aktiver freier Ansicht veränderten Ziehen und Mausrad die Canvas-Darstellung. Position, Geschwindigkeit und Fortschritt des stehenden Wagens blieben gleich. Die Ansicht funktionierte bei 1.280 und 390 CSS-Pixel Breite ohne horizontalen Überlauf. In Pause liegt der Pausendialog über dem Canvas und fängt Mausbedienung ab. |
+| Offline-Fahrt                          | **PASS.** Nach Laden der Produktionsdateien wurde der Browser offline geschaltet. Der Wagen fuhr weiter (0 auf 22 km/h). Ein frischer Aufruf war offline erwartungsgemäß blockiert.                                                                                                                                                                                                               |
+| WebGL 2 und Kontextverlust             | **PASS.** Bei verweigertem WebGL 2 erschien der deutsche Fehlerhinweis. Ein realer Kontextverlust per WebGL-Erweiterung führte zur Meldung „Grafikkontext verloren. Bitte lade die Seite neu.“                                                                                                                                                                                                    |
+| Renderer-Lebenszyklus                  | **PASS.** Zweimal auf demselben Test-Canvas initialisiert und freigegeben. Jeweils sechs Telemetriemeldungen vor und sechs nach Dispose, keine zusätzlichen Meldungen oder Fehler. Kurzer Funktionstest.                                                                                                                                                                                          |
+| FPS                                    | **Stichprobe.** Headless Chrome 158 bei 1.100 × 780 CSS-Pixeln, DPR 1, nach kurzer Beschleunigung. 90 normale RAF-Intervalle über 1,492 s ergaben ca. 60,3 FPS, Median 16,7 ms, p95 24,9 ms. Der separate In-App-HUD-Wert nach B’s Fahrt lag bei 60,4 FPS. Langzeitlast und andere Geräte stehen aus.                                                                                             |
+
+## Befunde und Verbesserungsvorschläge
+
+1. **Recovery-Hinweis bleibt sichtbar.** Nach Kontakt `R` drücken, anschließend wieder losfahren. In beiden reproduzierten Fällen stand „Zurückgesetzt“ nach vier Simulationssekunden und rund 16,9 m Weiterfahrt weiterhin im HUD. Vorschlag für A/B zur Entscheidung. Hinweis zeitlich begrenzen oder ausdrücklich als letzte Aktion kennzeichnen. Die Recovery selbst bestand.
+2. **F3-Bezeichnung „Grip“ ist missverständlich.** Die Prozentwerte geben die Auslastung der aktuell verfügbaren Reifenkraft an. Im Stand können daher 0 % auf Asphalt erscheinen. Diese Anzeige eignet sich nicht für den direkten Vergleich der maximalen Achskräfte auf Gras und Asphalt. Vorschlag. „Grip-Auslastung“ labeln. Falls die verfügbare Kraft für die Abnahme sichtbar sein soll, deren Wert in N zusätzlich anzeigen. [Berechnung](https://github.com/Andreas-Hartweger/ARENA/blob/68e8d1051a5ea01d544cc1496917568c25b59b92/src/physics/vehicleDynamics.ts#L52) · [HUD-Zuordnung](https://github.com/Andreas-Hartweger/ARENA/blob/68e8d1051a5ea01d544cc1496917568c25b59b92/src/rendering/firstDrive.ts#L300)
+3. **Fahrgefühl.** Das Feedback von B bleibt erhalten. Die reproduzierten Fahrproben bestätigen die Funktion. Aus der vorliegenden Rückmeldung lässt sich keine einzelne Ursache ableiten. Eine technische Änderung an Lenkung, Gas, Grip oder Kamera braucht ein gemeinsam vereinbartes Ziel.
+
+## Architektur für das Entwicklerreview
+
+1. `FixedStepClock` taktet die Simulation mit 60 Hz. Rendering liest und interpoliert veröffentlichte Weltstände. Dieselbe tickbasierte Eingabe liefert im Regressionstest auch bei 30, 60 und 144 Bildern pro Sekunde denselben Endzustand.
+2. `DriveWorld.step` löst die Fahrerbefehle auf, ermittelt freie Bewegung, löst Kontakte und wertet anschließend tatsächlich akzeptierte Bewegungen für Runden und Recovery aus. Erst die geprüfte Gesamtheit wird als neuer Weltframe veröffentlicht. Bei erschöpftem Kontaktbudget stoppt die betroffene Gruppe am zuletzt akzeptierten Stand.
+3. Die Reifenbegrenzung skaliert Längs- und Seitenkraft gemeinsam auf das Achslimit. Torwertung nutzt gerichtete Durchfahrten. Korrekturbewegungen und Recovery erhalten keine Torgutschrift. Spätere KI kann den Simulationskern und den gemeinsamen Steuervertrag ohne React oder Three.js verwenden. [Architektur](https://github.com/Andreas-Hartweger/ARENA/blob/68e8d1051a5ea01d544cc1496917568c25b59b92/docs/ARCHITECTURE.md#first-drive-im-batch-01)
+
+## Übergabestatus
+
+Der lokale Vite-Server und die isolierten Playwright-Sitzungen wurden beendet. Die beiden Teamdateien und der Doku-Auftrag liegen als Entwürfe außerhalb des Checkouts zur gemeinsamen Abstimmung bereit. A führt weiterhin die zentrale Detailplanung. B übernimmt technische Umsetzung, Tests, Fehlerbehebung, Dokumentation und GitHub-Verwaltung im jeweils freigegebenen Umfang. Batch 02 wartet auf A’s Spezifikation und die gemeinsame Implementierungsfreigabe.

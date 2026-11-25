@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { startDrive, type Telemetry } from '../rendering/firstDrive';
+import { Inspector } from './Inspector';
+import {
+  startDrive,
+  type DriverMode,
+  type Telemetry,
+} from '../rendering/firstDrive';
 import type { CameraMode } from '../rendering/camera';
 import { createTrack } from '../tracks/track';
 
@@ -25,13 +30,19 @@ export function App() {
     controller = useRef<ReturnType<typeof startDrive> | null>(null);
   const [hud, setHud] = useState<Telemetry | null>(null),
     [error, setError] = useState('');
+  const [driver, setDriver] = useState<DriverMode>('human');
+  const [inspect, setInspect] = useState(false);
   useEffect(() => {
+    setHud(null);
+    setError('');
+    setInspect(false);
     try {
       controller.current = startDrive(
         canvas.current!,
         course,
         setHud,
         setError,
+        driver,
       );
     } catch (e) {
       setError(String(e));
@@ -40,7 +51,10 @@ export function App() {
       controller.current?.dispose();
       controller.current = null;
     };
-  }, []);
+  }, [driver]);
+  useEffect(() => {
+    controller.current?.inspect(inspect && !!hud?.debug);
+  }, [inspect, hud?.debug]);
   const mode = hud?.mode ?? 'Follow';
   return (
     <main className="cockpit">
@@ -139,9 +153,11 @@ export function App() {
         </section>
         {hud?.debug && (
           <output className="diagnostic">
-            Tick {hud.index} · {hud.fps.toFixed(1)} FPS · Grip VA{' '}
-            {(100 * hud.frontGrip).toFixed(0)} % / HA{' '}
-            {(100 * hud.rearGrip).toFixed(0)} %{' '}
+            Tick {hud.index} · {hud.fps.toFixed(1)} FPS · Grip-Auslastung VA{' '}
+            {(100 * hud.frontGrip).toFixed(0)} % (
+            {hud.frontGripN?.toFixed(0) ?? '–'} N) / HA{' '}
+            {(100 * hud.rearGrip).toFixed(0)} % (
+            {hud.rearGripN?.toFixed(0) ?? '–'} N){' '}
             {hud.fallback && '· Kontaktfallback'}
           </output>
         )}
@@ -160,6 +176,36 @@ export function App() {
           </div>
         )}
       </section>
+      {(hud?.debug || driver !== 'human') && (
+        <section className="ai-tools">
+          <label>
+            Interner Test · Fahrer{' '}
+            <select
+              value={driver}
+              onChange={(e) => setDriver(e.target.value as DriverMode)}
+            >
+              <option value="human">Mensch</option>
+              <option value="fixture">Mathematisches Testmodell</option>
+              <option value="seed">Seed 42 · untrainiert</option>
+            </select>
+          </label>
+          {driver !== 'human' && hud?.debug && (
+            <>
+              <button onClick={() => setInspect(!inspect)}>
+                {inspect ? 'Inspector schließen' : 'Inspector öffnen'}
+              </button>
+              {inspect && (
+                <Inspector
+                  hud={hud}
+                  brain={controller.current?.brain}
+                  onPause={() => controller.current?.pause()}
+                  onStep={() => controller.current?.step()}
+                />
+              )}
+            </>
+          )}
+        </section>
+      )}
       <footer>
         <div className="bindings">
           <span>

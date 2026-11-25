@@ -155,6 +155,6 @@ function isEditing(target: EventTarget | null): boolean {
   const element = target as HTMLElement | null;
   return Boolean(
     element?.isContentEditable ||
-    element?.closest?.('input, textarea, select, [role="textbox"]'),
+    element?.closest?.('.ai-tools, input, textarea, select, [role="textbox"]'),
   );
 }

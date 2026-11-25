@@ -1,0 +1,284 @@
+{
+  "implementation": "a19140f",
+  "browser": "158.0.8127.89",
+  "width": 768,
+  "height": 640,
+  "mode": "seed 42",
+  "renderer": "SwiftShader",
+  "errors": [],
+  "samples": [
+    {
+      "minute": 0,
+      "tick": 10,
+      "elapsedSeconds": 0.21794069999999988,
+      "inspector": true,
+      "heapUsedBytes": 6961932,
+      "dom": {
+        "documents": 1,
+        "nodes": 2898,
+        "jsEventListeners": 186
+      },
+      "hud": "Tick 10 · 28.9 FPS · Grip-Auslastung VA 25 % (7971 N) / HA 25 % (7971 N)"
+    },
+    {
+      "minute": 1,
+      "tick": 3597,
+      "elapsedSeconds": 60.008375400000006,
+      "inspector": true,
+      "heapUsedBytes": 8344240,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 235
+      },
+      "hud": "Tick 3597 · 70.0 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 2,
+      "tick": 7201,
+      "elapsedSeconds": 120.0149155,
+      "inspector": true,
+      "heapUsedBytes": 8523028,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 487
+      },
+      "hud": "Tick 7201 · 85.6 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 3,
+      "tick": 10799,
+      "elapsedSeconds": 180.0165898,
+      "inspector": true,
+      "heapUsedBytes": 18300464,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 669
+      },
+      "hud": "Tick 10799 · 78.2 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 4,
+      "tick": 14398,
+      "elapsedSeconds": 240.0085846,
+      "inspector": true,
+      "heapUsedBytes": 12614336,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 886
+      },
+      "hud": "Tick 14398 · 79.1 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 5,
+      "tick": 18006,
+      "elapsedSeconds": 300.09016479999997,
+      "inspector": false,
+      "heapUsedBytes": 8363000,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 184
+      },
+      "hud": "Tick 18006 · 78.1 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 6,
+      "tick": 21601,
+      "elapsedSeconds": 360.01758179999996,
+      "inspector": false,
+      "heapUsedBytes": 10487416,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 509
+      },
+      "hud": "Tick 21601 · 67.6 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 7,
+      "tick": 25197,
+      "elapsedSeconds": 420.0033187,
+      "inspector": false,
+      "heapUsedBytes": 11440704,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 1154
+      },
+      "hud": "Tick 25197 · 72.1 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 8,
+      "tick": 28801,
+      "elapsedSeconds": 480.01553629999995,
+      "inspector": false,
+      "heapUsedBytes": 8213576,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 759
+      },
+      "hud": "Tick 28801 · 65.1 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 9,
+      "tick": 32400,
+      "elapsedSeconds": 540.0116147,
+      "inspector": false,
+      "heapUsedBytes": 13654896,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 194
+      },
+      "hud": "Tick 32400 · 66.8 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 10,
+      "tick": 36006,
+      "elapsedSeconds": 600.1110837,
+      "inspector": true,
+      "heapUsedBytes": 8648052,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 186
+      },
+      "hud": "Tick 36006 · 72.0 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 11,
+      "tick": 39598,
+      "elapsedSeconds": 660.0105424999999,
+      "inspector": true,
+      "heapUsedBytes": 10185784,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 900
+      },
+      "hud": "Tick 39598 · 67.0 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 12,
+      "tick": 43201,
+      "elapsedSeconds": 720.0026017,
+      "inspector": true,
+      "heapUsedBytes": 21672496,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 781
+      },
+      "hud": "Tick 43201 · 80.8 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 13,
+      "tick": 46799,
+      "elapsedSeconds": 780.0019374,
+      "inspector": true,
+      "heapUsedBytes": 11506520,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 312
+      },
+      "hud": "Tick 46799 · 75.7 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 14,
+      "tick": 50403,
+      "elapsedSeconds": 840.0109743,
+      "inspector": true,
+      "heapUsedBytes": 11385964,
+      "dom": {
+        "documents": 1,
+        "nodes": 2881,
+        "jsEventListeners": 571
+      },
+      "hud": "Tick 50403 · 86.6 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 15,
+      "tick": 54005,
+      "elapsedSeconds": 900.0864028999999,
+      "inspector": false,
+      "heapUsedBytes": 8067560,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 184
+      },
+      "hud": "Tick 54005 · 82.1 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 16,
+      "tick": 57597,
+      "elapsedSeconds": 960.0056093000001,
+      "inspector": false,
+      "heapUsedBytes": 8654416,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 654
+      },
+      "hud": "Tick 57597 · 75.1 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 17,
+      "tick": 61203,
+      "elapsedSeconds": 1020.0137900000001,
+      "inspector": false,
+      "heapUsedBytes": 13857940,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 284
+      },
+      "hud": "Tick 61203 · 73.9 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 18,
+      "tick": 64803,
+      "elapsedSeconds": 1080.0110085,
+      "inspector": false,
+      "heapUsedBytes": 14759632,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 834
+      },
+      "hud": "Tick 64803 · 72.0 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 19,
+      "tick": 68403,
+      "elapsedSeconds": 1140.0106562,
+      "inspector": false,
+      "heapUsedBytes": 15753784,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 1054
+      },
+      "hud": "Tick 68403 · 78.5 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    },
+    {
+      "minute": 20,
+      "tick": 71999,
+      "elapsedSeconds": 1200.0260604999999,
+      "inspector": false,
+      "heapUsedBytes": 7728940,
+      "dom": {
+        "documents": 1,
+        "nodes": 204,
+        "jsEventListeners": 179
+      },
+      "hud": "Tick 71999 · 66.5 FPS · Grip-Auslastung VA 0 % (2869 N) / HA 0 % (7971 N)"
+    }
+  ]
+}

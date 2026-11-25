@@ -1,0 +1,42 @@
+{
+  "implementation": "826e90755f6137d5b1279b6ffffba5b45c766cc1",
+  "node": "v24.22.3",
+  "cases": [
+    {
+      "id": "A",
+      "seed": 42,
+      "sensorHz": 60,
+      "decisionHz": 10,
+      "x": 0
+    },
+    {
+      "id": "B",
+      "seed": 1,
+      "sensorHz": 20,
+      "decisionHz": 60,
+      "x": 6
+    }
+  ],
+  "report": [
+    {
+      "shared": true,
+      "ticksPerWorld": 108000,
+      "comparedWorlds": 2,
+      "driversPerWorld": 2,
+      "hits": 6,
+      "resets": 10,
+      "snapshots": 3602,
+      "elapsedSeconds": 131.8611299
+    },
+    {
+      "shared": false,
+      "ticksPerWorld": 108000,
+      "comparedWorlds": 2,
+      "driversPerWorld": 2,
+      "hits": 6,
+      "resets": 10,
+      "snapshots": 3602,
+      "elapsedSeconds": 122.66782250000001
+    }
+  ]
+}

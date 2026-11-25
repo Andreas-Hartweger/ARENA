@@ -3,10 +3,12 @@ import {
   resolveControlTick,
   type ControlDiagnostic,
   type ControlRequest,
+  type ControlInput,
 } from '../input/controlInput';
 import {
   NEUTRAL_KEYBOARD_STATE,
   stepKeyboardControls,
+  stepTargetControls,
   type KeyboardControlState,
   type KeyboardSample,
 } from '../input/keyboardControls';
@@ -23,6 +25,7 @@ import {
 import type { SurfaceQuery } from './surface';
 
 export type TickCommand =
+  | { readonly kind: 'target'; readonly request: ControlInput }
   | { readonly kind: 'analog'; readonly request: ControlRequest }
   | {
       readonly kind: 'keyboard';
@@ -68,14 +71,21 @@ export function prepareVehicleTick(
           state.velocityMps,
           command.sensitivity,
         )
-      : {
-          ...resolveControlTick(
+      : command.kind === 'target'
+        ? stepTargetControls(
+            keyboard,
             command.request,
             state.drive,
             state.velocityMps,
-          ),
-          keyboard: NEUTRAL_KEYBOARD_STATE,
-        };
+          )
+        : {
+            ...resolveControlTick(
+              command.request,
+              state.drive,
+              state.velocityMps,
+            ),
+            keyboard: NEUTRAL_KEYBOARD_STATE,
+          };
   const motion = calculateFreeMotion(
     vehicle,
     { ...state, drive: controls.directionState },
