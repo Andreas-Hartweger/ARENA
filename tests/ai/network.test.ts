@@ -104,3 +104,12 @@ it('CTL-001–005 same effective controls and reversal gate', () => {
     if (i === 22) expect(drive.direction).toBe('reverse');
   }
 });
+
+it('NN-001 rejects an uninitialized hidden width', () => {
+  expect(() => new Brain('test', 42, new Array<number>(1))).toThrow();
+});
+it('CTL-001 rejects an incomplete output even when the array has length three', () => {
+  const output = [0, 0, 0];
+  delete output[2];
+  expect(() => targets(output)).toThrow();
+});

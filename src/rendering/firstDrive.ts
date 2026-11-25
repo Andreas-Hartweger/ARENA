@@ -107,7 +107,7 @@ export function startDrive(
   const clock = new FixedStepClock();
   let paused = false,
     mode: CameraMode = 'Follow',
-    debug = false,
+    debug = driverMode !== 'human',
     requestReset = false,
     center = spawn.position,
     freeWidth = 45,

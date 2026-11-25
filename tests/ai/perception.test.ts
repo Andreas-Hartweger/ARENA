@@ -157,3 +157,22 @@ describe('Perception', () => {
     expect(signature(v)).toBe(signature({ ...v, setup: { ...v.setup } }));
   });
 });
+
+it('SEN-009 detects shallow crossings on the straight in both directions', () => {
+  for (const sign of [-1, 1]) {
+    const dy = sign * 1e-6;
+    const r = {
+      origin: { x: 0, y: 76 - 10 * dy },
+      direction: { x: Math.sqrt(1 - dy * dy), y: dy },
+      range: 20,
+    };
+    const result = measure(track, walls, r, []);
+    expect(result.edge).toBeCloseTo(10, 7);
+    expect(result.material).toBe(sign > 0 ? 'grass' : 'asphalt');
+  }
+});
+it('OBS-004 rejects a missing numeric channel', () => {
+  const raw = observe(track, walls, [], v, v.state, 0).raw;
+  delete raw[0];
+  expect(() => normalize(raw, registry())).toThrow();
+});

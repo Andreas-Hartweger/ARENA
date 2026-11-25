@@ -60,7 +60,7 @@ export class Brain {
       !signature ||
       hidden.length < 1 ||
       hidden.length > 4 ||
-      hidden.some((n) => !Number.isInteger(n) || n < 4 || n > 128)
+      Array.from(hidden).some((n) => !Number.isInteger(n) || n < 4 || n > 128)
     )
       throw Error('Invalid model dimensions or signature');
     activate(0, activation);

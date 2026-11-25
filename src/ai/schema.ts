@@ -134,8 +134,8 @@ export function normalize(
 ) {
   if (raw.length !== channels.length) throw Error('Invalid observation width');
   const clamped: number[] = [];
-  const values = raw.map((v, i) => {
-    const c = channels[i];
+  const values = channels.map((c, i) => {
+    const v = raw[i];
     if (
       !Number.isFinite(v) ||
       (c.rule === 'bit' && v !== 0 && v !== 1) ||

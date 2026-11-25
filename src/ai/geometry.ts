@@ -166,23 +166,37 @@ export function measure(
   const limit = barrier ?? vehicle ?? Infinity;
   let edge: number | null = null,
     material: string | null = null;
-  const roots = roadEdges(track, ray);
+  // Neighboring roots delimit intervals of constant material. Include both sides of
+  // the range endpoints so a zero-distance or maximum-range crossing can be classified.
+  const probeSpan = 1;
+  const extended = {
+    ...ray,
+    origin: shift(ray.origin, ray.direction, -probeSpan),
+    range: ray.range + 2 * probeSpan,
+  };
+  const roots = roadEdges(track, extended).map((t) => t - probeSpan);
   for (let i = 0; i < roots.length; i++) {
+    if (roots[i] < -tolerance) continue;
+    if (roots[i] > ray.range + tolerance) break;
     const t = Math.max(0, Math.min(ray.range, roots[i]));
     if (t >= limit - tolerance) break;
-    const gap = Math.min(
-      1e-4,
-      (roots[i + 1] === undefined ? 1 : roots[i + 1] - t) / 3,
-      (i === 0 ? 1 : t - roots[i - 1]) / 3,
+    const beforeGap = Math.min(
+      probeSpan,
+      (t - (roots[i - 1] ?? -Infinity)) / 2,
+      t > tolerance ? t : Infinity,
     );
     const remaining = Math.min(limit, ray.range) - t;
-    const afterGap = remaining > tolerance ? Math.min(gap, remaining / 2) : gap;
+    const afterGap = Math.min(
+      probeSpan,
+      ((roots[i + 1] ?? Infinity) - t) / 2,
+      remaining > tolerance ? remaining / 2 : Infinity,
+    );
     const before = track.surfaceQuery(
-        shift(ray.origin, ray.direction, t - gap),
-      ),
-      after = track.surfaceQuery(
-        shift(ray.origin, ray.direction, t + afterGap),
-      );
+      shift(ray.origin, ray.direction, t - beforeGap),
+    );
+    const after = track.surfaceQuery(
+      shift(ray.origin, ray.direction, t + afterGap),
+    );
     if (before !== after) {
       edge = t;
       if (remaining > tolerance) material = after;

@@ -10,7 +10,10 @@ export function targets(
   output: readonly number[],
   previous: DriveDirection = 'forward',
 ) {
-  if (output.length !== 3 || !output.every(Number.isFinite))
+  if (
+    output.length !== 3 ||
+    ![output[0], output[1], output[2]].every(Number.isFinite)
+  )
     throw Error('Invalid controller output');
   const [pedal, steering, d] = output.map(Math.tanh);
   const direction = directionRequest(d, previous);
