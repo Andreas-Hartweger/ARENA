@@ -2,12 +2,12 @@
 
 Basis main 3b85cad, Recovery 97786cc. Arbeitsbaum sauber, Remote-main direkt geprüft. 108 Tests in 14 Dateien, Typprüfungen, ESLint, Prettier, Build und Kalibrierung erfolgreich. Geradeauswerte 3,816667 s, 248,341174 km/h, 31,174882 m, 2,283333 s und 29,675641 km/h rückwärts. Bekannte Bundlewarnung 753 kB.
 
-| Paket  | Status               | Abhängigkeit | Commit auf dem Entwicklungsbranch          | Nächster Schritt                              |
-| ------ | -------------------- | ------------ | ------------------------------------------ | --------------------------------------------- |
-| FD-004 | Auf GitHub gesichert | FD-003       | `46666e794fc020a487dd3336dc239cc9f9849ea2` | Geometrie und Torwertung im Entwicklerreview  |
-| FD-005 | Auf GitHub gesichert | FD-004       | `3c2cdf569f0e671e42b2ec9b48466ea09313991c` | Budgetfallback und Kontaktpfade im Review     |
-| FD-006 | Auf GitHub gesichert | FD-004/005   | `ec49e72f5a18881c094fa76bc5c0f31719d05a37` | Fahrgefühl und Darstellung auf beiden Geräten |
-| FD-007 | Automatisch geprüft  | FD-004–006   | Paketprüfung abgeschlossen                 | Remote sichern und gemeinsamen PR prüfen      |
+| Paket  | Status               | Abhängigkeit | Commit auf dem Entwicklungsbranch          | Nächster Schritt                                       |
+| ------ | -------------------- | ------------ | ------------------------------------------ | ------------------------------------------------------ |
+| FD-004 | Auf GitHub gesichert | FD-003       | `46666e794fc020a487dd3336dc239cc9f9849ea2` | Geometrie und Torwertung im Entwicklerreview           |
+| FD-005 | Auf GitHub gesichert | FD-004       | `3c2cdf569f0e671e42b2ec9b48466ea09313991c` | Budgetfallback und Kontaktpfade im Review              |
+| FD-006 | Auf GitHub gesichert | FD-004/005   | `ec49e72f5a18881c094fa76bc5c0f31719d05a37` | Fahrgefühl und Darstellung auf beiden Geräten          |
+| FD-007 | Auf GitHub gesichert | FD-004–006   | `b2fb5e230f9bbb0297afe40b7382ba05b9e22838` | PR eröffnen und CI prüfen; Entwicklerreview ausstehend |
 
 Die folgenden Einträge halten den Stand zum jeweiligen Paketabschluss fest.
 
@@ -36,3 +36,9 @@ Produktions-Preview und tatsächlicher Headless-Chrome: Gas bis 55 km/h, Bremse 
 Der Remote-Ref bestätigte den FD-006-Commit ec49e72f5a18881c094fa76bc5c0f31719d05a37. FD-007 verbindet die Integrationstests in tests/game mit den zusätzlichen Sonderfällen in tests/collision und tests/tracks. Geändert wurden Weltinitialisierung, Kontaktbudget, ruhende Überlappungen, Kurvenprojektion, Rundenprüfung, App und Renderanbindung sowie die Versionskennung in den Paketdateien. Die betroffenen Dokumente und Browserbilder sind im Abschlussbericht verknüpft.
 
 Zuerst reproduzierten die neuen Tests die stehenbleibende Überlappung und die gültig bleibende Abkürzung. Nach Korrektur bestanden alle 23 gezielten Strecken-, Kontakt- und Welttests. Der vollständige Check bestand mit 134 Tests in 18 Dateien. Referenzkalibrierung identisch, zwei gültige Browservollrunden, Offline-Fahrt, Fehlerdialoge und zweifacher Renderer-Lifecycle geprüft. Beide lokalen Server und der Testbrowserdienst beendet. Zweitrechner, menschliches Review und G-07 bleiben offen. [Messbericht und PR-Beschreibung](BATCH-01_COMPLETION_REPORT.md).
+
+## Übergabe
+
+`git ls-remote --heads origin feature/batch-01-complete-first-drive` bestätigte den vollständigen FD-007-SHA `b2fb5e230f9bbb0297afe40b7382ba05b9e22838`. Der Paketcode und die Prüfnachweise sind auf GitHub gesichert. Der separate Dokumentationscommit hält diese nachträgliche Verifikation fest.
+
+**Pull Request · Blockiert.** Der erneute Versuch nach FD-007 ergab HTTP 403 („Resource not accessible by integration“). Die PR-Suche fand keinen vorhandenen Batch-PR. Die Actions-Abfrage zum FD-007-SHA lieferte null PR-Workflowläufe. Zur Fortsetzung den vorbereiteten Vergleich im [Abschlussbericht](BATCH-01_COMPLETION_REPORT.md#h-github) mit dem dort dokumentierten Titel und Beschreibungstext öffnen, PR nach main erstellen und die CI auf dessen neuestem Commit prüfen. Die Paketimplementierung ist abgeschlossen.

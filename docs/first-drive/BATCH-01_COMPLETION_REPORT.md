@@ -67,7 +67,7 @@ Die Messungen beschreiben die geprüfte Umgebung. Dauerlast, Speicherentwicklung
 
 ## H. GitHub
 
-Basis `main` bei `3b85cadb564d4e591c217377f7b21422bd482e00` enthält den FD-003-Recovery-Commit. Zielbranch `feature/batch-01-complete-first-drive`. Die Paket-SHAs und Remote-Nachweise stehen im [Fortschrittsprotokoll](BATCH-01_PROGRESS.md). Der erste PR-Versuch über den Connector ergab HTTP 403. Die GitHub CLI war lokal nicht installiert. Die CI-Konfiguration reagiert auf PRs nach main und Pushes auf main.
+Basis `main` bei `3b85cadb564d4e591c217377f7b21422bd482e00` enthält den FD-003-Recovery-Commit. Zielbranch `feature/batch-01-complete-first-drive`. Die Paket-SHAs und Remote-Nachweise stehen im [Fortschrittsprotokoll](BATCH-01_PROGRESS.md). Der lokale FD-007-Commit und der über `git ls-remote` direkt verifizierte Remote-Ref lauteten beide `b2fb5e230f9bbb0297afe40b7382ba05b9e22838`. Beide PR-Versuche über den Connector ergaben HTTP 403 („Resource not accessible by integration“). Die Suche fand keinen Batch-PR. Die Actions-Abfrage zum FD-007-Commit lieferte null PR-Läufe. PR-Eröffnung und anschließende CI-Prüfung bleiben offen. Die GitHub CLI war lokal nicht installiert. Die CI-Konfiguration reagiert auf PRs nach main und Pushes auf main.
 
 **PR-Titel** · Complete First Drive – FD-004 to FD-007
 
