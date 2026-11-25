@@ -1,55 +1,375 @@
 :root {
+  font-family: Barlow, Arial, sans-serif;
+  color: #f5f2e9;
+  background: #111618;
   color-scheme: dark;
-  font-family: system-ui, sans-serif;
-  background: #0d1015;
-  color: #f3f5f8;
+  font-synthesis: none;
 }
-
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
 }
-main {
-  width: min(70rem, calc(100% - 2rem));
-  margin: clamp(2rem, 9vh, 6rem) auto;
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: #22292c;
+  border: 1px solid #485253;
+  padding: 0.55rem 0.9rem;
 }
-header {
-  padding-inline-start: 1rem;
-  border-inline-start: 0.25rem solid #ef795c;
+button:hover,
+button:focus-visible {
+  color: white;
+  border-color: #ff7346;
 }
-h1 {
-  margin: 0;
-  font-size: clamp(2rem, 7vw, 5rem);
-  line-height: 1;
-}
-.milestone {
-  margin: 0 0 0.65rem;
-  color: #ff9d82;
-  font-weight: 650;
-}
-.subtitle {
-  margin: 0.75rem 0 0;
-  color: #c1c7d1;
-}
-.preview {
+.cockpit {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  margin-top: 2rem;
-  border: 1px solid #373e4d;
+  grid-template-rows: 64px minmax(0, 1fr) auto;
+  height: 100dvh;
+  min-height: 330px;
 }
-canvas,
-.error {
-  grid-area: 1 / 1;
+.mast,
+footer {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  background: #14191c;
+  padding: 0 2vw;
 }
-canvas {
+.wordmark {
+  display: flex;
+  align-items: center;
+  font-size: 31px;
+  font-weight: 950;
+  font-style: italic;
+  letter-spacing: -2px;
+}
+.wordmark i {
+  width: 24px;
+  height: 20px;
+  display: inline-block;
+  transform: skew(-23deg);
+  background: repeating-linear-gradient(
+    90deg,
+    #ff693d 0 5px,
+    transparent 5px 8px
+  );
+  margin-right: 8px;
+}
+.edition,
+.eyebrow,
+.car-id,
+.timing small,
+.session {
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.15em;
+}
+.edition {
+  border-left: 1px solid #475055;
+  padding-left: 1.6rem;
+  color: #afb7b6;
+}
+.session {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.session b {
+  width: 7px;
+  height: 7px;
+  background: #a1d9a5;
+  border-radius: 50%;
+}
+.session span,
+.track-meta span {
+  color: #67716e;
+}
+.field {
+  position: relative;
+  overflow: hidden;
+  background: #405d42;
+}
+.field > canvas {
   display: block;
   width: 100%;
-  height: clamp(14rem, 55vh, 32rem);
+  height: 100%;
+  touch-action: none;
 }
-.error {
-  z-index: 1;
-  place-self: center;
-  margin: 1rem;
-  padding: 1rem;
-  background: #202530;
-  max-width: 32rem;
+.track-card,
+.timing,
+.instruments,
+.camera-controls,
+.diagnostic {
+  position: absolute;
+  background: #151b1ef2;
+  border: 1px solid #65716b;
+  box-shadow: 0 5px 20px #0002;
+}
+.track-card {
+  left: 2vw;
+  top: 20px;
+  width: 202px;
+  padding: 16px 17px;
+}
+.eyebrow {
+  color: #ff895c;
+}
+h1 {
+  font-size: 22px;
+  margin: 4px 0;
+  letter-spacing: -0.04em;
+}
+.track-meta,
+.segment,
+.surface,
+.fps {
+  font:
+    11px ui-monospace,
+    monospace;
+  color: #bdc4c0;
+}
+.map {
+  width: 100%;
+  height: 80px;
+  margin: 10px 0 4px;
+}
+.segment,
+.surface {
+  display: flex;
+  justify-content: space-between;
+  gap: 7px;
+}
+.track-card progress {
+  display: block;
+  width: 100%;
+  height: 4px;
+  accent-color: #ff7548;
+  margin-top: 7px;
+}
+.timing {
+  right: 2vw;
+  top: 20px;
+  padding: 13px 18px;
+  min-width: 165px;
+  font-variant-numeric: tabular-nums;
+}
+.timing div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.timing div + div {
+  margin-top: 8px;
+  color: #b4bdba;
+}
+.timing strong {
+  font:
+    600 23px ui-monospace,
+    monospace;
+}
+.timing span {
+  font:
+    13px ui-monospace,
+    monospace;
+}
+.timing small {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.camera-controls {
+  bottom: 22px;
+  left: 2vw;
+  display: flex;
+  padding: 3px;
+}
+.camera-controls button {
+  background: none;
+  border: 0;
+  font-size: 12px;
+}
+.camera-controls button[aria-pressed='true'] {
+  background: #e9e8de;
+  color: #18201e;
+}
+.instruments {
+  right: 2vw;
+  bottom: 22px;
+  width: 203px;
+  padding: 14px 17px;
+  border-top: 3px solid #ff7743;
+}
+.car-id {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.car-id b {
+  font: italic 800 14px Arial;
+  background: #dee3da;
+  color: #181e20;
+  padding: 2px 6px;
+}
+.speed {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin: 4px 0;
+}
+.speed strong {
+  font-size: clamp(42px, 5vw, 70px);
+  font-style: italic;
+  line-height: 1.1;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.speed span {
+  font-size: 13px;
+  color: #c8ceca;
+}
+.pedals {
+  display: flex;
+  gap: 10px;
+}
+.pedals label {
+  flex: 1;
+  font:
+    bold 9px ui-monospace,
+    monospace;
+  letter-spacing: 0.08em;
+}
+.pedals meter {
+  display: block;
+  width: 100%;
+  height: 10px;
+}
+.surface {
+  border-top: 1px solid #3c4446;
+  margin-top: 9px;
+  padding-top: 9px;
+  font-size: 10px;
+}
+.surface b {
+  color: #e3e7dc;
+}
+.diagnostic {
+  bottom: 80px;
+  left: 2vw;
+  padding: 8px;
+  font: 11px monospace;
+}
+.shade {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #08101294;
+}
+.dialog {
+  text-align: center;
+  background: #14191c;
+  padding: 24px 32px;
+  border-top: 3px solid #ff7548;
+}
+.dialog h2 {
+  margin: 0 0 15px;
+}
+footer {
+  min-height: 44px;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 11px;
+}
+.bindings {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.bindings span {
+  white-space: nowrap;
+}
+kbd {
+  color: #f6eada;
+  background: #303739;
+  border-radius: 2px;
+  padding: 3px;
+}
+.fps {
+  margin-left: auto;
+}
+footer button {
+  padding: 4px 8px;
+}
+@media (max-width: 700px), (max-height: 560px) {
+  .cockpit {
+    grid-template-rows: 44px minmax(0, 1fr) auto;
+  }
+  .track-card {
+    width: 135px;
+    padding: 9px;
+    top: 8px;
+  }
+  .track-card h1 {
+    font-size: 17px;
+  }
+  .map {
+    height: 40px;
+    margin: 3px;
+  }
+  .timing {
+    min-width: 115px;
+    padding: 9px;
+    top: 8px;
+  }
+  .timing strong {
+    font-size: 15px;
+  }
+  .instruments {
+    width: 140px;
+    padding: 7px 9px;
+    bottom: 8px;
+  }
+  .camera-controls {
+    bottom: 8px;
+  }
+  .camera-controls button {
+    padding: 5px;
+  }
+  .speed strong {
+    font-size: 36px;
+  }
+  .bindings {
+    gap: 8px;
+  }
+  footer {
+    padding: 6px;
+    gap: 6px;
+  }
+  .mast {
+    gap: 10px;
+  }
+  .edition {
+    padding-left: 10px;
+  }
+  .session {
+    font-size: 9px;
+    gap: 5px;
+  }
+  .wordmark {
+    font-size: 24px;
+  }
+  .track-meta {
+    font-size: 9px;
+  }
+}
+
+.field[data-camera='Übersicht'] .map,
+.field[data-camera='Übersicht'] .segment,
+.field[data-camera='Übersicht'] progress {
+  display: none;
 }

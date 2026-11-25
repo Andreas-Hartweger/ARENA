@@ -28,3 +28,7 @@ Review und vollständige Foundation-Abnahme stehen aus. Die Ausnahme erteilt kei
 ## FD-003 – Freie Fahrzeugdynamik
 
 Die gesonderte Recovery-Freigabe ersetzt für FD-003 die Sperre aus dem FD-002-Abschluss. 003a bis 003d sind lokal umgesetzt und geprüft. Die vier Leistungsziele, der Fehlervertrag und die bildratenunabhängige Headless-Ausführung sind im [Abschlussbericht](DEVELOPMENT_LOG.md#fd-003--recovery-der-fahrzeugphysik) belegt. Ausstehend sind gegenseitiges Review, G-07 und die paketübergreifende Abnahme in FD-007. FD-004 und weitere Pakete benötigen eine eigene Freigabe.
+
+## Development Batch 01 – Stand des Release-Kandidaten
+
+FD-004 bis FD-007 sind lokal implementiert und automatisch geprüft. [Fortschritt und Git-Nachweise](first-drive/BATCH-01_PROGRESS.md) sowie [Abschlussbericht](first-drive/BATCH-01_COMPLETION_REPORT.md) führen den aktuellen Reviewstand. Die vorläufige Batch-Ausnahme endet mit FD-007.

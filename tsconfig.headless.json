@@ -1,12 +1,18 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": { "lib": ["ES2022"], "types": [] },
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": []
+  },
   "include": [
     "scripts/calibration.ts",
     "src/core/**/*.ts",
     "src/vehicles/**/*.ts",
     "src/input/controlInput.ts",
     "src/input/keyboardControls.ts",
-    "src/physics/**/*.ts"
+    "src/physics/**/*.ts",
+    "src/tracks/**/*.ts",
+    "src/game/**/*.ts",
+    "src/collision/**/*.ts"
   ]
 }

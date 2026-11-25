@@ -24,3 +24,10 @@ Der Auftraggeber hat die funktionale Neuimplementierung ausschließlich auf `rec
 - Eine Session veröffentlicht einen vollständig validierten Fahrzeugframe. Nach einem Tickfehler beginnt ein neuer Lauf über den in der Architektur dokumentierten Neustart. FD-005/007 benötigen eine gemeinsame Welttransaktion.
 - Der bestehende FD-002-Setupvertrag bleibt mit seinen bisherigen Feldern verwendbar. Die numerische Ruhebehandlung verwendet zusätzlich 10⁻⁹ m/s für Restbewegung an den Achsen. Die Materialübergänge speichern effektive Startkoeffizienten, damit unterbrochene Übergänge stetig weiterlaufen.
 - Eine separate TypeScript-Konfiguration macht die ES2022-Prüfung ohne DOM- und Node-Typen zu einem festen Teil von `check`. Node.js 24 führt die Kalibrierung mit eingebauter TypeScript-Unterstützung und lokalem Importauflöser aus. Es kamen keine Pakete hinzu.
+
+## Arbeitsannahmen für den First-Drive-Kandidaten
+
+- Recovery speichert alle 15 Ticks bis zu 120 sichere Posen. Alle Fahrzeugecken müssen auf Asphalt liegen. Eine konservative Belegungshülle schützt belegte Plätze. Ohne geeigneten Kandidaten wird die Anfrage abgelehnt.
+- Vorwärtsfahrt über das innere Gras einer Kurve entwertet die laufende Runde. Der Auslauf bleibt befahrbar. Zur Torwertung zählen nur Bewegungssegmente aus akzeptierten Kontaktteilschritten.
+- Wand- und Fahrzeugkontakte teilen ein begrenztes Iterationsbudget. Bei ausgeschöpftem Budget stoppt die gemeinsame Kontaktgruppe am letzten akzeptierten Stand. Unabhängige Kandidaten erhalten ein eigenes Budget. Ruhende Überlappungen dürfen pro Iteration bis zu 0,60 m rein geometrisch korrigiert werden.
+- Die Versionskennung lautet `0.2.0-rc.1`. Für eine endgültige Abnahme sind das gegenseitige Review, die gemeinsame Foundation-Abnahme und ein Fahrtest auf Entwicklerhardware ausständig.

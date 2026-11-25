@@ -41,7 +41,7 @@ export interface VehicleFrame {
 }
 
 // Frames consist entirely of owned plain data. Shared snapshots stay safe across ticks.
-function freezeTree<T>(value: T): T {
+export function freezeTree<T>(value: T): T {
   if (typeof value === 'number')
     requireFinite(value, 'published numeric field');
   if (value && typeof value === 'object' && !Object.isFrozen(value)) {
@@ -49,6 +49,46 @@ function freezeTree<T>(value: T): T {
     Object.freeze(value);
   }
   return value;
+}
+
+export function prepareVehicleTick(
+  vehicle: Vehicle,
+  state: VehicleState,
+  keyboard: KeyboardControlState,
+  command: TickCommand,
+  query: SurfaceQuery,
+  diagnostics: boolean,
+) {
+  const controls =
+    command.kind === 'keyboard'
+      ? stepKeyboardControls(
+          keyboard,
+          command.sample,
+          state.drive,
+          state.velocityMps,
+          command.sensitivity,
+        )
+      : {
+          ...resolveControlTick(
+            command.request,
+            state.drive,
+            state.velocityMps,
+          ),
+          keyboard: NEUTRAL_KEYBOARD_STATE,
+        };
+  const motion = calculateFreeMotion(
+    vehicle,
+    { ...state, drive: controls.directionState },
+    controls.input,
+    query,
+    diagnostics,
+  );
+  return {
+    ...motion,
+    keyboard: controls.keyboard,
+    input: controls.input,
+    controlDiagnostics: controls.diagnostics,
+  };
 }
 
 export class VehicleTickSession {
@@ -90,35 +130,17 @@ export class VehicleTickSession {
     const { index, state, keyboard } = this.#frame;
     try {
       const nextIndex = requireNonNegativeInteger(index + 1, 'vehicle tick');
-      const controls =
-        command.kind === 'keyboard'
-          ? stepKeyboardControls(
-              keyboard,
-              command.sample,
-              state.drive,
-              state.velocityMps,
-              command.sensitivity,
-            )
-          : {
-              ...resolveControlTick(
-                command.request,
-                state.drive,
-                state.velocityMps,
-              ),
-              keyboard: NEUTRAL_KEYBOARD_STATE,
-            };
-      const motion = calculateFreeMotion(
+      const prepared = prepareVehicleTick(
         this.#vehicle,
-        { ...state, drive: controls.directionState },
-        controls.input,
+        state,
+        keyboard,
+        command,
         this.#query,
         this.#diagnostics,
       );
       const candidate = freezeTree({
         index: nextIndex,
-        ...motion,
-        keyboard: controls.keyboard,
-        controlDiagnostics: controls.diagnostics,
+        ...prepared,
       });
       this.#frame = candidate;
       return candidate;
