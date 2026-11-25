@@ -73,6 +73,28 @@ Drei Wechsel Mensch → Seed-Modell → Mensch ließen die Zahl der beobachteten
 | Bremsdauer           |      2,283333 s |      2,283333 s |
 | Rückwärtsspitze      |  29,675641 km/h |  29,675641 km/h |
 
+## Technische Nachprüfung nach Übergabe von PR #5
+
+Auf `f5071de` ließ sich ein fehlender Asphalt-/Grasübergang auf Academy reproduzieren. Bei sehr flachem Schnitt lagen die beidseitigen Proben innerhalb der numerischen Toleranz der Materialabfrage. Die Probe nutzt nun den freien Abstand zu benachbarten Schnittpunkten, Reichweite und Verdeckung. Eine feste Probe unmittelbar am Schnitt entfällt. Ein unabhängig berechneter Vergleich auf der oberen Academy-Geraden deckte 11.909 Strahlen aus vier Seeds ab. Materialklasse und Treffer stimmten durchgehend. Die größte absolute Distanzabweichung lag unter 6,7·10⁻⁹ m. [Geometrieprüfung](evidence/road-edge-review.json)
+
+Drei weitere zunächst fehlschlagende Regressionen betrafen JS-Arrays mit unbelegten Einträgen bei Netzarchitektur, Eingabe und Ausgabe. Hinzu kam ein Test für widersprüchliche Strahlmessungen. Der Kern weist solche Daten an der jeweiligen Schnittstelle ab. Ein zusätzlicher analytischer Test unterscheidet an allen vier Academy-Innenbögen die exakte Tangente von einem echten, sehr schmalen Durchgang durch Gras. Nach der Nachprüfung bestehen 160 Tests in 23 Dateien. Kalibrierung und Build bestanden. Die Vite-Warnung zur Bundlegröße besteht fort. In einem frischen Windows-Export von `efb62ef` installierte `npm ci` die 194 im Lockfile aufgelösten Pakete. Auch dort bestanden `npm run check` und `npm run calibrate`.
+
+Die festen Fahrbahngrenzen werden für den indizierten Pfad beim Aufbau der Geometrie vorbereitet. Der Referenzpfad baut sie pro Abfrage aus der TrackDefinition auf. Alle 8192 zusätzlichen Strahlen ergaben vor und nach der Umstellung identische Resultate. In zwölf abwechselnd ausgeführten Vergleichspaaren sank die Medianzeit für diese Strahlen von 89,27 auf 78,90 ms. [Gepaarte Vergleichsmessung](evidence/geometry-review.json) · [Erneute Benchmarkmatrix](evidence/benchmark-review.json)
+
+In 4096 zusätzlichen Streckenszenen prüfte eine separate konvexe Segment-Clipping-Rechnung 386.506 Sichtlinien zu akzeptierten Vorschauintervallen in Abständen von 0,5 m. Von 28.672 abgefragten Vorschaupunkten waren 13.126 gültig. Keine geprüfte Sichtlinie schnitt einen Blocker. 2048 Szenen enthielten ein Fahrzeug oder einen nur 1 mm dünnen Sichtschirm. Diese Stichproben ergänzen den kontinuierlichen geometrischen Nachweis im Algorithmus. [Sichtprüfung](evidence/preview-review.json)
+
+Zwei Fahrer wurden in gemeinsamen und getrennten Welten jeweils 108.000 Ticks mit identischen Kontrollläufen verglichen. In einem Lauf wechselte die Diagnose regelmäßig, im anderen blieb sie geschlossen. Position und angewandter Befehl wurden in jedem Tick verglichen, kompletter Fahrzeugzustand, Runde und Beobachtung zusätzlich jede simulierte Sekunde und am Ende. Es gab keine Abweichung. In allen vier Welten zusammen entspricht das 864.000 Fahrzeugticks. Reproduzierbar mit `node scripts/verify-ai-endurance.mjs`. Beim zusätzlichen Vergleich Node gegen Chrome mit drei Seeds und je 3600 Ticks stimmten alle geprüften Gültigkeitsbits überein. Der größte Unterschied einer Positionskomponente betrug 2,85·10⁻¹⁴ m. [Dauerlauf](evidence/endurance.json) · [Runtime-Matrix](evidence/runtime-review.json)
+
+Im Testmodus öffnet der Fahrerwechsel die Diagnose direkt. Die 248 Kanäle sind nach den fünf Schema-Gruppen auswählbar. Eine Tabelle zeigt die angeforderten und angewandten Pedal-, Lenk- und Richtungswerte mit zugehörigem Tick. Beide Modelle wurden bei 390, 768 und 1280 CSS-Pixeln jeweils pausiert und fünfmal einzeln weitergeschaltet. Die sechs Durchläufe ergaben genau 30 Einzelschritte, ohne Seitenüberlauf oder JavaScript-Fehler. [Browserprüfung](evidence/inspector-review.json) · [Ansicht der Fahrbefehle](evidence/commands-review.png)
+
+Eine unabhängige Python-Rechnung mit `math.fsum` und `math.tanh` verglich sämtliche gewichteten Summen, Aktivierungen und Ausgaben von 36 Netzen bei je acht Eingabevektoren. Geprüft wurden vier Architekturen, drei Aktivierungsfunktionen und drei Seeds. Die größte absolute Differenz betrug 1,60·10⁻¹⁴. [Numerischer Referenzvergleich](evidence/network-reference.json)
+
+Die nicht trainierten Modelle kennzeichnen die Initialisierung in ihren Metadaten. Der Inspector zeigt beim mathematischen Fixture „Vorgegebene Gewichte“ und beim Seed-Modell den tatsächlichen Seed. Die Bedienfolge steht in der [Projekt-README](../../README.md#ki-testfahrt-und-inspector).
+
+Bei einem weiteren Browserlauf meldete WebGL den nativen Renderer Intel Arc 140T über Direct3D 11. In je rund 30 Sekunden wurden 1799 Ticks bei 1280 × 800 mit geschlossenem Inspector und 1802 Ticks bei 1920 × 1080 mit offenem Inspector beobachtet. Es traten keine JavaScript-Fehler auf. [Prüfung mit Hardwarebeschleunigung](evidence/browser-renderer.json)
+
+Im direkten Vergleich zwischen der First-Drive-Basis und `efb62ef` stimmten alle 36.000 vollständigen veröffentlichten Weltframes exakt überein. Drei Seeds steuerten je zwei Fahrzeuge mit Tastatur- und Analogbefehlen, Richtungswechseln, Graskontakt und Recovery. Über die drei Läufe wurden 104 Kollisionsereignisse und 30 angenommene Rücksetzungen verglichen. [Regressionsvergleich](evidence/first-drive-parity.json)
+
 ## K · Offene Punkte
 
 Das Entwicklerreview für Batch 02A und die gesonderte Merge-Entscheidung stehen aus. Die Benchmarkwerte hängen von Hardware, Runtime und Last ab. Die Seed-Modelle sind untrainiert. Die sichtbare Qualität ihrer Fahrentscheidungen war kein Abnahmekriterium. 02B hat keine Umsetzungsfreigabe.

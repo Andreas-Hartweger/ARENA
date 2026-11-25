@@ -1,0 +1,261 @@
+{
+  "implementation": "efb62ef",
+  "reference": "Python math.fsum and math.tanh, separate row decoding; compared every preactivation, activation and output",
+  "networks": 36,
+  "forwardPasses": 288,
+  "worst": 1.5987211554602254e-14,
+  "rows": [
+    {
+      "hidden": [4],
+      "activation": "tanh",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 5.329070518200751e-15
+    },
+    {
+      "hidden": [4],
+      "activation": "tanh",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [4],
+      "activation": "tanh",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [4],
+      "activation": "relu",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 1.0658141036401503e-14
+    },
+    {
+      "hidden": [4],
+      "activation": "relu",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [4],
+      "activation": "relu",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 5.329070518200751e-15
+    },
+    {
+      "hidden": [4],
+      "activation": "leaky",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 8.881784197001252e-15
+    },
+    {
+      "hidden": [4],
+      "activation": "leaky",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [4],
+      "activation": "leaky",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "tanh",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "tanh",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 1.5987211554602254e-14
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "tanh",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 5.329070518200751e-15
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "relu",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 1.0658141036401503e-14
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "relu",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "relu",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "leaky",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 8.881784197001252e-15
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "leaky",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [16, 8],
+      "activation": "leaky",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 8.881784197001252e-15
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "tanh",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "tanh",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 1.0658141036401503e-14
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "tanh",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "relu",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 1.0658141036401503e-14
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "relu",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "relu",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "leaky",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 8.881784197001252e-15
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "leaky",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [32, 16],
+      "activation": "leaky",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 8.881784197001252e-15
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "tanh",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 5.329070518200751e-15
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "tanh",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 1.4210854715202004e-14
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "tanh",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "relu",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 1.0658141036401503e-14
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "relu",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "relu",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "leaky",
+      "seed": 0,
+      "inputs": 8,
+      "maxAbsoluteDifference": 8.881784197001252e-15
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "leaky",
+      "seed": 1,
+      "inputs": 8,
+      "maxAbsoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "hidden": [128, 128, 128, 128],
+      "activation": "leaky",
+      "seed": 42,
+      "inputs": 8,
+      "maxAbsoluteDifference": 8.881784197001252e-15
+    }
+  ]
+}

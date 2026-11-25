@@ -7,3 +7,7 @@ PRE-02: Die Teamdateien wurden aus Handover 002 angelegt. Im Checkout, den durch
 ## 25.11.2026 · Übergabe von PRE-03 und FI-001–012
 
 PRE-02 und PRE-03 sind geprüft. Das vollständige Spezifikationspaket und die Abnahme liegen ab `b8d32cc` auf der Feature-Branch. FI-001–010 wurden in `9003d0c` integriert und in `b1995a3` mit weiteren Geometrie-, Kontroll- und Browserprüfungen abgesichert. Die gemessenen Daten für FI-011 und die Einzelzuordnung jedes Pakets stehen im [Bericht](../first-intelligence/BATCH-02A_COMPLETION_REPORT.md). FI-012 übergibt [PR #5](https://github.com/Andreas-Hartweger/ARENA/pull/5) zum menschlichen Review. Beginn und technischer Abschluss aller Pakete erfolgten am 25.11.2026. Der Bericht enthält die tatsächlich vorhandenen Belege für die menschlichen Prüfungen.
+
+## 25.11.2026 · Technische Nachprüfung von PR #5
+
+Fünf neue Regressionen für SEN-009, OBS-004, NN-001 und CTL-001 wurden vor der Korrektur reproduziert. B prüfte den korrigierten Sensor, die Konsistenzprüfung und die Inspector-Bedienung. Die Vorberechnung statischer Geometrie in `826e907` wurde zusätzlich auf 8192 identischen Strahlen mit der Vorversion verglichen. Zusammen mit dem zusätzlichen Tangententest bestanden 160 Tests. Die [Nachprüfung und Rohdaten](../first-intelligence/BATCH-02A_COMPLETION_REPORT.md#technische-nachprüfung-nach-übergabe-von-pr-5) ergänzen die ursprüngliche Übergabe.

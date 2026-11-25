@@ -1,0 +1,11 @@
+{
+  "implementation": "826e907",
+  "seeds": [0, 1, 42, 2026],
+  "scenes": 4096,
+  "opposite": 1368,
+  "scenesWithVehicleOrThinScreen": 2048,
+  "valid": 13126,
+  "masked": 15546,
+  "checkedSightLines": 386506,
+  "stepM": 0.5
+}

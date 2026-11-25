@@ -1,0 +1,24 @@
+{
+  "implementation": "826e907",
+  "chrome": "158.0.8127.89",
+  "renderer": "ANGLE (Intel, Intel(R) Arc(TM) 140T GPU (16GB) (0x00007D51) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "rows": [
+    {
+      "width": 1280,
+      "height": 800,
+      "inspector": false,
+      "ticks": 1799,
+      "elapsedMs": 30007,
+      "displayedFps": "100 FPS"
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "inspector": true,
+      "ticks": 1802,
+      "elapsedMs": 30018,
+      "displayedFps": "100 FPS"
+    }
+  ],
+  "errors": []
+}

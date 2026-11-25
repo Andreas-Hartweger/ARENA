@@ -1,0 +1,40 @@
+{
+  "implementation": "a19140f",
+  "node": "v24.22.3",
+  "browser": "158.0.8127.89",
+  "rows": [
+    {
+      "seed": 0,
+      "sensorHz": 20,
+      "decisionHz": 30,
+      "sampledTicks": 60,
+      "tickInterval": 60,
+      "maskChanges": 0,
+      "maxPositionM": 0,
+      "maxChannelDelta": 0,
+      "maxOutputDelta": 3.3306690738754696e-16
+    },
+    {
+      "seed": 1,
+      "sensorHz": 30,
+      "decisionHz": 30,
+      "sampledTicks": 60,
+      "tickInterval": 60,
+      "maskChanges": 0,
+      "maxPositionM": 2.842170943040401e-14,
+      "maxChannelDelta": 9.159339953157541e-16,
+      "maxOutputDelta": 4.0245584642661925e-16
+    },
+    {
+      "seed": 42,
+      "sensorHz": 60,
+      "decisionHz": 30,
+      "sampledTicks": 60,
+      "tickInterval": 60,
+      "maskChanges": 0,
+      "maxPositionM": 8.881784197001252e-16,
+      "maxChannelDelta": 1.9984014443252818e-15,
+      "maxOutputDelta": 4.440892098500626e-16
+    }
+  ]
+}
