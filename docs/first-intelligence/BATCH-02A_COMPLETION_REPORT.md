@@ -2,6 +2,8 @@
 
 ## A · Stand
 
+Batch 02A ist abgeschlossen. [PR #5](https://github.com/Andreas-Hartweger/ARENA/pull/5) wurde am 25.11.2026 als `b2af946` in `main` gemergt. Die [CI auf `main`](https://github.com/Andreas-Hartweger/ARENA/actions/runs/45670859286) war erfolgreich.
+
 Ausgangsbasis ist First Drive 0.2.0-rc.1 auf `68e8d1051a5ea01d544cc1496917568c25b59b92`. Die Feature-Branch heißt `feature/batch-02a-ai-perception-brain`. Der geprüfte Implementierungsstand einschließlich Benchmarkprogramm ist `b1995a38742e45d7565c8485d241239ace90acfa`. Der anschließende Nachweiscommit ergänzt Dokumentation, Messdaten und einen weiteren Geometrietest. Der aktuelle Remote-Stand und seine CI sind im [gemeinsamen PR #5](https://github.com/Andreas-Hartweger/ARENA/pull/5) einsehbar. Die Ausgangsbasis wurde mit [PR #4](https://github.com/Andreas-Hartweger/ARENA/pull/4) und [main-CI](https://github.com/Andreas-Hartweger/ARENA/actions/runs/45613045498) abgeglichen.
 
 ## B · Übernahme und Abnahme
@@ -27,7 +29,7 @@ Die Testdateien sind unter `tests/ai` im Repository zu finden. Die folgenden Gru
 | FI-008     | Individuelle Takte und Caches, gemeinsame Welttransaktion, Reset und Sperre bei Fehler               | INT-001–006 · world.test.ts, controls.test.ts und Browsernachweise                  |
 | FI-009/010 | Messframe, sichtbare Strahlen, Kanalwahl, Schicht-/Neuron-/Verbindungswahl, Pause und Einzeltick     | INS-001–004 · world.test.ts und Browsernachweise                                    |
 | FI-011     | Regression, Kalibrierung und Messmatrix                                                              | REG-001/002, BEN-001–004 · Abschnitte H bis J                                       |
-| FI-012     | Bericht, Teamübergabe, Remote-Branch, PR und CI                                                      | REL-001 · PR #5; menschliches Review ausstehend                                     |
+| FI-012     | Bericht, Teamübergabe, Remote-Branch, PR und CI                                                      | REL-001 · PR #5 gemergt, main-CI erfolgreich                                        |
 
 ## E · Eingaben und Gewichte
 
@@ -99,6 +101,6 @@ Im 20-minütigen Chrome-Dauerlauf auf dem gesondert ausgewiesenen Stand `a19140f
 
 ## K · Offene Punkte
 
-Das Entwicklerreview für Batch 02A und die gesonderte Merge-Entscheidung stehen aus. Die Benchmarkwerte hängen von Hardware, Runtime und Last ab. Die Seed-Modelle sind untrainiert. Die sichtbare Qualität ihrer Fahrentscheidungen war kein Abnahmekriterium. 02B hat keine Umsetzungsfreigabe.
+Die Benchmarkwerte hängen von Hardware, Runtime und Last ab. Die Seed-Modelle sind untrainiert. Die sichtbare Qualität ihrer Fahrentscheidungen war kein Abnahmekriterium. 02B hat keine Umsetzungsfreigabe.
 
 NÄCHSTER PLANUNGSAUFTRAG ERFORDERLICH
