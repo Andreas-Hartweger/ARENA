@@ -142,8 +142,11 @@ export function Inspector({
       </details>
       <h2>Brain Inspector</h2>
       <p>
-        {dims.join(' → ')} · {brain?.activation} · Seed {brain?.seed} ·
-        Eingabetick {ai?.inputTick ?? '–'} · Entscheidungstick{' '}
+        {dims.join(' → ')} · {brain?.activation} ·{' '}
+        {brain?.initialization === 'supplied'
+          ? 'Vorgegebene Gewichte'
+          : 'Seed ' + brain?.seed}{' '}
+        · Eingabetick {ai?.inputTick ?? '–'} · Entscheidungstick{' '}
         {ai?.decisionTick ?? '–'}
       </p>
       <label>

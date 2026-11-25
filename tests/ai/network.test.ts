@@ -9,6 +9,10 @@ import {
 } from '../../src/input/keyboardControls';
 it('NN-001–004 sizes, dense layout, activation and ownership', () => {
   const net = new Brain('test');
+  expect(net.initialization).toBe('mulberry32-uniform-v1');
+  expect(
+    new Brain('test', 0, [32, 16], 'tanh', net.parameters()).initialization,
+  ).toBe('supplied');
   expect(net.parameters().length).toBe(8547);
   expect(new Brain('test', 0, [128, 128, 128, 128]).parameters().length).toBe(
     81795,

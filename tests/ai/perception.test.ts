@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { SeededRandom } from '../../src/core/random';
 import { createVehicle } from '../../src/vehicles/vehicle';
-import { createTrack } from '../../src/tracks/track';
+import { createTrack, shift } from '../../src/tracks/track';
 import { profile, rayPose, standardProfile } from '../../src/ai/profile';
 import { registry, normalize, signature } from '../../src/ai/schema';
 import { hit, measure, obstacle, wallIndex } from '../../src/ai/geometry';
@@ -185,4 +185,32 @@ it('OBS-004 rejects material without an edge and simultaneous opaque returns', (
   const doubleHit = raw.slice();
   doubleHit.splice(12, 9, 0, 0, 5, 1, 6, 1, 0, 0, 0);
   expect(() => normalize(doubleHit, registry())).toThrow(/ray00/);
+});
+
+it('SEN-009 distinguishes touching the inner arc from traversing a narrow grass chord', () => {
+  const halfWidth = track.def.width / 2;
+  for (const arc of track.segments.filter((s) => s.curvature !== 0)) {
+    const station = arc.offset + arc.length / 2 - track.def.startDistance;
+    const radius = Math.abs(1 / arc.curvature) - halfWidth;
+    for (const depth of [0, 1e-7, 0.1]) {
+      const pose = track.sample(
+        station,
+        Math.sign(arc.curvature) * (halfWidth + depth),
+      );
+      const ray = {
+        origin: shift(pose.position, pose.tangent, -3),
+        direction: pose.tangent,
+        range: 6,
+      };
+      const observation = measure(track, walls, ray, []);
+      if (depth === 0) {
+        expect(observation.edge).toBeNull();
+        expect(observation.material).toBeNull();
+      } else {
+        const halfChord = Math.sqrt(depth * (2 * radius - depth));
+        expect(observation.edge).toBeCloseTo(3 - halfChord, 7);
+        expect(observation.material).toBe('grass');
+      }
+    }
+  }
 });

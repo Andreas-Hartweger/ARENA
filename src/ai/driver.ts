@@ -104,8 +104,9 @@ export function driver(
       throw new Error(
         'AI ' +
           vehicle.id +
-          ' seed ' +
-          brain.seed +
+          (brain.initialization === 'supplied'
+            ? ' supplied parameters'
+            : ' seed ' + brain.seed) +
           ' frame ' +
           index +
           ': ' +

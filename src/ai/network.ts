@@ -44,6 +44,7 @@ export class Brain {
   readonly layout = 'arena.dense.float64.v1';
   readonly signature: string;
   readonly seed: number;
+  readonly initialization: 'supplied' | 'mulberry32-uniform-v1';
   readonly activation: Activation;
   constructor(
     signature: string,
@@ -54,6 +55,7 @@ export class Brain {
   ) {
     this.signature = signature;
     this.seed = seed;
+    this.initialization = parameters ? 'supplied' : 'mulberry32-uniform-v1';
     this.activation = activation;
     const random = new SeededRandom(seed);
     if (
