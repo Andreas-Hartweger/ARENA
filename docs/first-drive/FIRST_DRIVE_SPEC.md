@@ -95,15 +95,15 @@ Kalibrierung: sofortiges normiertes Vollgas (ohne Tastaturglättung), 0–100 3,
 
 ## 10. Freigabeprotokoll und offene technische Details
 
-| Gate | Entscheidung                                                                                         | Status                             |
-| ---- | ---------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| G-01 | X rechts, Y oben, CCW, 60 Hz, 8 Aufholticks, Seed, headless                                          | bestätigt                          |
-| G-02 | Gas 0,25/0,12 s; Lenkung 0,25/0,20 s; Richtung nach 0,3 s im Stillstand                              | bestätigt                          |
-| G-03 | Physikansatz, sanfte Limiter, Achskräfte, Modellübergang, 0,1 s Oberfläche bei sofortigem Grip-Limit | bestätigt, Kalibrierung ausstehend |
-| G-04 | OBB/SAT, swept broad phase, Impulse, adaptive Teilschritte, begrenzte Iteration/Fallback             | bestätigt, Robustheit ausstehend   |
-| G-05 | Academy im Uhrzeigersinn, acht gerichtete Tore inkl. Start/Ziel, Recovery ohne Gewinn                | bestätigt                          |
-| G-06 | Follow 45 m, Zoom 20–160 m, Glättung/Vorausschau, skalierbare Grafik/Overlays                        | bestätigt                          |
-| G-07 | D00 Foundation-Abnahme                                                                               | offen                              |
+| Gate | Entscheidung                                                                                         | Status                           |
+| ---- | ---------------------------------------------------------------------------------------------------- | -------------------------------- |
+| G-01 | X rechts, Y oben, CCW, 60 Hz, 8 Aufholticks, Seed, headless                                          | bestätigt                        |
+| G-02 | Gas 0,25/0,12 s; Lenkung 0,25/0,20 s; Richtung nach 0,3 s im Stillstand                              | bestätigt                        |
+| G-03 | Physikansatz, sanfte Limiter, Achskräfte, Modellübergang, 0,1 s Oberfläche bei sofortigem Grip-Limit | freie Bewegung lokal kalibriert  |
+| G-04 | OBB/SAT, swept broad phase, Impulse, adaptive Teilschritte, begrenzte Iteration/Fallback             | bestätigt, Robustheit ausstehend |
+| G-05 | Academy im Uhrzeigersinn, acht gerichtete Tore inkl. Start/Ziel, Recovery ohne Gewinn                | bestätigt                        |
+| G-06 | Follow 45 m, Zoom 20–160 m, Glättung/Vorausschau, skalierbare Grafik/Overlays                        | bestätigt                        |
+| G-07 | D00 Foundation-Abnahme                                                                               | offen                            |
 
 Foundation: laut Nutzer PC npm run check mit 9/9 Tests bestanden, erster Push main erfolgreich, Git-Abruf am Laptop erfolgreich; Nutzer meldet Git funktioniert. Vite-Start und check am Laptop, CI, Browser einschließlich WebGL-Fallback sowie Review/Test durch Freund nicht nachgewiesen. Freund ist momentan nicht verfügbar. Kein Status darf ohne Nachweis als bestanden gelten.
 
@@ -112,3 +112,7 @@ Regulär beide Entwickler vor Implementierung abnehmen. Als eng begrenzte Ausnah
 Technische Arbeitsannahmen (u.a. PRNG-Algorithmus, Substepbudget, Kontakt-Slop, Spawn-/Tessellierungsdetails, Stabilisierungskoeffizienten, HUD-Rate) sind kein Ersatz für Tests. Der dynamische Lenkwinkel ist als Zielhüllkurve mit Ratenbegrenzung vorgeschlagen, das mechanische Limit gilt strikt. Falls ein hartes dynamisches Limit erforderlich wird, Entscheidung vor Änderung einholen. Exakte Niedrigtempo-Relaxation, Reibungs-/Kontaktlösung und Recovery-Details in den jeweiligen Paketen spezifizieren und testen. Keine unklaren Anforderungen durch unbemerkte Funktionsänderungen lösen.
 
 **Gesonderte FD-002-Ausnahme.** Der Auftraggeber hat auf Basis von FD-001 (`6651800`, PR #1 mit laut Auftraggeber erfolgreicher GitHub Actions) ausschließlich FD-002 für die vorläufige lokale Entwicklung auf `feature/fd-002-vehicle-controls` freigegeben. Diese Freigabe wurde separat von der ursprünglichen FD-001-Ausnahme erteilt. G-07 und das gegenseitige Review bleiben offen. Die Ausnahme gibt weder einen Merge in main noch FD-003 frei.
+
+## FD-003-Recovery · Stand der G-03-Prüfung
+
+Die gesonderte lokale Freigabe für den Recovery-Branch dokumentiert der [Auftrag](FD-003_CODEX_PROMPT.md). Die Kraft- und Lenkkennlinien aus Abschnitt 5 sowie die vier Abnahmekorridore aus Abschnitt 9 wurden am einzelnen GT-01 headless geprüft. Kinematische Relaxationszeit 0,12 s, beide Mindestnenner 1 m/s, Dämpfung quer 0,5/s und um die Hochachse 0,7/s. Smoothstep mischt die Seitenkraftanforderungen im Bereich 5–15 km/h. Die echte Materialgrenze wirkt sofort, der Rollwiderstand und der Gripaufbau erreichen ihren Zielwert nach sechs Ticks. Die Kalibrierung der freien Bewegung ist abgeschlossen. Die gemeinsame Abnahme mit Strecke, Kontakten, HUD und Welttick bleibt FD-004–007 zugeordnet.

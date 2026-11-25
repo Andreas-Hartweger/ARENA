@@ -23,4 +23,8 @@ FD-001 ist in der lokalen Basis über PR #1 enthalten. Laut Auftraggeber war der
 
 Lokal umgesetzt auf `feature/fd-002-vehicle-controls` unter der separat erteilten FD-002-Ausnahme. Abnahmekriterien für dieses Paket sind validierte GT-01-Daten, unabhängige Instanzen, gemeinsame Steuergrenzen, Richtungsgate, 60-Hz-Tastaturverarbeitung und Browseradapter mit Ereignis- und Listener-Tests. Physikabhängige Kriterien sind im [Testkatalog](first-drive/FIRST_DRIVE_TESTS.md) ausgewiesen.
 
-Review und vollständige Foundation-Abnahme stehen aus. Die Ausnahme erteilt keine Freigabe für einen Merge in main. FD-003 und alle weiteren Pakete bleiben gesperrt. Siehe [First-Drive-Plan](first-drive/FIRST_DRIVE_TASKS.md).
+Review und vollständige Foundation-Abnahme stehen aus. Die Ausnahme erteilt keine Freigabe für einen Merge in main. Zum Abschluss von FD-002 standen die Freigaben für FD-003 und alle weiteren Pakete aus. Siehe [First-Drive-Plan](first-drive/FIRST_DRIVE_TASKS.md).
+
+## FD-003 – Freie Fahrzeugdynamik
+
+Die gesonderte Recovery-Freigabe ersetzt für FD-003 die Sperre aus dem FD-002-Abschluss. 003a bis 003d sind lokal umgesetzt und geprüft. Die vier Leistungsziele, der Fehlervertrag und die bildratenunabhängige Headless-Ausführung sind im [Abschlussbericht](DEVELOPMENT_LOG.md#fd-003--recovery-der-fahrzeugphysik) belegt. Ausstehend sind gegenseitiges Review, G-07 und die paketübergreifende Abnahme in FD-007. FD-004 und weitere Pakete benötigen eine eigene Freigabe.
