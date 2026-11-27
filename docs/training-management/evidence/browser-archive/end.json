@@ -1,0 +1,19 @@
+{
+  "comparisonRun": {
+    "type": "end",
+    "generations": 100,
+    "evaluations": 12800,
+    "ms": 11404898.7,
+    "champion": "8e3d307775f012a80c85481b1eb34cbb3d78e047136a70f2c6fba7b57b2a07f4",
+    "checkpoints": 3
+  },
+  "parallel": {
+    "type": "end",
+    "generations": 100,
+    "evaluations": 12800,
+    "ms": 3628351.6999999955,
+    "champion": "8e3d307775f012a80c85481b1eb34cbb3d78e047136a70f2c6fba7b57b2a07f4",
+    "checkpoints": 3
+  },
+  "identicalGenerations": 100
+}
