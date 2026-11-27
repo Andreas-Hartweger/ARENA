@@ -232,6 +232,19 @@ export async function runExperiment(
       },
     };
   };
+  if (def.phase === 'Baseline')
+    store.prepareObjects = (values) =>
+      values.map((o) => {
+        if (o.meta.kind !== 'checkpoint') return o;
+        const cp = decode(o);
+        if (cp.counters.logicalEpisodes !== 8192 || !cp.champion) return o;
+        ledger.manifest('prefix:' + exp, {
+          checkpoint: cp.id,
+          champion: cp.champion.genome,
+          logicalEpisodes: 8192,
+        });
+        return { ...o, meta: { ...o.meta, protected: true, root: true } };
+      });
   store.onCommit = (objects) => {
     const cpObject = objects.find((o) => o.meta.kind === 'checkpoint');
     for (const obj of objects.filter((o) => o.meta.kind === 'history')) {

@@ -99,11 +99,15 @@ export async function exportExperiment(
   };
   const index = JSON.parse(Buffer.from(get('run:' + runId)).toString()),
     cp = JSON.parse(Buffer.from(get(index.latest)).toString());
+  const prefix = ledger.db
+    .prepare('SELECT data FROM manifests WHERE id=?')
+    .get('prefix:' + id);
   const exports = {};
   for (const [role, key] of [
     ['champion', cp.champion?.genome],
     ['generationBest', cp.generationBest],
     ['fastest', cp.lapRecords?.[0]?.genome],
+    ['prefixChampion', prefix ? JSON.parse(prefix.data).champion : undefined],
   ]) {
     if (!key) continue;
     const bytes = get(key),

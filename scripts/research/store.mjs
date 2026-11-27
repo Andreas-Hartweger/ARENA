@@ -121,7 +121,7 @@ export class NodeStore {
         all.set(m.id, m);
         save.run(this.namespace, m.id, JSON.stringify(m), bytes);
       };
-      values.forEach(put);
+      (this.prepareObjects?.(values) ?? values).forEach(put);
       if (batch) {
         const get = this.db.prepare(
           'SELECT meta,bytes FROM object_stage WHERE space=? AND lease=? AND batch=? AND id=?',

@@ -45,9 +45,32 @@ export async function reuseReference(ledger, directory, entry) {
       .split('\n')
       .map((line) => JSON.parse(line)),
   );
+  const historical = readFileSync(join(old, 'generations.ndjson'), 'utf8')
+    .trim()
+    .split('\n')
+    .map((l) => JSON.parse(l));
+  const prefixChampion = historical[63].champion;
+  let reconstructed;
+  const { parameterBytes } = await import('../../src/runtime/fingerprint.ts');
   const verification = await replayReference(old, {
     recordsOnly: true,
     onCandidate: (generation, slot, _s, genome, ref) => {
+      if (
+        generation <= 63 &&
+        ref.id === prefixChampion.id &&
+        ref.score === prefixChampion.fitness &&
+        !reconstructed
+      ) {
+        const bytes = parameterBytes(genome.parameters()),
+          path = genome.hash + '.f64le';
+        publish(join(folder, path), bytes);
+        reconstructed = {
+          id: 'genome:' + genome.hash + ':' + sha(bytes),
+          file: path,
+          size: bytes.length,
+          sha256: sha(bytes),
+        };
+      }
       if (generation >= prefix.length) return;
       const candidate = prefix[generation][slot];
       assert.equal(candidate.hash, genome.hash);
@@ -56,7 +79,8 @@ export async function reuseReference(ledger, directory, entry) {
     },
   });
   assert.equal(verification.reconstructedCandidates, 12800);
-  const models = {};
+  assert(reconstructed);
+  const models = { prefixChampion: reconstructed };
   for (const driver of source.measured.filter(
     (d) =>
       d.roles.includes('Finaler Champion') ||

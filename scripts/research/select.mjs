@@ -12,7 +12,8 @@ import {
   parseFlags,
 } from './campaign.mjs';
 import { loadCandidate, loadPanel, evaluatePanel } from './evaluate-panel.mjs';
-const { caseStatistics } = await import('../../src/research/validation.ts');
+const { caseStatistics, comparePaired } =
+  await import('../../src/research/validation.ts');
 const { distribution } = await import('../../src/training/evolution.ts');
 const [directory, phase] = process.argv.slice(2);
 if (!['confirmation', 'long', 'freeze'].includes(phase))
@@ -72,7 +73,13 @@ try {
       )
     )
       continue;
-    const candidate = loadCandidate(directory, slot.ExperimentID);
+    const isPrefix =
+      phase === 'confirmation' && slot.ExperimentID.startsWith('B-');
+    const candidate = loadCandidate(
+      directory,
+      slot.ExperimentID,
+      isPrefix ? 'prefixChampion' : 'champion',
+    );
     const outcome = await evaluatePanel(
       ledger,
       clock,
@@ -83,8 +90,21 @@ try {
     const result = caseStatistics(outcome.actual);
     if (outcome.actual.some((c) => !c.result.ok))
       throw Error('Incomplete development validation');
-    const file = slot.ExperimentID + '.json';
+    const file = slot.ExperimentID + (isPrefix ? '-prefix' : '') + '.json';
+    let paired = null;
+    if (slot.ExperimentID.startsWith('S')) {
+      const peer = join(
+        folder,
+        'dev-B-evolution-' + slot.Seed + '-prefix.json',
+      );
+      if (existsSync(peer))
+        paired = comparePaired(
+          JSON.parse(readFileSync(peer, 'utf8')).outcome.actual,
+          outcome.actual,
+        );
+    }
     publishJSON(join(folder, 'dev-' + file), {
+      paired,
       panel: development.hash,
       genome: candidate.genome.hash,
       outcome,
@@ -97,6 +117,7 @@ try {
       .trim()
       .split('\n')
       .map((line) => JSON.parse(line));
+    if (isPrefix) gen.splice(64);
     const first = gen.find((g) => g.successes > 0),
       latest = gen.at(-1);
     const elapsed = gen.reduce((n, g) => n + (g.durationMs ?? g.ms), 0);
@@ -112,13 +133,16 @@ try {
       severe: result.severe,
       grass: result.grass?.median ?? null,
       progress: result.lawfulProgress.median,
-      msPerEpisode: elapsed / candidate.report.regularEpisodes,
+      msPerEpisode:
+        elapsed / (isPrefix ? 8192 : candidate.report.regularEpisodes),
+      comparedEpisodes: isPrefix ? 8192 : candidate.report.regularEpisodes,
+      paired,
       firstSuccessGeneration: first?.generation ?? null,
       censored: !first,
       progressGain: latest.progress.mean - gen[0].progress.mean,
       devHash: hashJSON(outcome),
       modelKey: candidate.genome.model.key,
-      versionSource: candidate.report.models.champion.id,
+      versionSource: candidate.report.models[candidate.role].id,
       devFile: 'dev-' + file,
     });
   }
