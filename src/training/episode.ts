@@ -1,3 +1,5 @@
+import { startState, type ScenarioStart } from './scenarioStart';
+import { RecoveryProof } from './recovery';
 import { Brain } from '../ai/network';
 import { profile, standardProfile, period } from '../ai/profile';
 import { canonical, signature } from '../ai/schema';
@@ -57,6 +59,7 @@ export function deadline(
   };
 }
 export interface ScenarioOptions {
+  start?: ScenarioStart;
   id?: string;
   seed?: number;
   track?: TrackDefinition;
@@ -81,12 +84,18 @@ export function scenario(digest: Digest, options: ScenarioOptions = {}) {
   );
   if (!(Number.isFinite(task.progressM) && task.progressM > 0))
     throw Error('Invalid progress threshold');
-  const track = createTrack(options.track),
-    pose = startGrid(track, 1, GT_01.lengthM, GT_01.widthM)[0];
+  const track = createTrack(options.track);
+  let initialState;
+  if (options.start) {
+    initialState = startState(track, options.start);
+  } else {
+    const pose = startGrid(track, 1, GT_01.lengthM, GT_01.widthM)[0];
+    initialState = { positionM: pose.position, headingRad: pose.heading };
+  }
   const vehicle = {
     id: 'candidate',
     startNumber: 0,
-    initialState: { positionM: pose.position, headingRad: pose.heading },
+    initialState,
   };
   const sensor = profile(standardProfile.rays, options.sensorHz ?? 30),
     decisionHz = options.decisionHz ?? 30;
@@ -122,10 +131,19 @@ export function scenario(digest: Digest, options: ScenarioOptions = {}) {
     }),
   );
   const key = digest(
-    canonical({ structure, track: track.def, vehicle, id, seed, purpose }),
+    canonical({
+      structure,
+      track: track.def,
+      vehicle,
+      id,
+      seed,
+      purpose,
+      ...(options.start ? { start: options.start } : {}),
+    }),
   );
   // Track compilation is shared read-only. Every call to evaluate starts a fresh world and driver.
   return freezeTree({
+    ...(options.start ? { start: { ...options.start } } : {}),
     track,
     vehicle,
     sensor,
@@ -231,6 +249,7 @@ export function* stepEpisode(
         world.frame.cars[0].lap.s,
       ),
       penalty = new Penalties();
+    const recovery = s.start?.kind === 'recovery' ? new RecoveryProof() : null;
     const clock = { anchor: 0, last: s.task.graceTicks },
       commands = new Map(),
       samples: TraceSample[] = [];
@@ -283,6 +302,21 @@ export function* stepEpisode(
         facts.contacts,
         ledger.highwater - before,
       );
+      if (recovery)
+        recovery.accept(
+          tick,
+          s.track,
+          {
+            position: car.state.positionM,
+            heading: car.state.headingRad,
+            lengthM: GT_01.lengthM,
+            widthM: GT_01.widthM,
+          },
+          car.lap.s,
+          p.longitudinalMps,
+          facts.travel,
+          facts.contacts,
+        );
       if (sampled) {
         if (record)
           samples.push({
@@ -339,6 +373,7 @@ export function* stepEpisode(
             productiveMps: end ? ledger.highwater / end : null,
           },
           lapTimes: ledger.lapTimes,
+          ...(recovery ? { recovery: recovery.result } : {}),
           ...(trace ? { trace: { samples, truncated } } : {}),
         });
       }
