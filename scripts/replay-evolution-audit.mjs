@@ -10,7 +10,8 @@ const { Evolution } = await import('../src/training/evolution.ts');
 const { scenarioSet, evaluate } = await import('../src/training/episode.ts');
 const { model } = await import('../src/training/genome.ts');
 const directory = process.argv[2],
-  partial = process.argv.includes('--partial');
+  partial = process.argv.includes('--partial'),
+  recordsOnly = process.argv.includes('--records-only');
 if (!directory) throw Error('Expected a reference run directory');
 const file = (name) => join(directory, name);
 const meta = JSON.parse(readFileSync(file('run.json'), 'utf8'));
@@ -55,7 +56,7 @@ for await (const line of createInterface({ input, crlfDelay: Infinity })) {
       [contract, seed, scenario, attempt],
       [current.key, current.seed, 0, 0],
     );
-    const reDrive = slot === best || slot === second;
+    const reDrive = !recordsOnly && (slot === best || slot === second);
     slot++;
     if (!reDrive) return raw;
     const actual = evaluate(current, genome.brain());
@@ -90,7 +91,7 @@ for await (const line of createInterface({ input, crlfDelay: Infinity })) {
 }
 assert.equal(buffer.length, 0);
 assert.equal(g, summaries.length);
-assert.equal(drives, g * 2);
+assert.equal(drives, recordsOnly ? 0 : g * 2);
 if (!partial) {
   assert.equal(run.population.length, 0);
   assert.equal(records, 12800);
@@ -105,6 +106,7 @@ process.stdout.write(
       ...environment(),
       originalSha: meta.sha,
       complete: !partial,
+      recordsOnly,
       generations: g,
       reconstructedCandidates: records,
       episodesDrivenAgain: drives,

@@ -1,6 +1,6 @@
 {
   "sha": "44c100c22854793b200a104dbc358e49ea9190fa",
-  "reason": "Der Sitzungswechsel beendete den ersten Referenzprozess nach G76. Alle vollständigen Generationen wurden vor dem Neustart geprüft. Einzelrecords des neuen Laufs werden bis G76 byteweise über SHA-256 verglichen.",
+  "reason": "Der Sitzungswechsel beendete den Referenzprozess nach G76. Diese Hashes sichern die 77 vollständig geprüften Originalgenerationen. Eine separate Wiederholung bestätigte G0–G34 bytegenau. Für den Abschluss wurden ab G77 ausschließlich die fehlenden Generationen gefahren.",
   "completedGenerations": 77,
   "regularEvaluations": 9856,
   "verifiedEarlierPrefix": 22,
