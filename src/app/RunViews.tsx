@@ -32,10 +32,19 @@ export function RunMap({
     [mode, setMode] = useState<CameraMode>('Übersicht');
   const [free, setFree] = useState({ x: 0, y: 0, width: 120 }),
     [poses, setPoses] = useState<Pose[]>([]),
-    [path, setPath] = useState<Pose[]>([]);
+    [path, setPath] = useState<Pick<Pose, 'key' | 'x' | 'y'>[]>([]);
+  const scenarioIndex =
+    poses.find(
+      (p) =>
+        p.key.slot === slot &&
+        p.key.sessionId === state?.sessionId &&
+        p.key.segmentId === state?.segment,
+    )?.key.scenarioIndex ??
+    poses.at(-1)?.key.scenarioIndex ??
+    0;
   const track = useMemo(
-    () => createTrack(draft.scenarios[0]?.track),
-    [draft.scenarios],
+    () => createTrack(draft.scenarios[scenarioIndex]?.track),
+    [draft.scenarios, scenarioIndex],
   );
   const geometry = useMemo(() => {
     const points = track.stations.map((s) => track.sample(s).position),
@@ -76,15 +85,9 @@ export function RunMap({
     };
     refresh();
     document.addEventListener('visibilitychange', refresh);
-    const off = lab.listen((msg) => {
-      if (
-        !fresh ||
-        msg.type !== 'observation' ||
-        !visible ||
-        msg.sample.key.sessionId !== session
-      )
-        return;
-      const p = msg.sample;
+    let timer: ReturnType<typeof setTimeout>;
+    const receive = (p: Pose) => {
+      if (!visible || p.key.sessionId !== session || document.hidden) return;
       setPoses((values) =>
         [
           ...values.filter(
@@ -100,12 +103,24 @@ export function RunMap({
           ...(values.at(-1)?.key.jobId === p.key.jobId
             ? values.slice(-599)
             : []),
-          p,
+          { key: p.key, x: p.x, y: p.y },
         ]);
-    });
+    };
+    const pull = async () => {
+      if (!document.hidden && visible && active) {
+        try {
+          const batch = await lab.call<Pose[]>({ type: 'samples' });
+          if (fresh) for (const p of batch) receive(p);
+        } catch {
+          /* Coordinator errors are reported by the run panel. */
+        }
+      }
+      if (fresh) timer = setTimeout(pull, 100);
+    };
+    if (visible && active) void pull();
     return () => {
       fresh = false;
-      off();
+      clearTimeout(timer);
       document.removeEventListener('visibilitychange', refresh);
       void lab
         .call({ type: 'observe', visible: 0, slot: null })
@@ -113,10 +128,22 @@ export function RunMap({
     };
   }, [visible, active, session, slot, detail, limit]);
   const current = poses.filter(
-    (p) => p.key.sessionId === session && p.key.segmentId === state?.segment,
+    (p) =>
+      p.key.sessionId === session &&
+      p.key.segmentId === state?.segment &&
+      p.key.scenarioIndex === scenarioIndex,
   );
   const pinned = current.find((p) => p.key.slot === slot),
-    focus = pinned ?? current.at(-1);
+    leader = current.reduce<Pose | undefined>(
+      (best, p) =>
+        !best ||
+        p.validLaps > best.validLaps ||
+        (p.validLaps === best.validLaps && p.certifiedM > best.certifiedM)
+          ? p
+          : best,
+      undefined,
+    ),
+    focus = pinned ?? leader;
   const b = useLabQuery<BrainData>(
     detail && visible && pinned?.ai ? { type: 'brain', slot } : null,
     pinned?.key.genomeHash,
@@ -304,6 +331,21 @@ export function RunMap({
               Sensoren und Brain beobachten
             </label>
           </div>
+          {leader && (
+            <p>
+              Vorläufig führender sichtbarer Slot {leader.key.slot} ·{' '}
+              {leader.validLaps} Runden · {number(leader.certifiedM, 1)} m
+              zertifizierter Fortschritt
+            </p>
+          )}
+          {focus && (
+            <p>
+              Segment {focus.key.segmentId} · G{focus.key.generation} · Szenario{' '}
+              {focus.key.scenarioIndex + 1} · Tor {focus.nextGate} · Bremse{' '}
+              {number(100 * focus.braking, 1)} % · {focus.contacts} Kontakte im
+              Tick
+            </p>
+          )}
           {focus && (
             <p>
               Slot {focus.key.slot} · Tick {focus.tick} ·{' '}

@@ -1,4 +1,4 @@
-function reference(workers: number, small: boolean) {
+function reference(workers: number, small: boolean, benchmark?: object) {
   const worker = new Worker(new URL('./reference.worker.ts', import.meta.url), {
     type: 'module',
   });
@@ -9,7 +9,7 @@ function reference(workers: number, small: boolean) {
     rows.push(e.data);
     if (e.data.type === 'end' || e.data.type === 'fault') worker.terminate();
   };
-  worker.postMessage({ workers, small });
+  worker.postMessage({ workers, small, benchmark });
   return { poll: () => rows.splice(0) };
 }
 Object.assign(window, { reference });

@@ -125,6 +125,31 @@ export function memoryEstimate(
 export function preflight(draft: Draft, digest: Digest, hardware?: number) {
   if (
     draft.version !== 1 ||
+    typeof draft.volatile !== 'boolean' ||
+    !draft.options ||
+    !draft.custom ||
+    Object.keys(draft).some(
+      (k) =>
+        ![
+          'version',
+          'options',
+          'hidden',
+          'activation',
+          'weightLimit',
+          'biasLimit',
+          'scenarios',
+          'weights',
+          'sourceVersion',
+          'profile',
+          'custom',
+          'rate',
+          'mode',
+          'goal',
+          'time',
+          'autosave',
+          'volatile',
+        ].includes(k),
+    ) ||
     !Array.isArray(draft.scenarios) ||
     !draft.scenarios.length ||
     draft.scenarios.length > 64 ||
@@ -134,6 +159,8 @@ export function preflight(draft: Draft, digest: Digest, hardware?: number) {
   )
     throw Error('Invalid run configuration');
   if (draft.goal) validateGoal(draft.goal);
+  if (draft.time && typeof draft.time.hard !== 'boolean')
+    throw Error('Invalid time limit policy');
   if (draft.time)
     bounded(draft.time.seconds, 0.001, Number.MAX_SAFE_INTEGER, 'wall time');
   const master = draft.options.master ?? 42,

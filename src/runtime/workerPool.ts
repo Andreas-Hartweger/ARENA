@@ -28,6 +28,8 @@ interface Work {
   reject: (e: Error) => void;
 }
 export interface PoolMonitor {
+  transferredBytes: number;
+  receivedMessages: number;
   evaluated: number;
   ticks: number;
   computeMs: number;
@@ -69,7 +71,14 @@ export class WorkerPool {
     if (slot === this.#selected) return 'detail';
     return [...this.#lanes].indexOf(l) < this.#visible ? 'pose' : undefined;
   }
-  #monitor = { evaluated: 0, ticks: 0, computeMs: 0, attempts: 0 };
+  #monitor = {
+    evaluated: 0,
+    ticks: 0,
+    computeMs: 0,
+    attempts: 0,
+    transferredBytes: 0,
+    receivedMessages: 0,
+  };
   onProgress?: (event: Extract<WorkerEvent, { type: 'progress' }>) => void;
   onPause?: () => void;
   constructor(factory: () => ComputePort, limit: number, session: string) {
@@ -177,6 +186,12 @@ export class WorkerPool {
     const key = l.job,
       w = this.#work;
     if (!w) return;
+    if (key && (this.#mode === 'paused' || this.#mode === 'pausing')) {
+      this.#fail(
+        Error('Workerzustand während der Pause verloren: ' + error.message),
+      );
+      return;
+    }
     if (!key || key.attempt === 1) {
       this.#fail(error);
       return;
@@ -226,13 +241,13 @@ export class WorkerPool {
           runId: e.config.runId,
           sessionId: this.#session,
           segmentId: e.config.segment,
-          generation: e.history.length,
+          generation: e.nextGeneration,
           slot,
           scenarioIndex,
           jobId: JSON.stringify([
             this.#session,
             e.config.segment,
-            e.history.length,
+            e.nextGeneration,
             slot,
             scenarioIndex,
           ]),
@@ -265,6 +280,7 @@ export class WorkerPool {
         l.job = key;
         l.paused = false;
         this.#monitor.attempts++;
+        this.#monitor.transferredBytes += parameters.byteLength;
         l.port.send({ type: 'assign', job, rate: this.#rate }, [
           parameters.buffer as ArrayBuffer,
         ]);
@@ -272,6 +288,7 @@ export class WorkerPool {
   }
   #event(l: Lane, msg: WorkerEvent) {
     if (!this.#lanes.has(l)) return;
+    this.#monitor.receivedMessages++;
     if (msg.type === 'ready') {
       if (msg.protocolVersion !== 1 || l.ready)
         throw Error('Invalid worker handshake');
@@ -283,7 +300,7 @@ export class WorkerPool {
     if (!w || msg.key?.sessionId !== this.#session) return;
     if (!sameAssignment(l.job!, msg.key)) {
       if (
-        msg.key.generation < w.evolution.history.length ||
+        msg.key.generation < w.evolution.nextGeneration ||
         msg.key.segmentId < w.evolution.config.segment
       )
         return;
@@ -301,6 +318,7 @@ export class WorkerPool {
     switch (msg.type) {
       case 'progress':
         this.onProgress?.(msg);
+        l.port.send({ type: 'sampleAck', key });
         return;
       case 'running':
         return;

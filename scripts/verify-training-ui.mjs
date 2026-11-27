@@ -168,6 +168,61 @@ try {
   await button('Generation abschließen').click();
   await phase('Abgeschlossen');
   const finalGeneration = await gen();
+  let reviewedModel = false;
+  if (mode === 'short') {
+    await nav('Modelle');
+    await field('Name der Kopie').fill('Isolierter Klon');
+    await button('Exakte Kopie anlegen').click();
+    await page
+      .getByRole('button', { name: /Isolierter Klon.*Version/ })
+      .waitFor();
+    await page
+      .getByText('Versionen vergleichen und Testfahrt', { exact: true })
+      .click();
+    const comparison = field('Vergleichsversion');
+    await comparison.selectOption({ label: 'Isolierter Klon · V1' });
+    await button('Parameter vergleichen').click();
+    await page.getByRole('columnheader', { name: 'RMS' }).waitFor();
+    await button('Gemeinsamen Fahrvergleich starten').click();
+    await page.getByText(/ein gemeinsames Testszenario/).waitFor();
+    const results = page.getByRole('table').filter({
+      has: page.getByRole('columnheader', { name: 'Simulationszeit' }),
+    });
+    const [left, right] = await results.locator('tbody tr').all();
+    const read = async (r) =>
+      (await r.locator('td').allTextContents()).slice(1, -1);
+    if (JSON.stringify(await read(left)) !== JSON.stringify(await read(right)))
+      throw Error('Cloned models diverged on identical test scenario');
+    await button('Laufchampion als Version sichern').click();
+    await field('Version')
+      .filter({ has: page.locator('option', { hasText: 'Version 2' }) })
+      .waitFor();
+    const download = page.waitForEvent('download');
+    await button('Modell exportieren').click();
+    const file = join(destination, 'roundtrip.arena-model');
+    await (await download).saveAs(file);
+    await nav('Speicher');
+    await field('Paket zur Prüfung öffnen').setInputFiles(file);
+    await button('Geprüftes Paket importieren').click();
+    await page.getByText('Import abgeschlossen.').waitFor();
+    await page.setViewportSize({ width: 390, height: 844 });
+    await nav('Modelle');
+    await page.keyboard.press('Tab');
+    if (
+      await page.evaluate(
+        () => document.documentElement.scrollWidth > window.innerWidth + 1,
+      )
+    )
+      throw Error('Required UI overflows narrow viewport');
+    await page.screenshot({
+      path: join(destination, 'models-mobile.png'),
+      fullPage: true,
+    });
+    await nav('Training');
+    if ((await gen()) !== finalGeneration)
+      throw Error('Read-only comparison modified training');
+    reviewedModel = true;
+  }
   await nav('Speicher');
   await button('Integrität prüfen').click();
   await page.getByText('Integritätsprüfung abgeschlossen.').waitFor();
@@ -178,6 +233,7 @@ try {
     cycle,
     gaps,
     finalGeneration,
+    reviewedModel,
     timings,
     errors,
   });
@@ -192,3 +248,4 @@ try {
   await browser.close();
   await new Promise((r) => server.httpServer.close(r));
 }
+/* global document,window */

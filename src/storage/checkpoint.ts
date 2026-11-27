@@ -29,6 +29,13 @@ export interface RunCounters {
   parentCheckpoint?: string;
 }
 type SavedMember = Omit<Member, 'genome'> & { genome: string };
+export interface LapRecord<G = Genome> {
+  contract: string;
+  scenario: number;
+  individual: string;
+  seconds: number;
+  genome: G;
+}
 export interface Checkpoint {
   version: 'arena.checkpoint.v1';
   runtime: string;
@@ -46,6 +53,7 @@ export interface Checkpoint {
   adaptive: AdaptiveState | null;
   champion: { id: string; fitness: number; genome: string } | null;
   generationBest: string | null;
+  lapRecords?: LapRecord<string>[];
 }
 export interface RunIndex {
   id: string;
@@ -95,9 +103,13 @@ export function boundary(
   historyIds: readonly string[],
   prior?: RunIndex,
   manual = false,
+  lapRecords: readonly LapRecord[] = [],
+  terminal = false,
 ) {
   const snap: CommittedSnapshot | null = stage?.snapshot ?? evolution.snapshot;
-  const population = stage?.snapshot.nextPopulation ?? evolution.population;
+  const population = terminal
+    ? []
+    : (stage?.snapshot.nextPopulation ?? evolution.population);
   const history = stage?.history ?? evolution.history;
   const objects = new Map<string, StoredObject>(),
     genomes = new Map<Genome, string>();
@@ -114,8 +126,11 @@ export function boundary(
     genome: ref(genome),
   }));
   const ids = [...historyIds];
-  for (let i = ids.length; i < history.length; i++) {
-    const summary = history[i],
+  const nextGeneration = evolution.historyOffset + history.length;
+  if (ids.length < evolution.historyOffset || ids.length > nextGeneration)
+    throw Error('Unvollständiger dauerhafter Verlaufsindex.');
+  for (let i = ids.length; i < nextGeneration; i++) {
+    const summary = history[i - evolution.historyOffset],
       key = 'history:' + draft.options.runId + ':' + counters.segment + ':' + i;
     const record = jsonObject('history', key, summary);
     objects.set(key, record);
@@ -131,7 +146,7 @@ export function boundary(
     runId,
     phase: population.length ? 'readyToEvaluate' : 'terminal',
     reason,
-    nextGeneration: population.length ? history.length : null,
+    nextGeneration: population.length ? nextGeneration : null,
     draft,
     original,
     counters,
@@ -146,6 +161,9 @@ export function boundary(
         }
       : null,
     generationBest: snap ? ref(snap.generationBest) : null,
+    ...(lapRecords.length
+      ? { lapRecords: lapRecords.map((r) => ({ ...r, genome: ref(r.genome) })) }
+      : {}),
   };
   const checkpoint = jsonObject(
     'checkpoint',
@@ -191,6 +209,7 @@ export async function restore(
   runtime: string,
   hardware?: number,
   branchRun?: string,
+  archive?: (row: GenerationSummary) => void,
 ) {
   async function get(key: string) {
     const o = await db.get(key);
@@ -244,9 +263,13 @@ export async function restore(
   const identity = (id: string) => {
     if (!branchRun) return id;
     const parts: unknown = JSON.parse(id);
-    if (!Array.isArray(parts) || parts.length !== 3 || parts[0] !== fromRun)
+    if (
+      !Array.isArray(parts) ||
+      ![3, 4].includes(parts.length) ||
+      parts[0] !== fromRun
+    )
       return id;
-    return JSON.stringify([branchRun, parts[1], parts[2]]);
+    return JSON.stringify([branchRun, ...parts.slice(1)]);
   };
   function lineage<T extends Pick<Member, 'id' | 'parents' | 'inheritance'>>(
     m: T,
@@ -272,11 +295,20 @@ export async function restore(
       Object.freeze({ ...lineage(fields), genome: await genome(key) }),
     );
   const history: GenerationSummary[] = [];
-  for (const key of cp.history) {
+  for (const [i, key] of cp.history.entries()) {
     const row = await get(key);
     if (row.meta.kind !== 'history')
       throw Error('Ungültige Generationsreferenz.');
     const summary = decode<GenerationSummary>(row);
+    if (
+      summary.version !== 'arena.generation.v1' ||
+      summary.generation !== i ||
+      summary.records.length !== c.n ||
+      summary.evaluations !== c.n * scenarios.length
+    )
+      throw Error('Ungültige Generationsdaten.');
+    archive?.(summary);
+    if (archive && !branchRun && i < cp.history.length - 1) continue;
     history.push(
       branchRun
         ? {
@@ -313,6 +345,7 @@ export async function restore(
     {
       population,
       history,
+      historyOffset: cp.history.length - history.length,
       champion,
       generationBest: cp.generationBest
         ? await genome(cp.generationBest)
@@ -320,5 +353,20 @@ export async function restore(
       adaptive: cp.adaptive,
     },
   );
-  return { cp, evolution };
+  const lapRecords: LapRecord[] = [];
+  for (const r of cp.lapRecords ?? []) {
+    if (
+      scenarios[r.scenario]?.key !== r.contract ||
+      !Number.isFinite(r.seconds) ||
+      r.seconds <= 0 ||
+      lapRecords.some((v) => v.contract === r.contract)
+    )
+      throw Error('Ungültige Rundenreferenz.');
+    lapRecords.push({
+      ...r,
+      individual: identity(r.individual),
+      genome: await genome(r.genome),
+    });
+  }
+  return { cp, evolution, lapRecords };
 }

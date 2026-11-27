@@ -161,3 +161,27 @@ export function validateObject(o: StoredObject) {
   )
     throw Error('Invalid storage object');
 }
+export function profileDeletion(all: readonly ObjectMeta[], ids: string[]) {
+  const map = new Map(all.map((m) => [m.id, m]));
+  const operational = reachable(
+    map,
+    all
+      .filter(
+        (m) =>
+          m.kind === 'run' ||
+          m.kind === 'queue' ||
+          m.protected ||
+          m.kind === 'pin',
+      )
+      .map((m) => m.id),
+  );
+  for (const id of ids) {
+    const profile = map.get(id);
+    if (profile?.kind !== 'profile') throw Error('Kein Modellprofil.');
+    if (profile.refs.some((v) => operational.has(v)))
+      throw Error(
+        'Eine Modellversion wird von einem Lauf, Checkpoint oder wartenden Auftrag benötigt.',
+      );
+  }
+  return deletionPreview(all, ids);
+}

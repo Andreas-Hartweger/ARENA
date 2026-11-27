@@ -213,6 +213,7 @@ export type CommittedSnapshot = Readonly<{
   nextPopulation: readonly Member[];
 }>;
 export interface EvolutionBoundary {
+  historyOffset?: number;
   population: readonly Member[];
   history: readonly GenerationSummary[];
   champion: CommittedSnapshot['champion'] | null;
@@ -229,6 +230,7 @@ export class Evolution {
   readonly #digest: Digest;
   #population: readonly Member[];
   #history: readonly Summary[] = Object.freeze([]);
+  #historyOffset = 0;
   #champion: { id: string; fitness: number; genome: Genome } | null = null;
   #lastError: string | null = null;
   #phase: Phase = 'initialized';
@@ -279,8 +281,12 @@ export class Evolution {
         : initialPopulation(m, this.config, digest, seed);
     if (boundary) {
       const { history, champion, generationBest, adaptive } = boundary,
-        g = history.length;
+        g = (boundary.historyOffset ?? 0) + history.length;
+      this.#historyOffset = boundary.historyOffset ?? 0;
       if (
+        !Number.isSafeInteger(this.#historyOffset) ||
+        this.#historyOffset < 0 ||
+        (this.#historyOffset > 0 && !history.length) ||
         g > this.config.generations ||
         g > 0 !== !!champion ||
         g > 0 !== !!generationBest ||
@@ -299,7 +305,7 @@ export class Evolution {
         history.some(
           (h, i) =>
             h.version !== 'arena.generation.v1' ||
-            h.generation !== i ||
+            h.generation !== this.#historyOffset + i ||
             h.records.length !== this.config.n ||
             h.evaluations !== this.config.n * scenarios.length,
         )
@@ -337,6 +343,24 @@ export class Evolution {
   get history() {
     return this.#history;
   }
+  get historyOffset() {
+    return this.#historyOffset;
+  }
+  get nextGeneration() {
+    return this.#historyOffset + this.history.length;
+  }
+  releaseDurableHistory(written: number) {
+    if (!Number.isSafeInteger(written) || written > this.nextGeneration)
+      throw Error('Unknown durable history boundary');
+    const release = Math.max(
+      0,
+      Math.min(written - this.#historyOffset, this.history.length - 1),
+    );
+    if (release) {
+      this.#history = Object.freeze(this.history.slice(release));
+      this.#historyOffset += release;
+    }
+  }
   get champion() {
     return this.#champion;
   }
@@ -353,7 +377,7 @@ export class Evolution {
     if (this.#busy || !this.population.length)
       throw Error('No open generation');
     const rows: EvaluationRow[] = [],
-      generation = this.history.length,
+      generation = this.nextGeneration,
       c = this.config;
     this.#busy = true;
     this.#phase = 'evaluating';
@@ -434,7 +458,7 @@ export class Evolution {
     let interrupted = false;
     try {
       const c = this.config,
-        g = this.history.length,
+        g = this.nextGeneration,
         n = c.n,
         sc = this.scenarios.length,
         slots = new Map<number, EvaluationRow>();

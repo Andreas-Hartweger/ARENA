@@ -1,3 +1,4 @@
+import { ChartHistory, type ChartMetric } from './history';
 import {
   Evolution,
   type EvaluationRow,
@@ -13,11 +14,11 @@ import {
   restore,
   type RunCounters,
   type RunIndex,
+  type LapRecord,
 } from '../storage/checkpoint';
 import {
   decode,
   deletionPreview,
-  jsonObject,
   type StorePort,
   type StoredObject,
 } from '../storage/objects';
@@ -48,6 +49,10 @@ export interface RunState {
   generation: number;
   evaluations: number;
   activeMs: number;
+  sessionActiveMs: number;
+  managedEstimate: number;
+  saveMs: number;
+  commits: number;
   durableGeneration: number | null;
   reason: string | null;
   error: string | null;
@@ -62,6 +67,8 @@ export class TrainingController {
   #pool?: WorkerPool;
   #index?: RunIndex;
   #historyIds: string[] = [];
+  #plot = new ChartHistory();
+  #laps: LapRecord[] = [];
   #counts!: RunCounters;
   #phase: Phase = 'Draft';
   #reason: string | null = null;
@@ -69,6 +76,10 @@ export class TrainingController {
   #activeSince: number | null = null;
   #durable: number | null = null;
   #seq = 0;
+  #sessionBaseMs = 0;
+  #managedEstimate = 0;
+  #saveMs = 0;
+  #commits = 0;
   #session = '';
   #waitingRows?: EvaluationRow[];
   #pendingSave?: () => Promise<void>;
@@ -140,6 +151,10 @@ export class TrainingController {
       generation: this.#counts?.globalGeneration ?? 0,
       evaluations: this.#counts?.logicalEpisodes ?? 0,
       activeMs: this.#active(),
+      sessionActiveMs: Math.max(0, this.#active() - this.#sessionBaseMs),
+      managedEstimate: this.#managedEstimate,
+      saveMs: this.#saveMs,
+      commits: this.#commits,
       durableGeneration: this.#durable,
       reason: this.#reason,
       error: this.#error,
@@ -175,60 +190,52 @@ export class TrainingController {
       Math.max(0, offset) + Math.min(128, limit),
     );
   }
-  history(metric: 'fitness' | 'laps' | 'diversity' | 'progress' = 'fitness') {
-    const full = this.#e?.history ?? [];
-    const point = (s: GenerationSummary) => ({
-      generation: s.generation,
-      fitness: s.fitness,
-      successes: s.successes,
-      lapTime: s.lapTimes?.worst ?? null,
-      diversity: s.diversity.D,
-      progress: s.progress.best,
-    });
-    if (full.length <= 600) return full.map(point);
-    // Keep actual extrema for each visible series and a missing-value marker per bin.
-    const series = (s: GenerationSummary): (number | null)[] =>
-      metric === 'fitness'
-        ? [
-            s.fitness.best,
-            s.fitness.mean,
-            s.fitness.median,
-            s.fitness.q1,
-            s.fitness.q3,
-          ]
-        : [
-            metric === 'laps'
-              ? (s.lapTimes?.worst ?? null)
-              : metric === 'diversity'
-                ? s.diversity.D
-                : s.progress.best,
-          ];
-    const width = Math.ceil(
-        full.length / Math.floor(598 / (metric === 'fitness' ? 11 : 4)),
-      ),
-      selected = new Set([0, full.length - 1]);
-    for (let start = 0; start < full.length; start += width) {
-      const end = Math.min(start + width, full.length),
-        min: number[] = [],
-        max: number[] = [];
-      let gap = false;
-      selected.add(start);
-      for (let i = start; i < end; i++)
-        for (const [k, v] of series(full[i]).entries()) {
-          if (v === null) {
-            if (!gap) selected.add(i);
-            gap = true;
-            continue;
-          }
-          if (min[k] === undefined || v < series(full[min[k]])[k]!) min[k] = i;
-          if (max[k] === undefined || v > series(full[max[k]])[k]!) max[k] = i;
-        }
-      for (const i of [...min, ...max]) selected.add(i);
-    }
-    return [...selected].sort((a, b) => a - b).map((i) => point(full[i]));
+  history(metric: ChartMetric = 'fitness') {
+    return this.#plot.read(metric);
   }
   champion() {
     return this.#e?.champion;
+  }
+  archiveCandidate(
+    role: 'champion' | 'generationBest' | 'lapRecord',
+    scenario = 0,
+  ) {
+    const e = this.#e,
+      s = e?.snapshot;
+    if (!e || !s) throw Error('Noch keine bestätigte Generation.');
+    if (role === 'lapRecord') {
+      const lap = this.#laps.find((r) => r.scenario === scenario);
+      if (!lap)
+        throw Error(
+          'Bisher keine bestätigte gültige Runde in diesem Szenario.',
+        );
+      return {
+        id: lap.individual,
+        genome: lap.genome,
+        value: lap.seconds,
+        metric: 'lapTime' as const,
+        contract: lap.contract,
+        scenarios: 1,
+        scenario,
+      };
+    }
+    const candidate =
+      role === 'champion'
+        ? s.champion
+        : {
+            id: s.summary.bestId,
+            genome: s.generationBest,
+            fitness: s.summary.fitness.best,
+          };
+    return {
+      id: candidate.id,
+      genome: candidate.genome,
+      value: candidate.fitness,
+      metric: 'fitness' as const,
+      contract: e.scenarios.map((v) => v.key).join(','),
+      scenarios: e.scenarios.length,
+      scenario: 0,
+    };
   }
   #emit() {
     this.#seq++;
@@ -277,6 +284,8 @@ export class TrainingController {
     this.#e = undefined;
     this.#index = undefined;
     this.#historyIds = [];
+    this.#plot = new ChartHistory();
+    this.#laps = [];
     this.#session = crypto.randomUUID();
     this.#learning = undefined;
     this.#newScenarios = undefined;
@@ -284,6 +293,9 @@ export class TrainingController {
     this.#error = null;
     this.#durable = null;
     this.#phase = 'Initializing';
+    this.#sessionBaseMs = 0;
+    this.#saveMs = 0;
+    this.#commits = 0;
     this.#original = structuredClone(draft);
     this.#draft = structuredClone(draft);
     this.#counts = {
@@ -324,7 +336,7 @@ export class TrainingController {
         'Warteschlangenläufe benötigen einen dauerhaften Start-Checkpoint.',
       );
     draft.options.runId = crypto.randomUUID();
-    const { m, scenarios, allocation } = preflight(
+    const { m, scenarios, allocation, estimated } = preflight(
       draft,
       fingerprint,
       this.#hardware,
@@ -341,6 +353,7 @@ export class TrainingController {
     );
     this.#init(draft);
     this.#e = evolution;
+    this.#managedEstimate = estimated.total;
     this.#makePool(allocation.workers);
     this.#startClock();
     this.#emit();
@@ -475,6 +488,26 @@ export class TrainingController {
     let draft = proposed?.draft ?? this.#draft!;
     const reason = proposed?.stopped ?? null,
       write = save && !draft.volatile;
+    let lapRecords = [...this.#laps];
+    for (const row of stage?.snapshot.summary.records ?? []) {
+      for (const ep of row.episodes)
+        for (const seconds of ep.lapTimes) {
+          const position = lapRecords.findIndex(
+            (r) => r.contract === ep.contract,
+          );
+          if (position >= 0 && lapRecords[position].seconds <= seconds)
+            continue;
+          const record = {
+            contract: ep.contract,
+            scenario: ep.scenario,
+            individual: row.id,
+            seconds,
+            genome: this.#e!.population[row.slot].genome,
+          };
+          if (position < 0) lapRecords.push(record);
+          else lapRecords[position] = record;
+        }
+    }
     const makeBoundary = (
       e: Evolution,
       s: Stage | undefined,
@@ -493,6 +526,7 @@ export class TrainingController {
         history,
         index,
         manual,
+        lapRecords,
       );
     let saved = write
       ? makeBoundary(
@@ -507,6 +541,7 @@ export class TrainingController {
       successor: Evolution | undefined;
     if (proposed?.nextScenarios) {
       const old = saved;
+      lapRecords = [];
       counts = {
         ...counts,
         segment: counts.segment + 1,
@@ -519,7 +554,11 @@ export class TrainingController {
       };
       draft = {
         ...draft,
-        options: { ...draft.options, segment: counts.segment },
+        options: {
+          ...draft.options,
+          segment: counts.segment,
+          segmentedIdentity: true,
+        },
         scenarios: proposed.nextScenarios,
       };
       const { m, scenarios } = preflight(draft, fingerprint, this.#hardware);
@@ -550,7 +589,10 @@ export class TrainingController {
     }
     const publish = () => {
       stage?.publish();
+      if (successor) this.#plot = new ChartHistory();
+      else if (stage) this.#plot.add(stage.snapshot.summary);
       this.#e = successor ?? this.#e;
+      this.#laps = lapRecords;
       this.#counts = { ...counts, activeMs: this.#counts.activeMs };
       this.#draft = draft;
       this.#reason = reason;
@@ -558,6 +600,7 @@ export class TrainingController {
         this.#index = saved.index;
         this.#durable = saved.checkpoint.counters.globalGeneration;
         this.#historyIds = saved.checkpoint.history;
+        this.#e!.releaseDurableHistory(this.#historyIds.length);
       }
       this.#pendingSave = undefined;
       this.#error = null;
@@ -568,6 +611,7 @@ export class TrainingController {
       return;
     }
     const commit = async () => {
+      const started = performance.now();
       await this.#db.commit(queueUpdate ? [...objects, queueUpdate] : objects, {
         replace: [
           'run:' + draft.options.runId,
@@ -575,6 +619,8 @@ export class TrainingController {
         ],
       });
       publish();
+      this.#commits++;
+      this.#saveMs += performance.now() - started;
       try {
         const garbage = deletionPreview(await this.#db.list(), []);
         if (garbage.remove.length)
@@ -656,25 +702,63 @@ export class TrainingController {
     this.#pendingSave = undefined;
     this.#freezeClock();
     this.#reason = reason;
-    if (this.#index) {
-      const i = { ...this.#index, terminal: true };
-      const row = jsonObject(
-        'run',
-        'run:' + i.id,
-        i,
-        [i.latest, ...i.automatic, ...i.milestones],
-        true,
-      );
-      await this.#db.commit([row], { replace: [row.meta.id] });
-      this.#index = i;
+    const end = () => {
+      this.#phase = 'Cancelled';
+      this.#pendingSave = undefined;
+      this.#emit();
+    };
+    if (!this.#index) {
+      end();
+      return;
     }
-    this.#phase = 'Cancelled';
-    this.#emit();
+    const saved = boundary(
+      this.#e!,
+      undefined,
+      this.#draft!,
+      this.#original!,
+      this.#counts,
+      this.#runtime,
+      reason,
+      this.#historyIds,
+      this.#index,
+      false,
+      this.#laps,
+      true,
+    );
+    const commit = async () => {
+      await this.#db.commit(saved.objects, {
+        replace: ['run:' + saved.index.id],
+      });
+      this.#index = saved.index;
+      this.#historyIds = saved.checkpoint.history;
+      this.#durable = this.#counts.globalGeneration;
+      end();
+    };
+    try {
+      await commit();
+    } catch (error) {
+      this.#phase = 'Recoverable';
+      this.#error = String(error);
+      this.#pendingSave = commit;
+      this.#emit();
+    }
   }
   display(pick: Pick<Draft, 'rate' | 'mode' | 'profile' | 'custom'>) {
-    if (!this.#draft || !this.#pool) throw Error('Kein Lauf.');
+    if (
+      !this.#draft ||
+      !this.#pool ||
+      !['Running', 'Paused', 'Draining', 'Stopping'].includes(this.#phase)
+    )
+      throw Error('Kein bearbeitbarer Lauf.');
+    if (
+      Object.keys(pick).some(
+        (k) => !['rate', 'mode', 'profile', 'custom'].includes(k),
+      )
+    )
+      throw Error('Nur Anzeige und Rechenprofil sind hier änderbar.');
     const next = { ...this.#draft, ...pick };
     const p = preflight(next, fingerprint, this.#hardware);
+    this.#managedEstimate = p.estimated.total;
     this.#draft = next;
     this.#pool.setRate(next.mode === 'live' ? 1 : next.rate);
     this.#pool.resize(p.allocation.workers);
@@ -683,6 +767,22 @@ export class TrainingController {
   revise(learning: Learning, scenarios?: Draft['scenarios']) {
     if (!this.#draft || !['Running', 'Paused'].includes(this.#phase))
       throw Error('Kein bearbeitbarer Lauf.');
+    if (
+      learning &&
+      Object.keys(learning).some(
+        (k) =>
+          ![
+            'mutation',
+            'adaptation',
+            'eliteRate',
+            'poolFraction',
+            'crossProbability',
+            'operator',
+            'tournament',
+          ].includes(k),
+      )
+    )
+      throw Error('Diese Einstellung erfordert einen neuen Lauf.');
     const d = this.#draft,
       options = {
         ...d.options,
@@ -702,7 +802,11 @@ export class TrainingController {
     this.#emit();
   }
   markSave() {
-    if (!this.#e || this.#draft?.volatile)
+    if (
+      !this.#e ||
+      this.#draft?.volatile ||
+      !['Running', 'Paused', 'Draining', 'Stopping'].includes(this.#phase)
+    )
       throw Error('Keine dauerhafte Speicherung verfügbar.');
     this.#saveRequested = true;
     this.#emit();
@@ -729,12 +833,14 @@ export class TrainingController {
       throw Error(
         'Für die unbekannte Aktivzeit seit der Sicherung eine konservative Anzahl Sekunden angeben.',
       );
-    const { cp, evolution } = await restore(
+    const plot = new ChartHistory();
+    const { cp, evolution, lapRecords } = await restore(
       this.#db,
       id,
       this.#runtime,
       this.#hardware,
       fork ? crypto.randomUUID() : undefined,
+      (s) => plot.add(s),
     );
     if (cp.phase === 'terminal')
       throw Error('Terminaler Speicherstand ist abgeschlossen.');
@@ -753,6 +859,9 @@ export class TrainingController {
         this.#runtime,
         null,
         [],
+        undefined,
+        false,
+        lapRecords,
       );
       await this.#db.commit(b.objects);
       destination = b.index;
@@ -762,9 +871,18 @@ export class TrainingController {
     this.#original = cp.original;
     this.#e = evolution;
     this.#counts = cp.counters;
+    this.#sessionBaseMs = cp.counters.activeMs;
+    this.#managedEstimate = preflight(
+      cp.draft,
+      fingerprint,
+      this.#hardware,
+    ).estimated.total;
     this.#durable = cp.counters.globalGeneration;
     this.#index = destination;
     this.#historyIds = history;
+    this.#plot = plot;
+    evolution.releaseDurableHistory(history.length);
+    this.#laps = lapRecords;
     this.#learning = cp.counters.pendingLearning;
     this.#newScenarios = cp.counters.pendingScenario;
     this.#makePool(

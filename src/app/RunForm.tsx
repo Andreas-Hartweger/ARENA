@@ -565,6 +565,21 @@ export function RunForm({
           </fieldset>
           <details>
             <summary>Vollständige Konfiguration bearbeiten</summary>
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={d.volatile}
+                onChange={(e) => setDraft({ ...d, volatile: e.target.checked })}
+              />
+              Flüchtiger Einzellauf ohne dauerhafte Checkpoints
+            </label>
+            {d.volatile && (
+              <p>
+                Beim Schließen gehen die ungesicherten Laufdaten verloren. Eine
+                Fortsetzung aus einem Checkpoint ist bei diesem Lauf
+                ausgeschlossen.
+              </p>
+            )}
             <p>
               Hier lassen sich unter anderem Szenariosätze, kombinierte Ziele,
               geschützte Schichten und schichtweise Mutationsfaktoren festlegen.

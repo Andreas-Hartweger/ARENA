@@ -28,8 +28,9 @@ export type LabCommand =
       settings: Pick<Draft, 'mode' | 'rate' | 'profile' | 'custom'>;
     }
   | { type: 'revise'; learning: Learning; scenarios?: Draft['scenarios'] }
-  | { type: 'currentDraft' | 'dispatchQueue' }
+  | { type: 'currentDraft' | 'dispatchQueue' | 'samples' }
   | { type: 'version'; id: string }
+  | { type: 'compatibility'; version: string; other?: string; draft: Draft }
   | {
       type: 'population';
       offset: number;
@@ -39,6 +40,7 @@ export type LabCommand =
     }
   | { type: 'brain'; slot: number }
   | { type: 'checkpointInfo'; id: string }
+  | { type: 'findRecovery'; run: string }
   | {
       type: 'recover';
       id: string;
@@ -47,7 +49,12 @@ export type LabCommand =
     }
   | { type: 'create'; name: string; draft: Draft; source?: string }
   | { type: 'profile'; id: string; changes: Partial<Profile> }
-  | { type: 'champion'; profile: string }
+  | {
+      type: 'champion';
+      profile: string;
+      role?: 'champion' | 'generationBest' | 'lapRecord';
+      scenario?: number;
+    }
   | { type: 'compare'; a: string; b: string }
   | { type: 'drive'; version: string; draft: Draft }
   | { type: 'writeQueue'; value: QueueState }

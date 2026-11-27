@@ -166,6 +166,9 @@ export function StorageCenter({
     );
   const trash = models.filter((p) => p.trashedAt),
     roots = s.meta.filter((m) => m.root && m.kind !== 'pin').map((m) => m.id);
+  const categories = new Map<string, number>();
+  for (const m of s.meta)
+    categories.set(m.kind, (categories.get(m.kind) ?? 0) + m.size);
   return (
     <>
       <section className="lab-panel">
@@ -203,6 +206,19 @@ export function StorageCenter({
             ? 'dauerhafter Browserspeicher'
             : 'Browserspeicher unterliegt der Freigabe durch den Browser'}
         </p>
+        <details>
+          <summary>Belegung nach Objektart</summary>
+          <dl className="facts">
+            {[...categories]
+              .sort((a, b) => b[1] - a[1])
+              .map(([kind, size]) => (
+                <div key={kind}>
+                  <dt>{kind}</dt>
+                  <dd>{bytes(size)}</dd>
+                </div>
+              ))}
+          </dl>
+        </details>
         <div className="toolbar">
           <NumberField
             name="Festplattenbudget (MiB)"
@@ -289,6 +305,30 @@ export function StorageCenter({
               <button onClick={() => exp('checkpoint', [selected.id])}>
                 Checkpoint exportieren
               </button>
+              {owner && (
+                <button
+                  disabled={active}
+                  onClick={() =>
+                    act(async () => {
+                      const found = await lab.call<{
+                        id: string;
+                        failures: { id: string; reason: string }[];
+                      }>({ type: 'findRecovery', run: owner.id });
+                      setCk(found.id);
+                      setInfo(
+                        found.failures.length
+                          ? 'Früherer lesbarer Stand gewählt. Übersprungene Stände: ' +
+                              found.failures
+                                .map((f) => f.id + ' ' + f.reason)
+                                .join(', ')
+                          : 'Letzter Stand vollständig geprüft.',
+                      );
+                    })
+                  }
+                >
+                  Letzten lesbaren Stand suchen
+                </button>
+              )}
             </div>
           </>
         ) : (
@@ -357,6 +397,15 @@ export function StorageCenter({
             trash.map((p) => (
               <div key={p.id}>
                 <strong>{p.name}</strong>
+                <p>
+                  Im Papierkorb seit{' '}
+                  {new Date(p.trashedAt!).toLocaleDateString('de-AT')}. Reguläre
+                  Aufbewahrung bis{' '}
+                  {new Date(p.trashedAt! + 30 * 86400000).toLocaleDateString(
+                    'de-AT',
+                  )}
+                  .
+                </p>
                 <div className="toolbar">
                   <button
                     onClick={() =>

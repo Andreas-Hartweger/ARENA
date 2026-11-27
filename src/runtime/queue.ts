@@ -29,6 +29,15 @@ export async function prepareQueue(db: StorePort, s: QueueState, h?: number) {
     throw Error(
       'Warteschlange wurde inzwischen geändert. Neu laden und erneut bearbeiten.',
     );
+  return jsonObject(
+    'queue',
+    key,
+    { ...s, version: (previous.version ?? 0) + 1 },
+    validateQueue(s, h),
+    true,
+  );
+}
+export function validateQueue(s: QueueState, h?: number) {
   if (
     typeof s.enabled !== 'boolean' ||
     !Array.isArray(s.entries) ||
@@ -49,13 +58,7 @@ export async function prepareQueue(db: StorePort, s: QueueState, h?: number) {
     preflight(e.draft, fingerprint, h);
     if (e.draft.sourceVersion) refs.push(e.draft.sourceVersion);
   }
-  return jsonObject(
-    'queue',
-    key,
-    { ...s, version: (previous.version ?? 0) + 1 },
-    refs,
-    true,
-  );
+  return refs;
 }
 export function seriesDrafts(
   draft: Draft,

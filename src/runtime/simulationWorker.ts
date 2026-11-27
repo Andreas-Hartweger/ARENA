@@ -29,11 +29,38 @@ export function simulationWorker(
     rate: Rate = 'max',
     lastReport = 0,
     token = 0;
+  let lastFrame: import('../game/world').WorldFrame | undefined,
+    awaitingSample = false;
+  function report() {
+    if (!lastFrame || !active?.observation) return;
+    const car = lastFrame.cars[0];
+    lastReport = now();
+    awaitingSample = true;
+    send({
+      type: 'progress',
+      key: active.key,
+      tick: lastFrame.index,
+      certifiedM: car.lap.certified,
+      validLaps: car.lap.laps,
+      braking: car.input.brake,
+      contacts: lastFrame.events.length,
+      nextGate: car.lap.next,
+      x: car.state.positionM.x,
+      y: car.state.positionM.y,
+      heading: car.state.headingRad,
+      speed: Math.hypot(car.state.velocityMps.x, car.state.velocityMps.y),
+      ...(active.observation === 'detail'
+        ? { ai: car.ai, applied: car.input }
+        : {}),
+    });
+  }
   let lastResult: WorkerEvent | undefined;
   function reset() {
     token++;
     active = undefined;
     steps = undefined;
+    lastFrame = undefined;
+    awaitingSample = false;
     lastResult = undefined;
     phase = 'idle';
   }
@@ -75,22 +102,8 @@ export function simulationWorker(
           steps = undefined;
           return;
         }
-        if (active.observation && now() - lastReport >= 100) {
-          const car = next.value.cars[0];
-          lastReport = now();
-          send({
-            type: 'progress',
-            key: active.key,
-            tick,
-            x: car.state.positionM.x,
-            y: car.state.positionM.y,
-            heading: car.state.headingRad,
-            speed: Math.hypot(car.state.velocityMps.x, car.state.velocityMps.y),
-            ...(active.observation === 'detail'
-              ? { ai: car.ai, applied: car.input }
-              : {}),
-          });
-        }
+        lastFrame = active.observation ? next.value : undefined;
+        if (lastFrame && !awaitingSample && now() - lastReport >= 100) report();
       } while (
         tick - first <
           (rate === 'max'
@@ -183,8 +196,12 @@ export function simulationWorker(
     }
     if (!active || !sameAssignment(command.key, active.key)) return;
     switch (command.type) {
+      case 'sampleAck':
+        awaitingSample = false;
+        break;
       case 'observe':
         active.observation = command.observation;
+        if (!command.observation) lastFrame = undefined;
         break;
       case 'ack':
         if (phase === 'result') reset();
@@ -199,6 +216,7 @@ export function simulationWorker(
         if (phase === 'running') {
           token++;
           phase = 'paused';
+          report();
           send({ type: 'paused', key: active.key, tick });
         }
         break;

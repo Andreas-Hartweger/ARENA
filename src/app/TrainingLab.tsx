@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { trainingLab } from './labClient';
-import { number, useLabQuery } from './labData';
+import { bytes, number, useLabQuery } from './labData';
 import { defaultDraft, preflight, type Draft } from '../runtime/runConfig';
 import { fingerprint } from '../runtime/fingerprint';
 import type { Phase, RunState } from '../runtime/controller';
@@ -59,7 +59,7 @@ export default function TrainingLab({ route }: { route: string }) {
     [templateName, setTemplateName] = useState(''),
     [confirmCancel, setConfirmCancel] = useState(false);
   const models = useLabQuery<Profile[]>({ type: 'library' }, revision),
-    templates = useLabQuery<{ id: string; name: string }[]>(
+    templates = useLabQuery<{ id: string; name: string; revision: number }[]>(
       { type: 'templates' },
       revision,
     );
@@ -342,7 +342,7 @@ export default function TrainingLab({ route }: { route: string }) {
                       <option value="">Auswählen</option>
                       {templates.data?.map((t) => (
                         <option value={t.id} key={t.id}>
-                          {t.name}
+                          {t.name} · Revision {t.revision}
                         </option>
                       ))}
                     </select>
@@ -424,7 +424,9 @@ export default function TrainingLab({ route }: { route: string }) {
                     {metric('Ticks', number(ticks))}
                     {metric(
                       'Ticks pro aktiver Sekunde',
-                      activeMs ? number((ticks * 1000) / activeMs, 1) : '–',
+                      state?.sessionActiveMs
+                        ? number((ticks * 1000) / state.sessionActiveMs, 1)
+                        : '–',
                     )}
                     {metric(
                       'Rechenzeit aller Worker',
@@ -440,6 +442,42 @@ export default function TrainingLab({ route }: { route: string }) {
                       number(summary?.successes),
                     )}
                     {metric('Diversität', number(summary?.diversity.D, 5))}
+                    {metric(
+                      'Episoden / aktive Minute',
+                      state?.sessionActiveMs
+                        ? number(
+                            ((monitor?.evaluated ?? 0) * 60000) /
+                              state.sessionActiveMs,
+                            1,
+                          )
+                        : '–',
+                    )}
+                    {metric(
+                      'Genomtransfer',
+                      bytes(monitor?.transferredBytes ?? 0),
+                    )}
+                    {metric(
+                      'Worker-Nachrichten',
+                      number(monitor?.receivedMessages ?? 0),
+                    )}
+                    {metric(
+                      'Bestätigte Schreibvorgänge',
+                      number(state?.commits ?? 0),
+                    )}
+                    {metric(
+                      'Schreibzeit dieser Sitzung',
+                      number((state?.saveMs ?? 0) / 1000, 2) + ' s',
+                    )}
+                    {metric(
+                      'Geschätzter verwalteter RAM',
+                      state?.managedEstimate
+                        ? bytes(state.managedEstimate)
+                        : '–',
+                    )}
+                    {metric(
+                      'Prozess-CPU / tatsächlicher RAM',
+                      'Nicht verfügbar',
+                    )}
                   </dl>
                   {summary && (
                     <details>

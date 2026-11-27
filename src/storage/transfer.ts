@@ -18,7 +18,10 @@ import { TrainingDatabase } from './database';
 import { sha256 } from '../runtime/fingerprint';
 import { readVersion, validateProfile, type Profile } from './library';
 import { restore, type Checkpoint, type RunIndex } from './checkpoint';
-import type { QueueState } from '../runtime/queue';
+import { validateQueue, type QueueState } from '../runtime/queue';
+import { preflight, type Draft } from '../runtime/runConfig';
+import { fingerprint } from '../runtime/fingerprint';
+import type { PerformanceRecord } from './library';
 export type PackageType = 'model' | 'checkpoint' | 'backup';
 function inertQueue(bytes: Uint8Array) {
   const q = strictJson(bytes) as QueueState;
@@ -247,6 +250,16 @@ export async function previewPackage(db: TrainingDatabase, file: Blob) {
       validateProfile(p);
       if (
         !Array.isArray(p.versions) ||
+        typeof p.favorite !== 'boolean' ||
+        typeof p.archived !== 'boolean' ||
+        !(
+          p.trashedAt === null ||
+          (Number.isSafeInteger(p.trashedAt) && p.trashedAt > 0)
+        ) ||
+        new Set(p.versions).size !== p.versions.length ||
+        (p.records ?? []).some(
+          (id) => metadata.get(id)?.kind !== 'record' || !e.refs.includes(id),
+        ) ||
         !p.versions.includes(p.active) ||
         !p.versions.includes(p.preferred) ||
         p.id !== e.id ||
@@ -265,11 +278,56 @@ export async function previewPackage(db: TrainingDatabase, file: Blob) {
         throw Error('Ungültiger Versionsgraph.');
     } else if (e.role === 'checkpoint') {
       const cp = decode<Checkpoint>(value);
-      await restore(sandbox, e.id, cp.runtime, 32);
+      await restore(sandbox, e.id, cp.runtime, 32, undefined, () => {});
     } else if (e.role === 'run') {
       const idx = decode<RunIndex>(value);
-      if (!e.refs.includes(idx.latest) || !metadata.has(idx.latest))
+      if (
+        e.id !== 'run:' + idx.id ||
+        !Array.isArray(idx.automatic) ||
+        idx.automatic.length > 3 ||
+        !Array.isArray(idx.milestones) ||
+        typeof idx.terminal !== 'boolean' ||
+        [idx.latest, ...idx.automatic, ...idx.milestones].some(
+          (k) => metadata.get(k)?.kind !== 'checkpoint' || !e.refs.includes(k),
+        )
+      )
         throw Error('Lauf ohne Checkpoint.');
+    } else if (e.role === 'queue') {
+      const q = decode<QueueState>(value);
+      const refs = validateQueue(q, 32);
+      if (
+        refs.some(
+          (k) => metadata.get(k)?.kind !== 'version' || !e.refs.includes(k),
+        )
+      )
+        throw Error('Fehlende Modellversion der Warteschlange.');
+    } else if (e.role === 'record') {
+      const r = decode<PerformanceRecord>(value);
+      if (
+        !e.refs.includes(r.version) ||
+        metadata.get(r.version)?.kind !== 'version' ||
+        !r.contract ||
+        !Number.isSafeInteger(r.sampleCount) ||
+        r.sampleCount < 1 ||
+        !Number.isFinite(r.value) ||
+        !['training', 'test', 'validation', 'analysis'].includes(r.purpose) ||
+        typeof r.verified !== 'boolean'
+      )
+        throw Error('Ungültiger Leistungsnachweis.');
+      const v = decode<{ genome: string }>((await item(r.version))!);
+      if (v.genome !== r.genome)
+        throw Error('Leistungsnachweis verweist auf ein anderes Genom.');
+    } else if (e.role === 'template') {
+      const t = decode<{ name: string; draft: Draft }>(value);
+      if (
+        typeof t.name !== 'string' ||
+        !t.name.trim() ||
+        [...t.name].length > 64
+      )
+        throw Error('Ungültige Vorlage.');
+      preflight(t.draft, fingerprint, 32);
+      if (t.draft.sourceVersion && !e.refs.includes(t.draft.sourceVersion))
+        throw Error('Vorlagenquelle fehlt.');
     }
   }
   return {
@@ -309,8 +367,12 @@ export async function importPackage(
       if (v.startsWith('["')) {
         try {
           const a = JSON.parse(v);
-          if (Array.isArray(a) && a.length === 3 && mapping.has(a[0]))
-            return JSON.stringify([mapping.get(a[0]), a[1], a[2]]);
+          if (
+            Array.isArray(a) &&
+            [3, 4].includes(a.length) &&
+            mapping.has(a[0])
+          )
+            return JSON.stringify([mapping.get(a[0]), ...a.slice(1)]);
         } catch {
           /* Plain text. */
         }
@@ -339,7 +401,25 @@ export async function importPackage(
         continue;
       if (e.role !== 'genome') {
         let payload = decode<unknown>(row);
-        if (variant) payload = remap(payload);
+        if (variant) {
+          const original = payload;
+          payload = remap(payload);
+          if (e.role === 'profile') {
+            const p = original as Profile;
+            Object.assign(payload as object, {
+              name: p.name,
+              description: p.description,
+              collection: p.collection,
+              tags: p.tags,
+              color: p.color,
+              icon: p.icon,
+            });
+          }
+          if (e.role === 'template')
+            Object.assign(payload as object, {
+              name: (original as { name: string }).name,
+            });
+        }
         if (e.role === 'queue')
           payload = inertQueue(
             new TextEncoder().encode(JSON.stringify(payload)),

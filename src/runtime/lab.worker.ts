@@ -10,7 +10,12 @@ import {
   saveVersion,
   type PerformanceRecord,
 } from '../storage/library';
-import { decode, deletionPreview, jsonObject } from '../storage/objects';
+import {
+  decode,
+  profileDeletion,
+  jsonObject,
+  reachable,
+} from '../storage/objects';
 import { queue, prepareQueue, writeQueue, type QueueState } from './queue';
 import { preflight } from './runConfig';
 import { fingerprint } from './fingerprint';
@@ -21,7 +26,7 @@ import {
 } from '../storage/transfer';
 import { evaluate } from '../training/episode';
 import { type Envelope, type LabCommand, type LabEvent } from './labProtocol';
-import type { RunIndex } from '../storage/checkpoint';
+import { restore, type RunIndex } from '../storage/checkpoint';
 const runtime = 'arena.02c.cpu.v1|' + navigator.userAgent,
   hardware = navigator.hardwareConcurrency;
 const db = await TrainingDatabase.open(),
@@ -103,8 +108,28 @@ controller.changed = (state) => {
       }),
     );
 };
+type Sample = Extract<LabEvent, { type: 'observation' }>['sample'];
+const samples = new Map<string, Sample>();
+let visibleLimit = 0,
+  selectedSlot: number | null = null;
 controller.observed = (sample) => {
-  if (generationSubscription) send({ type: 'observation', sample });
+  if (!generationSubscription) return;
+  const lease = sample.key.jobId;
+  for (const [key, old] of samples)
+    if (
+      old.key.generation !== sample.key.generation ||
+      old.key.segmentId !== sample.key.segmentId ||
+      old.key.sessionId !== sample.key.sessionId ||
+      old.key.slot === sample.key.slot
+    )
+      samples.delete(key);
+  samples.set(lease, sample);
+  if (samples.size > visibleLimit)
+    for (const [key, old] of samples)
+      if (old.key.slot !== selectedSlot) {
+        samples.delete(key);
+        break;
+      }
 };
 let preview: Awaited<ReturnType<typeof previewPackage>> | undefined,
   previewId = '';
@@ -122,12 +147,111 @@ async function handle(c: LabCommand) {
           const r = decode<PerformanceRecord>((await db.get(m.id))!);
           records.push(m.imported ? { ...r, verified: false } : r);
         }
-      return { version, manifest, records };
+      const all = await db.list(),
+        map = new Map(all.map((m) => [m.id, m]));
+      const size = [...reachable(map, [c.id])].reduce(
+        (n, id) => n + map.get(id)!.size,
+        0,
+      );
+      return { version, manifest, records, logicalBytes: size };
+    }
+    case 'compatibility': {
+      const a = await readVersion(db, c.version),
+        other = c.other ? await readVersion(db, c.other) : undefined;
+      const manifest = a.manifest,
+        flags: {
+          dimension: string;
+          status: 'Ja' | 'Nein' | 'Offen';
+          reason: string;
+        }[] = [];
+      try {
+        const p = preflight(c.draft, fingerprint, hardware);
+        const signature = p.m.signature === manifest.model.signature;
+        flags.push({
+          dimension: 'Ausführung',
+          status: signature ? 'Ja' : 'Nein',
+          reason: signature
+            ? 'Fahrzeug, Sensorik und Controller stimmen überein.'
+            : 'Sensor- oder Controllervertrag weicht ab.',
+        });
+        const train =
+          signature &&
+          p.m.key === manifest.modelKey &&
+          p.m.weightLimit === manifest.model.weightLimit &&
+          p.m.biasLimit === manifest.model.biasLimit;
+        flags.push({
+          dimension: 'Training mit Laufentwurf',
+          status: train ? 'Ja' : 'Nein',
+          reason: train
+            ? 'Topologie, Grenzen und Rechenbudget sind kompatibel.'
+            : 'Der Laufentwurf benötigt eine andere Architektur oder andere Parametergrenzen.',
+        });
+      } catch (e) {
+        flags.push({
+          dimension: 'Training mit Laufentwurf',
+          status: 'Nein',
+          reason: String(e),
+        });
+      }
+      flags.push({
+        dimension: 'Exakte Fortsetzung',
+        status: 'Nein',
+        reason: 'Dafür wird ein vollständiger Checkpoint benötigt.',
+      });
+      if (other) {
+        const match = manifest.modelKey === other.manifest.modelKey;
+        flags.push({
+          dimension: 'Parametervergleich',
+          status: match ? 'Ja' : 'Nein',
+          reason: match
+            ? 'Identische Parameterzuordnung.'
+            : 'Schichtlayout oder Eingabevertrag weicht ab.',
+        });
+        const records: (PerformanceRecord & { imported: boolean })[] = [];
+        for (const meta of await db.list('record'))
+          if (meta.refs.includes(c.version) || meta.refs.includes(c.other!))
+            records.push({
+              ...decode<PerformanceRecord>((await db.get(meta.id))!),
+              imported: !!meta.imported,
+            });
+        const shared = records.some(
+          (r) =>
+            r.version === c.version &&
+            r.verified &&
+            !r.imported &&
+            records.some(
+              (o) =>
+                o.version === other.version.id &&
+                o.verified &&
+                !o.imported &&
+                o.contract === r.contract &&
+                o.purpose === r.purpose &&
+                o.runtime === r.runtime &&
+                o.seed === r.seed,
+            ),
+        );
+        flags.push({
+          dimension: 'Gespeicherte Leistungswerte',
+          status: shared ? 'Ja' : 'Offen',
+          reason: shared
+            ? 'Lokale Nachweise mit gleichem Bewertungsvertrag liegen vor.'
+            : 'Gemeinsamer Fahrvergleich für diesen Vertrag erforderlich.',
+        });
+      }
+      return flags;
     }
     case 'observe':
       generationSubscription = c.visible > 0;
+      visibleLimit = c.visible;
+      selectedSlot = c.slot;
+      samples.clear();
       controller.observe(c.visible, c.slot);
       return;
+    case 'samples': {
+      const result = [...samples.values()];
+      samples.clear();
+      return result;
+    }
     case 'start':
       await start(c.draft);
       return;
@@ -177,6 +301,40 @@ async function handle(c: LabCommand) {
         parent: cp.counters.parentCheckpoint,
       };
     }
+    case 'findRecovery': {
+      const row = await db.get('run:' + c.run);
+      if (row?.meta.kind !== 'run') throw Error('Laufindex fehlt.');
+      const index = decode<RunIndex>(row),
+        failures: { id: string; reason: string }[] = [];
+      const all = new Map((await db.list('checkpoint')).map((m) => [m.id, m]));
+      const ids = [
+        ...new Set([
+          index.latest,
+          ...[...index.milestones, ...index.automatic].sort(
+            (a, b) => (all.get(b)?.created ?? 0) - (all.get(a)?.created ?? 0),
+          ),
+        ]),
+      ];
+      for (const id of ids) {
+        try {
+          const { cp } = await restore(
+            db,
+            id,
+            runtime,
+            hardware,
+            undefined,
+            () => {},
+          );
+          return { id, phase: cp.phase, failures };
+        } catch (e) {
+          failures.push({ id, reason: String(e) });
+        }
+      }
+      throw Error(
+        'Kein lesbarer Speicherstand: ' +
+          failures.map((f) => f.id + ' ' + f.reason).join(', '),
+      );
+    }
     case 'library':
       return profiles(db);
     case 'create': {
@@ -195,17 +353,19 @@ async function handle(c: LabCommand) {
       return editProfile(db, c.id, c.changes);
     case 'champion': {
       await acquire();
-      const best = controller.champion(),
+      const role = c.role ?? 'champion',
+        best = controller.archiveCandidate(role, c.scenario),
         d = controller.draft;
       if (!best || !d) throw Error('Noch kein bestätigter Champion.');
       const { scenarios } = preflight(d, fingerprint, hardware);
-      return saveVersion(db, c.profile, best.genome, d, 'champion', best.id, {
+      return saveVersion(db, c.profile, best.genome, d, role, best.id, {
         purpose: 'training',
-        value: best.fitness,
-        contract: scenarios.map((s) => s.key).join(','),
-        sampleCount: scenarios.length,
+        value: best.value,
+        metric: best.metric,
+        contract: best.contract,
+        sampleCount: best.scenarios,
         seed: d.options.master ?? 42,
-        track: scenarios[0].track.def.name,
+        track: scenarios[best.scenario].track.def.name,
         vehicle: 'GT-01',
         runtime,
         verified: true,
@@ -239,7 +399,7 @@ async function handle(c: LabCommand) {
     case 'previewDelete': {
       const status = await db.status(),
         all = await db.list();
-      return { ...deletionPreview(all, c.ids), revision: status.revision };
+      return { ...profileDeletion(all, c.ids), revision: status.revision };
     }
     case 'purge': {
       await acquire();
@@ -253,7 +413,7 @@ async function handle(c: LabCommand) {
         )
           throw Error('Zuerst in den Papierkorb verschieben.');
       }
-      const checked = deletionPreview(all, c.ids);
+      const checked = profileDeletion(all, c.ids);
       return db.commit([], {
         remove: checked.remove,
         expectedRevision: c.revision,
@@ -284,12 +444,26 @@ async function handle(c: LabCommand) {
       preflight(c.draft, fingerprint, hardware);
       if (!c.name.trim() || [...c.name].length > 64)
         throw Error('Name fehlt oder ist zu lang.');
+      let revision = 1;
+      let parent: string | null = null;
+      for (const m of await db.list('template')) {
+        const previous = decode<{ name: string; revision?: number }>(
+          (await db.get(m.id))!,
+        );
+        if (previous.name === c.name && (previous.revision ?? 1) >= revision) {
+          revision = (previous.revision ?? 1) + 1;
+          parent = m.id;
+        }
+      }
       return db.commit([
         jsonObject(
           'template',
           'template:' + crypto.randomUUID(),
-          { name: c.name, draft: c.draft },
-          c.draft.sourceVersion ? [c.draft.sourceVersion] : [],
+          { name: c.name, revision, parent, draft: c.draft },
+          [
+            ...(c.draft.sourceVersion ? [c.draft.sourceVersion] : []),
+            ...(parent ? [parent] : []),
+          ],
           true,
         ),
       ]);
@@ -299,7 +473,8 @@ async function handle(c: LabCommand) {
       for (const m of await db.list())
         if (m.kind === 'template') {
           const o = (await db.get(m.id))!;
-          rows.push({ id: m.id, name: decode<{ name: string }>(o).name });
+          const t = decode<{ name: string; revision?: number }>(o);
+          rows.push({ id: m.id, name: t.name, revision: t.revision ?? 1 });
         }
       return rows;
     }
@@ -341,7 +516,10 @@ async function handle(c: LabCommand) {
       return rows;
     }
     case 'integrity': {
-      for (const m of await db.list()) {
+      const all = await db.list(),
+        map = new Map(all.map((m) => [m.id, m]));
+      reachable(map, map.keys());
+      for (const m of all) {
         const o = await db.get(m.id);
         if (!o) throw Error('Objekt fehlt.');
         if (m.kind === 'genome') {
@@ -359,12 +537,13 @@ async function handle(c: LabCommand) {
 let sequence = 0;
 const receipts = new Map<
   string,
-  { seq: number; type: string; receipt: LabEvent }
+  { seq: number; signature: string; receipt: LabEvent }
 >();
 self.onmessage = (event: MessageEvent<Envelope>) => {
   const input = event.data;
   void controller.serialize(async () => {
     let receipt: LabEvent;
+    let signature = '';
     try {
       if (
         input?.version !== 1 ||
@@ -375,8 +554,9 @@ self.onmessage = (event: MessageEvent<Envelope>) => {
       )
         throw Error('Ungültiger Befehl.');
       const previous = receipts.get(input.id);
+      signature = JSON.stringify([input.session, input.command]);
       if (previous) {
-        if (previous.seq !== input.seq || previous.type !== input.command.type)
+        if (previous.seq !== input.seq || previous.signature !== signature)
           throw Error('Widersprüchliche Befehls-ID.');
         send(previous.receipt);
         return;
@@ -422,13 +602,30 @@ self.onmessage = (event: MessageEvent<Envelope>) => {
     }
     if (
       receipt.type === 'ack' &&
+      !receipts.has(input.id) &&
+      signature &&
+      signature.length <= 32768 &&
       (receipt.value === undefined ||
-        typeof receipt.value === 'number' ||
-        typeof receipt.value === 'boolean')
+        ![
+          'export',
+          'previewImport',
+          'history',
+          'population',
+          'brain',
+          'samples',
+          'storage',
+          'status',
+          'currentDraft',
+          'library',
+          'version',
+          'checkpoints',
+          'drive',
+          'compare',
+        ].includes(input.command.type))
     ) {
       receipts.set(input.id, {
         seq: input.seq,
-        type: input.command?.type,
+        signature,
         receipt,
       });
       if (receipts.size > 128) receipts.delete(receipts.keys().next().value!);

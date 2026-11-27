@@ -7,9 +7,10 @@ import type {
   compareParameters,
   readVersion,
 } from '../storage/library';
-import type { EpisodeResult } from '../training/episode';
+import type { AnalysisResult } from '../runtime/analysis';
+import { analyzeVersions } from './analysisClient';
 import { trainingLab } from './labClient';
-import { download, number, useLabQuery } from './labData';
+import { bytes, download, number, useLabQuery } from './labData';
 import type { Act } from './RunForm';
 
 type Props = {
@@ -22,6 +23,7 @@ type Props = {
   openDraft: (draft: Draft) => void;
 };
 type Details = {
+  logicalBytes: number;
   version: Version;
   manifest: Awaited<ReturnType<typeof readVersion>>['manifest'];
   records: PerformanceRecord[];
@@ -101,6 +103,7 @@ function ProfileEditor({ p, act }: { p: Profile; act: Act }) {
 }
 function VersionView({
   p,
+  draft,
   models,
   act,
   revision,
@@ -111,7 +114,7 @@ function VersionView({
   const [selected, setSelected] = useState(p.active),
     [other, setOther] = useState(''),
     [clone, setClone] = useState(''),
-    [drive, setDrive] = useState<EpisodeResult>(),
+    [drive, setDrive] = useState<AnalysisResult>(),
     [diff, setDiff] = useState<ReturnType<typeof compareParameters>>();
   const details = useLabQuery<Details>(
       { type: 'version', id: selected },
@@ -119,6 +122,17 @@ function VersionView({
     ),
     lab = trainingLab(),
     d = details.data;
+  const compat = useLabQuery<
+    { dimension: string; status: string; reason: string }[]
+  >(
+    {
+      type: 'compatibility',
+      version: selected,
+      other: other || undefined,
+      draft,
+    },
+    revision,
+  );
   return (
     <section className="lab-panel">
       <div className="panel-title">
@@ -178,7 +192,8 @@ function VersionView({
             ))}
           </dl>
           <p className="technical">
-            Genom <code>{d.version.genome}</code>
+            Genom <code>{d.version.genome}</code> · Referenzierte Objektdaten{' '}
+            {bytes(d.logicalBytes)}
           </p>
           <p className="technical">
             Quelle <code>{d.version.source ?? 'Neu initialisiert'}</code>
@@ -237,6 +252,20 @@ function VersionView({
             </button>
           </div>
           <details>
+            <summary>Kompatibilität mit dem aktuellen Entwurf</summary>
+            {compat.error && <p role="alert">{compat.error}</p>}
+            <dl>
+              {compat.data?.map((row) => (
+                <div key={row.dimension}>
+                  <dt>{row.dimension}</dt>
+                  <dd>
+                    {row.status} · {row.reason}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </details>
+          <details>
             <summary>Leistungsnachweise ({d.records.length})</summary>
             {d.records.map((r, i) => (
               <p key={i}>
@@ -274,6 +303,35 @@ function VersionView({
               }
             >
               Laufchampion als Version sichern
+            </button>
+            <button
+              disabled={!champion}
+              onClick={() =>
+                act(() =>
+                  lab.call({
+                    type: 'champion',
+                    profile: p.id,
+                    role: 'generationBest',
+                  }),
+                )
+              }
+            >
+              Generationsbesten sichern
+            </button>
+            <button
+              disabled={!champion}
+              onClick={() =>
+                act(() =>
+                  lab.call({
+                    type: 'champion',
+                    profile: p.id,
+                    role: 'lapRecord',
+                    scenario: 0,
+                  }),
+                )
+              }
+            >
+              Rundenrekord in Szenario 1 sichern
             </button>
           </div>
           <details>
@@ -366,24 +424,75 @@ function VersionView({
               onClick={() =>
                 act(async () =>
                   setDrive(
-                    await lab.call({
-                      type: 'drive',
-                      version: selected,
+                    await analyzeVersions({
+                      versions: other ? [selected, other] : [selected],
                       draft: d.manifest.draft,
                     }),
                   ),
                 )
               }
             >
-              Isolierte Testfahrt starten
+              {other
+                ? 'Gemeinsamen Fahrvergleich starten'
+                : 'Isolierte Testfahrt starten'}
             </button>
             {drive && (
-              <p>
-                {drive.reason} · {drive.tick} Ticks{' '}
-                {drive.ok
-                  ? '· Fitness ' + number(drive.fitness.F, 4)
-                  : drive.message}
-              </p>
+              <div>
+                <p>
+                  {drive.track} · Seed {drive.seed} · ein gemeinsames
+                  Testszenario · <code>{drive.contract}</code>
+                </p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Version</th>
+                      <th>Fitness</th>
+                      <th>Abschluss</th>
+                      <th>Gültige Runden</th>
+                      <th>Simulationszeit</th>
+                      <th>Rechenzeit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {drive.results.map((r, i) => (
+                      <tr key={i}>
+                        <td>{i === 0 ? 'Auswahl' : 'Vergleich'}</td>
+                        <td>{number(r.fitness, 4)}</td>
+                        <td>{r.reason}</td>
+                        <td>
+                          {r.laps.length} ·{' '}
+                          {r.laps.length
+                            ? number(Math.min(...r.laps), 3) + ' s'
+                            : '–'}
+                        </td>
+                        <td>{number(r.duration, 3)} s</td>
+                        <td>{number(r.elapsedMs, 1)} ms</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {drive.results.map((r, i) => (
+                  <details key={i}>
+                    <summary>Fahrspur und Fehlerwerte · {i + 1}</summary>
+                    <p>
+                      {r.path.length} aufgezeichnete Positionen
+                      {r.truncated ? ' · gekürzt' : ''}
+                    </p>
+                    <pre>
+                      {JSON.stringify(
+                        {
+                          version: r.version,
+                          genome: r.genome,
+                          ticks: r.ticks,
+                          penalties: r.errors,
+                        },
+                        null,
+                        2,
+                      )}
+                    </pre>
+                  </details>
+                ))}
+              </div>
             )}
           </details>
         </>

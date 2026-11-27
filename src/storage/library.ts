@@ -9,6 +9,7 @@ import {
 } from './objects';
 import { genomeObject, readGenome } from './checkpoint';
 import type { ModelSpec } from '../runtime/compute';
+import { scenario } from '../training/episode';
 export interface Profile {
   id: string;
   name: string;
@@ -23,6 +24,7 @@ export interface Profile {
   active: string;
   preferred: string;
   versions: string[];
+  records?: string[];
 }
 export interface Version {
   id: string;
@@ -31,7 +33,7 @@ export interface Version {
   genome: string;
   manifest: string;
   origin: 'local' | 'clone' | 'import';
-  role: 'experiment' | 'generationBest' | 'champion' | 'starter';
+  role: 'experiment' | 'generationBest' | 'champion' | 'lapRecord' | 'starter';
   source: string | null;
   created: number;
 }
@@ -55,6 +57,7 @@ export interface PerformanceRecord {
   runtime: string;
   sampleCount: number;
   value: number;
+  metric?: 'fitness' | 'lapTime';
   version: string;
   genome: string;
   verified: boolean;
@@ -92,6 +95,15 @@ export async function readVersion(db: StorePort, id: string) {
   const s = manifest.model,
     m = model(s.signature, s.hidden, s.activation, s.weightLimit, s.biasLimit);
   if (
+    manifest.version !== 1 ||
+    manifest.physics !== 'first-drive.v1' ||
+    manifest.vehicle !== 'GT-01' ||
+    scenario(fingerprint, manifest.draft.scenarios[0]).modelSignature !==
+      s.signature ||
+    JSON.stringify(manifest.draft.hidden) !== JSON.stringify(s.hidden) ||
+    manifest.draft.activation !== s.activation ||
+    manifest.draft.weightLimit !== s.weightLimit ||
+    manifest.draft.biasLimit !== s.biasLimit ||
     manifest.modelKey !== m.key ||
     manifest.layout !== m.layout ||
     manifest.dtype !== 'float64le'
@@ -166,7 +178,13 @@ function profileObject(p: Profile) {
   validateProfile(p);
   if (!p.versions.includes(p.active) || !p.versions.includes(p.preferred))
     throw Error('Unknown profile version');
-  return jsonObject('profile', p.id, p, p.versions, true);
+  return jsonObject(
+    'profile',
+    p.id,
+    p,
+    [...p.versions, ...(p.records ?? [])],
+    true,
+  );
 }
 export async function createModel(
   db: StorePort,
@@ -223,18 +241,27 @@ export async function saveVersion(
   record?: Omit<PerformanceRecord, 'version' | 'genome'>,
 ) {
   const p = decode<Profile>(await entry(db, profileId, 'profile'));
+  const active = await readVersion(db, p.active);
+  if (
+    active.genome.model.key !== g.model.key ||
+    active.genome.model.weightLimit !== g.model.weightLimit ||
+    active.genome.model.biasLimit !== g.model.biasLimit
+  )
+    throw Error(
+      'Architektur oder Parametergrenzen erfordern ein eigenes Modell.',
+    );
   const v = versionObjects(
     g,
     draft,
     p.id,
     role,
-    p.active,
+    draft.sourceVersion ?? null,
     source,
     'local',
     'training',
   );
   p.versions.push(v.version.id);
-  const writes: StoredObject[] = [...v.objects, profileObject(p)];
+  const writes: StoredObject[] = [...v.objects];
   if (record) {
     if (
       !Number.isSafeInteger(record.sampleCount) ||
@@ -243,17 +270,19 @@ export async function saveVersion(
       !record.contract
     )
       throw Error('Ungültiger Leistungsnachweis.');
+    const recordId = 'record:' + crypto.randomUUID();
+    p.records = [...(p.records ?? []), recordId];
     writes.push(
       jsonObject(
         'record',
-        'record:' + crypto.randomUUID(),
+        recordId,
         { ...record, version: v.version.id, genome: v.version.genome },
         [v.version.id],
-        true,
+        false,
       ),
     );
   }
-  await db.commit(writes, { replace: [p.id] });
+  await db.commit([...writes, profileObject(p)], { replace: [p.id] });
   return v.version;
 }
 export async function editProfile(

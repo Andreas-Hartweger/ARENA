@@ -75,7 +75,7 @@ export interface Job {
 export type Rate = number | 'max';
 export type WorkerCommand =
   | { type: 'assign'; job: Job; rate: Rate }
-  | { type: 'pause' | 'resume' | 'cancel' | 'ack'; key: JobKey }
+  | { type: 'pause' | 'resume' | 'cancel' | 'ack' | 'sampleAck'; key: JobKey }
   | { type: 'rate'; key: JobKey; rate: Rate }
   | { type: 'observe'; key: JobKey; observation?: Job['observation'] }
   | { type: 'shutdown' };
@@ -91,6 +91,11 @@ export type WorkerEvent =
       y: number;
       heading: number;
       speed: number;
+      certifiedM: number;
+      validLaps: number;
+      braking: number;
+      contacts: number;
+      nextGate: number;
       ai?: import('../ai/driver').AiState;
       applied?: import('../input/controlInput').ControlInput;
     }
