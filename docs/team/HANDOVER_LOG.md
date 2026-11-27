@@ -37,3 +37,5 @@ A bestätigte im Auftragschat den geprüften Stand von PR #7 und die Übernahme 
 Die 122 Experimentdefinitionen, der Schutz der Rechenbudgets, die drei historischen Modellarchive für vier Rollen und der Test des Wiederanlaufs aus einem realen Checkpoint sind geprüft. Die Szenarien sind vor der Auswahl eingefroren. Der Worker-Vergleich läuft auf einem eigenen Checkout. [Forschungsstand](../intelligence-validation/RESEARCH_EXECUTION.md)
 
 Der Headless-Vergleich ist abgeschlossen. Die Kampagne hat den historischen Seed 42 geprüft und für Seed 43 12.800 reguläre Episoden, 834 gültige Runden und 30.155.325 Fahrzeugticks ausgewertet. Chromium hat den Import und das Klonen des historischen G99-Modells nach Neuladen bestätigt. [Fahr- und Prüfnachweise](../intelligence-validation/RESEARCH_EXECUTION.md)
+
+Am 28.11.2026 wurden die sechs Baseline-Audits, die Entwicklungsvergleiche bei 8.192 und 12.800 Episoden sowie das CPU-Profil abgeschlossen. Der Hauptcursor ist das gepaarte Screening auf `160db2c`. [Kampagnenbericht](../intelligence-validation/RESEARCH_EXECUTION.md) · [CI](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46083573828)

@@ -1,0 +1,663 @@
+{
+  "schema": "arena.baseline-dev.v1",
+  "panel": "cf5be24eed52c153a89b05b254e0094f0c154861f70b9b947e5c32a1d7f0032e",
+  "caseCount": 40,
+  "runs": [
+    {
+      "id": "B-evolution-42",
+      "role": "prefixChampion",
+      "seed": 42,
+      "method": "evolution",
+      "genome": "08e111719ece8eb49221b2ad9a71b423d59ac5c59d1d315cfee76033836a222f",
+      "episodesPerArm": 8192,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 4,
+        "byGroup": [
+          3,
+          1,
+          0
+        ],
+        "severe": 0,
+        "times": {
+          "best": 73.74489870389226,
+          "worst": 67.08935113806595,
+          "mean": 69.05711396767038,
+          "median": 67.69710301436166,
+          "q1": 67.25319254634282,
+          "q3": 69.50102443568922
+        },
+        "grass": {
+          "best": 0,
+          "worst": 0,
+          "mean": 0,
+          "median": 0,
+          "q1": 0,
+          "q3": 0
+        },
+        "clean": 4,
+        "lawfulProgress": {
+          "best": 676.310712238434,
+          "worst": 0.2080016060676826,
+          "mean": 299.9462512575212,
+          "median": 305.49721173717796,
+          "q1": 121.27914075802872,
+          "q3": 431.8106457142153
+        }
+      },
+      "file": "experiments/B-evolution-42/dev-prefixChampion.json",
+      "sha256": "8b367fd00f0589e380827481e8f41fe77dd0b783e558e2f7a4139e490f4d0dd5"
+    },
+    {
+      "id": "B-random-42",
+      "role": "prefixChampion",
+      "seed": 42,
+      "method": "random",
+      "genome": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac",
+      "episodesPerArm": 8192,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 0,
+        "byGroup": [
+          0,
+          0,
+          0
+        ],
+        "severe": 29,
+        "times": null,
+        "grass": null,
+        "clean": 0,
+        "lawfulProgress": {
+          "best": 246.29487310755178,
+          "worst": 3.0739847730549172,
+          "mean": 113.8900989259591,
+          "median": 125.0537578435356,
+          "q1": 112.57328289827089,
+          "q3": 129.63371664039195
+        }
+      },
+      "file": "experiments/B-random-42/dev-prefixChampion.json",
+      "sha256": "67cfbf6836c7d42eae88e21a689905a8c7bb52850604c53e1782837586a32291"
+    },
+    {
+      "id": "B-evolution-42",
+      "role": "champion",
+      "seed": 42,
+      "method": "evolution",
+      "genome": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+      "episodesPerArm": 12800,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 4,
+        "byGroup": [
+          1,
+          0,
+          3
+        ],
+        "severe": 0,
+        "times": {
+          "best": 62.64391567554259,
+          "worst": 48.204210554805876,
+          "mean": 57.51786490528534,
+          "median": 59.61166669539646,
+          "q1": 55.63915889285193,
+          "q3": 61.49037270782988
+        },
+        "grass": {
+          "best": 0.5416666666666405,
+          "worst": 0,
+          "mean": 0.13541666666666013,
+          "median": 0,
+          "q1": 0,
+          "q3": 0.13541666666666013
+        },
+        "clean": 4,
+        "lawfulProgress": {
+          "best": 673.6091086753972,
+          "worst": 1.0046549562762266,
+          "mean": 501.03406937192915,
+          "median": 538.9361446725368,
+          "q1": 473.7491975602801,
+          "q3": 591.3620663594859
+        }
+      },
+      "file": "experiments/B-evolution-42/dev-champion.json",
+      "sha256": "ba1fdcfb49d307d0a46890e0f0e910b4fe2109f09536e5006cdd4b23978a3e5c"
+    },
+    {
+      "id": "B-random-42",
+      "role": "champion",
+      "seed": 42,
+      "method": "random",
+      "genome": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac",
+      "episodesPerArm": 12800,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 0,
+        "byGroup": [
+          0,
+          0,
+          0
+        ],
+        "severe": 29,
+        "times": null,
+        "grass": null,
+        "clean": 0,
+        "lawfulProgress": {
+          "best": 246.29487310755178,
+          "worst": 3.0739847730549172,
+          "mean": 113.8900989259591,
+          "median": 125.0537578435356,
+          "q1": 112.57328289827089,
+          "q3": 129.63371664039195
+        }
+      },
+      "file": "experiments/B-random-42/dev-champion.json",
+      "sha256": "67cfbf6836c7d42eae88e21a689905a8c7bb52850604c53e1782837586a32291"
+    },
+    {
+      "id": "B-evolution-43",
+      "role": "prefixChampion",
+      "seed": 43,
+      "method": "evolution",
+      "genome": "88e500a7c832271c0dbce373ff5f39ee3f28c849b3e461784d2b4fcfe446052e",
+      "episodesPerArm": 8192,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 0,
+        "byGroup": [
+          0,
+          0,
+          0
+        ],
+        "severe": 0,
+        "times": null,
+        "grass": null,
+        "clean": 0,
+        "lawfulProgress": {
+          "best": 507.3566718351575,
+          "worst": 0.2660831176498277,
+          "mean": 236.63653109937232,
+          "median": 260.9682105879073,
+          "q1": 178.85470223712085,
+          "q3": 303.597842063978
+        }
+      },
+      "file": "experiments/B-evolution-43/dev-prefixChampion.json",
+      "sha256": "eb99fd254d7736a0591472472066ace845f1f1bb80ba44e8bb665728950dac47"
+    },
+    {
+      "id": "B-random-43",
+      "role": "prefixChampion",
+      "seed": 43,
+      "method": "random",
+      "genome": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684",
+      "episodesPerArm": 8192,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 0,
+        "byGroup": [
+          0,
+          0,
+          0
+        ],
+        "severe": 39,
+        "times": null,
+        "grass": null,
+        "clean": 0,
+        "lawfulProgress": {
+          "best": 337.54984349484334,
+          "worst": 10.40533942449838,
+          "mean": 122.62604883253712,
+          "median": 112.34162934061999,
+          "q1": 109.13144741436335,
+          "q3": 122.87873876614549
+        }
+      },
+      "file": "experiments/B-random-43/dev-prefixChampion.json",
+      "sha256": "8f8cffa12ec4991dac78e950781b5b90708401d8827ce8d49225b17d0bfbe268"
+    },
+    {
+      "id": "B-evolution-43",
+      "role": "champion",
+      "seed": 43,
+      "method": "evolution",
+      "genome": "dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d",
+      "episodesPerArm": 12800,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 0,
+        "byGroup": [
+          0,
+          0,
+          0
+        ],
+        "severe": 11,
+        "times": null,
+        "grass": null,
+        "clean": 0,
+        "lawfulProgress": {
+          "best": 540.4006827891606,
+          "worst": 0.32617098914897724,
+          "mean": 296.6845568278958,
+          "median": 323.88513798594533,
+          "q1": 259.7206996320232,
+          "q3": 420.54063478593076
+        }
+      },
+      "file": "experiments/B-evolution-43/dev-champion.json",
+      "sha256": "de854db161e9df1889669c479d4572c3930727c8b38b6893ed0c5848a1e9843c"
+    },
+    {
+      "id": "B-random-43",
+      "role": "champion",
+      "seed": 43,
+      "method": "random",
+      "genome": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684",
+      "episodesPerArm": 12800,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 0,
+        "byGroup": [
+          0,
+          0,
+          0
+        ],
+        "severe": 39,
+        "times": null,
+        "grass": null,
+        "clean": 0,
+        "lawfulProgress": {
+          "best": 337.54984349484334,
+          "worst": 10.40533942449838,
+          "mean": 122.62604883253712,
+          "median": 112.34162934061999,
+          "q1": 109.13144741436335,
+          "q3": 122.87873876614549
+        }
+      },
+      "file": "experiments/B-random-43/dev-champion.json",
+      "sha256": "8f8cffa12ec4991dac78e950781b5b90708401d8827ce8d49225b17d0bfbe268"
+    },
+    {
+      "id": "B-evolution-44",
+      "role": "prefixChampion",
+      "seed": 44,
+      "method": "evolution",
+      "genome": "0e2b66b7a9324c0f13e4ab6fe0738205a369c13bb16c1fb445f74cb46bb0f797",
+      "episodesPerArm": 8192,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 1,
+        "byGroup": [
+          1,
+          0,
+          0
+        ],
+        "severe": 8,
+        "times": {
+          "best": 49.427874569835666,
+          "worst": 49.427874569835666,
+          "mean": 49.427874569835666,
+          "median": 49.427874569835666,
+          "q1": 49.427874569835666,
+          "q3": 49.427874569835666
+        },
+        "grass": {
+          "best": 0,
+          "worst": 0,
+          "mean": 0,
+          "median": 0,
+          "q1": 0,
+          "q3": 0
+        },
+        "clean": 1,
+        "lawfulProgress": {
+          "best": 673.6906884746954,
+          "worst": 172.57197205702198,
+          "mean": 460.1602851035412,
+          "median": 505.01203133477964,
+          "q1": 314.94065996194973,
+          "q3": 566.5691338272982
+        }
+      },
+      "file": "experiments/B-evolution-44/dev-prefixChampion.json",
+      "sha256": "b121157d497823fba72d483369f44e2054352e3eb364b87f55db1dd2917e45bd"
+    },
+    {
+      "id": "B-random-44",
+      "role": "prefixChampion",
+      "seed": 44,
+      "method": "random",
+      "genome": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed",
+      "episodesPerArm": 8192,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 0,
+        "byGroup": [
+          0,
+          0,
+          0
+        ],
+        "severe": 7,
+        "times": null,
+        "grass": null,
+        "clean": 0,
+        "lawfulProgress": {
+          "best": 434.4907571682668,
+          "worst": 10.40533942449838,
+          "mean": 96.84491128394086,
+          "median": 98.06610716426923,
+          "q1": 92.91061545351232,
+          "q3": 105.77567920089518
+        }
+      },
+      "file": "experiments/B-random-44/dev-prefixChampion.json",
+      "sha256": "9000445204331bfb7efa907466df3efcd7a3da4b448fa8f4f098222acdd8d3fd"
+    },
+    {
+      "id": "B-evolution-44",
+      "role": "champion",
+      "seed": 44,
+      "method": "evolution",
+      "genome": "fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9",
+      "episodesPerArm": 12800,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 21,
+        "byGroup": [
+          5,
+          8,
+          8
+        ],
+        "severe": 3,
+        "times": {
+          "best": 57.302681171714475,
+          "worst": 40.359185307328964,
+          "mean": 43.60455600487616,
+          "median": 42.18247249583951,
+          "q1": 41.44925066270422,
+          "q3": 43.46093418877185
+        },
+        "grass": {
+          "best": 0,
+          "worst": 0,
+          "mean": 0,
+          "median": 0,
+          "q1": 0,
+          "q3": 0
+        },
+        "clean": 21,
+        "lawfulProgress": {
+          "best": 676.3684110829004,
+          "worst": 63.17404578802848,
+          "mean": 580.5122442639806,
+          "median": 667.2441487686106,
+          "q1": 457.21098273787595,
+          "q3": 671.6203676224782
+        }
+      },
+      "file": "experiments/B-evolution-44/dev-champion.json",
+      "sha256": "5549fa497af0e5d671b0c4fb1557f917ec0eead2784d6c60c4b0791322795556"
+    },
+    {
+      "id": "B-random-44",
+      "role": "champion",
+      "seed": 44,
+      "method": "random",
+      "genome": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed",
+      "episodesPerArm": 12800,
+      "casesValid": true,
+      "statistics": {
+        "n": 40,
+        "success": 0,
+        "byGroup": [
+          0,
+          0,
+          0
+        ],
+        "severe": 7,
+        "times": null,
+        "grass": null,
+        "clean": 0,
+        "lawfulProgress": {
+          "best": 434.4907571682668,
+          "worst": 10.40533942449838,
+          "mean": 96.84491128394086,
+          "median": 98.06610716426923,
+          "q1": 92.91061545351232,
+          "q3": 105.77567920089518
+        }
+      },
+      "file": "experiments/B-random-44/dev-champion.json",
+      "sha256": "9000445204331bfb7efa907466df3efcd7a3da4b448fa8f4f098222acdd8d3fd"
+    }
+  ],
+  "pairs": [
+    {
+      "seed": 42,
+      "role": "prefixChampion",
+      "complete": true,
+      "evolutionAgainstRandom": {
+        "paired": 40,
+        "successA": 4,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      }
+    },
+    {
+      "seed": 42,
+      "role": "champion",
+      "complete": true,
+      "evolutionAgainstRandom": {
+        "paired": 40,
+        "successA": 4,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      }
+    },
+    {
+      "seed": 43,
+      "role": "prefixChampion",
+      "complete": true,
+      "evolutionAgainstRandom": {
+        "paired": 40,
+        "successA": 0,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      }
+    },
+    {
+      "seed": 43,
+      "role": "champion",
+      "complete": true,
+      "evolutionAgainstRandom": {
+        "paired": 40,
+        "successA": 0,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      }
+    },
+    {
+      "seed": 44,
+      "role": "prefixChampion",
+      "complete": true,
+      "evolutionAgainstRandom": {
+        "paired": 40,
+        "successA": 1,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      }
+    },
+    {
+      "seed": 44,
+      "role": "champion",
+      "complete": true,
+      "evolutionAgainstRandom": {
+        "paired": 40,
+        "successA": 21,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      }
+    }
+  ],
+  "trainingTimes": [
+    {
+      "id": "B-evolution-42",
+      "auditSHA256": "5601969f958d94d870d57d361589fadb336b65313f924b800e47b28420599839",
+      "boundaries": [
+        {
+          "episodes": 8192,
+          "validLaps": 215,
+          "seconds": {
+            "min": 73.74142008660284,
+            "max": 113.08632490974276,
+            "mean": 85.64856233360472,
+            "q1": 77.84378978278913,
+            "median": 82.04329330022213,
+            "q3": 91.72784027844642
+          }
+        },
+        {
+          "episodes": 12800,
+          "validLaps": 664,
+          "seconds": {
+            "min": 59.663774729747736,
+            "max": 115.51968118932076,
+            "mean": 81.32228335056188,
+            "q1": 73.27402817497018,
+            "median": 77.84680769065606,
+            "q3": 88.66955253891334
+          }
+        }
+      ]
+    },
+    {
+      "id": "B-random-42",
+      "auditSHA256": "8c7688a38c9cca8f3ee0562f5fe352d436674e65bf320124291428c2304192df",
+      "boundaries": [
+        {
+          "episodes": 8192,
+          "validLaps": 0,
+          "seconds": null
+        },
+        {
+          "episodes": 12800,
+          "validLaps": 0,
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "id": "B-evolution-43",
+      "auditSHA256": "8d096cb94b314b1c18d32674e5c7f97c79a46d52dac94c85baa0ed2ada2594bf",
+      "boundaries": [
+        {
+          "episodes": 8192,
+          "validLaps": 411,
+          "seconds": {
+            "min": 62.251439577544886,
+            "max": 113.1724772321925,
+            "mean": 83.53193479183173,
+            "q1": 74.35842663321645,
+            "median": 82.20327737683756,
+            "q3": 91.3280791740265
+          }
+        },
+        {
+          "episodes": 12800,
+          "validLaps": 834,
+          "seconds": {
+            "min": 52.26689530564939,
+            "max": 115.0564558225852,
+            "mean": 77.46198771718686,
+            "q1": 67.69361991952195,
+            "median": 74.35842663321645,
+            "q3": 87.79614451285961
+          }
+        }
+      ]
+    },
+    {
+      "id": "B-random-43",
+      "auditSHA256": "2c316cc262a2362adc0f3fa83254cbcf4c7dcd219567821d9501c3d0935c0786",
+      "boundaries": [
+        {
+          "episodes": 8192,
+          "validLaps": 0,
+          "seconds": null
+        },
+        {
+          "episodes": 12800,
+          "validLaps": 0,
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "id": "B-evolution-44",
+      "auditSHA256": "82211a3c1e48e29bbfe7121d27a83cdd1ac7a537912b96ab52f01d30f2715545",
+      "boundaries": [
+        {
+          "episodes": 8192,
+          "validLaps": 306,
+          "seconds": {
+            "min": 50.15932935578593,
+            "max": 114.13763178496691,
+            "mean": 69.79626145083962,
+            "q1": 59.073777880429056,
+            "median": 66.37652412407871,
+            "q3": 78.53669915641488
+          }
+        },
+        {
+          "episodes": 12800,
+          "validLaps": 1218,
+          "seconds": {
+            "min": 42.40798767734166,
+            "max": 115.48035489023437,
+            "mean": 63.32024460593275,
+            "q1": 52.884808911492684,
+            "median": 60.77601549111604,
+            "q3": 71.33619055535215
+          }
+        }
+      ]
+    },
+    {
+      "id": "B-random-44",
+      "auditSHA256": "8a4e0eaf74c6713f3d27e6e4bd6c625fdb5b69e82cda098b83af4fe33d03276e",
+      "boundaries": [
+        {
+          "episodes": 8192,
+          "validLaps": 0,
+          "seconds": null
+        },
+        {
+          "episodes": 12800,
+          "validLaps": 0,
+          "seconds": null
+        }
+      ]
+    }
+  ],
+  "selectionInput": "development-only",
+  "evidenceDigest": "84a5301bf589721b72fa50efb1bf8ccd2f7a088f8411beb57250ed60f39a736a"
+}
