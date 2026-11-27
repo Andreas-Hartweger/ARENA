@@ -40,6 +40,36 @@ it.each(vectors.fitness)(
   },
 );
 it('FIT-001 FIT-004 FIT-006 FIT-007 checks hierarchy, protected completion and custom weights', () => {
+  const N = 1_000_000;
+  const tier = (L: number, P: number) =>
+    scoreFitness(
+      N,
+      L,
+      false,
+      P,
+      P,
+      P,
+      0,
+      120,
+      Array(6).fill(1 - P),
+      profiles.Balanced,
+    ).F;
+  expect(tier(N - 1, 0) - tier(N - 2, 1)).toBe(100);
+  expect(() => new ProgressLedger(660, 8, N + 1, 0)).toThrow();
+  expect(() =>
+    scoreFitness(
+      N + 1,
+      0,
+      false,
+      0,
+      0,
+      0,
+      0,
+      120,
+      Array(6).fill(0),
+      profiles.Balanced,
+    ),
+  ).toThrow();
   for (const n of [1, 2, 10])
     for (let l = 0; l < n; l++) {
       const max = scoreFitness(

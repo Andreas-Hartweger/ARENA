@@ -8,7 +8,7 @@ import {
   type ScoredEpisode,
   type TraceOptions,
 } from './episode';
-import { normalized } from './fitness';
+import { bounded, normalized } from './fitness';
 import { Genome, type Model } from './genome';
 import {
   config,
@@ -18,7 +18,7 @@ import {
   type Member,
 } from './population';
 import { ranking } from './operators';
-import { stream } from './random';
+import { derivedSeed, stream } from './random';
 
 export function distribution(values: readonly number[]) {
   if (!values.length || !Array.from(values).every(Number.isFinite))
@@ -57,6 +57,27 @@ export type Evaluator = (
   trace?: TraceOptions,
 ) => EpisodeResult;
 const drive: Evaluator = (s, g, t) => evaluate(s, g.brain(), t);
+// External evaluators may supply shallow-frozen or mutable plain records.
+// Copy their published values at the transaction boundary, including trace data.
+function copyData<T>(value: T): T {
+  if (typeof value === 'number' && !Number.isFinite(value))
+    throw Error('Nonfinite evaluation data');
+  if (Array.isArray(value))
+    return Array.from(value, (item) => copyData(item)) as T;
+  if (value !== null && typeof value === 'object') {
+    if (Object.getPrototypeOf(value) !== Object.prototype)
+      throw Error('Expected plain evaluation data');
+    return Object.fromEntries(
+      Object.entries(value).map(([key, v]) => [key, copyData(v)]),
+    ) as T;
+  }
+  if (
+    value !== null &&
+    !['number', 'string', 'boolean', 'undefined'].includes(typeof value)
+  )
+    throw Error('Invalid evaluation data');
+  return value;
+}
 function compact(
   m: Member,
   slot: number,
@@ -72,6 +93,7 @@ function compact(
     origin: m.origin,
     operator: m.operator,
     mutation: m.mutation,
+    inheritance: m.inheritance,
     score,
     episodes: rows.map((row) => {
       if (!row.result.ok) throw Error('Unscored episode');
@@ -80,7 +102,7 @@ function compact(
         contract: row.contract,
         seed: row.seed,
         attempt: row.attempt,
-        ...row.result,
+        ...copyData(row.result),
       };
     }),
   };
@@ -175,6 +197,20 @@ function summarize(
   });
 }
 type Summary = ReturnType<typeof summarize>;
+type Phase =
+  | 'initialized'
+  | 'evaluating'
+  | 'staged'
+  | 'committed'
+  | 'blocked'
+  | 'cancelled';
+type CommittedSnapshot = Readonly<{
+  historyIndex: number;
+  summary: Summary;
+  generationBest: Genome;
+  champion: Readonly<{ id: string; fitness: number; genome: Genome }>;
+  nextPopulation: readonly Member[];
+}>;
 export class Evolution {
   readonly config;
   readonly scenarios: readonly Scenario[];
@@ -184,6 +220,8 @@ export class Evolution {
   #history: readonly Summary[] = Object.freeze([]);
   #champion: { id: string; fitness: number; genome: Genome } | null = null;
   #lastError: string | null = null;
+  #phase: Phase = 'initialized';
+  #committed: CommittedSnapshot | null = null;
   #busy = false;
   constructor(
     m: Model,
@@ -199,8 +237,16 @@ export class Evolution {
       !scenarios.length ||
       new Set(scenarios.map((s) => s.key)).size !== scenarios.length ||
       scenarios.some(
-        (s) =>
+        (s, i) =>
           s.purpose !== 'training' ||
+          s.seed !==
+            derivedSeed(
+              this.config.master,
+              'scenario',
+              0,
+              this.config.segment,
+              i,
+            ) ||
           s.modelSignature !== m.signature ||
           s.structure !== scenarios[0].structure,
       )
@@ -228,6 +274,12 @@ export class Evolution {
   get lastError() {
     return this.#lastError;
   }
+  get phase() {
+    return this.#phase;
+  }
+  get snapshot() {
+    return this.#committed;
+  }
   collect(evaluator: Evaluator = drive): EvaluationRow[] {
     if (this.#busy || !this.population.length)
       throw Error('No open generation');
@@ -235,6 +287,7 @@ export class Evolution {
       generation = this.history.length,
       c = this.config;
     this.#busy = true;
+    this.#phase = 'evaluating';
     try {
       for (const [slot, individual] of this.population.entries())
         for (const [index, s] of this.scenarios.entries()) {
@@ -279,6 +332,7 @@ export class Evolution {
             result,
           });
         }
+      this.#phase = 'staged';
       return rows;
     } finally {
       this.#busy = false;
@@ -315,7 +369,12 @@ export class Evolution {
           ![0, 1].includes(row.attempt)
         )
           throw Error('Invalid staged identity');
-        if (!row.result.ok)
+        if (!row.result.ok) {
+          if (
+            row.result.reason === 'cancelled' ||
+            row.result.reason === 'externalReset'
+          )
+            this.#phase = 'cancelled';
           throw Error(
             JSON.stringify({
               generation: g,
@@ -328,6 +387,39 @@ export class Evolution {
               ...row.result,
             }),
           );
+        }
+        const result = row.result;
+        if (
+          !['timeout', 'noProgress', 'completed'].includes(result.reason) ||
+          result.errors.length !== 6 ||
+          result.lapTimes.length > s.task.laps ||
+          (result.reason === 'completed') !==
+            (result.lapTimes.length === s.task.laps)
+        )
+          throw Error('Invalid episode outcome');
+        bounded(result.tick, 1, s.task.maxTicks, 'result tick', true);
+        bounded(
+          result.duration,
+          0,
+          result.tick / 60 + 1e-10,
+          'simulated duration',
+        );
+        for (const v of [
+          ...result.errors,
+          result.fitness.P,
+          result.fitness.A,
+          result.fitness.K,
+          result.fitness.T,
+          result.fitness.Q,
+        ])
+          bounded(v, 0, 1, 'fitness component');
+        bounded(result.fitness.R, 0, 1000, 'detail fitness');
+        bounded(
+          result.fitness.F,
+          0,
+          1100 * (2 * s.task.laps + 1) + 1000,
+          'score',
+        );
         slots.set(key, row);
       }
       const records = this.#population.map((m, i) => {
@@ -368,13 +460,23 @@ export class Evolution {
           ? reproduce(this.#population, order, c, g + 1, adaptive, this.#digest)
           : Object.freeze([]);
       const history = Object.freeze([...this.history, summary]);
+      const snapshot = Object.freeze({
+        historyIndex: g,
+        summary,
+        generationBest: this.#population[best].genome,
+        champion,
+        nextPopulation: next,
+      });
       this.#history = history;
       this.#champion = champion;
       this.#population = next;
       this.#lastError = null;
+      this.#committed = snapshot;
+      this.#phase = 'committed';
       return summary;
     } catch (error) {
       this.#lastError = String(error);
+      if (this.#phase !== 'cancelled') this.#phase = 'blocked';
       throw error;
     } finally {
       this.#busy = false;

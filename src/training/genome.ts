@@ -52,20 +52,24 @@ export function model(
   });
 }
 export type Model = ReturnType<typeof model>;
+export function checkedParameters(m: Model, values: Float64Array) {
+  if (!(values instanceof Float64Array) || values.length !== m.count)
+    throw Error('Invalid genome length/type');
+  const copy = values.slice();
+  for (const l of m.layers)
+    for (let i = l.offset; i < l.end; i++) {
+      const limit = i < l.bias ? m.weightLimit : m.biasLimit;
+      bounded(copy[i], -limit, limit, 'gene');
+      if (copy[i] === 0) copy[i] = 0;
+    }
+  return copy;
+}
 export class Genome {
   readonly model: Model;
   readonly hash: string;
   readonly #values: Float64Array;
   constructor(m: Model, values: Float64Array, digest: Digest) {
-    if (!(values instanceof Float64Array) || values.length !== m.count)
-      throw Error('Invalid genome length/type');
-    const copy = values.slice();
-    for (const l of m.layers)
-      for (let i = l.offset; i < l.end; i++) {
-        const limit = i < l.bias ? m.weightLimit : m.biasLimit;
-        bounded(copy[i], -limit, limit, 'gene');
-        if (copy[i] === 0) copy[i] = 0;
-      }
+    const copy = checkedParameters(m, values);
     this.model = m;
     this.#values = copy;
     this.hash = digest(m.key, copy.slice());

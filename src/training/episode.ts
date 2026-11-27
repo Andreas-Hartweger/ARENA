@@ -10,6 +10,7 @@ import { createVehicle } from '../vehicles/vehicle';
 import { GT_01 } from '../vehicles/vehicleDefinition';
 import {
   ProgressLedger,
+  MAX_TASK_LAPS,
   bounded,
   normalized,
   profiles,
@@ -68,7 +69,7 @@ export interface ScenarioOptions {
 export type Digest = (header: string, parameters?: Float64Array) => string;
 export function scenario(digest: Digest, options: ScenarioOptions = {}) {
   const task = { ...standardTask, ...options.task };
-  bounded(task.laps, 1, Number.MAX_SAFE_INTEGER, 'task laps', true);
+  bounded(task.laps, 1, MAX_TASK_LAPS, 'task laps', true);
   bounded(task.maxTicks, 1, Number.MAX_SAFE_INTEGER, 'max ticks', true);
   bounded(task.graceTicks, 0, task.maxTicks - 1, 'grace ticks', true);
   bounded(
@@ -140,6 +141,21 @@ export function scenario(digest: Digest, options: ScenarioOptions = {}) {
   });
 }
 export type Scenario = ReturnType<typeof scenario>;
+export function scenarioSet(
+  digest: Digest,
+  master = 42,
+  segment = 0,
+  options: readonly Omit<ScenarioOptions, 'seed'>[] = [{}],
+) {
+  return Object.freeze(
+    options.map((s, i) =>
+      scenario(digest, {
+        ...s,
+        seed: derivedSeed(master, 'scenario', 0, segment, i),
+      }),
+    ),
+  );
+}
 export interface TraceOptions {
   maxSamples: number;
   everyTicks: number;

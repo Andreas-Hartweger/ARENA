@@ -121,6 +121,7 @@ export interface Member {
   origin: 'initial' | 'seed' | 'offspring' | 'immigrant' | 'elite' | 'random';
   operator: Operator | 'copy' | 'fallback';
   mutation?: Omit<ReturnType<typeof mutate>, 'parameters'>;
+  inheritance?: { parentByIndex: readonly string[]; truncated: boolean };
 }
 const identity = (c: Config, g: number, i: number) =>
   JSON.stringify([c.runId, g, i]);
@@ -160,6 +161,10 @@ function child(
   mutation: MutationOptions,
   attempted: boolean,
 ): Member {
+  const detailed = c.trace?.generation === g && c.trace.slot === i;
+  const donorMask = detailed
+    ? new Uint8Array(Math.min(a.genome.model.count, c.trace!.maxChanges))
+    : undefined;
   const m = a.genome.model,
     values = b
       ? crossover(
@@ -168,9 +173,9 @@ function child(
           c.operator,
           stream(c.master, 'cross', g, i),
           c.protectedLayers,
+          donorMask,
         )
       : a.genome.parameters();
-  const detailed = c.trace?.generation === g && c.trace.slot === i;
   const { parameters, ...summary } = mutate(
     m,
     values,
@@ -187,6 +192,14 @@ function child(
     origin: 'offspring',
     operator: b ? c.operator : attempted ? 'fallback' : 'copy',
     mutation: summary,
+    ...(donorMask
+      ? {
+          inheritance: {
+            parentByIndex: Array.from(donorMask, (bit) => (bit ? b!.id : a.id)),
+            truncated: donorMask.length < m.count,
+          },
+        }
+      : {}),
   };
 }
 export function initialPopulation(
@@ -227,6 +240,18 @@ export function reproduce(
   digest: Digest,
 ) {
   const m = previous[0].genome.model;
+  if (c.globalProtection) {
+    const fixed = previous[0].genome.parameters();
+    for (const member of previous) {
+      const candidate = member.genome.parameters();
+      for (const i of c.protectedLayers) {
+        const layer = m.layers[i];
+        for (let j = layer.offset; j < layer.end; j++)
+          if (candidate[j] !== fixed[j])
+            throw Error('Inconsistent globally protected layer');
+      }
+    }
+  }
   if (c.randomSearch)
     return freezeTree(
       Array.from({ length: c.n }, (_, i) =>
@@ -240,6 +265,7 @@ export function reproduce(
     ...previous[i],
     origin: 'elite',
     mutation: undefined,
+    inheritance: undefined,
   }));
   const pool = order.slice(0, Math.max(1, Math.round(c.n * c.poolFraction))),
     mutation = { ...c.mutation, p: state.p, alpha: state.alpha };

@@ -13,6 +13,7 @@ import {
 import { Genome, GenomeSet, model } from '../../src/training/genome';
 import {
   crossover,
+  mixedGaussian,
   eliteCount,
   elites,
   ranking,
@@ -38,6 +39,21 @@ const { digest }: { digest: Digest } = await import(adapterPath);
 const m = model('fixture'),
   small = model('fixture', [4]);
 const seeded = (n: number) => Genome.initialize(small, n, digest);
+it('MUT-005 MUT-006 isolates the all-large kernel and rejects malformed source values even with mutation disabled', () => {
+  const a = new SeededRandom(8),
+    b = new SeededRandom(8);
+  const normal = mixedGaussian(a, 0.25, 0, 5),
+    large = mixedGaussian(b, 0.25, 1, 5);
+  expect(normal.large).toBe(false);
+  expect(large.large).toBe(true);
+  expect(large.delta).toBeCloseTo(5 * normal.delta, 12);
+  expect(a.getState()).toBe(b.getState());
+  const input = new Float64Array(small.count);
+  input[7] = NaN;
+  expect(() =>
+    mutate(small, input, { ...standardMutation, p: 0 }, a),
+  ).toThrow();
+});
 it.each(vectors.rng)(
   'RNG-001 RNG-003 golden PRNG and Gaussian seed $seed',
   (v) => {

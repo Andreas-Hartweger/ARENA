@@ -7,6 +7,8 @@ export const profiles = freezeTree({
   Speed: [0.8, 0.1, 0.02, 0.03, 0.02, 0.03, 0],
   Safety: [0.15, 0.45, 0.15, 0.05, 0.07, 0.1, 0.03],
 });
+// DR-02B-001: keep adjacent lap tiers distinguishable in the published Float64 score.
+export const MAX_TASK_LAPS = 1_000_000;
 export const clampUnit = (x: number) =>
   Math.min(1, Math.max(0, requireFinite(x, 'fraction')));
 export function bounded(
@@ -47,7 +49,7 @@ export function scoreFitness(
   errors: readonly number[],
   weights: readonly number[],
 ) {
-  bounded(N, 1, Number.MAX_SAFE_INTEGER, 'required laps', true);
+  bounded(N, 1, MAX_TASK_LAPS, 'required laps', true);
   bounded(L, 0, N, 'laps', true);
   if (
     (success && L !== N) ||
@@ -90,7 +92,7 @@ export class ProgressLedger {
     if (!(requireFinite(length, 'length') > 0)) throw Error('Invalid length');
     this.length = length;
     this.gates = bounded(gates, 1, 256, 'gates', true);
-    this.required = bounded(required, 1, Number.MAX_SAFE_INTEGER, 'laps', true);
+    this.required = bounded(required, 1, MAX_TASK_LAPS, 'laps', true);
     this.approachLength = Math.max(0, -requireFinite(startS, 'start station'));
     this.#endStation = startS;
   }

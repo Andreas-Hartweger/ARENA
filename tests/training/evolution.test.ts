@@ -3,6 +3,7 @@ import { Brain } from '../../src/ai/network';
 import {
   evaluate,
   scenario,
+  scenarioSet,
   type Digest,
   type EpisodeResult,
   type ScoredEpisode,
@@ -30,6 +31,61 @@ const zeros = new Brain(
   new Float64Array(m.count),
 );
 const base = evaluate(short, zeros) as ScoredEpisode;
+it('DIA-003 EVO-003 publishes the whole immutable snapshot and owns shallow-frozen input records', () => {
+  const e = start();
+  expect(e.phase).toBe('initialized');
+  expect(e.snapshot).toBeNull();
+  const data = { ...base, fitness: { ...base.fitness }, raw: { ...base.raw } };
+  const rows = e.collect(() => Object.freeze(data));
+  expect(e.phase).toBe('staged');
+  e.commit(rows);
+  const first = e.snapshot!;
+  expect(first.historyIndex).toBe(0);
+  expect(first.summary).toBe(e.history[0]);
+  expect(first.nextPopulation).toBe(e.population);
+  expect(first.champion).toBe(e.champion);
+  expect(first.generationBest.hash).toBe(
+    first.summary.records[first.summary.order[0]].hash,
+  );
+  data.raw.distance = 123;
+  expect(first.summary.records[0].episodes[0].raw.distance).toBe(0);
+  const stopped = e.collect(() => ({
+    ok: false,
+    reason: 'cancelled',
+    tick: 0,
+    message: 'stop',
+  }));
+  expect(() => e.commit(stopped)).toThrow();
+  expect(e.phase).toBe('cancelled');
+  expect(e.snapshot).toBe(first);
+});
+it('RNG-005 EPS-010 ADP-009 uses scenario seeds keyed by master, segment and canonical scenario position', () => {
+  const both = scenarioSet(digest, 12, 4, [
+    { task: short.task },
+    { task: short.task, id: 'B' },
+  ]);
+  expect(both[0].seed).not.toBe(both[1].seed);
+  const run = new Evolution(m, both, digest, {
+    master: 12,
+    segment: 4,
+    n: 8,
+    generations: 1,
+  });
+  const rows = run.collect(() => base);
+  expect(rows.map((r) => r.seed)).toEqual(
+    Array.from({ length: 16 }, (_, i) => both[i % 2].seed),
+  );
+  expect(
+    () =>
+      new Evolution(m, [...both].reverse(), digest, { master: 12, segment: 4 }),
+  ).toThrow();
+  expect(run.champion).toBeNull();
+});
+it('FIT-001 DR-02B-001 accepts the delegated maximum and rejects schedules above it', () => {
+  const task = { laps: 1_000_000 };
+  expect(scenario(digest, { task }).task.laps).toBe(task.laps);
+  expect(() => scenario(digest, { task: { laps: task.laps + 1 } })).toThrow();
+});
 function landscape(_: unknown, g: Genome): ScoredEpisode {
   const x = g.parameters(),
     score = 20 + x[0] - Math.abs(x[1]);
@@ -59,7 +115,10 @@ it('EPS-001 EPS-002 EPS-006 EPS-007 EPS-008 REG-006 replays independent real AI 
   expect(fault).not.toHaveProperty('fitness');
 });
 it('EPS-010 FIT-008 ADP-009 rejects incompatible training structures and holds out validation', () => {
-  const s2 = scenario(digest, { id: 'second', task: short.task, seed: 2 });
+  const s2 = scenarioSet(digest, 42, 0, [
+    { task: short.task },
+    { id: 'second', task: short.task },
+  ])[1];
   const ev = new Evolution(
     m,
     [short, s2],

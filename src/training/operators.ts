@@ -1,6 +1,6 @@
 import { bounded } from './fitness';
 import type { Genome, Model } from './genome';
-import { GenomeSet } from './genome';
+import { GenomeSet, checkedParameters } from './genome';
 import { gaussian, integer, permutation, type Draw } from './random';
 
 export interface MutationOptions {
@@ -49,6 +49,17 @@ const stats = () => ({
   rms: 0,
   maxAbs: 0,
 });
+// The public mutation configuration caps the mixture at 30%. The two endpoint
+// distributions can also be exercised directly with the same draw schedule.
+export function mixedGaussian(
+  r: Draw,
+  sigma: number,
+  probability: number,
+  multiplier: number,
+) {
+  const large = r.next() < probability;
+  return { large, delta: sigma * (large ? multiplier : 1) * gaussian(r) };
+}
 export function mutate(
   m: Model,
   source: Float64Array,
@@ -58,7 +69,8 @@ export function mutate(
   protectedLayers: readonly number[] = [],
 ) {
   validateMutation(m, c);
-  const out = source.slice(),
+  bounded(maxDetails, 0, 100000, 'change budget', true);
+  const out = checkedParameters(m, source),
     layers = m.layers.map(() => ({ weight: stats(), bias: stats() }));
   const details: {
     index: number;
@@ -118,9 +130,10 @@ export function mutate(
   let cursor = 0;
   for (const i of selected) {
     while (i >= eligibleGroups[cursor].end) cursor++;
-    const { sigma, limit, summary } = eligibleGroups[cursor],
-      large = r.next() < c.largeProbability;
-    const raw = out[i] + sigma * (large ? c.largeMultiplier : 1) * gaussian(r);
+    const { sigma, limit, summary } = eligibleGroups[cursor];
+    const step = mixedGaussian(r, sigma, c.largeProbability, c.largeMultiplier),
+      large = step.large;
+    const raw = out[i] + step.delta;
     if (!Number.isFinite(raw)) throw Error('Nonfinite mutated gene');
     const value = Math.max(-limit, Math.min(limit, raw)),
       old = out[i],
@@ -155,6 +168,7 @@ export function crossover(
   kind: Operator,
   r: Draw,
   protectedLayers: readonly number[] = [],
+  donorMask?: Uint8Array,
 ) {
   if (a.model.key !== b.model.key || !['uniform', 'neuron-wise'].includes(kind))
     throw Error('Incompatible crossover');
@@ -164,13 +178,20 @@ export function crossover(
     if (protectedLayers.includes(l.i)) continue;
     if (kind === 'uniform') {
       for (let i = l.offset; i < l.end; i++)
-        if (r.next() >= 0.5) out[i] = other[i];
+        if (r.next() >= 0.5) {
+          out[i] = other[i];
+          if (donorMask && i < donorMask.length) donorMask[i] = 1;
+        }
     } else
       for (let j = 0; j < l.width; j++)
         if (r.next() >= 0.5) {
           const start = l.offset + j * l.inputs;
           out.set(other.subarray(start, start + l.inputs), start);
           out[l.bias + j] = other[l.bias + j];
+          if (donorMask) {
+            donorMask.fill(1, start, start + l.inputs);
+            if (l.bias + j < donorMask.length) donorMask[l.bias + j] = 1;
+          }
         }
   }
   return out;
