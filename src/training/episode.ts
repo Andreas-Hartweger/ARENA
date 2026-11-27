@@ -179,6 +179,9 @@ export interface TraceSample {
 }
 export interface EpisodeFailure {
   ok: false;
+  contract?: string;
+  seed?: number;
+  modelSignature?: string;
   reason:
     | 'externalReset'
     | 'cancelled'
@@ -232,12 +235,15 @@ export function evaluate(
     for (tick = 1; tick <= s.task.maxTicks; tick++) {
       const interruption = stop?.();
       if (interruption)
-        return {
+        return Object.freeze({
           ok: false,
           reason: interruption,
           tick: tick - 1,
           message: 'Episode interrupted',
-        } satisfies EpisodeFailure;
+          contract: s.key,
+          seed: s.seed,
+          modelSignature: brain.signature,
+        } satisfies EpisodeFailure);
       const sampled = !!trace && (tick - 1) % trace.everyTicks === 0;
       world.trace = sampled && samples.length < trace!.maxSamples;
       const frame = world.step(commands),
@@ -336,12 +342,15 @@ export function evaluate(
     throw Error('Episode exceeded tick limit');
   } catch (error) {
     const message = String(error);
-    return {
+    return Object.freeze({
       ok: false,
       reason: /AI |model/i.test(message) ? 'modelFault' : 'simulationFault',
       tick,
       message,
-    } satisfies EpisodeFailure;
+      contract: s.key,
+      seed: s.seed,
+      modelSignature: brain.signature,
+    } satisfies EpisodeFailure);
   }
 }
 export type EpisodeResult = ReturnType<typeof evaluate> | EpisodeFailure;

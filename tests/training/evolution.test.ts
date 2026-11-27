@@ -111,7 +111,14 @@ it('EPS-001 EPS-002 EPS-006 EPS-007 EPS-008 REG-006 replays independent real AI 
     expect(r).not.toHaveProperty('fitness');
   }
   const fault = evaluate(s, new Brain('other vehicle'));
-  expect(fault).toMatchObject({ reason: 'modelFault', ok: false, tick: 0 });
+  expect(fault).toMatchObject({
+    reason: 'modelFault',
+    ok: false,
+    tick: 0,
+    contract: s.key,
+    seed: s.seed,
+    modelSignature: 'other vehicle',
+  });
   expect(fault).not.toHaveProperty('fitness');
 });
 it('EPS-010 FIT-008 ADP-009 rejects incompatible training structures and holds out validation', () => {
@@ -353,4 +360,29 @@ it('EPS-008 EVO-002 rejects nonfinite scores without publishing a generation', (
   expect(() => r.commit(rows)).toThrow();
   expect(r.population).toBe(p);
   expect(r.champion).toBeNull();
+});
+it('EVO-002 EPS-007 rejects conflicting result metadata and reports the current staging failure after cancellation', () => {
+  const run = start();
+  const rows = run.collect(() => base);
+  const cancelled = [...rows];
+  cancelled[0] = {
+    ...rows[0],
+    result: { ok: false, reason: 'cancelled', tick: 0, message: 'stop' },
+  };
+  expect(() => run.commit(cancelled)).toThrow(/cancelled/);
+  expect(run.phase).toBe('cancelled');
+  expect(() => run.commit(rows.slice(1))).toThrow(/Incomplete/);
+  expect(run.phase).toBe('blocked');
+  for (const mismatch of [
+    { contract: 'other' },
+    { seed: 123 },
+    { attempt: 1 },
+    { scenario: 4 },
+  ]) {
+    const wrong = [...rows];
+    wrong[0] = { ...rows[0], result: { ...base, ...mismatch } };
+    expect(() => run.commit(wrong)).toThrow(/identity/);
+    expect(run.snapshot).toBeNull();
+  }
+  expect(run.commit(rows).evaluations).toBe(8);
 });

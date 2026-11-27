@@ -342,6 +342,7 @@ export class Evolution {
     if (this.#busy || !this.population.length)
       throw Error('No open generation');
     this.#busy = true;
+    let interrupted = false;
     try {
       const c = this.config,
         g = this.history.length,
@@ -353,6 +354,7 @@ export class Evolution {
         const m = this.#population[row.slot],
           s = this.scenarios[row.scenario],
           key = row.slot * sc + row.scenario;
+        const result = row.result;
         if (
           !Number.isInteger(row.slot) ||
           !Number.isInteger(row.scenario) ||
@@ -366,17 +368,22 @@ export class Evolution {
           row.seed !== s.seed ||
           row.individual !== m.id ||
           !m.genome.equals(row.genome) ||
-          ![0, 1].includes(row.attempt)
+          ![0, 1].includes(row.attempt) ||
+          ('contract' in result && result.contract !== row.contract) ||
+          ('seed' in result && result.seed !== row.seed) ||
+          ('scenario' in result && result.scenario !== row.scenario) ||
+          ('attempt' in result && result.attempt !== row.attempt)
         )
           throw Error('Invalid staged identity');
-        if (!row.result.ok) {
+        if (!result.ok) {
           if (
-            row.result.reason === 'cancelled' ||
-            row.result.reason === 'externalReset'
+            result.reason === 'cancelled' ||
+            result.reason === 'externalReset'
           )
-            this.#phase = 'cancelled';
+            interrupted = true;
           throw Error(
             JSON.stringify({
+              ...result,
               generation: g,
               slot: row.slot,
               scenario: s.id,
@@ -384,11 +391,9 @@ export class Evolution {
               seed: s.seed,
               genome: m.genome.hash,
               attempt: row.attempt,
-              ...row.result,
             }),
           );
         }
-        const result = row.result;
         if (
           !['timeout', 'noProgress', 'completed'].includes(result.reason) ||
           result.errors.length !== 6 ||
@@ -476,7 +481,7 @@ export class Evolution {
       return summary;
     } catch (error) {
       this.#lastError = String(error);
-      if (this.#phase !== 'cancelled') this.#phase = 'blocked';
+      this.#phase = interrupted ? 'cancelled' : 'blocked';
       throw error;
     } finally {
       this.#busy = false;
