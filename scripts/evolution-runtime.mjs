@@ -6,15 +6,21 @@ import { execFileSync } from 'node:child_process';
 import os from 'node:os';
 import { URL } from 'node:url';
 import process from 'node:process';
-const sourceRoot = new URL('../src/', import.meta.url).href;
-const fixtureRoot = new URL('../tests/', import.meta.url).href;
+const sourceRoots = [
+  new URL('../src/', import.meta.url).href,
+  new URL('../tests/', import.meta.url).href,
+];
+export function includeSourceDirectory(directory) {
+  sourceRoots.push(
+    directory.href.endsWith('/') ? directory.href : directory.href + '/',
+  );
+}
 registerHooks({
   resolve(name, ctx, next) {
     return next(
-      (ctx.parentURL?.startsWith(sourceRoot) ||
-        ctx.parentURL?.startsWith(fixtureRoot)) &&
-        name.startsWith('.') &&
-        !extname(name)
+      name.startsWith('.') &&
+        !extname(name) &&
+        sourceRoots.some((root) => ctx.parentURL?.startsWith(root))
         ? name + '.ts'
         : name,
       ctx,
