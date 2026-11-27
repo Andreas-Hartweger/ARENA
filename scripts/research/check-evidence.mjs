@@ -21,6 +21,7 @@ import {
 import { ActiveTime, publishJSON } from './campaign.mjs';
 import { nodeComputePort } from '../node-compute-port.mjs';
 import { exportExperiment } from './evidence.mjs';
+import { inspectDevelopment } from './inspect-development.mjs';
 import { runExperiment } from './coordinator.mjs';
 import {
   evaluatePanel,
@@ -88,6 +89,7 @@ try {
     writeFileSync(paramFile, parameters);
     const panel = {
       name: 'development',
+      hash: hashJSON('qa-development'),
       cases: [
         {
           id: 'qa-dev',
@@ -143,6 +145,16 @@ try {
     const receipt = JSON.parse(lostEvent.context);
     assert.equal(receipt.ticks, null);
     assert.equal(receipt.chargedTicks, 65);
+    await inspectDevelopment(src, ledger, clock, panel, candidate, first);
+    const diagnostics = ledger.readManifest(
+      'development-trace:qa-technical:champion',
+    );
+    assert.equal(diagnostics.sampleCount, 6);
+    assert.equal(diagnostics.diagnostics.observations, 6);
+    assert.equal(diagnostics.diagnostics.measuredDecisions, 6);
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 260);
+    await inspectDevelopment(src, ledger, clock, panel, candidate, first);
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 260);
     await assert.rejects(
       evaluatePanel(ledger, clock, standardPanel(), candidate, 1),
       /frozen/i,

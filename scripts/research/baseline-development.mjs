@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import { existsSync, readFileSync } from 'node:fs';
 import { loadPanel, loadCandidate, evaluatePanel } from './evaluate-panel.mjs';
 import { publishJSON } from './campaign.mjs';
+import { inspectDevelopment } from './inspect-development.mjs';
 import { hashJSON, sha } from './manifest.mjs';
 const { caseStatistics, comparePaired } =
   await import('../../src/research/validation.ts');
@@ -45,8 +46,18 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
         const id = 'B-' + method + '-' + seed;
         const model = loadCandidate(directory, id, role),
           result = await evaluatePanel(ledger, clock, panel, model, workers);
-        const casesValid = result.actual.every((c) => c.result.ok);
         const summary = caseStatistics(result.actual);
+        const casesValid =
+          summary.n === panel.cases.length && summary.lawfulProgress !== null;
+        if (id === 'B-evolution-42' && role === 'prefixChampion')
+          await inspectDevelopment(
+            directory,
+            ledger,
+            clock,
+            panel,
+            model,
+            result,
+          );
         const relative = 'experiments/' + id + '/dev-' + role + '.json',
           target = join(directory, relative);
         publishJSON(target, result);

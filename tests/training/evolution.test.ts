@@ -14,6 +14,7 @@ import {
   type EvaluationRow,
 } from '../../src/training/evolution';
 import { Genome, model } from '../../src/training/genome';
+import { traceDiagnostics } from '../../src/research/traceDiagnostics';
 import { permutation, stream } from '../../src/training/random';
 const path = '../../scripts/evolution-runtime.mjs';
 const { digest }: { digest: Digest } = await import(path);
@@ -349,6 +350,44 @@ it('DIA-001 DIA-003 DIA-004 DIA-005 DIA-006 DIA-007 EVO-009 REG-003 verifies rea
         true,
       );
     }
+  }
+});
+it('D-024 counts measured sensor frames and decisions, including masked inputs', () => {
+  for (const activation of ['tanh', 'relu', 'leaky'] as const) {
+    const contract = model(short.modelSignature, [4], activation);
+    const brain = new Brain(short.modelSignature, 31, [4], activation);
+    const result = evaluate(short, brain, { everyTicks: 1, maxSamples: 3 });
+    if (!result.ok || !result.trace) throw Error('Missing physical trace');
+    const samples = result.trace.samples;
+    const audit = traceDiagnostics(samples, contract);
+    expect(audit.observations).toBe(2);
+    expect(audit.measuredDecisions).toBe(2);
+    expect(audit.inputs).toHaveLength(248);
+    expect(audit.inputs.find((i) => i.id === 'object00.x')).toMatchObject({
+      masked: 2,
+      available: 0,
+      min: null,
+      max: null,
+    });
+    expect(audit.layers[0].values).toBe(8);
+    expect(audit.layers[1]).toMatchObject({
+      activation: 'linear',
+      values: 6,
+      saturated: null,
+    });
+    expect(audit.layers[0].saturated === null).toBe(activation !== 'tanh');
+    expect(
+      traceDiagnostics(
+        samples.map((s) => ({ ...s, layers: [] })),
+        contract,
+      ).measuredDecisions,
+    ).toBe(0);
+    const masked = audit.inputs.findIndex((i) => i.id === 'object00.x');
+    const values = [...samples[0].values];
+    values[masked] = 0.5;
+    expect(() =>
+      traceDiagnostics([{ ...samples[0], values }], contract),
+    ).toThrow(/Unmasked/);
   }
 });
 it('EPS-008 EVO-002 rejects nonfinite scores without publishing a generation', () => {

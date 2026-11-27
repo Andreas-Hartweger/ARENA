@@ -33,8 +33,42 @@ function summarize(id) {
   );
   for (const [file, digest] of Object.entries(hashes))
     assert.equal(sha(readFileSync(join(folder, file))), digest);
+  const history = readFileSync(join(folder, 'generations.ndjson'));
+  assert.equal(sha(history), report.artifacts['generations.ndjson'].sha256);
+  const generations = history
+    .toString('utf8')
+    .trim()
+    .split('\n')
+    .map((line) => JSON.parse(line));
+  assert.equal(generations.length, report.completed);
+  generations.forEach((g, i) => assert.equal(g.generation, i));
   const audits = Object.entries(hashes).map(([file]) => {
     const audit = read(join(folder, file));
+    const included = generations.slice(0, audit.generations);
+    assert.equal(included.length, audit.generations);
+    const total = (field) => {
+      const counts = {};
+      for (const g of included)
+        for (const [name, count] of Object.entries(g[field])) {
+          assert(Number.isSafeInteger(count) && count >= 0);
+          counts[name] = (counts[name] ?? 0) + count;
+        }
+      return counts;
+    };
+    const adaptation = {};
+    for (const g of included) {
+      const reason = g.adaptive.reason;
+      adaptation[reason] = (adaptation[reason] ?? 0) + 1;
+    }
+    const snapshot = (g) => ({
+      generation: g.generation,
+      evaluated: g.evaluations,
+      validLaps: g.laps,
+      successfulEpisodes: g.successes,
+      lapTimesSeconds: g.lapTimes,
+      progressMetres: g.progress,
+      diversity: g.diversity,
+    });
     return {
       file,
       episodes: audit.regularEpisodes,
@@ -47,6 +81,13 @@ function summarize(id) {
       champion: audit.champion,
       rawTicks: audit.ticks,
       saturated: audit.saturated,
+      firstGeneration: snapshot(included[0]),
+      lastGeneration: snapshot(included.at(-1)),
+      origins: total('origins'),
+      operators: total('operators'),
+      mutation: total('mutation'),
+      terminalReasons: total('reasons'),
+      adaptation,
     };
   });
   return {
@@ -54,6 +95,7 @@ function summarize(id) {
     seed: report.entry.definition.masterSeed,
     configId: report.entry.definition.configId,
     hypothesis: report.entry.definition.hypothesis,
+    fitnessContract: report.entry.definition.fitnessVersion,
     source: report.runtime.sha ?? report.provenance?.original,
     status: report.state.toLowerCase(),
     outcome: report.outcome,

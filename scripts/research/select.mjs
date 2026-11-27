@@ -14,6 +14,7 @@ import {
   parseFlags,
 } from './campaign.mjs';
 import { loadCandidate, loadPanel, evaluatePanel } from './evaluate-panel.mjs';
+import { inspectDevelopment } from './inspect-development.mjs';
 import { NodeStore } from './store.mjs';
 import { sha } from './manifest.mjs';
 const { createModel, profiles, readVersion } =
@@ -123,7 +124,7 @@ async function select() {
       outcome,
       result,
     });
-    if (outcome.actual.some((c) => !c.result.ok)) {
+    if (!result.lawfulProgress || outcome.actual.some((c) => !c.result.ok)) {
       excluded.push({
         experimentId: slot.ExperimentID,
         devFile: 'dev-' + file,
@@ -131,6 +132,18 @@ async function select() {
       });
       continue;
     }
+    if (
+      phase === 'confirmation' &&
+      ['S40-42', 'S41-42'].includes(slot.ExperimentID)
+    )
+      await inspectDevelopment(
+        directory,
+        ledger,
+        clock,
+        development,
+        candidate,
+        outcome,
+      );
     const gen = readFileSync(
       join(directory, 'experiments', slot.ExperimentID, 'generations.ndjson'),
       'utf8',

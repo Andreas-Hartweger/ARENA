@@ -10,6 +10,8 @@ import { hashJSON, sha } from './manifest.mjs';
 import { auditEpisode } from './audit-data.mjs';
 const { createTrack } = await import('../../src/tracks/track.ts');
 const { distribution } = await import('../../src/training/evolution.ts');
+const { traceDiagnostics } =
+  await import('../../src/research/traceDiagnostics.ts');
 const { validateCapability, comparePaired } =
   await import('../../src/research/validation.ts');
 
@@ -187,6 +189,7 @@ async function review() {
         sampledTicks: t.samples.length,
         travelIntervals: moves,
         contactIntervals: contacts,
+        diagnostics: traceDiagnostics(t.samples, candidate.genome.model),
       });
     }
     checked.push({
