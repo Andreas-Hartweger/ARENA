@@ -1,0 +1,90 @@
+{
+  "sha": "44c100c22854793b200a104dbc358e49ea9190fa",
+  "evidenceChecksPassed": true,
+  "referenceComplete": false,
+  "completedGenerations": 77,
+  "evaluated": 9856,
+  "eliteRechecks": 456,
+  "prefixMatches": 22,
+  "reasons": {
+    "noProgress": 9477,
+    "timeout": 41,
+    "completed": 338
+  },
+  "successes": 338,
+  "allLaps": 338,
+  "firstSuccess": 31,
+  "fastestLapSeconds": 73.24421028932503,
+  "totalTicks": 22279263,
+  "totalSimulatedSeconds": 371318.54762881884,
+  "elapsedSeconds": null,
+  "championGenome": null,
+  "timeline": [
+    {
+      "generation": 0,
+      "best": 167.18011493946813,
+      "worst": 0,
+      "mean": 14.985159472396074,
+      "median": 0,
+      "q1": 0,
+      "q3": 10,
+      "successes": 0,
+      "laps": 0,
+      "progressBest": 118.83098121195803,
+      "unique": 128
+    },
+    {
+      "generation": 24,
+      "best": 776.7783917326103,
+      "worst": 0,
+      "mean": 204.34314639028656,
+      "median": 176.217743547795,
+      "q1": 125.69686718633172,
+      "q3": 231.14375709920222,
+      "successes": 0,
+      "laps": 0,
+      "progressBest": 530.3096439875512,
+      "unique": 128
+    },
+    {
+      "generation": 31,
+      "best": 4269.33366254004,
+      "worst": 5.5003522937836635,
+      "mean": 246.21821799155023,
+      "median": 165.58784689461203,
+      "q1": 137.1456384438252,
+      "q3": 241.97477340578843,
+      "successes": 1,
+      "laps": 1,
+      "progressBest": 667.9114857512855,
+      "unique": 128
+    },
+    {
+      "generation": 49,
+      "best": 4275.771428196007,
+      "worst": 0,
+      "mean": 427.5624181405021,
+      "median": 168.97973953142412,
+      "q1": 99.82196332231973,
+      "q3": 302.4366743493854,
+      "successes": 7,
+      "laps": 7,
+      "progressBest": 667.9114857512855,
+      "unique": 128
+    },
+    {
+      "generation": 74,
+      "best": 4275.89876124427,
+      "worst": 3.3301255611488045,
+      "mean": 521.709756093717,
+      "median": 220.77863368730027,
+      "q1": 147.7355925774865,
+      "q3": 352.3780933402663,
+      "successes": 9,
+      "laps": 9,
+      "progressBest": 667.9114857512855,
+      "unique": 128
+    }
+  ],
+  "candidateDataDigest": "7b82681dd1d658759c562761a8ac7c8cc0d8dc7cad2aeedc887f5de4530d1d42"
+}

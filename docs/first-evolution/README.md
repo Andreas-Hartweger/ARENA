@@ -14,7 +14,7 @@ node scripts/run-evolution.mjs .npm-cache/reference-01 reference
 node scripts/verify-evolution-run.mjs .npm-cache/reference-01
 ```
 
-Die vorhandene Referenz unter `docs/first-evolution/evidence/reference-release` kann direkt mit `node scripts/verify-evolution-run.mjs docs/first-evolution/evidence/reference-release docs/first-evolution/evidence/comparison-prefix.json` nachgerechnet werden. Für einen noch laufenden Lauf prüft `--partial` dessen bereits vollständig gespeicherte Generationen. Der Prüfer liest unkomprimierte oder gzip-komprimierte Einzelzeilen.
+Die vorhandene Referenz unter `docs/first-evolution/evidence/reference-release` kann direkt mit `node scripts/verify-evolution-run.mjs docs/first-evolution/evidence/reference-release docs/first-evolution/evidence/interrupted-prefix.json` nachgerechnet werden. Neben Fitness, Statistik, Mutationszählern und Abstammung prüft der Befehl die Kandidatenbytes der ersten 77 Generationen gegen einen separat ausgeführten Lauf. Für einen laufenden Lauf prüft `--partial` die bereits vollständig gespeicherten Generationen. Der Prüfer liest unkomprimierte oder gzip-komprimierte Einzelzeilen.
 
 Mit `node scripts/replay-evolution-audit.mjs docs/first-evolution/evidence/reference-release` lässt sich zusätzlich der aktuelle Koordinator gegen die gespeicherten Einzelergebnisse prüfen. Er rekonstruiert Genom und Abstammung jedes Slots und vergleicht sämtliche Kandidaten- und Generationsdaten. Je Generation fährt er das beste Modell und ein wechselndes zweites Modell noch einmal in einer frischen Welt. Im vollständigen Lauf sind das 200 Kontrollfahrten.
 
