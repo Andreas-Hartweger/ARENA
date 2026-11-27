@@ -9,4 +9,6 @@ Batch 02A ist abgeschlossen. [PR #5](https://github.com/Andreas-Hartweger/ARENA/
 | FI-001–012      | B, Review durch A/B | Abgeschlossen     | [Paketabhängigkeiten](../first-intelligence/BATCH-02A_TASKS.md), [Ergebnisse je Paket](../first-intelligence/BATCH-02A_COMPLETION_REPORT.md), [PR #5 und CI](https://github.com/Andreas-Hartweger/ARENA/pull/5) |
 | 02B–D, Batch 03 | Planung A           | In Planung        | Neuer Planungsauftrag und ausdrückliche Freigabe erforderlich                                                                                                                                                   |
 
-NÄCHSTER PLANUNGSAUFTRAG ERFORDERLICH
+## Aktiver Auftrag vom 27.11.2026
+
+PRE-B01 abgeschlossen. EV-001–013 sind für B in [dieser Reihenfolge mit Abhängigkeiten](../first-evolution/specification/BATCH-02B_TASKS.md) freigegeben. Ergebnisse und Stand werden im Fortschritt und in der aktuellen Übergabe festgehalten. D12–14 und Post-Launch bleiben bei der Planung.

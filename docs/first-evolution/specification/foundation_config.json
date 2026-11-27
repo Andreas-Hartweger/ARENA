@@ -1,0 +1,100 @@
+{
+  "schema": "arena.evo.plan.v1",
+  "masterSeed": 42,
+  "population": 128,
+  "evaluatedGenerations": 100,
+  "architecture": [
+    248,
+    32,
+    16,
+    3
+  ],
+  "activation": "tanh",
+  "track": "academy",
+  "vehicle": "gt-01",
+  "physicsHz": 60,
+  "sensorHz": 30,
+  "decisionHz": 30,
+  "task": {
+    "laps": 1,
+    "maxTicks": 7200,
+    "graceTicks": 300,
+    "noProgressTicks": 900,
+    "progressM": 2
+  },
+  "fitness": {
+    "profile": "Balanced",
+    "weights": {
+      "Balanced": [
+        0.5,
+        0.25,
+        0.08,
+        0.07,
+        0.04,
+        0.06,
+        0
+      ],
+      "Speed": [
+        0.8,
+        0.1,
+        0.02,
+        0.03,
+        0.02,
+        0.03,
+        0
+      ],
+      "Safety": [
+        0.15,
+        0.45,
+        0.15,
+        0.05,
+        0.07,
+        0.1,
+        0.03
+      ]
+    }
+  },
+  "selection": {
+    "tournament": 3,
+    "eliteRate": 0.05,
+    "parentPool": 1,
+    "crossoverProbability": 0,
+    "crossoverOperator": "neuron-wise"
+  },
+  "mutation": {
+    "p": 0.05,
+    "mode": "relative",
+    "alpha": 0.2,
+    "largeProbability": 0.05,
+    "largeMultiplier": 5,
+    "biasProbabilityFactor": 1,
+    "biasStrengthFactor": 1,
+    "layerProbabilityFactors": [
+      1,
+      1,
+      1
+    ],
+    "layerStrengthFactors": [
+      1,
+      1,
+      1
+    ],
+    "weightLimit": 8,
+    "biasLimit": 4
+  },
+  "adaptation": {
+    "window": 15,
+    "epsilon": 1,
+    "factor": 1.5,
+    "probabilityEnabled": false,
+    "strengthEnabled": false,
+    "pMax": 0.2,
+    "alphaMax": 0.8,
+    "immigrantRate": 0,
+    "rescueEnabled": false,
+    "rescueInterval": 45,
+    "rescueRate": 0.15
+  },
+  "seededStartRandomFraction": 0.25,
+  "diagnostics": "compact"
+}
