@@ -70,12 +70,14 @@ export interface Job {
   scenario: ScenarioOptions;
   parameters: Float64Array;
   trace?: TraceOptions;
+  observation?: 'pose' | 'detail';
 }
 export type Rate = number | 'max';
 export type WorkerCommand =
   | { type: 'assign'; job: Job; rate: Rate }
   | { type: 'pause' | 'resume' | 'cancel' | 'ack'; key: JobKey }
   | { type: 'rate'; key: JobKey; rate: Rate }
+  | { type: 'observe'; key: JobKey; observation?: Job['observation'] }
   | { type: 'shutdown' };
 export type WorkerEvent =
   | { type: 'ready'; protocolVersion: 1 }
@@ -89,6 +91,8 @@ export type WorkerEvent =
       y: number;
       heading: number;
       speed: number;
+      ai?: import('../ai/driver').AiState;
+      applied?: import('../input/controlInput').ControlInput;
     }
   | { type: 'fault'; key: JobKey; message: string; transient: boolean };
 export interface ComputePort {

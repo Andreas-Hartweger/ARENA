@@ -34,10 +34,10 @@ export function Inspector({
   onPause,
   onStep,
 }: {
-  hud: Telemetry;
+  hud: Pick<Telemetry, 'ai' | 'paused' | 'index' | 'applied'>;
   brain?: Brain;
   onPause: () => void;
-  onStep: () => void;
+  onStep?: () => void;
 }) {
   const [channel, setChannel] = useState(0),
     [layer, setLayer] = useState(0),
@@ -67,7 +67,7 @@ export function Inspector({
   return (
     <div className="ai-inspector">
       <button onClick={onPause}>{hud.paused ? 'Fortsetzen' : 'Pause'}</button>
-      <button disabled={!hud.paused} onClick={onStep}>
+      <button disabled={!hud.paused || !onStep} onClick={onStep}>
         Einzeltick
       </button>
       <h2>Sensor Inspector</h2>

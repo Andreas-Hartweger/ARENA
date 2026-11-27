@@ -31,3 +31,7 @@ Die 02B-Referenz und lokale Laufverzeichnisse enthalten Seed, Konfiguration, Her
 ### Technischer Zwischenstand
 
 Der gemeinsame Episodeniterator führt den bestehenden 02B-Tick aus. Der synchrone Evaluator nutzt denselben Pfad. Zwei echte Node-Worker ergaben in zwei kurzen Generationen identische Einzelergebnisse, Rangfolgen, Fitness und Folgegenome wie der serielle Lauf. SHA-256, Float64-Framing und CPU-Profile stimmen mit den unabhängigen Referenzvektoren überein. 216 Tests bestanden. Die vollständige Systemabnahme von 02C steht aus.
+
+### 02C · Referenzvergleich und Speicherprüfung
+
+Der isolierte Acht-Worker-Lauf auf `18839aa` wertete alle 12.800 regulären Episoden aus G0–G99 aus. Die Kandidaten-NDJSON stimmen bytegenau mit der 02B-Referenz überein. Alle 100 logischen Generationsstatistiken und der Championhash stimmen überein. Die CLI benötigte einschließlich Datei-I/O 983,43 s. [Messdaten](../training-management/evidence/node-pool-reference.json). Der Browser-Kurztest verwendete einen eigenen Coordinator-Worker und zwei Simulationsworker. Chromium bestätigte vier Generationen, drei erhaltene automatische Checkpoints und die Zurückweisung eines zweiten Writers. Der erste Testdeckaufbau verlor den ersten Befehl beim asynchronen Datenbankstart. Ein explizites Ready-Signal vor der Zustellung behebt dies.

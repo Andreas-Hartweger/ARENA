@@ -199,6 +199,7 @@ export function* stepEpisode(
   brain: Brain,
   trace?: TraceOptions,
   stop?: () => 'cancelled' | 'externalReset' | undefined,
+  inspect?: () => boolean,
 ) {
   let tick = 0;
   try {
@@ -247,7 +248,8 @@ export function* stepEpisode(
           modelSignature: brain.signature,
         } satisfies EpisodeFailure);
       const sampled = !!trace && (tick - 1) % trace.everyTicks === 0;
-      world.trace = sampled && samples.length < trace!.maxSamples;
+      const record = sampled && samples.length < trace!.maxSamples;
+      world.trace = record || (inspect?.() ?? false);
       const frame = world.step(commands),
         car = frame.cars[0],
         p = car.physics!,
@@ -282,7 +284,7 @@ export function* stepEpisode(
         ledger.highwater - before,
       );
       if (sampled) {
-        if (world.trace)
+        if (record)
           samples.push({
             tick,
             position: car.state.positionM,

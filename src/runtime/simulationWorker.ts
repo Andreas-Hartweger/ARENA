@@ -75,7 +75,7 @@ export function simulationWorker(
           steps = undefined;
           return;
         }
-        if (active.trace && now() - lastReport >= 100) {
+        if (active.observation && now() - lastReport >= 100) {
           const car = next.value.cars[0];
           lastReport = now();
           send({
@@ -86,6 +86,9 @@ export function simulationWorker(
             y: car.state.positionM.y,
             heading: car.state.headingRad,
             speed: Math.hypot(car.state.velocityMps.x, car.state.velocityMps.y),
+            ...(active.observation === 'detail'
+              ? { ai: car.ai, applied: car.input }
+              : {}),
           });
         }
       } while (
@@ -159,7 +162,13 @@ export function simulationWorker(
         const genome = new Genome(activeModel, parameters, digest);
         if (genome.hash !== key.genomeHash)
           throw Error('Genome fingerprint mismatch');
-        steps = stepEpisode(contract, genome.brain(), trace);
+        steps = stepEpisode(
+          contract,
+          genome.brain(),
+          trace,
+          undefined,
+          () => active?.observation === 'detail',
+        );
         rate = command.rate;
         tick = 0;
         computeMs = 0;
@@ -174,6 +183,9 @@ export function simulationWorker(
     }
     if (!active || !sameAssignment(command.key, active.key)) return;
     switch (command.type) {
+      case 'observe':
+        active.observation = command.observation;
+        break;
       case 'ack':
         if (phase === 'result') reset();
         break;

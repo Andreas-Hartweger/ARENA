@@ -44,6 +44,31 @@ export class WorkerPool {
   #limit: number;
   #mode: 'running' | 'pausing' | 'draining' | 'paused' | 'closed' = 'running';
   #rate: Rate = 'max';
+  #visible = 0;
+  #selected: number | null = null;
+  observe(visible: number, slot: number | null) {
+    if (
+      !Number.isInteger(visible) ||
+      visible < 0 ||
+      visible > 16 ||
+      (slot !== null && (!Number.isInteger(slot) || slot < 0 || slot >= 1024))
+    )
+      throw Error('Invalid viewer subscription');
+    this.#visible = visible;
+    this.#selected = slot;
+    for (const lane of this.#lanes)
+      if (lane.job)
+        lane.port.send({
+          type: 'observe',
+          key: lane.job,
+          observation: this.#observation(lane, lane.job.slot),
+        });
+  }
+  #observation(l: Lane, slot: number): Job['observation'] {
+    if (!this.#visible) return undefined;
+    if (slot === this.#selected) return 'detail';
+    return [...this.#lanes].indexOf(l) < this.#visible ? 'pose' : undefined;
+  }
   #monitor = { evaluated: 0, ticks: 0, computeMs: 0, attempts: 0 };
   onProgress?: (event: Extract<WorkerEvent, { type: 'progress' }>) => void;
   onPause?: () => void;
@@ -63,6 +88,9 @@ export class WorkerPool {
   }
   get paused() {
     return this.#mode === 'paused';
+  }
+  get evaluating() {
+    return !!this.#work;
   }
   evaluate(evolution: Evolution, scenarios: readonly ScenarioOptions[]) {
     if (
@@ -228,6 +256,7 @@ export class WorkerPool {
           },
           parameters,
           scenario: { ...w.scenarios[scenarioIndex], seed: spec.seed },
+          observation: this.#observation(l, slot),
           trace:
             trace?.generation === key.generation && trace.slot === slot
               ? trace
