@@ -1,4 +1,10 @@
-import { currentOfficial, cloneOfficial } from '../storage/capabilities';
+import { cloneOfficial } from '../storage/capabilities';
+import {
+  availableOfficial,
+  installedOfficial,
+  installReleasedModel,
+} from '../storage/releasedModels';
+import { releaseCatalog } from '../storage/releaseCatalog';
 import { TrainingController } from './controller';
 import { TrainingDatabase } from '../storage/database';
 import { browserPort } from './browserPort';
@@ -365,12 +371,12 @@ async function handle(c: LabCommand) {
           failures.map((f) => f.id + ' ' + f.reason).join(', '),
       );
     }
-    case 'officialStarter': {
-      const official = await currentOfficial(db, 'Starter');
-      return official?.freeze.version ?? null;
-    }
+    case 'officialStarter':
+      return availableOfficial(db, 'Starter');
     case 'cloneStarter':
       await acquire();
+      if (!(await installedOfficial(db, 'Starter')) && releaseCatalog.Starter)
+        await installReleasedModel(db, 'Starter', releaseCatalog.Starter);
       return cloneOfficial(db, 'Starter', c.name, hardware);
     case 'library':
       return profiles(db);

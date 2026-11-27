@@ -64,8 +64,7 @@ export function freezeCandidates(candidates: readonly ModelFreeze[]) {
 }
 // Only an independently approved release record should be installed by the release process.
 // Imported settings can never promote a model simply by sharing an ID.
-export async function promote(
-  db: StorePort,
+export function validatePromotionReview(
   role: Capability,
   freeze: ModelFreeze,
   evidence: ValidationEvidence,
@@ -94,6 +93,16 @@ export async function promote(
     validateCapability(role, evidence).status !== 'passed'
   )
     throw Error('Independent validation and approval required');
+  return hash;
+}
+export async function promote(
+  db: StorePort,
+  role: Capability,
+  freeze: ModelFreeze,
+  evidence: ValidationEvidence,
+  review: PromotionReview,
+) {
+  const hash = validatePromotionReview(role, freeze, evidence, review);
   const m = await readVersion(db, freeze.version);
   if (
     m.genome.hash !== freeze.genome ||
@@ -104,6 +113,13 @@ export async function promote(
   const current = previousPointer?.meta.imported
     ? null
     : await currentOfficial(db, role);
+  if (
+    current?.freeze.version === freeze.version &&
+    current.validationHash === hash &&
+    evidenceHash(current.freeze) === evidenceHash(freeze) &&
+    evidenceHash(current.review) === evidenceHash(review)
+  )
+    return current.id;
   const row: OfficialModel = {
     schema: 'arena.official-model.v1',
     issuance: crypto.randomUUID(),

@@ -29,3 +29,9 @@ Für den neu gerechneten Baseline-Seed 43 bestätigen die komprimierten Einzelre
 Chromium 158 importierte das historische G99-Paket in eine leere IndexedDB, klonte die Version und lud die Bibliothek neu. Das Original und der Klon waren anschließend sichtbar. Der Starter-Eintrag blieb bei fehlender Rollenfreigabe deaktiviert. [Browserprüfung](evidence/browser-model-restore.json)
 
 Der Nachweis für PRE-D01 liegt vor. Die Abnahme von Batch 02D, das unabhängige Review und die Modellfreigabe sind offen. Der gemeinsame Entwurf wird in [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8) geführt.
+
+## Auslieferung und Wiederherstellung
+
+Der finale Rohdatenaudit prüft die gespeicherten Fahrten, D10-Arithmetik, Linienfortschritt, Sensor- und Entscheidungstakte sowie die ausgewählten Trajektorien. Für verglichene Kandidaten gleicher Rolle weist er gemeinsame erfolgreiche Fälle, Zeitdifferenzen und relevante Regressionen aus. Der Softwaretest des Archivwegs stellt einen echten D13-Checkpoint aus einer separaten SQLite-Onlinekopie wieder her und erkennt eine nachträglich beschädigte Datei. Das Kampagnenbackup wird nach dem finalen Rohdatenaudit in einem gesonderten Verzeichnis mit Prüfsummen und gespeicherten Checkpoint-IDs erstellt. [Audit](../../scripts/research/review-validation.mjs) · [Archivierung](../../scripts/research/archive-campaign.mjs)
+
+Für eine Modellfreigabe muss die unabhängige Entscheidung den geprüften Commit, die Rolle, das Genom, den Validierungshash und den Hash des Rohdatenaudits benennen. Die Auslieferung verknüpft das freigegebene D13-Modellpaket mit der eingefrorenen Version und den geprüften Einzelfahrten. Beim Klonen eines ausgelieferten Starters prüft der Browser die Dateien und die Rollenfreigabe. Der aktuelle Auslieferungskatalog ist leer. [Freigabeprüfung](../../scripts/research/prepare-reviewed-model.mjs) · [Katalog](../../src/storage/releaseCatalog.ts) · [Installation](../../src/storage/releasedModels.ts)

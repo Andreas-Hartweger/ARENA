@@ -15,7 +15,12 @@ import {
   rollbackOfficial,
   type ModelFreeze,
 } from '../src/storage/capabilities';
-import { defaultDraft } from '../src/runtime/runConfig';
+import { defaultDraft, preflight } from '../src/runtime/runConfig';
+import { fingerprint, sha256 } from '../src/runtime/fingerprint';
+import {
+  availableOfficial,
+  installReleasedModel,
+} from '../src/storage/releasedModels';
 import { createModel, readVersion } from '../src/storage/library';
 import type { StorePort, StoredObject } from '../src/storage/objects';
 import type { ScoredEpisode } from '../src/training/episode';
@@ -69,6 +74,85 @@ function passing(genome: string): ValidationEvidence {
   };
 }
 describe('D14 capability contract (synthetic boundary cases)', () => {
+  it('loads only a reviewed D13 release into an empty store and installs the same receipt idempotently', async () => {
+    const ledgerModule = '../scripts/research/ledger.mjs',
+      storeModule = '../scripts/research/store.mjs';
+    const { ResearchLedger, campaign } = await import(ledgerModule);
+    const { NodeStore } = await import(storeModule);
+    const cap = { ms: 1000, ticks: 1000, episodes: 100 };
+    const ledger = new ResearchLedger(
+      ':memory:',
+      campaign('fixture', 'f'.repeat(64), '1'.repeat(40), [
+        { id: 'test', total: cap, training: cap },
+      ]),
+      'test',
+    );
+    ledger.claim();
+    try {
+      const db = new NodeStore(ledger, 'synthetic-technical-release');
+      const folder = 'docs/intelligence-validation/evidence/historical/';
+      const item = JSON.parse(readFileSync(folder + 'roles.json', 'utf8'))
+        .measured[2];
+      const data = passing(item.fingerprint);
+      const model = new Uint8Array(readFileSync(folder + item.package)),
+        evidence = new TextEncoder().encode(JSON.stringify(data));
+      const read = async (url: string) =>
+        url === 'fixture/model' ? model : evidence;
+      const release = {
+        packageUrl: 'fixture/model',
+        packageSHA256: item.packageSHA256,
+        evidenceUrl: 'fixture/validation',
+        evidenceSHA256: sha256(evidence),
+        freeze: {
+          schema: 1 as const,
+          version: item.version,
+          genome: item.fingerprint,
+          roles: ['Starter' as const],
+          modelKey: preflight(defaultDraft(), fingerprint, 16).m.key,
+          selection: 'b'.repeat(64),
+          panelHashes: {
+            holdout: evidenceHash(data.holdout.expected),
+            endurance: evidenceHash(data.endurance.expected),
+          },
+        },
+        review: {
+          approved: true,
+          reviewer: 'technical-fixture-A',
+          implementer: 'technical-fixture-B',
+          validationHash: evidenceHash(data),
+          implementationSHA: 'c'.repeat(40),
+          evidence: 'synthetic software test fixture',
+        },
+      };
+      expect(await availableOfficial(db, 'Starter')).toBeNull();
+      await expect(
+        installReleasedModel(
+          db,
+          'Starter',
+          { ...release, packageSHA256: '0'.repeat(64) },
+          read,
+        ),
+      ).rejects.toThrow();
+      await expect(
+        installReleasedModel(
+          db,
+          'Starter',
+          { ...release, review: { ...release.review, approved: false } },
+          read,
+        ),
+      ).rejects.toThrow();
+      expect(await db.list()).toEqual([]);
+      const id = await installReleasedModel(db, 'Starter', release, read);
+      expect(await availableOfficial(db, 'Starter')).toBe(item.version);
+      expect(await installReleasedModel(db, 'Starter', release, read)).toBe(id);
+      expect(
+        (await cloneOfficial(db, 'Starter', 'Technical test copy', 16)).active,
+      ).not.toBe(item.version);
+    } finally {
+      ledger.release();
+      ledger.close();
+    }
+  });
   it('applies the exact group, speed, contact and multi-lap thresholds to complete evidence', () => {
     const data = passing('a'.repeat(64));
     expect(validateCapability('Starter', data).status).toBe('passed');
