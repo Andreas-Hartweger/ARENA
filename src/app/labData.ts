@@ -4,11 +4,14 @@ import type { LabCommand } from '../runtime/labProtocol';
 export function useLabQuery<T>(
   command: LabCommand | null,
   revision: number | string = 0,
+  scope = '',
 ) {
   const signature = command ? JSON.stringify(command) : null;
-  const [state, setState] = useState<{ signature: string; value: T } | null>(
-      null,
-    ),
+  const [state, setState] = useState<{
+      signature: string;
+      scope: string;
+      value: T;
+    } | null>(null),
     [error, setError] = useState('');
   useEffect(() => {
     let live = true;
@@ -18,7 +21,7 @@ export function useLabQuery<T>(
         .then(
           (value) => {
             if (live) {
-              setState({ signature, value });
+              setState({ signature, scope, value });
               setError('');
             }
           },
@@ -30,9 +33,12 @@ export function useLabQuery<T>(
     return () => {
       live = false;
     };
-  }, [signature, revision]);
+  }, [signature, revision, scope]);
   return {
-    data: state?.signature === signature ? state?.value : undefined,
+    data:
+      state?.signature === signature && state?.scope === scope
+        ? state?.value
+        : undefined,
     error,
   };
 }

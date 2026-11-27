@@ -68,13 +68,22 @@ export function RunMap({
     phase = state?.phase;
   const active =
     !!session &&
-    ['Running', 'Paused', 'Pausing', 'Draining', 'Stopping'].includes(
-      phase ?? '',
-    );
+    [
+      'Running',
+      'Paused',
+      'Pausing',
+      'Resuming',
+      'Draining',
+      'Stopping',
+    ].includes(phase ?? '');
   useEffect(() => {
     const lab = trainingLab();
     let fresh = true;
     const refresh = () => {
+      if (document.hidden) {
+        setPoses([]);
+        setPath([]);
+      }
       void lab
         .call({
           type: 'observe',
@@ -88,16 +97,37 @@ export function RunMap({
     let timer: ReturnType<typeof setTimeout>;
     const receive = (p: Pose) => {
       if (!visible || p.key.sessionId !== session || document.hidden) return;
-      setPoses((values) =>
-        [
-          ...values.filter(
-            (q) =>
-              q.key.generation === p.key.generation &&
-              q.key.slot !== p.key.slot,
-          ),
-          p,
-        ].slice(-limit),
-      );
+      setPoses((values) => {
+        const latest = values.at(-1);
+        if (
+          latest &&
+          p.key.sessionId === latest.key.sessionId &&
+          (p.key.segmentId < latest.key.segmentId ||
+            (p.key.segmentId === latest.key.segmentId &&
+              p.key.generation < latest.key.generation))
+        )
+          return values;
+        const group = values.filter(
+          (q) =>
+            q.key.sessionId === p.key.sessionId &&
+            q.key.segmentId === p.key.segmentId &&
+            q.key.generation === p.key.generation,
+        );
+        const prior = group.find((q) => q.key.slot === p.key.slot);
+        if (
+          prior &&
+          (prior.key.scenarioIndex > p.key.scenarioIndex ||
+            (prior.key.jobId === p.key.jobId && prior.tick >= p.tick))
+        )
+          return values;
+        const next = [...group.filter((q) => q.key.slot !== p.key.slot), p];
+        if (next.length > limit)
+          next.splice(
+            next.findIndex((q) => q.key.slot !== slot),
+            1,
+          );
+        return next;
+      });
       if (p.key.slot === slot)
         setPath((values) => [
           ...(values.at(-1)?.key.jobId === p.key.jobId
@@ -182,7 +212,16 @@ export function RunMap({
           <small>GT-01 · {number(track.length, 1)} m</small>
           <h2>{track.def.name}</h2>
         </div>
-        <button aria-pressed={visible} onClick={() => setVisible(!visible)}>
+        <button
+          aria-pressed={visible}
+          onClick={() => {
+            if (visible) {
+              setPoses([]);
+              setPath([]);
+            }
+            setVisible(!visible);
+          }}
+        >
           {visible ? 'Beobachtung aus' : 'Beobachten'}
         </button>
       </div>
@@ -363,6 +402,7 @@ export function RunMap({
                   applied: pinned.applied,
                 }}
                 brain={brain}
+                seriesId={pinned.key.jobId}
                 onPause={() =>
                   act(() =>
                     trainingLab().call({
@@ -388,6 +428,7 @@ export function HistoryChart({ state }: { state?: RunState }) {
   const { data, error } = useLabQuery<History>(
     { type: 'history', metric },
     state?.sessionId + ':' + state?.segment + ':' + state?.generation,
+    state?.sessionId + ':' + state?.segment,
   );
   const rows = data ?? [],
     series =
@@ -416,6 +457,8 @@ export function HistoryChart({ state }: { state?: RunState }) {
           onChange={(e) => setMetric(e.target.value as typeof metric)}
         >
           <option value="fitness">Fitness</option>
+          <option value="progress">Rohfortschritt</option>
+          <option value="lineage">Elternlinie</option>
           <option value="laps">Beste Rundenzeit</option>
           <option value="diversity">Diversität</option>
           <option value="progress">Fortschritt</option>
@@ -512,7 +555,9 @@ export function Population({
   const [page, setPage] = useState(0),
     [which, setWhich] = useState<number | null>(null),
     [filter, setFilter] = useState(''),
-    [sort, setSort] = useState('slot'),
+    [sort, setSort] = useState<'slot' | 'fitness' | 'progress' | 'lineage'>(
+      'slot',
+    ),
     [whatIf, setWhatIf] = useState<keyof typeof profiles>('Balanced');
   const { data, error } = useLabQuery<Rows>(
     {
@@ -520,9 +565,10 @@ export function Population({
       offset: page * 32,
       limit: 32,
       filter,
-      sort: sort === 'fitness' ? 'fitness' : 'slot',
+      sort,
     },
     state?.sessionId + ':' + state?.generation,
+    state?.sessionId + ':' + state?.segment,
   );
   const selected = data?.find((x) => x.slot === which),
     ep = selected?.episodes[0];
@@ -556,7 +602,7 @@ export function Population({
               setFilter(e.target.value);
               setPage(0);
             }}
-            placeholder="Slot, Herkunft oder Genom"
+            placeholder="Slot, Fitness, Herkunft, Eltern oder Abschluss"
           />
         </label>
         <label>
@@ -564,7 +610,7 @@ export function Population({
           <select
             value={sort}
             onChange={(e) => {
-              setSort(e.target.value);
+              setSort(e.target.value as typeof sort);
               setPage(0);
             }}
           >

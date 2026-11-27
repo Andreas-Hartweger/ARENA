@@ -1,5 +1,6 @@
 import { preflight, type Draft } from './runConfig';
 import { fingerprint } from './fingerprint';
+import { describeVersion } from '../storage/library';
 import { decode, jsonObject, type StorePort } from '../storage/objects';
 
 export interface QueueEntry {
@@ -29,11 +30,23 @@ export async function prepareQueue(db: StorePort, s: QueueState, h?: number) {
     throw Error(
       'Warteschlange wurde inzwischen geändert. Neu laden und erneut bearbeiten.',
     );
+  const refs = validateQueue(s, h);
+  for (const e of s.entries)
+    if (e.draft.sourceVersion) {
+      const { manifest } = await describeVersion(db, e.draft.sourceVersion),
+        { m } = preflight(e.draft, fingerprint, h);
+      if (
+        manifest.modelKey !== m.key ||
+        manifest.model.weightLimit !== m.weightLimit ||
+        manifest.model.biasLimit !== m.biasLimit
+      )
+        throw Error('Wartender Auftrag hat einen inkompatiblen Modellvertrag.');
+    }
   return jsonObject(
     'queue',
     key,
     { ...s, version: (previous.version ?? 0) + 1 },
-    validateQueue(s, h),
+    refs,
     true,
   );
 }

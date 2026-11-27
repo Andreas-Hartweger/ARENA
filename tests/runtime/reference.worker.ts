@@ -1,6 +1,6 @@
 import { Evolution } from '../../src/training/evolution';
 import { defaultDraft, preflight } from '../../src/runtime/runConfig';
-import { fingerprint } from '../../src/runtime/fingerprint';
+import { fingerprint, parameterBytes } from '../../src/runtime/fingerprint';
 import { WorkerPool } from '../../src/runtime/workerPool';
 import { browserPort } from '../../src/runtime/browserPort';
 import { TrainingDatabase } from '../../src/storage/database';
@@ -9,6 +9,7 @@ import { deletionPreview } from '../../src/storage/objects';
 self.onmessage = async (
   event: MessageEvent<{
     workers: number;
+    capture?: boolean;
     small: boolean;
     benchmark?: {
       rate: number | 'max';
@@ -91,6 +92,7 @@ self.onmessage = async (
       await db.commit(b.objects, { replace: ['run:reference'] });
       stage?.publish();
       ids = b.checkpoint.history;
+      e.compactHistory(ids.length);
       index = b.index;
       saveMs = performance.now() - begin;
       const committed = performance.now();
@@ -109,7 +111,7 @@ self.onmessage = async (
         (v) => v.toString(16).padStart(2, '0'),
       ).join('');
     while (e.population.length) {
-      if (benchmark && e.history.length === 1 && pool) {
+      if (benchmark && e.nextGeneration === 1 && pool) {
         pool.setRate(benchmark.rate);
         if (benchmark.observe) pool.observe(1, 0);
       }
@@ -121,6 +123,21 @@ self.onmessage = async (
       counters.logicalEpisodes += rows.length;
       counters.activeMs = performance.now() - started;
       await save(stage);
+      if (event.data.capture) {
+        const genome = e.champion!.genome;
+        const milestone = [0, 31, 99].includes(summary.generation);
+        postMessage({
+          type: 'archive',
+          summary,
+          genome: milestone
+            ? {
+                hash: genome.hash,
+                header: genome.model.key,
+                bytes: Array.from(parameterBytes(genome.parameters())),
+              }
+            : undefined,
+        });
+      }
       postMessage({
         type: 'generation',
         generation: summary.generation,
@@ -180,7 +197,7 @@ self.onmessage = async (
     postMessage({
       type: 'end',
       restoreMs,
-      generations: e.history.length,
+      generations: e.nextGeneration,
       evaluations: counters.logicalEpisodes,
       ms: performance.now() - started,
       champion: e.champion?.genome.hash,

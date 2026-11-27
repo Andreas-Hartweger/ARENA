@@ -5,6 +5,7 @@ import {
   compareParameters,
   createModel,
   editProfile,
+  describeVersion,
   profiles,
   readVersion,
   saveVersion,
@@ -13,6 +14,7 @@ import {
 import {
   decode,
   profileDeletion,
+  expiredProfiles,
   jsonObject,
   reachable,
 } from '../storage/objects';
@@ -33,6 +35,7 @@ const db = await TrainingDatabase.open(),
   owner = crypto.randomUUID(),
   controller = new TrainingController(db, browserPort, runtime, hardware);
 const send = (event: LabEvent) => postMessage(event);
+let queueError: string | null = null;
 let writer = false,
   auto = false,
   generationSubscription = false;
@@ -94,11 +97,19 @@ async function terminal() {
         return;
       }
     } else auto = false;
+  } catch (error) {
+    auto = false;
+    queueError = String(error);
+    throw error;
   } finally {
     if (!active()) await release();
   }
 }
 controller.changed = (state) => {
+  if (state.phase === 'Recoverable' || state.phase === 'Faulted') {
+    auto = false;
+    queueError = state.error ?? 'Automatischer Folgestart angehalten.';
+  }
   send({ type: 'state', state });
   if (['Completed', 'Cancelled', 'Faulted'].includes(state.phase))
     void controller.serialize(terminal).catch((e) =>
@@ -140,7 +151,7 @@ async function handle(c: LabCommand) {
     case 'currentDraft':
       return controller.draft;
     case 'version': {
-      const { version, manifest } = await readVersion(db, c.id);
+      const { version, manifest } = await describeVersion(db, c.id);
       const records = [];
       for (const m of await db.list())
         if (m.kind === 'record' && m.refs.includes(c.id)) {
@@ -153,11 +164,20 @@ async function handle(c: LabCommand) {
         (n, id) => n + map.get(id)!.size,
         0,
       );
-      return { version, manifest, records, logicalBytes: size };
+      const parentAvailable = version.parent
+        ? map.get(version.parent)?.kind === 'version'
+        : null;
+      return {
+        version,
+        manifest,
+        records,
+        logicalBytes: size,
+        parentAvailable,
+      };
     }
     case 'compatibility': {
-      const a = await readVersion(db, c.version),
-        other = c.other ? await readVersion(db, c.other) : undefined;
+      const a = await describeVersion(db, c.version),
+        other = c.other ? await describeVersion(db, c.other) : undefined;
       const manifest = a.manifest,
         flags: {
           dimension: string;
@@ -226,6 +246,7 @@ async function handle(c: LabCommand) {
                 !o.imported &&
                 o.contract === r.contract &&
                 o.purpose === r.purpose &&
+                (o.metric ?? 'fitness') === (r.metric ?? 'fitness') &&
                 o.runtime === r.runtime &&
                 o.seed === r.seed,
             ),
@@ -241,6 +262,14 @@ async function handle(c: LabCommand) {
       return flags;
     }
     case 'observe':
+      if (
+        !Number.isInteger(c.visible) ||
+        c.visible < 0 ||
+        c.visible > 16 ||
+        (c.slot !== null &&
+          (!Number.isSafeInteger(c.slot) || c.slot < 0 || c.slot > 1023))
+      )
+        throw Error('Ungültige Beobachtungsgrenze.');
       generationSubscription = c.visible > 0;
       visibleLimit = c.visible;
       selectedSlot = c.slot;
@@ -396,6 +425,17 @@ async function handle(c: LabCommand) {
     case 'diskBudget':
       await acquire();
       return db.commit([], { budget: c.bytes });
+    case 'previewExpired': {
+      const status = await db.status(),
+        all = await db.list(),
+        ids = expiredProfiles(all, await profiles(db), Date.now());
+      return {
+        ids,
+        value: ids.length
+          ? { ...profileDeletion(all, ids), revision: status.revision }
+          : null,
+      };
+    }
     case 'previewDelete': {
       const status = await db.status(),
         all = await db.list();
@@ -421,7 +461,7 @@ async function handle(c: LabCommand) {
     }
     case 'queue': {
       const q = await queue(db);
-      return { ...q, enabled: auto && q.enabled };
+      return { ...q, enabled: auto && q.enabled, queueError };
     }
     case 'dispatchQueue': {
       if (active()) throw Error('Ein Lauf ist bereits aktiv.');
@@ -438,6 +478,7 @@ async function handle(c: LabCommand) {
       await acquire();
       await writeQueue(db, c.value, hardware);
       auto = c.value.enabled;
+      queueError = null;
       return;
     case 'template': {
       await acquire();
@@ -548,7 +589,9 @@ self.onmessage = (event: MessageEvent<Envelope>) => {
       if (
         input?.version !== 1 ||
         typeof input.id !== 'string' ||
+        !input.id.length ||
         input.id.length > 100 ||
+        typeof input.session !== 'string' ||
         !Number.isSafeInteger(input.seq) ||
         !input.command
       )
@@ -575,6 +618,7 @@ self.onmessage = (event: MessageEvent<Envelope>) => {
           'display',
           'revise',
           'champion',
+          'observe',
         ].includes(input.command.type) &&
         input.session !== controller.snapshot.sessionId
       )
@@ -602,8 +646,8 @@ self.onmessage = (event: MessageEvent<Envelope>) => {
     }
     if (
       receipt.type === 'ack' &&
-      !receipts.has(input.id) &&
       signature &&
+      !receipts.has(input.id) &&
       signature.length <= 32768 &&
       (receipt.value === undefined ||
         ![

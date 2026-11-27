@@ -15,7 +15,7 @@ await build({
   },
   logLevel: 'error',
 });
-const server = await preview({
+let server = await preview({
   build: { outDir },
   preview: { host: '127.0.0.1', port: 0, open: false },
   logLevel: 'error',
@@ -43,6 +43,9 @@ async function fresh() {
 }
 try {
   const first = await fresh(),
+    control = await first.page.evaluate(() =>
+      window.storageCases.controlCases(),
+    ),
     migration = await first.page.evaluate(() =>
       window.storageCases.migration(),
     ),
@@ -54,7 +57,54 @@ try {
       (arg) => window.storageCases.consume(arg),
       fixture,
     );
-  if (errors.length) throw Error(JSON.stringify(errors));
+  const port = server.httpServer.address().port;
+  let conflict = false;
+  try {
+    const second = await preview({
+      build: { outDir },
+      preview: { host: '127.0.0.1', port, open: false },
+      logLevel: 'silent',
+    });
+    await new Promise((r) => second.httpServer.close(r));
+  } catch (e) {
+    conflict = /already in use|EADDRINUSE/i.test(String(e));
+  }
+  if (!conflict) throw Error('Port conflict did not fail closed');
+  await target.page.goto('about:blank');
+  const nextDir = resolve(destination, 'update');
+  await build({
+    build: {
+      outDir: nextDir,
+      rollupOptions: {
+        input: resolve('tests/runtime/storage.html'),
+        output: { entryFileNames: 'assets/update-[hash].js' },
+      },
+    },
+    logLevel: 'error',
+  });
+  await new Promise((r) => server.httpServer.close(r));
+  server = await preview({
+    build: { outDir: nextDir },
+    preview: { host: '127.0.0.1', port, open: false },
+    logLevel: 'error',
+  });
+  await target.page.goto(url);
+  const update = await target.page.evaluate(
+    (hash) => window.storageCases.updateCheck(hash),
+    fixture.fingerprint,
+  );
+  if (
+    !url.startsWith(update.origin + '/') ||
+    update.models !== 2 ||
+    errors.length
+  )
+    throw Error(
+      'Stable origin, model count or browser error: ' + JSON.stringify(errors),
+    );
+  const fallback = await target.page.evaluate(
+    ({ latest, prior }) => window.storageCases.fallback(latest, prior),
+    { latest: fixture.latest, prior: fixture.prior },
+  );
   writeFileSync(
     join(destination, 'verified.json'),
     JSON.stringify(
@@ -62,8 +112,12 @@ try {
         ...environment(),
         browser: browser.version(),
         migration,
+        control,
         faults,
         transfer,
+        update,
+        conflict,
+        fallback,
         errors,
       },
       null,

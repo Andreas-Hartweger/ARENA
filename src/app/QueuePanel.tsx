@@ -12,10 +12,9 @@ type Props = {
   openDraft: (draft: Draft) => void;
 };
 export function QueuePanel({ draft, act, revision, active, openDraft }: Props) {
-  const { data: q, error } = useLabQuery<QueueState>(
-      { type: 'queue' },
-      revision + ':' + active,
-    ),
+  const { data: q, error } = useLabQuery<
+      QueueState & { queueError: string | null }
+    >({ type: 'queue' }, revision + ':' + active),
     [axis, setAxis] =
       useState<Parameters<typeof seriesDrafts>[1]>('mutation.p'),
     [values, setValues] = useState('0.03, 0.05, 0.08'),
@@ -35,7 +34,16 @@ export function QueuePanel({ draft, act, revision, active, openDraft }: Props) {
     ),
     cost = count * unit * steps;
   const write = (value: QueueState) =>
-    act(() => trainingLab().call({ type: 'writeQueue', value }));
+    act(() =>
+      trainingLab().call({
+        type: 'writeQueue',
+        value: {
+          version: value.version,
+          entries: value.entries,
+          enabled: value.enabled,
+        },
+      }),
+    );
   if (!q)
     return (
       <p role={error ? 'alert' : 'status'}>
@@ -93,6 +101,9 @@ export function QueuePanel({ draft, act, revision, active, openDraft }: Props) {
             Automatischen Folgestart zulassen
           </label>
         </div>
+        {q.queueError && (
+          <p role="alert">Folgestart angehalten. {q.queueError}</p>
+        )}
         {entries.length ? (
           <ol className="queue-list">
             {entries.map((row, i) => (

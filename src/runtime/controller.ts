@@ -25,11 +25,13 @@ import {
 
 export type Phase =
   | 'Draft'
+  | 'Validating'
   | 'Initializing'
   | 'Running'
   | 'Pausing'
   | 'Draining'
   | 'Paused'
+  | 'Resuming'
   | 'Stopping'
   | 'Completed'
   | 'Cancelling'
@@ -57,6 +59,7 @@ export interface RunState {
   reason: string | null;
   error: string | null;
   unsaved: boolean;
+  saveRequested: boolean;
   summary?: Omit<GenerationSummary, 'records' | 'order'>;
   monitor?: ReturnType<TrainingController['metrics']>;
 }
@@ -159,6 +162,7 @@ export class TrainingController {
       reason: this.#reason,
       error: this.#error,
       unsaved: !!this.#pendingSave,
+      saveRequested: this.#saveRequested,
       summary,
       monitor: this.metrics(),
     };
@@ -167,7 +171,7 @@ export class TrainingController {
     offset = 0,
     limit = 100,
     filter = '',
-    sort: 'slot' | 'fitness' = 'slot',
+    sort: 'slot' | 'fitness' | 'progress' | 'lineage' = 'slot',
   ) {
     const query = filter.toLowerCase().trim();
     const rows = (this.#e?.history.at(-1)?.records ?? []).filter(
@@ -179,12 +183,26 @@ export class TrainingController {
           r.hash,
           r.origin,
           r.operator,
+          r.score,
+          ...r.episodes.map((e) => e.fitness.P),
           ...r.parents,
           ...r.episodes.map((e) => e.reason),
         ].some((v) => String(v).toLowerCase().includes(query)),
     );
     if (sort === 'fitness')
       rows.sort((a, b) => b.score - a.score || a.slot - b.slot);
+    if (sort === 'progress')
+      rows.sort(
+        (a, b) =>
+          Math.max(...b.episodes.map((e) => e.fitness.P)) -
+            Math.max(...a.episodes.map((e) => e.fitness.P)) || a.slot - b.slot,
+      );
+    if (sort === 'lineage')
+      rows.sort(
+        (a, b) =>
+          a.parents.join(',').localeCompare(b.parents.join(',')) ||
+          a.slot - b.slot,
+      );
     return rows.slice(
       Math.max(0, offset),
       Math.max(0, offset) + Math.min(128, limit),
@@ -276,12 +294,17 @@ export class TrainingController {
     }
   }
   #init(draft: Draft) {
-    if (!['Draft', 'Completed', 'Cancelled', 'Faulted'].includes(this.#phase))
+    if (
+      !['Draft', 'Validating', 'Completed', 'Cancelled', 'Faulted'].includes(
+        this.#phase,
+      )
+    )
       throw Error('Ein Trainingslauf ist aktiv.');
     this.#pool?.close();
     this.#waitingRows = undefined;
     this.#pendingSave = undefined;
     this.#e = undefined;
+    this.#saveRequested = false;
     this.#index = undefined;
     this.#historyIds = [];
     this.#plot = new ChartHistory();
@@ -312,9 +335,20 @@ export class TrainingController {
     this.#pool = new WorkerPool(this.#port, workers, this.#session);
     this.#pool.setRate(this.#draft!.mode === 'live' ? 1 : this.#draft!.rate);
     this.#pool.onProgress = (m) => this.observed?.(m);
+    const session = this.#session;
+    this.#pool.onResumed = () => {
+      void this.serialize(() => {
+        if (this.#phase === 'Resuming' && this.#session === session)
+          return this.#resumeReady();
+      });
+    };
     this.#pool.onPause = () => {
       void this.serialize(() => {
-        if (!['Pausing', 'Draining'].includes(this.#phase)) return;
+        if (
+          this.#session !== session ||
+          !['Pausing', 'Draining'].includes(this.#phase)
+        )
+          return;
         this.#freezeClock();
         this.#phase = 'Paused';
         this.#emit();
@@ -324,6 +358,20 @@ export class TrainingController {
   async start(input: Draft, source?: Genome, queueUpdate?: StoredObject) {
     if (!['Draft', 'Completed', 'Cancelled', 'Faulted'].includes(this.#phase))
       throw Error('Ein Trainingslauf ist aktiv.');
+    const previous = this.#phase;
+    this.#phase = 'Validating';
+    this.#emit();
+    try {
+      await this.#initialize(input, source, queueUpdate);
+    } catch (error) {
+      if (this.#phase === 'Validating') {
+        this.#phase = previous;
+        this.#emit();
+      }
+      throw error;
+    }
+  }
+  async #initialize(input: Draft, source?: Genome, queueUpdate?: StoredObject) {
     for (const item of await this.#db.list())
       if (item.kind === 'run') {
         const record = await this.#db.get(item.id);
@@ -343,6 +391,15 @@ export class TrainingController {
     );
     if (!!draft.sourceVersion !== !!source)
       throw Error('Source model missing or unexpected');
+    if (
+      source &&
+      (source.model.key !== m.key ||
+        source.model.weightLimit !== m.weightLimit ||
+        source.model.biasLimit !== m.biasLimit)
+    )
+      throw Error(
+        'Ausgangsmodell und Laufentwurf haben unterschiedliche Modellverträge.',
+      );
     const evolution = new Evolution(
       m,
       scenarios,
@@ -520,7 +577,12 @@ export class TrainingController {
         s,
         draft,
         this.#original!,
-        { ...counts, activeMs: this.#active() },
+        {
+          ...counts,
+          activeMs: this.#active(),
+          pendingLearning: this.#learning,
+          pendingScenario: this.#newScenarios,
+        },
         this.#runtime,
         why,
         history,
@@ -600,7 +662,9 @@ export class TrainingController {
         this.#index = saved.index;
         this.#durable = saved.checkpoint.counters.globalGeneration;
         this.#historyIds = saved.checkpoint.history;
-        this.#e!.releaseDurableHistory(this.#historyIds.length);
+        this.#e!.compactHistory(this.#historyIds.length);
+      } else if (draft.volatile && this.#e) {
+        this.#e.compactHistory(this.#e.nextGeneration);
       }
       this.#pendingSave = undefined;
       this.#error = null;
@@ -632,18 +696,20 @@ export class TrainingController {
     try {
       await commit();
     } catch (e) {
+      const previousPhase = this.#phase;
       this.#freezeClock();
       this.#phase = 'Recoverable';
       this.#error = String(e);
       this.#pendingSave = async () => {
-        this.#startClock();
+        if (previousPhase !== 'Paused') this.#startClock();
         try {
           await commit();
         } catch (error) {
           this.#freezeClock();
           throw error;
         }
-        this.#phase = 'Running';
+        this.#phase =
+          previousPhase === 'Initializing' ? 'Running' : previousPhase;
         await after();
       };
       this.#emit();
@@ -664,10 +730,24 @@ export class TrainingController {
   async resume() {
     if (this.#phase !== 'Paused')
       throw Error('Pause zuerst bestätigen lassen.');
-    this.#phase = 'Running';
-    this.#startClock();
+    const limit = this.#draft?.time;
+    if (limit?.hard && this.#active() >= 1000 * limit.seconds) {
+      await this.cancel('hardTime');
+      return;
+    }
     const pool = this.#pool!;
-    if (pool.paused) pool.resume();
+    this.#phase = 'Resuming';
+    this.#startClock();
+    this.#emit();
+    if (pool.paused) {
+      pool.resume();
+      return;
+    }
+    await this.#resumeReady();
+  }
+  async #resumeReady() {
+    this.#phase = 'Running';
+    const pool = this.#pool!;
     this.#emit();
     if (this.#waitingRows) {
       const r = this.#waitingRows;
@@ -689,6 +769,7 @@ export class TrainingController {
       ![
         'Running',
         'Paused',
+        'Resuming',
         'Pausing',
         'Draining',
         'Stopping',
@@ -801,7 +882,7 @@ export class TrainingController {
     this.#newScenarios = scenarios ? structuredClone(scenarios) : undefined;
     this.#emit();
   }
-  markSave() {
+  async markSave() {
     if (
       !this.#e ||
       this.#draft?.volatile ||
@@ -809,6 +890,10 @@ export class TrainingController {
     )
       throw Error('Keine dauerhafte Speicherung verfügbar.');
     this.#saveRequested = true;
+    if (this.#phase === 'Paused') {
+      await this.#saveThen(undefined, true, () => this.#emit());
+      return;
+    }
     this.#emit();
   }
   async recover(
@@ -881,7 +966,7 @@ export class TrainingController {
     this.#index = destination;
     this.#historyIds = history;
     this.#plot = plot;
-    evolution.releaseDurableHistory(history.length);
+    evolution.compactHistory(history.length);
     this.#laps = lapRecords;
     this.#learning = cp.counters.pendingLearning;
     this.#newScenarios = cp.counters.pendingScenario;

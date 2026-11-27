@@ -15,6 +15,7 @@ interface Lane {
   ready: boolean;
   paused: boolean;
   job?: JobKey;
+  lastSignal: number;
 }
 interface Work {
   evolution: Evolution;
@@ -30,6 +31,7 @@ interface Work {
 export interface PoolMonitor {
   transferredBytes: number;
   receivedMessages: number;
+  oldestSignalMs: number | null;
   evaluated: number;
   ticks: number;
   computeMs: number;
@@ -81,6 +83,8 @@ export class WorkerPool {
   };
   onProgress?: (event: Extract<WorkerEvent, { type: 'progress' }>) => void;
   onPause?: () => void;
+  onResumed?: () => void;
+  #resuming = new Set<Lane>();
   constructor(factory: () => ComputePort, limit: number, session: string) {
     if (!session || !Number.isInteger(limit) || limit < 1 || limit > 16)
       throw Error('Invalid worker pool');
@@ -91,6 +95,14 @@ export class WorkerPool {
   get monitor(): PoolMonitor {
     return {
       ...this.#monitor,
+      oldestSignalMs: this.#lanes.size
+        ? Math.max(
+            0,
+            ...[...this.#lanes]
+              .filter((l) => l.job)
+              .map((l) => performance.now() - l.lastSignal),
+          )
+        : null,
       busy: [...this.#lanes].filter((x) => x.job).length,
       workers: this.#lanes.size,
     };
@@ -163,8 +175,10 @@ export class WorkerPool {
     for (const l of this.#lanes)
       if (l.job && l.paused) {
         l.paused = false;
+        this.#resuming.add(l);
         l.port.send({ type: 'resume', key: l.job });
       }
+    if (!this.#resuming.size) this.onResumed?.();
     this.#schedule();
   }
   close() {
@@ -172,6 +186,7 @@ export class WorkerPool {
     this.#fail(Error('Pool closed'));
   }
   #fail(error: unknown) {
+    this.#resuming.clear();
     const w = this.#work;
     this.#work = undefined;
     for (const l of this.#lanes) {
@@ -186,7 +201,12 @@ export class WorkerPool {
     const key = l.job,
       w = this.#work;
     if (!w) return;
-    if (key && (this.#mode === 'paused' || this.#mode === 'pausing')) {
+    if (
+      key &&
+      (this.#resuming.has(l) ||
+        this.#mode === 'paused' ||
+        this.#mode === 'pausing')
+    ) {
       this.#fail(
         Error('Workerzustand während der Pause verloren: ' + error.message),
       );
@@ -211,7 +231,12 @@ export class WorkerPool {
     const outstanding = w.total - w.rows.size;
     while (this.#lanes.size < Math.min(this.#limit, outstanding)) {
       const port = this.#factory(),
-        l: Lane = { port, ready: false, paused: false };
+        l: Lane = {
+          port,
+          ready: false,
+          paused: false,
+          lastSignal: performance.now(),
+        };
       this.#lanes.add(l);
       port.listen(
         (msg) => {
@@ -288,6 +313,7 @@ export class WorkerPool {
   }
   #event(l: Lane, msg: WorkerEvent) {
     if (!this.#lanes.has(l)) return;
+    l.lastSignal = performance.now();
     this.#monitor.receivedMessages++;
     if (msg.type === 'ready') {
       if (msg.protocolVersion !== 1 || l.ready)
@@ -321,6 +347,10 @@ export class WorkerPool {
         l.port.send({ type: 'sampleAck', key });
         return;
       case 'running':
+        if (this.#resuming.delete(l) && !this.#resuming.size)
+          this.onResumed?.();
+        return;
+      case 'heartbeat':
         return;
       case 'paused':
         l.paused = true;

@@ -137,7 +137,7 @@ export function StorageCenter({
   const [budget, setBudget] = useState<number>(),
     [preview, setPreview] = useState<Preview>(),
     [variant, setVariant] = useState(false),
-    [removal, setRemoval] = useState<{ id: string; value: Removal }>(),
+    [removal, setRemoval] = useState<{ ids: string[]; value: Removal }>(),
     [ck, setCk] = useState(''),
     [info, setInfo] = useState('');
   const exp = (kind: PackageType, roots: string[]) =>
@@ -393,6 +393,30 @@ export function StorageCenter({
         </section>
         <section className="lab-panel">
           <h2>Papierkorb</h2>
+          {!!trash.length && (
+            <button
+              onClick={() =>
+                act(async () => {
+                  const result = await lab.call<{
+                    ids: string[];
+                    value: Removal | null;
+                  }>({ type: 'previewExpired' });
+                  setRemoval(
+                    result.value
+                      ? { ids: result.ids, value: result.value }
+                      : undefined,
+                  );
+                  setInfo(
+                    result.value
+                      ? 'Löschvorschau für abgelaufene Modelle geöffnet.'
+                      : 'Keine abgelaufenen, freigegebenen Modelle.',
+                  );
+                })
+              }
+            >
+              Abgelaufene Modelle prüfen
+            </button>
+          )}
           {trash.length ? (
             trash.map((p) => (
               <div key={p.id}>
@@ -424,7 +448,7 @@ export function StorageCenter({
                     onClick={() =>
                       act(async () =>
                         setRemoval({
-                          id: p.id,
+                          ids: [p.id],
                           value: await lab.call({
                             type: 'previewDelete',
                             ids: [p.id],
@@ -456,7 +480,7 @@ export function StorageCenter({
                   act(async () => {
                     await lab.call({
                       type: 'purge',
-                      ids: [removal.id],
+                      ids: removal.ids,
                       revision: removal.value.revision,
                     });
                     setRemoval(undefined);

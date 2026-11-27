@@ -176,6 +176,7 @@ try {
     await page
       .getByRole('button', { name: /Isolierter Klon.*Version/ })
       .waitFor();
+    await page.getByRole('button', { name: /^UI-Abnahme.*Version/ }).click();
     await page
       .getByText('Versionen vergleichen und Testfahrt', { exact: true })
       .click();

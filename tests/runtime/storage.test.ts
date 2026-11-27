@@ -63,7 +63,8 @@ it('prepares without publication, restores at G0/G1 and terminal, and matches ev
     const recovered = await restore(db, b.checkpoint.id, 'test', 8);
     const actual = recovered.evolution.commit(recovered.evolution.collect());
     const stage = e.prepare(e.collect());
-    expect(e.history.length).toBe(i);
+    expect(e.nextGeneration).toBe(i);
+    expect(e.history.length).toBe(Math.min(1, i));
     expect(stage.snapshot.summary).toEqual(actual);
     counts.globalGeneration++;
     counts.logicalEpisodes += 8;
@@ -80,6 +81,7 @@ it('prepares without publication, restores at G0/G1 and terminal, and matches ev
     );
     await db.commit(b.objects);
     stage.publish();
+    e.compactHistory(b.checkpoint.history.length);
     expect(() => stage.publish()).toThrow();
     expect(e.population.map((x) => x.genome.hash)).toEqual(
       recovered.evolution.population.map((x) => x.genome.hash),

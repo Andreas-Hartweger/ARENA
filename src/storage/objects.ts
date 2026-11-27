@@ -161,9 +161,9 @@ export function validateObject(o: StoredObject) {
   )
     throw Error('Invalid storage object');
 }
-export function profileDeletion(all: readonly ObjectMeta[], ids: string[]) {
+function operationalReferences(all: readonly ObjectMeta[]) {
   const map = new Map(all.map((m) => [m.id, m]));
-  const operational = reachable(
+  return reachable(
     map,
     all
       .filter(
@@ -175,6 +175,31 @@ export function profileDeletion(all: readonly ObjectMeta[], ids: string[]) {
       )
       .map((m) => m.id),
   );
+}
+export function expiredProfiles(
+  all: readonly ObjectMeta[],
+  profiles: readonly { id: string; trashedAt: number | null }[],
+  now: number,
+) {
+  const operational = operationalReferences(all),
+    byId = new Map(all.map((m) => [m.id, m]));
+  return profiles
+    .filter((p) => {
+      const meta = byId.get(p.id);
+      return (
+        p.trashedAt !== null &&
+        p.trashedAt <= now - 30 * 86400000 &&
+        meta?.kind === 'profile' &&
+        !meta.protected &&
+        !operational.has(p.id) &&
+        !meta.refs.some((id) => operational.has(id))
+      );
+    })
+    .map((p) => p.id);
+}
+export function profileDeletion(all: readonly ObjectMeta[], ids: string[]) {
+  const operational = operationalReferences(all),
+    map = new Map(all.map((m) => [m.id, m]));
   for (const id of ids) {
     const profile = map.get(id);
     if (profile?.kind !== 'profile') throw Error('Kein Modellprofil.');

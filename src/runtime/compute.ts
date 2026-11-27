@@ -82,7 +82,11 @@ export type WorkerCommand =
 export type WorkerEvent =
   | { type: 'ready'; protocolVersion: 1 }
   | { type: 'result'; key: JobKey; result: EpisodeResult; elapsedMs: number }
-  | { type: 'paused' | 'cancelled' | 'running'; key: JobKey; tick: number }
+  | {
+      type: 'paused' | 'cancelled' | 'running' | 'heartbeat';
+      key: JobKey;
+      tick: number;
+    }
   | {
       type: 'progress';
       key: JobKey;

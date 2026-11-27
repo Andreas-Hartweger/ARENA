@@ -1,4 +1,9 @@
-function reference(workers: number, small: boolean, benchmark?: object) {
+function reference(
+  workers: number,
+  small: boolean,
+  benchmark?: object,
+  capture = false,
+) {
   const worker = new Worker(new URL('./reference.worker.ts', import.meta.url), {
     type: 'module',
   });
@@ -9,7 +14,12 @@ function reference(workers: number, small: boolean, benchmark?: object) {
     rows.push(e.data);
     if (e.data.type === 'end' || e.data.type === 'fault') worker.terminate();
   };
-  worker.postMessage({ workers, small, benchmark });
+  worker.postMessage({ workers, small, benchmark, capture });
   return { poll: () => rows.splice(0) };
 }
-Object.assign(window, { reference });
+import { runtimeProbe } from '../training/runtimeProbe';
+import { fingerprint } from '../../src/runtime/fingerprint';
+Object.assign(window, {
+  reference,
+  runtimeProbe: () => runtimeProbe(fingerprint),
+});

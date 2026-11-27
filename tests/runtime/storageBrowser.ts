@@ -1,3 +1,4 @@
+import { controlCases } from './controlBrowser';
 import { TrainingDatabase } from '../../src/storage/database';
 import { decode, jsonObject, deletionPreview } from '../../src/storage/objects';
 import {
@@ -16,6 +17,8 @@ import { prepareQueue, queue, writeQueue } from '../../src/runtime/queue';
 import { defaultDraft, preflight } from '../../src/runtime/runConfig';
 import {
   boundary,
+  genomeObject,
+  readGenome,
   restore,
   type RunCounters,
 } from '../../src/storage/checkpoint';
@@ -297,16 +300,23 @@ async function migration() {
       r.onsuccess = () => resolve(r.result);
       r.onerror = () => reject(r.error);
     });
+  const d = draft(),
+    { m, scenarios } = preflight(d, fingerprint, 8);
+  const original = new Evolution(m, scenarios, fingerprint, d.options)
+    .population[0].genome;
+  const genome = genomeObject(original);
   const marker = jsonObject(
       'settings',
       'settings:legacy',
       { preserved: 'v1' },
-      [],
+      [genome.meta.id],
       true,
     ),
     tx = old.transaction(['meta', 'data'], 'readwrite');
-  tx.objectStore('meta').put(marker.meta, marker.meta.id);
-  tx.objectStore('data').put(marker.bytes, marker.meta.id);
+  for (const row of [marker, genome]) {
+    tx.objectStore('meta').put(row.meta, row.meta.id);
+    tx.objectStore('data').put(row.bytes, row.meta.id);
+  }
   await new Promise<void>((r, j) => {
     tx.oncomplete = () => r();
     tx.onabort = () => j(tx.error);
@@ -321,6 +331,13 @@ async function migration() {
       decode<{ preserved: string }>((await db.get(rows[0].id))!).preserved ===
         'v1',
     'Migration data loss',
+  );
+  const migrated = await db.get(genome.meta.id);
+  check(
+    migrated &&
+      readGenome(migrated, m).hash === original.hash &&
+      migrated.bytes.every((byte, i) => byte === genome.bytes[i]),
+    'Migration changed genome parameter bytes',
   );
   const stale = await prepareQueue(db, { entries: [], enabled: false });
   await db.commit([stale]);
@@ -337,10 +354,72 @@ async function migration() {
   return {
     schema: 2,
     legacyChecksum: marker.meta.checksum,
+    genomeHash: original.hash,
+    rawChecksum: genome.meta.checksum,
+    parameterBytes: genome.bytes.length,
     blockedReported: true,
     staleQueueRejected: true,
   };
 }
+async function fallback(latest: string, prior: string) {
+  const raw = await new Promise<IDBDatabase>((resolve, reject) => {
+    const r = indexedDB.open('arena-training');
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+  try {
+    const tx = raw.transaction('data', 'readwrite');
+    tx.objectStore('data').put(new Uint8Array([0]), latest);
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onabort = () => reject(tx.error);
+    });
+  } finally {
+    raw.close();
+  }
+  const client = new LabClient();
+  try {
+    const found = await client.call<{
+      id: string;
+      failures: { id: string; reason: string }[];
+    }>({ type: 'findRecovery', run: 'source' });
+    check(
+      found.id === prior && found.failures.some((f) => f.id === latest),
+      'Corrupt boundary not isolated',
+    );
+    const index = await client.call<{ id: string; latest: string }[]>({
+      type: 'checkpoints',
+    });
+    check(
+      index.some((r) => r.id === 'source' && r.latest === latest),
+      'Fallback overwrote latest history',
+    );
+    return found;
+  } finally {
+    client.close();
+  }
+}
+async function updateCheck(expected: string) {
+  const db = await TrainingDatabase.open();
+  try {
+    const list = await profiles(db);
+    const genomes = await Promise.all(
+      list.map(async (p) => (await readVersion(db, p.active)).genome.hash),
+    );
+    check(genomes.includes(expected), 'Daten nach Update fehlen');
+    return { origin: location.origin, models: list.length, genome: expected };
+  } finally {
+    db.close();
+  }
+}
 Object.assign(window, {
-  storageCases: { produce, consume, faults, migration },
+  storageCases: {
+    controlCases,
+    produce,
+    consume,
+    faults,
+    migration,
+    updateCheck,
+    fallback,
+  },
 });

@@ -28,6 +28,7 @@ export function simulationWorker(
     computeMs = 0,
     rate: Rate = 'max',
     lastReport = 0,
+    lastHeartbeat = 0,
     token = 0;
   let lastFrame: import('../game/world').WorldFrame | undefined,
     awaitingSample = false;
@@ -113,6 +114,10 @@ export function simulationWorker(
       );
       const spent = now() - started;
       computeMs += spent;
+      if (now() - lastHeartbeat >= 1500) {
+        lastHeartbeat = now();
+        send({ type: 'heartbeat', key: active.key, tick });
+      }
       queue(
         rate === 'max'
           ? 0
@@ -186,6 +191,7 @@ export function simulationWorker(
         tick = 0;
         computeMs = 0;
         lastReport = now();
+        lastHeartbeat = lastReport;
         phase = 'running';
         send({ type: 'running', key, tick });
         queue();

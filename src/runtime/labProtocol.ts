@@ -36,7 +36,7 @@ export type LabCommand =
       offset: number;
       limit: number;
       filter?: string;
-      sort?: 'slot' | 'fitness';
+      sort?: 'slot' | 'fitness' | 'progress' | 'lineage';
     }
   | { type: 'brain'; slot: number }
   | { type: 'checkpointInfo'; id: string }
@@ -62,6 +62,7 @@ export type LabCommand =
   | { type: 'templates' }
   | { type: 'loadTemplate'; id: string }
   | { type: 'diskBudget'; bytes: number }
+  | { type: 'previewExpired' }
   | { type: 'previewDelete'; ids: string[] }
   | { type: 'purge'; ids: string[]; revision: number }
   | { type: 'export'; kind: PackageType; roots: string[] }

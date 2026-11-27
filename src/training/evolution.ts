@@ -349,9 +349,14 @@ export class Evolution {
   get nextGeneration() {
     return this.#historyOffset + this.history.length;
   }
-  releaseDurableHistory(written: number) {
-    if (!Number.isSafeInteger(written) || written > this.nextGeneration)
-      throw Error('Unknown durable history boundary');
+  // Keep the latest full summary for selection and inspector reads. The caller owns history retention.
+  compactHistory(written: number) {
+    if (
+      !Number.isSafeInteger(written) ||
+      written < 0 ||
+      written > this.nextGeneration
+    )
+      throw Error('Unknown history boundary');
     const release = Math.max(
       0,
       Math.min(written - this.#historyOffset, this.history.length - 1),

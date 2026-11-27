@@ -7,10 +7,12 @@ import os from 'node:os';
 import { URL } from 'node:url';
 import process from 'node:process';
 const sourceRoot = new URL('../src/', import.meta.url).href;
+const fixtureRoot = new URL('../tests/', import.meta.url).href;
 registerHooks({
   resolve(name, ctx, next) {
     return next(
-      ctx.parentURL?.startsWith(sourceRoot) &&
+      (ctx.parentURL?.startsWith(sourceRoot) ||
+        ctx.parentURL?.startsWith(fixtureRoot)) &&
         name.startsWith('.') &&
         !extname(name)
         ? name + '.ts'

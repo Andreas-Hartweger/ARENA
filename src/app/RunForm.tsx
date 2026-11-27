@@ -457,73 +457,239 @@ export function RunForm({
             ))}
           </fieldset>
           <fieldset>
-            <legend>Beendigung</legend>
+            <legend>Ausgangspopulation und Diagnose</legend>
+            {num(
+              'Zufallsanteil bei Ausgangsmodell',
+              o.randomFraction ?? 0.25,
+              (v) => opt('randomFraction', v),
+              0,
+              1,
+              0.01,
+            )}
             <label>
-              Zielmetrik
-              <select
-                value={d.goal?.leaves[0]?.metric ?? ''}
+              Geschützte Schichten (Indizes ab 0)
+              <input
+                key={(o.protectedLayers ?? []).join(',')}
+                defaultValue={(o.protectedLayers ?? []).join(',')}
+                onBlur={(e) =>
+                  opt(
+                    'protectedLayers',
+                    e.target.value.trim()
+                      ? e.target.value.split(',').map(Number)
+                      : [],
+                  )
+                }
+              />
+            </label>
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={o.globalProtection ?? false}
+                onChange={(e) => opt('globalProtection', e.target.checked)}
+              />
+              Schichtschutz für die gesamte Population
+            </label>
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={!!o.trace}
+                onChange={(e) =>
+                  opt(
+                    'trace',
+                    e.target.checked
+                      ? {
+                          generation: 0,
+                          slot: 0,
+                          maxChanges: 64,
+                          maxSamples: 60,
+                          everyTicks: 12,
+                        }
+                      : undefined,
+                  )
+                }
+              />
+              Detailspur gezielt aufzeichnen
+            </label>
+            {o.trace &&
+              (
+                [
+                  'generation',
+                  'slot',
+                  'maxChanges',
+                  'maxSamples',
+                  'everyTicks',
+                ] as const
+              ).map((k, i) =>
+                num(
+                  [
+                    'Spur-Generation',
+                    'Spur-Slot',
+                    'Maximale Genänderungen',
+                    'Maximale Messframes',
+                    'Abstand der Messframes (Ticks)',
+                  ][i],
+                  o.trace![k],
+                  (n) => opt('trace', { ...o.trace!, [k]: n }),
+                  k === 'everyTicks' ? 1 : 0,
+                ),
+              )}
+          </fieldset>
+          <fieldset>
+            <legend>Beendigung</legend>
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={!!d.goal}
                 onChange={(e) =>
                   setDraft({
                     ...d,
-                    goal: e.target.value
+                    goal: e.target.checked
                       ? {
                           logic: 'and',
                           consecutive: 1,
-                          leaves: [
-                            {
-                              metric: e.target.value as GoalMetric,
-                              threshold: 1,
-                            },
-                          ],
+                          leaves: [{ metric: 'fitness', threshold: 1000 }],
                         }
                       : undefined,
                   })
                 }
-              >
-                <option value="">Generationsbudget</option>
-                {Object.entries({
-                  fitness: 'Beste Fitness',
-                  laps: 'Gültige Runden',
-                  successes: 'Erfolgreiche Episoden',
-                  lapTime: 'Beste Rundenzeit (s)',
-                  successFraction: 'Erfolgsquote',
-                  plateau: 'Plateau',
-                }).map(([v, l]) => (
-                  <option key={v} value={v}>
-                    {l}
-                  </option>
-                ))}
-              </select>
+              />
+              Ergebnisziel verwenden
             </label>
             {d.goal && (
               <>
+                <label>
+                  Bedingungen verknüpfen
+                  <select
+                    value={d.goal.logic}
+                    onChange={(e) =>
+                      setDraft({
+                        ...d,
+                        goal: {
+                          ...d.goal!,
+                          logic: e.target.value as 'and' | 'or',
+                        },
+                      })
+                    }
+                  >
+                    <option value="and">Alle (UND)</option>
+                    <option value="or">Mindestens eine (ODER)</option>
+                  </select>
+                </label>
                 {num(
-                  'Zielwert',
-                  d.goal.leaves[0].threshold,
-                  (n) =>
+                  'Aufeinanderfolgende Generationen',
+                  d.goal.consecutive,
+                  (consecutive) =>
+                    setDraft({ ...d, goal: { ...d.goal!, consecutive } }),
+                  1,
+                )}
+                {d.goal.leaves.map((leaf, i) => (
+                  <div key={i}>
+                    <label>
+                      Zielmetrik {i + 1}
+                      <select
+                        value={leaf.metric}
+                        onChange={(e) =>
+                          setDraft({
+                            ...d,
+                            goal: {
+                              ...d.goal!,
+                              leaves: d.goal!.leaves.map((l, j) =>
+                                i === j
+                                  ? {
+                                      metric: e.target.value as GoalMetric,
+                                      threshold: 1,
+                                    }
+                                  : l,
+                              ),
+                            },
+                          })
+                        }
+                      >
+                        {Object.entries({
+                          fitness: 'Beste Fitness',
+                          laps: 'Gültige Runden',
+                          successes: 'Erfolgreiche Episoden',
+                          lapTime: 'Beste gültige Rundenzeit (s)',
+                          successFraction: 'Erfolg / ausgewertete Episoden',
+                          plateau: 'Generationen auf Plateau',
+                        }).map(([v, label]) => (
+                          <option key={v} value={v}>
+                            {label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    {num(
+                      'Schwelle ' + (i + 1),
+                      leaf.threshold,
+                      (threshold) =>
+                        setDraft({
+                          ...d,
+                          goal: {
+                            ...d.goal!,
+                            leaves: d.goal!.leaves.map((l, j) =>
+                              i === j ? { ...l, threshold } : l,
+                            ),
+                          },
+                        }),
+                      0,
+                      leaf.metric === 'successFraction' ? 1 : undefined,
+                      'any',
+                    )}
+                    <button
+                      disabled={d.goal!.leaves.length === 1}
+                      onClick={() =>
+                        setDraft({
+                          ...d,
+                          goal: {
+                            ...d.goal!,
+                            leaves: d.goal!.leaves.filter((_, j) => i !== j),
+                          },
+                        })
+                      }
+                    >
+                      Bedingung entfernen
+                    </button>
+                  </div>
+                ))}
+                <button
+                  disabled={d.goal.leaves.length >= 32}
+                  onClick={() =>
                     setDraft({
                       ...d,
                       goal: {
                         ...d.goal!,
                         leaves: [
-                          { ...d.goal!.leaves[0], threshold: n },
-                          ...d.goal!.leaves.slice(1),
+                          ...d.goal!.leaves,
+                          { metric: 'successes', threshold: 1 },
                         ],
                       },
-                    }),
-                  0,
-                  undefined,
-                  'any',
-                )}
-                {num(
-                  'Aufeinanderfolgende Generationen',
-                  d.goal.consecutive,
-                  (n) =>
-                    setDraft({ ...d, goal: { ...d.goal!, consecutive: n } }),
-                  1,
-                )}
+                    })
+                  }
+                >
+                  Bedingung ergänzen
+                </button>
               </>
             )}
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={o.budget !== undefined}
+                onChange={(e) =>
+                  opt(
+                    'budget',
+                    e.target.checked
+                      ? (o.n ?? 128) *
+                          (o.generations ?? 100) *
+                          d.scenarios.length
+                      : undefined,
+                  )
+                }
+              />
+              Episodenbudget begrenzen
+            </label>
+            {o.budget !== undefined &&
+              num('Logische Episoden', o.budget, (n) => opt('budget', n), 1)}
             <label className="check">
               <input
                 type="checkbox"

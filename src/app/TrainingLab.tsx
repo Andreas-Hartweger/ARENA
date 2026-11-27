@@ -20,11 +20,13 @@ const screens = {
 };
 const states: Record<Phase, string> = {
   Draft: 'Bereit',
+  Validating: 'Entwurf wird geprüft',
   Initializing: 'Initialisierung',
   Running: 'Läuft',
   Pausing: 'Pause angefordert',
   Draining: 'Worker laufen aus',
   Paused: 'Pausiert',
+  Resuming: 'Fortsetzung angefordert',
   Stopping: 'Abschluss angefordert',
   Completed: 'Abgeschlossen',
   Cancelling: 'Abbruch läuft',
@@ -66,6 +68,7 @@ export default function TrainingLab({ route }: { route: string }) {
   const current = useLabQuery<Draft | undefined>(
     state?.sessionId ? { type: 'currentDraft' } : null,
     (state?.sessionId ?? '') + ':' + revision + ':' + state?.segment,
+    (state?.sessionId ?? '') + ':' + state?.segment,
   );
   useEffect(() => {
     try {
@@ -285,6 +288,11 @@ export default function TrainingLab({ route }: { route: string }) {
               </label>
               {state?.reason && <span>Beendet durch {state.reason}</span>}
               {state?.unsaved && <strong>Speicherung ausstehend</strong>}
+              {state?.saveRequested && (
+                <span>
+                  Meilenstein für die nächste bestätigte Grenze vorgemerkt.
+                </span>
+              )}
             </div>
             {configure && (
               <section className="lab-panel">
@@ -459,6 +467,12 @@ export default function TrainingLab({ route }: { route: string }) {
                     {metric(
                       'Worker-Nachrichten',
                       number(monitor?.receivedMessages ?? 0),
+                    )}
+                    {metric(
+                      'Ältestes aktives Worker-Signal',
+                      monitor?.oldestSignalMs == null
+                        ? '–'
+                        : number(monitor.oldestSignalMs / 1000, 1) + ' s',
                     )}
                     {metric(
                       'Bestätigte Schreibvorgänge',

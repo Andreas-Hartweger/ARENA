@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Brain } from '../ai/network';
 import { registry } from '../ai/schema';
 import { standardProfile } from '../ai/profile';
@@ -28,14 +28,66 @@ const percent = new Intl.NumberFormat('de-AT', {
   maximumFractionDigits: 1,
 });
 const fmt = (x: number | undefined | null) => (x == null ? '–' : x.toFixed(4));
+function NeuronSeries({
+  tick,
+  value,
+}: {
+  tick: number | null | undefined;
+  value: number | undefined;
+}) {
+  const [samples, setSamples] = useState<{ tick: number; value: number }[]>([]);
+  useEffect(() => {
+    if (tick == null || value === undefined || !Number.isFinite(value)) return;
+    setSamples((previous) =>
+      previous.length && previous[previous.length - 1].tick >= tick
+        ? previous
+        : [...previous.slice(-599), { tick, value }],
+    );
+  }, [tick, value]);
+  if (!samples.length) return <p>Noch keine Aktivierungen aufgezeichnet.</p>;
+  const first = samples[0].tick,
+    last = samples[samples.length - 1].tick;
+  const min = Math.min(0, ...samples.map((p) => p.value)),
+    max = Math.max(0, ...samples.map((p) => p.value));
+  return (
+    <figure>
+      <figcaption>
+        Aktivierung des gewählten Neurons · Entscheidungsticks {first} bis{' '}
+        {last} · {samples.length} Messpunkte
+      </figcaption>
+      <svg
+        aria-label="Zeitreihe der gemessenen Aktivierung"
+        viewBox="0 0 400 80"
+        style={{ height: 80 }}
+      >
+        <polyline
+          fill="none"
+          stroke="#7edbc5"
+          strokeWidth="2"
+          points={samples
+            .map(
+              (p) =>
+                4 +
+                (392 * (p.tick - first)) / Math.max(1, last - first) +
+                ',' +
+                (75 - (70 * (p.value - min)) / (max - min || 1)),
+            )
+            .join(' ')}
+        />
+      </svg>
+    </figure>
+  );
+}
 export function Inspector({
   hud,
   brain,
   onPause,
   onStep,
+  seriesId,
 }: {
   hud: Pick<Telemetry, 'ai' | 'paused' | 'index' | 'applied'>;
   brain?: Brain;
+  seriesId?: string;
   onPause: () => void;
   onStep?: () => void;
 }) {
@@ -233,6 +285,13 @@ export function Inspector({
         {ai?.output.map(fmt).join(' / ')} · Tanh{' '}
         {ai?.output.map((x) => fmt(Math.tanh(x))).join(' / ')}
       </p>
+      {seriesId && (
+        <NeuronSeries
+          key={[seriesId, layer, neuron].join('/')}
+          tick={ai?.decisionTick}
+          value={entry?.values[neuron]}
+        />
+      )}
       <table aria-label="Fahrbefehle">
         <thead>
           <tr>

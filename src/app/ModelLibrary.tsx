@@ -24,6 +24,7 @@ type Props = {
 };
 type Details = {
   logicalBytes: number;
+  parentAvailable: boolean | null;
   version: Version;
   manifest: Awaited<ReturnType<typeof readVersion>>['manifest'];
   records: PerformanceRecord[];
@@ -197,6 +198,16 @@ function VersionView({
           </p>
           <p className="technical">
             Quelle <code>{d.version.source ?? 'Neu initialisiert'}</code>
+            {d.version.parent && (
+              <>
+                {' '}
+                · Elternversion <code>{d.version.parent}</code> (
+                {d.parentAvailable
+                  ? 'lokal verfügbar'
+                  : 'historische Referenz, lokal nicht verfügbar'}
+                )
+              </>
+            )}
           </p>
           <div className="toolbar">
             <button
@@ -269,7 +280,10 @@ function VersionView({
             <summary>Leistungsnachweise ({d.records.length})</summary>
             {d.records.map((r, i) => (
               <p key={i}>
-                {r.purpose} · {number(r.value, 4)} · {r.track} / {r.vehicle} ·
+                {r.purpose} ·{' '}
+                {r.metric === 'lapTime' ? 'Rundenzeit' : 'Fitness'}{' '}
+                {number(r.value, 4)}
+                {r.metric === 'lapTime' ? ' s' : ''} · {r.track} / {r.vehicle} ·
                 Seed {r.seed} · n = {r.sampleCount} ·{' '}
                 {r.verified ? 'lokal nachgewiesen' : 'ungeprüfte Angabe'}{' '}
                 <code>{r.contract}</code>

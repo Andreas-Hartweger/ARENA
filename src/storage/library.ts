@@ -88,10 +88,36 @@ export function validateProfile(
   )
     throw Error('Ungültige Profildaten.');
 }
-export async function readVersion(db: StorePort, id: string) {
+export async function describeVersion(db: StorePort, id: string) {
   const stored = await entry(db, id, 'version');
   const version = decode<Version>(stored),
     manifest = decode<Manifest>(await entry(db, version.manifest, 'manifest'));
+  if (
+    version.id !== id ||
+    manifest.version !== 1 ||
+    manifest.physics !== 'first-drive.v1' ||
+    manifest.vehicle !== 'GT-01' ||
+    manifest.dtype !== 'float64le' ||
+    typeof version.created !== 'number' ||
+    !['local', 'clone', 'import'].includes(version.origin) ||
+    ![
+      'starter',
+      'experiment',
+      'champion',
+      'generationBest',
+      'lapRecord',
+    ].includes(version.role)
+  )
+    throw Error('Unbekannter Modell- oder Versionsvertrag.');
+  return {
+    version: stored.meta.imported
+      ? { ...version, origin: 'import' as const }
+      : version,
+    manifest,
+  };
+}
+export async function readVersion(db: StorePort, id: string) {
+  const { version, manifest } = await describeVersion(db, id);
   const s = manifest.model,
     m = model(s.signature, s.hidden, s.activation, s.weightLimit, s.biasLimit);
   if (
@@ -110,9 +136,7 @@ export async function readVersion(db: StorePort, id: string) {
   )
     throw Error('Modellvertrag passt nicht.');
   return {
-    version: stored.meta.imported
-      ? { ...version, origin: 'import' as const }
-      : version,
+    version,
     manifest,
     genome: readGenome(await entry(db, version.genome, 'genome'), m),
   };
