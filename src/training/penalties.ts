@@ -57,7 +57,7 @@ export class Penalties {
       const a = Math.max(c.start, start),
         b = Math.min(c.end, end);
       if (b <= a) continue;
-      if (a - this.#contactEnd >= 0.25 - 1e-12) {
+      if (a >= this.#contactEnd + 0.25) {
         this.#clusterPeak = c.approach;
         r.clusters++;
         r.impactSum += impactCost(c.approach);

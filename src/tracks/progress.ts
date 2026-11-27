@@ -16,7 +16,8 @@ export type TravelFact =
       fromS: number;
       toS: number;
     }
-  | { kind: 'invalidate' | 'start'; time: number }
+  | { kind: 'invalidate'; time: number; uncreditedDistance?: number }
+  | { kind: 'start'; time: number; station: number }
   | { kind: 'gate'; time: number; gate: number }
   | { kind: 'finish'; time: number; lapTime: number };
 export interface LapState {
@@ -58,7 +59,11 @@ export function recordTravel(
   // Walk long segments locally to unwrap the seam and detect shortcuts through the infield.
   const count = Math.max(1, Math.ceil(distance));
   if (count > track.length) {
-    facts?.push({ kind: 'invalidate', time: move.startTime });
+    facts?.push({
+      kind: 'invalidate',
+      time: move.startTime,
+      uncreditedDistance: distance,
+    });
     return invalidateLap(prior, track.project(move.to).s);
   }
   const probes = facts ? ([] as { t: number; s: number }[]) : undefined;
@@ -93,7 +98,11 @@ export function recordTravel(
       projection.distance > track.def.width / 2 + track.def.runoff + 1e-7
     ) {
       // The race validator rejects this travel before resolving its gates.
-      facts?.push({ kind: 'invalidate', time: move.startTime });
+      facts?.push({
+        kind: 'invalidate',
+        time: move.startTime,
+        uncreditedDistance: distance,
+      });
       return invalidateLap(result, track.project(move.to, result.s).s);
     }
     probes?.push({ t: i / count, s: projection.s });
@@ -134,7 +143,7 @@ export function recordTravel(
         facts?.push({ kind: 'finish', time, lapTime: result.last });
       }
       result = { ...result, next: 1, started: time, valid: true, certified: 0 };
-      facts?.push({ kind: 'start', time });
+      facts?.push({ kind: 'start', time, station });
     } else if (result.valid && h.index === result.next) {
       result.certified = (h.index * track.length) / track.gates.length;
       facts?.push({ kind: 'gate', time, gate: h.index });

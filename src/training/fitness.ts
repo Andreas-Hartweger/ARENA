@@ -82,6 +82,7 @@ export class ProgressLedger {
   readonly lapTimes: number[] = [];
   #approaching = true;
   #approachPosition = 0;
+  #endStation: number;
   #position = 0;
   #seen = new Set<number>();
   #next = 1;
@@ -91,6 +92,7 @@ export class ProgressLedger {
     this.gates = bounded(gates, 1, 256, 'gates', true);
     this.required = bounded(required, 1, Number.MAX_SAFE_INTEGER, 'laps', true);
     this.approachLength = Math.max(0, -requireFinite(startS, 'start station'));
+    this.#endStation = startS;
   }
   get highwater() {
     return this.approach + this.completed * this.length + this.partial;
@@ -115,7 +117,9 @@ export class ProgressLedger {
         case 'move': {
           this.distance += f.distance;
           if (this.active) {
-            this.#position += f.delta;
+            // A backward solver correction can expose the same road again. Remove
+            // that overlap before accumulating real travel. Forward gaps earn zero.
+            this.#position += Math.min(0, f.fromS - this.#endStation) + f.delta;
             this.partial = Math.max(
               this.partial,
               Math.min(this.#position, (this.length * this.#next) / this.gates),
@@ -124,19 +128,25 @@ export class ProgressLedger {
             // Count only the part inside the physical approach, including reverse travel.
             const within = (s: number) =>
               Math.min(0, Math.max(-this.approachLength, s));
-            this.#approachPosition += within(f.toS) - within(f.fromS);
+            this.#approachPosition +=
+              Math.min(0, within(f.fromS) - within(this.#endStation)) +
+              within(f.toS) -
+              within(f.fromS);
             this.approach = Math.max(
               this.approach,
               Math.min(this.approachLength, this.#approachPosition),
             );
           }
+          this.#endStation = f.toS;
           break;
         }
         case 'invalidate':
+          this.distance += f.uncreditedDistance ?? 0;
           this.active = false;
           this.#approaching = false;
           break;
         case 'start':
+          this.#endStation = f.station;
           this.active = true;
           this.#approaching = false;
           this.#position = 0;

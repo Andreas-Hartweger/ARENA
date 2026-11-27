@@ -1,0 +1,255 @@
+import { expect, it } from 'vitest';
+import { Brain } from '../../src/ai/network';
+import {
+  evaluate,
+  scenario,
+  type Digest,
+  type EpisodeResult,
+  type ScoredEpisode,
+} from '../../src/training/episode';
+import {
+  Evolution,
+  distribution,
+  type EvaluationRow,
+} from '../../src/training/evolution';
+import { Genome, model } from '../../src/training/genome';
+import { permutation, stream } from '../../src/training/random';
+const path = '../../scripts/evolution-runtime.mjs';
+const { digest }: { digest: Digest } = await import(path);
+const short = scenario(digest, {
+    task: { maxTicks: 3, graceTicks: 0, noProgressTicks: 3 },
+  }),
+  m = model(short.modelSignature, [4]);
+const start = (opts = {}) =>
+  new Evolution(m, [short], digest, { n: 8, generations: 3, ...opts });
+const zeros = new Brain(
+  short.modelSignature,
+  0,
+  [4],
+  'tanh',
+  new Float64Array(m.count),
+);
+const base = evaluate(short, zeros) as ScoredEpisode;
+function landscape(_: unknown, g: Genome): ScoredEpisode {
+  const x = g.parameters(),
+    score = 20 + x[0] - Math.abs(x[1]);
+  return { ...base, fitness: { ...base.fitness, F: score } };
+}
+it('EPS-001 EPS-002 EPS-006 EPS-007 EPS-008 REG-006 replays independent real AI worlds, external reset and model failure', () => {
+  const s = scenario(digest);
+  const stopped = evaluate(s, zeros);
+  expect(stopped).toMatchObject({
+    ok: true,
+    reason: 'noProgress',
+    tick: 1200,
+    duration: 20,
+    fitness: { F: 0 },
+  });
+  expect(stopped).toEqual(evaluate(s, zeros));
+  for (const reason of ['cancelled', 'externalReset'] as const) {
+    let t = 0;
+    const r = evaluate(s, zeros, undefined, () =>
+      ++t === 3 ? reason : undefined,
+    );
+    expect(r).toMatchObject({ ok: false, reason, tick: 2 });
+    expect(r).not.toHaveProperty('fitness');
+  }
+  const fault = evaluate(s, new Brain('other vehicle'));
+  expect(fault).toMatchObject({ reason: 'modelFault', ok: false, tick: 0 });
+  expect(fault).not.toHaveProperty('fitness');
+});
+it('EPS-010 FIT-008 ADP-009 rejects incompatible training structures and holds out validation', () => {
+  const s2 = scenario(digest, { id: 'second', task: short.task, seed: 2 });
+  const ev = new Evolution(
+    m,
+    [short, s2],
+    digest,
+    { n: 8, generations: 1 },
+    undefined,
+    [Number.MAX_VALUE, Number.MAX_VALUE / 2],
+  );
+  const rows = ev.collect((s, g) => ({
+    ...landscape(s, g),
+    fitness: { ...base.fitness, F: s === short ? 1 : 7 },
+  }));
+  expect(() => ev.commit(rows.slice(0, -1))).toThrow('Incomplete');
+  for (const r of ev.commit(rows.reverse()).records)
+    expect(r.score).toBeCloseTo(3, 12);
+  for (const other of [
+    scenario(digest, { fitness: 'Speed', task: short.task }),
+    scenario(digest, { purpose: 'validation', task: short.task }),
+    scenario(digest, { purpose: 'test', task: short.task }),
+  ])
+    expect(() => new Evolution(m, [short, other], digest)).toThrow();
+});
+it('EVO-001 EVO-004 EVO-006 RNG-006 RNG-007 POP-006 selects identically from permuted results and retains elite/champion', () => {
+  const runs = [start(), start(), start()],
+    prev = [-Infinity, -Infinity, -Infinity];
+  for (let g = 0; g < 3; g++) {
+    const next = runs.map((r, index) => {
+      const rows = r.collect(landscape),
+        shuffle =
+          index === 2 ? permutation(stream(42, 'diagnostic', g), 8) : [];
+      const summary = r.commit(
+        index === 0
+          ? rows
+          : index === 1
+            ? rows.reverse()
+            : shuffle.map((i) => rows[i]),
+      );
+      expect(summary.fitness.best).toBeGreaterThanOrEqual(prev[index]);
+      prev[index] = summary.fitness.best;
+      return [summary, r.population.map((m) => m.genome.hash)];
+    });
+    expect(next[1]).toEqual(next[0]);
+    expect(next[2]).toEqual(next[0]);
+  }
+  const tied = start();
+  tied.commit(tied.collect(() => base));
+  const champion = tied.champion;
+  tied.commit(tied.collect(() => base));
+  expect(tied.champion).toBe(champion);
+});
+it('EVO-002 EVO-003 EPS-008 RNG-007 rejects missing, duplicate, stale and wrong-genome results and rolls back late reproduction errors', () => {
+  let budget = Infinity;
+  const r = new Evolution(
+    m,
+    [short],
+    (a, b) => {
+      if (--budget === 0) throw Error('generation creation slot 127');
+      return digest(a, b);
+    },
+    { n: 128, generations: 3 },
+  );
+  r.commit(r.collect(landscape));
+  const rows = r.collect(landscape),
+    p = r.population,
+    h = r.history,
+    c = r.champion;
+  for (const change of [
+    { slot: 128 },
+    { slot: 0 },
+    { generation: 0 },
+    { contract: 'other' },
+    { genome: p[0].genome },
+    { individual: 'other' },
+    { seed: 99 },
+    { segment: 88 },
+  ]) {
+    const altered = [...rows];
+    altered[127] = { ...altered[127], ...change };
+    expect(() => r.commit(altered)).toThrow(/identity/);
+  }
+  expect(() => r.commit(rows.slice(0, -1))).toThrow('Incomplete');
+  budget = 122;
+  expect(() => r.commit(rows)).toThrow(/slot 127/);
+  expect(r.population).toBe(p);
+  expect(r.history).toBe(h);
+  expect(r.champion).toBe(c);
+  budget = Infinity;
+  r.commit(rows);
+  const clean = new Evolution(m, [short], digest, { n: 128, generations: 3 });
+  clean.commit(clean.collect(landscape));
+  clean.commit(clean.collect(landscape));
+  expect(r.population.map((m) => m.genome.hash)).toEqual(
+    clean.population.map((m) => m.genome.hash),
+  );
+});
+it('EPS-009 EVO-005 isolates candidates and restricts retries to temporary infrastructure', () => {
+  const r = start();
+  for (const [reason, transient, expected] of [
+    ['infrastructureFault', true, 16],
+    ['infrastructureFault', false, 8],
+    ['modelFault', true, 8],
+    ['simulationFault', true, 8],
+  ] as const) {
+    let calls = 0;
+    const rows = r.collect(() => {
+      calls++;
+      return { ok: false, reason, tick: 2, message: 'fixture', transient };
+    });
+    expect(calls).toBe(expected);
+    expect(() => r.commit(rows)).toThrow(reason);
+    expect(r.history).toHaveLength(0);
+  }
+  let calls = 0;
+  const rows = r.collect(() =>
+    ++calls === 1
+      ? {
+          ok: false,
+          reason: 'infrastructureFault',
+          tick: 0,
+          transient: true,
+          message: 'temporary',
+        }
+      : base,
+  );
+  expect(rows[0].attempt).toBe(1);
+  expect(r.commit(rows).attempts).toBe(9);
+});
+it('POP-004 POP-005 POP-007 EVO-008 DIA-002 budgets whole generations, stores compact records and supports matched random search', () => {
+  const r = start({ budget: 20, generations: 100, randomSearch: true });
+  r.commit(r.collect(landscape));
+  expect(
+    r.population.every((m) => m.origin === 'random' && m.parents.length === 0),
+  ).toBe(true);
+  const last = r.commit(r.collect(landscape));
+  expect(r.history).toHaveLength(2);
+  expect(r.population).toHaveLength(0);
+  expect(last.lapTimes).toBeNull();
+  expect(last.reasons).toEqual({ timeout: 8 });
+  expect(JSON.stringify(r.history)).not.toContain('"genome":');
+  expect(() => r.collect()).toThrow();
+  expect(start({ budget: 7 }).population).toHaveLength(0);
+});
+it('DIA-001 DIA-003 DIA-004 DIA-005 DIA-006 DIA-007 EVO-009 REG-003 verifies real selected traces and identical reproduction', () => {
+  expect(distribution([3, 1, 4, 2])).toEqual({
+    best: 4,
+    worst: 1,
+    mean: 2.5,
+    q1: 1.75,
+    q3: 3.25,
+    median: 2.5,
+  });
+  const r = start({
+      trace: {
+        generation: 1,
+        slot: 7,
+        maxChanges: 1,
+        maxSamples: 1,
+        everyTicks: 1,
+      },
+    }),
+    plain = start();
+  for (let i = 0; i < 2; i++) {
+    const s = r.commit(r.collect()),
+      off = plain.commit(plain.collect());
+    expect(s.order).toEqual(off.order);
+    expect(s.fitness).toEqual(off.fitness);
+    expect(s.records.map((x) => x.hash)).toEqual(
+      off.records.map((x) => x.hash),
+    );
+    expect(() => s.order.push(99)).toThrow();
+    if (i === 1) {
+      const rec = s.records[7];
+      expect(rec.episodes[0].trace).toMatchObject({ truncated: true });
+      const sample = rec.episodes[0].trace!.samples[0];
+      expect(sample.values).toHaveLength(248);
+      expect(sample.layers).toHaveLength(2);
+      expect(rec.mutation?.details).toHaveLength(1);
+      expect(s.records.slice(0, 7).every((x) => !x.episodes[0].trace)).toBe(
+        true,
+      );
+    }
+  }
+});
+it('EPS-008 EVO-002 rejects nonfinite scores without publishing a generation', () => {
+  const r = start(),
+    p = r.population;
+  const rows: EvaluationRow[] = r.collect(landscape);
+  const bad: EpisodeResult = { ...base, fitness: { ...base.fitness, F: NaN } };
+  rows[0] = { ...rows[0], result: bad };
+  expect(() => r.commit(rows)).toThrow();
+  expect(r.population).toBe(p);
+  expect(r.champion).toBeNull();
+});

@@ -16,6 +16,9 @@ import {
   scoreFitness,
 } from './fitness';
 import { Penalties } from './penalties';
+import type { ContactInterval } from '../collision/solver';
+import type { TravelFact } from '../tracks/progress';
+import { derivedSeed } from './random';
 
 export const standardTask = Object.freeze({
   laps: 1,
@@ -24,9 +27,7 @@ export const standardTask = Object.freeze({
   noProgressTicks: 900,
   progressM: 2,
 });
-export type Task = typeof standardTask extends infer T
-  ? { -readonly [K in keyof T]: number }
-  : never;
+export type Task = { [K in keyof typeof standardTask]: number };
 export function deadline(
   task: Task,
   tick: number,
@@ -96,7 +97,13 @@ export function scenario(digest: Digest, options: ScenarioOptions = {}) {
       typeof fitness === 'string' ? profiles[fitness] : fitness,
     );
   if (weights.length !== 7) throw Error('Expected seven fitness weights');
-  const seed = bounded(options.seed ?? 0, 0, 0xffffffff, 'scenario seed', true),
+  const seed = bounded(
+      options.seed ?? derivedSeed(42, 'scenario'),
+      0,
+      0xffffffff,
+      'scenario seed',
+      true,
+    ),
     id = options.id ?? 'academy-grid',
     purpose = options.purpose ?? 'training';
   if (!id || !['training', 'validation', 'test'].includes(purpose))
@@ -144,6 +151,15 @@ export interface TraceSample {
   values: readonly number[];
   decisionTick: number;
   layers: ReturnType<Brain['evaluate']>['layers'];
+  input: {
+    throttle: number;
+    brake: number;
+    steering: number;
+    direction: string;
+  };
+  travel: readonly TravelFact[];
+  contacts: readonly ContactInterval[];
+  terminalTime: number;
 }
 export interface EpisodeFailure {
   ok: false;
@@ -250,6 +266,10 @@ export function evaluate(
             values: car.ai!.observation.values,
             decisionTick: car.ai!.decisionTick,
             layers: car.ai!.layers,
+            input: car.input,
+            travel: facts.travel,
+            contacts: facts.contacts,
+            terminalTime: end,
           });
         else truncated = true;
       }

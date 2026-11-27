@@ -103,7 +103,8 @@ function summarize(
   for (const e of episodes) reasons[e.reason] = (reasons[e.reason] ?? 0) + 1;
   for (const r of records) {
     origins[r.origin] = (origins[r.origin] ?? 0) + 1;
-    operators[r.operator] = (operators[r.operator] ?? 0) + 1;
+    if (r.origin === 'offspring')
+      operators[r.operator] = (operators[r.operator] ?? 0) + 1;
   }
   const means = (
     keys: readonly string[],
@@ -133,6 +134,24 @@ function summarize(
     diversity: diversity(population.map((m) => m.genome)),
     origins,
     operators,
+    mutation: records.reduce(
+      (totals, r) => {
+        for (const layer of r.mutation?.layers ?? [])
+          for (const group of [layer.weight, layer.bias]) {
+            for (const key of [
+              'eligible',
+              'selected',
+              'changed',
+              'large',
+              'normal',
+              'clipped',
+            ] as const)
+              totals[key] += group[key];
+          }
+        return totals;
+      },
+      { eligible: 0, selected: 0, changed: 0, large: 0, normal: 0, clipped: 0 },
+    ),
     reasons,
     successes: reasons.completed ?? 0,
     successRate: (reasons.completed ?? 0) / episodes.length,
@@ -162,7 +181,7 @@ export class Evolution {
   readonly weights: readonly number[];
   readonly #digest: Digest;
   #population: readonly Member[];
-  #history: readonly Summary[] = [];
+  #history: readonly Summary[] = Object.freeze([]);
   #champion: { id: string; fitness: number; genome: Genome } | null = null;
   #lastError: string | null = null;
   #busy = false;
@@ -195,6 +214,7 @@ export class Evolution {
       this.config.budget < this.config.n * scenarios.length
         ? Object.freeze([])
         : initialPopulation(m, this.config, digest, seed);
+    Object.freeze(this);
   }
   get population() {
     return this.#population;

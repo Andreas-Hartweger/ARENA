@@ -61,30 +61,8 @@ while (run.population.length) {
   appendFileSync(
     join(destination, 'episodes.ndjson'),
     records
-      .map(
-        ({
-          slot,
-          id,
-          hash,
-          birth,
-          parents,
-          origin,
-          operator,
-          score,
-          episodes,
-        }) =>
-          JSON.stringify({
-            generation: summary.generation,
-            slot,
-            id,
-            hash,
-            birth,
-            parents,
-            origin,
-            operator,
-            score,
-            episodes,
-          }),
+      .map((record) =>
+        JSON.stringify({ generation: summary.generation, ...record }),
       )
       .join('\n') + '\n',
   );
