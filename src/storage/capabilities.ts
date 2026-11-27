@@ -26,6 +26,8 @@ export interface PromotionReview {
   approved: boolean;
 }
 interface OfficialModel {
+  schema: 'arena.official-model.v1';
+  issuance: string;
   freeze: ModelFreeze;
   role: Capability;
   review: PromotionReview;
@@ -98,8 +100,13 @@ export async function promote(
     m.manifest.modelKey !== freeze.modelKey
   )
     throw Error('Frozen genome or contract differs');
-  const current = await currentOfficial(db, role);
+  const previousPointer = await db.get('settings:official-' + role);
+  const current = previousPointer?.meta.imported
+    ? null
+    : await currentOfficial(db, role);
   const row: OfficialModel = {
+    schema: 'arena.official-model.v1',
+    issuance: crypto.randomUUID(),
     freeze,
     role,
     review,
@@ -122,6 +129,40 @@ export async function promote(
   );
   return id;
 }
+export async function verifyOfficialManifest(
+  db: StorePort,
+  entry: import('./objects').StoredObject,
+) {
+  const row = decode<OfficialModel>(entry);
+  freezeCandidates([row.freeze]);
+  if (
+    row.schema !== 'arena.official-model.v1' ||
+    typeof row.issuance !== 'string' ||
+    !row.issuance ||
+    !roles.includes(row.role) ||
+    !row.freeze.roles.includes(row.role) ||
+    !row.review.approved ||
+    !row.review.reviewer.trim() ||
+    !row.review.implementer.trim() ||
+    row.review.reviewer.trim().toLowerCase() ===
+      row.review.implementer.trim().toLowerCase() ||
+    !row.review.evidence.trim() ||
+    !hex(row.review.implementationSHA, 40) ||
+    !hex(row.validationHash) ||
+    row.validationHash !== row.review.validationHash ||
+    entry.meta.id !== 'manifest:official-' + evidenceHash(row) ||
+    !entry.meta.refs.includes(row.freeze.version) ||
+    (row.previous !== null && !entry.meta.refs.includes(row.previous))
+  )
+    throw Error('Ungültiger offizieller Modellnachweis.');
+  const v = await readVersion(db, row.freeze.version);
+  if (
+    v.genome.hash !== row.freeze.genome ||
+    v.manifest.modelKey !== row.freeze.modelKey
+  )
+    throw Error('Modellintegrität verletzt.');
+  return row;
+}
 export async function currentOfficial(db: StorePort, role: Capability) {
   if (!roles.includes(role)) throw Error('Unknown capability');
   const pointer = await db.get('settings:official-' + role);
@@ -137,19 +178,8 @@ export async function currentOfficial(db: StorePort, role: Capability) {
     !entry.meta.protected
   )
     throw Error('Offizieller Modellnachweis fehlt.');
-  const row = decode<OfficialModel>(entry);
-  if (
-    row.role !== role ||
-    id !== 'manifest:official-' + evidenceHash(row) ||
-    !entry.meta.refs.includes(row.freeze.version)
-  )
-    throw Error('Incompatible capability');
-  const v = await readVersion(db, row.freeze.version);
-  if (
-    v.genome.hash !== row.freeze.genome ||
-    v.manifest.modelKey !== row.freeze.modelKey
-  )
-    throw Error('Modellintegrität verletzt.');
+  const row = await verifyOfficialManifest(db, entry);
+  if (row.role !== role) throw Error('Incompatible capability');
   return { id, ...row };
 }
 export async function cloneOfficial(

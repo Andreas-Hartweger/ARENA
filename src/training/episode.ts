@@ -118,9 +118,21 @@ export function scenario(digest: Digest, options: ScenarioOptions = {}) {
     purpose = options.purpose ?? 'training';
   if (!id || !['training', 'validation', 'test'].includes(purpose))
     throw Error('Invalid scenario identity');
+  const recovery = options.start?.kind === 'recovery';
+  if (
+    recovery &&
+    (purpose === 'training' ||
+      task.maxTicks !== 1500 ||
+      task.noProgressTicks < 1500 ||
+      task.laps !== 1)
+  )
+    throw Error(
+      'Recovery certification requires its own validation task and full 1200 + 300 ticks',
+    );
   const structure = digest(
     canonical({
       version: 'arena.evaluation.v1',
+      ...(recovery ? { objective: 'arena.recovery.v1' } : {}),
       physics: 'first-drive.v1',
       task,
       fitness,
@@ -163,13 +175,13 @@ export function scenarioSet(
   digest: Digest,
   master = 42,
   segment = 0,
-  options: readonly Omit<ScenarioOptions, 'seed'>[] = [{}],
+  options: readonly ScenarioOptions[] = [{}],
 ) {
   return Object.freeze(
     options.map((s, i) =>
       scenario(digest, {
         ...s,
-        seed: derivedSeed(master, 'scenario', 0, segment, i),
+        seed: s.seed ?? derivedSeed(master, 'scenario', 0, segment, i),
       }),
     ),
   );

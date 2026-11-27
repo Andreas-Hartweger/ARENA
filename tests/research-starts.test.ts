@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { scenario } from '../src/training/episode';
+import { scenario, scenarioSet } from '../src/training/episode';
 import { buildPanels } from '../src/research/panels';
 import { fingerprint } from '../src/runtime/fingerprint';
 import { createTrack } from '../src/tracks/track';
@@ -30,6 +30,15 @@ describe('D14 physical panels and recovery', () => {
       ),
     ).toThrow();
     const standard = scenario(fingerprint);
+    expect(scenarioSet(fingerprint, 43, 4, [{ seed: 17 }])[0].seed).toBe(17);
+    const recovery = panels.recovery.cases[0].scenario;
+    expect(scenario(fingerprint, recovery).structure).not.toBe(
+      standard.structure,
+    );
+    expect(() =>
+      scenario(fingerprint, { ...recovery, purpose: 'training' }),
+    ).toThrow();
+
     expect(standard.vehicle.initialState).not.toHaveProperty('velocityMps');
     expect(standard).not.toHaveProperty('start');
     const start = panels.development.cases[0].scenario.start!;

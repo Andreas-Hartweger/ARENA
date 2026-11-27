@@ -1,3 +1,4 @@
+import { verifyOfficialManifest } from './capabilities';
 import {
   scanArchive,
   writeArchive,
@@ -318,6 +319,8 @@ export async function previewPackage(db: TransferStore, file: Blob) {
         !e.refs.includes(version.genome)
       )
         throw Error('Ungültiger Versionsgraph.');
+    } else if (e.role === 'manifest' && e.id.startsWith('manifest:official-')) {
+      await verifyOfficialManifest(sandbox, value);
     } else if (e.role === 'manifest') {
       const m = decode<{ model: object }>(value);
       allowedFields(m, [
@@ -458,6 +461,13 @@ export async function importPackage(
   preview: Awaited<ReturnType<typeof previewPackage>>,
   variant = false,
 ) {
+  if (
+    variant &&
+    preview.manifest.entries.some((e) => e.id.startsWith('manifest:official-'))
+  )
+    throw Error(
+      'Offizielle Freigaben behalten ihre ursprünglichen IDs. Modellversion separat klonen.',
+    );
   if (preview.conflicts.length && !variant)
     throw Error('ID-Konflikt. Eigenständige Variante erforderlich.');
   const id = crypto.randomUUID(),

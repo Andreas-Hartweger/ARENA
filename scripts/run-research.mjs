@@ -164,6 +164,20 @@ try {
       progress.deferred.push({ id, reason: 'outside frozen selection' });
       continue;
     }
+    if (progress.deferred.some((r) => r.id === id)) {
+      ledger.transaction(() => {
+        ledger.assertLease();
+        ledger.event(
+          ledger.token,
+          'deferred',
+          'research',
+          { experimentId: id, reason: 'paired seed postponed' },
+          { ms: 0, ticks: 0, episodes: 0 },
+          { ms: 0, ticks: 0, episodes: 0 },
+        );
+      });
+      continue;
+    }
     const entry = experiment(
         id,
         ledger.definition.id,
@@ -203,35 +217,78 @@ try {
       progress.completed.push(id);
       continue;
     }
-    if (phase === 'screen') {
+    if (phase !== 'baseline') {
       const used = ledger.usage('research').charged,
         limit = ledger.machine.training;
-      const phaseStats = ledger.db
-        .prepare("SELECT summary FROM chunks WHERE experiment LIKE 'B-%'")
-        .all()
-        .map((r) => JSON.parse(r.summary));
-      const baseEpisodes = phaseStats.reduce((n, r) => n + r.evaluations, 0);
-      const perMs =
-          phaseStats.reduce((n, r) => n + r.durationMs, 0) / baseEpisodes,
-        perTick =
-          phaseStats.reduce(
-            (n, r) => n + r.actualOrConservativelyChargedTicks,
-            0,
-          ) / baseEpisodes;
-      if (!baseEpisodes)
-        throw Error('Measured baselines required before screening');
-      const reserveEpisodes = 3 * 3 * 25600 + 2 * 2 * 51200;
-      const proposedEpisodes =
-        entry.definition.episodeBudget * (Number(row.Seed) === 42 ? 2 : 1);
-
-      // Protect confirmation independently of the final validation reserve.
-      if (
-        used.ms + (reserveEpisodes + proposedEpisodes) * perMs >= limit.ms ||
-        used.ticks + (reserveEpisodes + proposedEpisodes) * perTick >=
-          limit.ticks ||
-        used.episodes + proposedEpisodes > limit.episodes - reserveEpisodes
-      ) {
-        progress.deferred.push({ id, reason: 'remaining phase allocation' });
+      // Use SQLite aggregates so a large campaign does not materialize every history row.
+      const costs = (pattern) =>
+        ledger.db
+          .prepare(
+            `SELECT SUM(json_extract(summary,'$.durationMs'))/SUM(json_extract(summary,'$.evaluations')) ms,
+         1.0*SUM(json_extract(summary,'$.actualOrConservativelyChargedTicks'))/SUM(json_extract(summary,'$.evaluations')) ticks
+         FROM chunks WHERE experiment LIKE ?`,
+          )
+          .get(pattern);
+      const base = costs('B-%');
+      if (!base.ms || !base.ticks)
+        throw Error('Measured baselines required before comparison');
+      const existing = costs(entry.definition.configId + '-%');
+      const perMs = Math.max(base.ms, existing.ms ?? 0),
+        perTick = Math.max(base.ticks, existing.ticks ?? 0);
+      const reserveEpisodes =
+        phase === 'screen'
+          ? 3 * 3 * 25600 + 2 * 2 * 51200
+          : phase === 'confirmation'
+            ? 2 * 2 * 51200
+            : 0;
+      const seeds =
+        phase === 'screen'
+          ? [42, 43]
+          : phase === 'confirmation'
+            ? [101, 102, 103]
+            : [201, 202];
+      const proposed =
+        entry.definition.episodeBudget *
+        (seeds.length - seeds.indexOf(Number(row.Seed)));
+      const futureDevelopmentCases =
+        40 * (phase === 'screen' ? 100 : phase === 'confirmation' ? 18 : 4);
+      const needed = {
+        ms: Math.ceil(
+          proposed * perMs +
+            (reserveEpisodes + futureDevelopmentCases) * base.ms,
+        ),
+        ticks: Math.ceil(
+          proposed * perTick +
+            (reserveEpisodes + futureDevelopmentCases) * base.ticks,
+        ),
+        episodes: proposed + reserveEpisodes,
+      };
+      if (Object.keys(needed).some((k) => used[k] + needed[k] > limit[k])) {
+        const reason = {
+          id,
+          reason: 'remaining paired phase allocation',
+          estimated: needed,
+          usage: used,
+          limit,
+        };
+        progress.deferred.push(reason);
+        ledger.transaction(() => {
+          ledger.assertLease();
+          ledger.event(
+            ledger.token,
+            'deferred',
+            'research',
+            { experimentId: id, ...reason },
+            { ms: 0, ticks: 0, episodes: 0 },
+            { ms: 0, ticks: 0, episodes: 0 },
+          );
+        });
+        // Later seeds of this group must not run alone just because their forecast is smaller.
+        for (const other of rows.filter(
+          (r) =>
+            r.ConfigID === row.ConfigID && Number(r.Seed) > Number(row.Seed),
+        ))
+          progress.deferred.push({ ...reason, id: other.ExperimentID });
         continue;
       }
     }
@@ -266,7 +323,11 @@ try {
     digest: sha(bytes),
     usage: ledger.usage().charged,
   });
-  if (progress.stopped) throw Error(JSON.stringify(progress.stopped));
+  if (
+    progress.stopped &&
+    !/budget exhausted/i.test(progress.stopped.error ?? '')
+  )
+    throw Error(JSON.stringify(progress.stopped));
 } finally {
   try {
     clock.finish();

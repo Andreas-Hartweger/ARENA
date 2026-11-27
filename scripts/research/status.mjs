@@ -33,6 +33,14 @@ export function campaignStatus(dir) {
         .all()
         .map((r) => r.id.slice(11)),
     );
+    const deferred = new Set(
+      db
+        .prepare(
+          "SELECT DISTINCT json_extract(context,'$.experimentId') id FROM events WHERE state='deferred'",
+        )
+        .all()
+        .map((r) => r.id),
+    );
     const slotsWithStatus = slots.map((s) => {
       const id = s.ExperimentID,
         path = join(dir, 'experiments', id, 'experiment.json');
@@ -62,7 +70,9 @@ export function campaignStatus(dir) {
           ? 'running'
           : started
             ? 'started-unpublished'
-            : 'not-started',
+            : deferred.has(id)
+              ? 'deferred'
+              : 'not-started',
         outcome: 'not-evaluated',
         episodes: null,
         generations: chunks.find((r) => r.experiment === id)?.generations ?? 0,
