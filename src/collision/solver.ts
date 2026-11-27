@@ -22,6 +22,12 @@ export interface CollisionEvent {
   normalSpeed: number;
   impulse: number;
 }
+export interface ContactInterval {
+  start: number;
+  end: number;
+  approach: number;
+  partners: string[];
+}
 export function compileWalls(barriers: readonly Barrier[]) {
   return barriers.map((w) => {
     const shape = wallShape(w);
@@ -33,17 +39,29 @@ export function solveContacts(
   walls: ReturnType<typeof compileWalls>,
   tick: number,
   shared = true,
-): { events: CollisionEvent[]; paths: Travel[][]; fallback: boolean } {
+  measure = false,
+): {
+  events: CollisionEvent[];
+  paths: Travel[][];
+  fallback: boolean;
+  contacts?: ContactInterval[][];
+} {
   if (!shared && bodies.length > 1) {
-    const results = bodies.map((body) => solveContacts([body], walls, tick));
+    const results = bodies.map((body) =>
+      solveContacts([body], walls, tick, true, measure),
+    );
     return {
       events: results.flatMap((r) => r.events),
       paths: results.map((r) => r.paths[0]),
       fallback: results.some((r) => r.fallback),
+      ...(measure ? { contacts: results.map((r) => r.contacts![0]) } : {}),
     };
   }
   const events: CollisionEvent[] = [],
     paths = bodies.map(() => [] as Travel[]);
+  const contacts = measure
+    ? bodies.map(() => [] as ContactInterval[])
+    : undefined;
   let fallback = false,
     elapsed = 0;
   const base = (tick - 1) * TICK_SECONDS;
@@ -77,6 +95,25 @@ export function solveContacts(
       break;
     }
     const acceptedEvents = events.length;
+    const touching =
+      contacts && candidates.length
+        ? new Map<number, ContactInterval>()
+        : undefined;
+    const contact = (i: number, partner: string, approach: number) => {
+      if (!touching) return;
+      let interval = touching.get(i);
+      if (!interval) {
+        interval = {
+          start: base + elapsed,
+          end: base + elapsed + dt,
+          approach: 0,
+          partners: [],
+        };
+        touching.set(i, interval);
+      }
+      interval.approach = Math.max(interval.approach, approach);
+      if (!interval.partners.includes(partner)) interval.partners.push(partner);
+    };
     const before = bodies.map((b) => ({ ...b }));
     bodies.forEach((b) => {
       b.position = shift(b.position, b.velocity, dt);
@@ -106,6 +143,10 @@ export function solveContacts(
         const impact = respond(a, b, c);
         changed ||= c.depth > 0.010001 || impact.impulse > 1e-6;
         const id = b?.id ?? walls[wall].id;
+        if (touching) {
+          contact(i, id, -impact.normalSpeed);
+          if (b) contact(j, a.id, -impact.normalSpeed);
+        }
         if (
           impact.impulse > 0 &&
           impact.normalSpeed < -0.5 &&
@@ -137,6 +178,8 @@ export function solveContacts(
       fallback = true;
       break;
     }
+    if (contacts && touching)
+      for (const [i, interval] of touching) contacts[i].push(interval);
     bodies.forEach((_, i) =>
       paths[i].push({
         from: before[i].position,
@@ -152,5 +195,5 @@ export function solveContacts(
       b.velocity = { x: 0, y: 0 };
       b.yaw = 0;
     }
-  return { events, paths, fallback };
+  return { events, paths, fallback, ...(contacts ? { contacts } : {}) };
 }
