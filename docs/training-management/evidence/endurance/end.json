@@ -1,0 +1,76 @@
+{
+  "reason": "Die beiden Vorläufe wurden um 19:07 Uhr beendet. Nach dem zwischenzeitlichen Auftrag für einen einzelnen Endabnahmelauf ordnete A dessen sofortigen Abbruch und den administrativen Abschluss an.",
+  "completedTwoHours": false,
+  "terminalCheckpointOrRestoreAtStopTested": false,
+  "samplesSinceStart": [
+    {
+      "fixture": "02c-endurance-1f92ede",
+      "source": "1f92edefe3ad519a918c4c07734b38a6427f74b6",
+      "samples": 352,
+      "raw": "samples.ndjson.gz",
+      "observedActiveMs": 3528470.6184,
+      "elapsedAtLastPollMs": 3529997.0766,
+      "gapsAbove30s": 0,
+      "generations": 414,
+      "durableGeneration": 414,
+      "evaluations": 6624,
+      "simulationTicks": 11418034,
+      "managedEstimateBytes": 28097472,
+      "successfulCommits": 415,
+      "lastLogicalStorageBytes": 19107968,
+      "logicalRecords": 464,
+      "phases": [
+        "Running"
+      ],
+      "reportedStateErrors": []
+    },
+    {
+      "fixture": "02c-endurance-02",
+      "source": "b6b28f3525e3fb1904f2fb62e88a74bf7dbf406e",
+      "samples": 575,
+      "raw": "second-samples.ndjson.gz",
+      "observedActiveMs": 5766747.615799999,
+      "elapsedAtLastPollMs": 5767325.7349,
+      "gapsAbove30s": 0,
+      "generations": 745,
+      "durableGeneration": 745,
+      "evaluations": 11920,
+      "simulationTicks": 20717738,
+      "managedEstimateBytes": null,
+      "successfulCommits": null,
+      "lastLogicalStorageBytes": 31833416,
+      "logicalRecords": 795,
+      "phases": [
+        "Running"
+      ],
+      "reportedStateErrors": []
+    },
+    {
+      "fixture": "02c-release-endurance-1b99d13",
+      "source": "1b99d131ded2484f4f0a0122bb73bd52001825c0",
+      "samples": 6,
+      "raw": "release-samples.ndjson.gz",
+      "observedActiveMs": 50083.3487,
+      "elapsedAtLastPollMs": 50651.0696,
+      "gapsAbove30s": 0,
+      "generations": 10,
+      "durableGeneration": 10,
+      "evaluations": 160,
+      "simulationTicks": 246056,
+      "managedEstimateBytes": 28097472,
+      "successfulCommits": 11,
+      "lastLogicalStorageBytes": 3571215,
+      "logicalRecords": 60,
+      "phases": [
+        "Running"
+      ],
+      "reportedStateErrors": []
+    }
+  ],
+  "scope": "Reguläre Episoden mit zwei Workern und obligatorischer Speicherung bei jeder bestätigten Generation. Messzeiten unterschiedlicher Läufe werden nicht addiert. Die letzte Abfrage lag jeweils vor dem angeordneten Ende des Testprozesses.",
+  "preliminaryTestsStoppedAt": "2026-11-27T19:07:42+01:00",
+  "stoppedAt": "2026-11-27T19:14:29+01:00",
+  "requiredDurationHours": 2,
+  "administrativeStatus": "Erledigt auf ausdrückliche Anweisung von A",
+  "measurementStatus": "Vorzeitig beendet"
+}

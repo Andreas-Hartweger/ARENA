@@ -1,0 +1,38 @@
+{
+  "sha": "b6b28f3525e3fb1904f2fb62e88a74bf7dbf406e",
+  "sourceDiff": "M scripts/verify-training-browser.mjs\n M src/app/App.tsx\n M src/app/main.tsx\n?? src/app/Router.tsx\n?? src/app/RunForm.tsx",
+  "node": "v24.22.3",
+  "os": "Windows 11 Pro",
+  "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+  "logicalCpus": 16,
+  "totalRam": 33820106752,
+  "power": "uncontrolled",
+  "backgroundLoad": "uncontrolled",
+  "renderer": null,
+  "driver": "158.0.8127.89",
+  "mode": "endurance",
+  "initial": {
+    "phase": "Running",
+    "runId": "d1a54066-7bed-41dd-a5fd-b2e3b294db63",
+    "sessionId": "705e3535-c32e-4391-bd2e-cd79eeea0b53",
+    "seq": 2,
+    "segment": 0,
+    "generation": 0,
+    "evaluations": 0,
+    "activeMs": 109.79999999701977,
+    "durableGeneration": 0,
+    "reason": null,
+    "error": null,
+    "unsaved": false,
+    "monitor": {
+      "evaluated": 0,
+      "ticks": 0,
+      "computeMs": 0,
+      "attempts": 0,
+      "busy": 0,
+      "workers": 2
+    }
+  },
+  "locked": true,
+  "started": "2026-11-27T16:31:28.217Z"
+}
