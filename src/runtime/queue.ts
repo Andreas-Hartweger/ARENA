@@ -10,6 +10,7 @@ export interface QueueEntry {
   series?: string;
 }
 export interface QueueState {
+  version?: number;
   enabled: boolean;
   entries: QueueEntry[];
 }
@@ -19,19 +20,42 @@ export async function queue(db: StorePort): Promise<QueueState> {
   return r ? decode(r) : { enabled: false, entries: [] };
 }
 export async function writeQueue(db: StorePort, s: QueueState, h?: number) {
+  const obj = await prepareQueue(db, s, h);
+  await db.commit([obj], { replace: [key] });
+}
+export async function prepareQueue(db: StorePort, s: QueueState, h?: number) {
+  const previous = await queue(db);
+  if ((s.version ?? 0) !== (previous.version ?? 0))
+    throw Error(
+      'Warteschlange wurde inzwischen geändert. Neu laden und erneut bearbeiten.',
+    );
   if (
+    typeof s.enabled !== 'boolean' ||
+    !Array.isArray(s.entries) ||
     s.entries.length > 32 ||
     new Set(s.entries.map((x) => x.id)).size !== s.entries.length
   )
     throw Error('Maximal 32 wartende Läufe.');
   const refs: string[] = [];
   for (const e of s.entries) {
+    if (
+      typeof e.id !== 'string' ||
+      !e.id ||
+      !Number.isSafeInteger(e.revision) ||
+      e.revision < 1 ||
+      typeof e.autoStart !== 'boolean'
+    )
+      throw Error('Ungültiger Warteschlangeneintrag.');
     preflight(e.draft, fingerprint, h);
     if (e.draft.sourceVersion) refs.push(e.draft.sourceVersion);
   }
-  await db.commit([jsonObject('queue', key, s, refs, true)], {
-    replace: [key],
-  });
+  return jsonObject(
+    'queue',
+    key,
+    { ...s, version: (previous.version ?? 0) + 1 },
+    refs,
+    true,
+  );
 }
 export function seriesDrafts(
   draft: Draft,
@@ -41,11 +65,16 @@ export function seriesDrafts(
   maxEvaluations: number,
 ) {
   const count = values.length * seeds.length,
+    perGeneration = (draft.options.n ?? 128) * draft.scenarios.length,
     budget =
       count *
-      (draft.options.n ?? 128) *
-      (draft.options.generations ?? 100) *
-      draft.scenarios.length;
+      perGeneration *
+      Math.min(
+        draft.options.generations ?? 100,
+        Math.floor(
+          (draft.options.budget ?? Number.MAX_SAFE_INTEGER) / perGeneration,
+        ),
+      );
   if (
     !count ||
     !Number.isSafeInteger(budget) ||

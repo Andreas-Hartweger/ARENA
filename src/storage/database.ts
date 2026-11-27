@@ -39,18 +39,41 @@ export class TrainingDatabase implements StorePort {
   readonly #name: string;
   #lease?: { owner: string; epoch: number };
   #unlock?: () => void;
+  #released?: Promise<void>;
   private constructor(db: IDBDatabase) {
     this.#db = db;
     this.#name = db.name;
     db.onversionchange = () => this.close();
   }
   static async open(name = 'arena-training') {
-    const req = indexedDB.open(name, 1);
-    req.onupgradeneeded = () => {
-      for (const store of ['state', 'meta', 'data', 'stage'])
-        req.result.createObjectStore(store);
+    const req = indexedDB.open(name, 2);
+    let blocked = false;
+    req.onupgradeneeded = (event) => {
+      if (blocked) {
+        req.transaction!.abort();
+        return;
+      }
+      if (event.oldVersion === 0)
+        for (const store of ['state', 'meta', 'data', 'stage'])
+          req.result.createObjectStore(store);
+      if (event.oldVersion < 2)
+        req.transaction!.objectStore('meta').createIndex('byKind', 'kind');
     };
-    const db = await request(req);
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      req.onblocked = () => {
+        blocked = true;
+        reject(
+          Error(
+            'Datenbank-Update wartet auf einen anderen ARENA-Tab. Diesen schließen und erneut öffnen.',
+          ),
+        );
+      };
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => {
+        if (blocked) req.result.close();
+        else resolve(req.result);
+      };
+    });
     return new TrainingDatabase(db);
   }
   async status() {
@@ -70,7 +93,7 @@ export class TrainingDatabase implements StorePort {
         release = r;
       });
       await new Promise<void>((resolve, reject) => {
-        void navigator.locks
+        this.#released = navigator.locks
           .request(
             this.#name + ':writer',
             { mode: 'exclusive', ifAvailable: true },
@@ -85,17 +108,19 @@ export class TrainingDatabase implements StorePort {
               await hold;
             },
           )
-          .catch(reject);
+          .then(() => undefined, reject);
       });
     }
     try {
-      const tx = this.#db.transaction('state', 'readwrite'),
+      const tx = this.#db.transaction(['state', 'stage'], 'readwrite'),
         s = tx.objectStore('state'),
         committed = done(tx);
       const current = ((await request(s.get('writer'))) ?? initial) as Lease;
       if (current.owner && !ownsLock)
         throw Error('Previous writer requires coordinated release');
       const next = { ...current, owner, epoch: current.epoch + 1 };
+      // Holding the writer lock fences abandoned stages from a prior session.
+      tx.objectStore('stage').clear();
       s.put(next, 'writer');
       await committed;
       this.#lease = { owner, epoch: next.epoch };
@@ -103,6 +128,8 @@ export class TrainingDatabase implements StorePort {
     } catch (error) {
       this.#unlock?.();
       this.#unlock = undefined;
+      await this.#released;
+      this.#released = undefined;
       throw error;
     }
   }
@@ -121,6 +148,8 @@ export class TrainingDatabase implements StorePort {
       this.#lease = undefined;
       this.#unlock?.();
       this.#unlock = undefined;
+      await this.#released;
+      this.#released = undefined;
     }
   }
   close() {
@@ -129,9 +158,10 @@ export class TrainingDatabase implements StorePort {
     this.#unlock?.();
     this.#unlock = undefined;
   }
-  async list() {
+  async list(kind?: ObjectMeta['kind']) {
+    const store = this.#db.transaction('meta').objectStore('meta');
     return (await request(
-      this.#db.transaction('meta').objectStore('meta').getAll(),
+      kind ? store.index('byKind').getAll(kind) : store.getAll(),
     )) as ObjectMeta[];
   }
   async get(id: string) {

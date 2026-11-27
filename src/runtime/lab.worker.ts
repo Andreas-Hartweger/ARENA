@@ -8,9 +8,10 @@ import {
   profiles,
   readVersion,
   saveVersion,
+  type PerformanceRecord,
 } from '../storage/library';
 import { decode, deletionPreview, jsonObject } from '../storage/objects';
-import { queue, writeQueue } from './queue';
+import { queue, prepareQueue, writeQueue, type QueueState } from './queue';
 import { preflight } from './runConfig';
 import { fingerprint } from './fingerprint';
 import {
@@ -46,12 +47,35 @@ const active = () =>
   !['Draft', 'Completed', 'Cancelled', 'Faulted'].includes(
     controller.snapshot.phase,
   );
-async function start(d: Parameters<typeof controller.start>[0]) {
+async function start(
+  d: Parameters<typeof controller.start>[0],
+  waiting?: QueueState,
+) {
   await acquire();
+  const { estimated } = preflight(d, fingerprint, hardware);
+  if (!d.volatile) {
+    const s = await db.status(),
+      quota = await navigator.storage.estimate();
+    const available = Math.min(
+      s.budget - s.total,
+      (quota.quota ?? Infinity) - (quota.usage ?? 0),
+    );
+    if (4 * estimated.population > available)
+      throw Error(
+        'Festplattenbudget reicht für drei Checkpoints und den neuen Schreibstand nicht aus. Population verkleinern oder das Budget im Speicher anpassen.',
+      );
+  }
   const source = d.sourceVersion
     ? await readVersion(db, d.sourceVersion)
     : undefined;
-  await controller.start(d, source?.genome);
+  const queueUpdate = waiting
+    ? await prepareQueue(
+        db,
+        { ...waiting, entries: waiting.entries.slice(1) },
+        hardware,
+      )
+    : undefined;
+  await controller.start(d, source?.genome, queueUpdate);
 }
 async function terminal() {
   if (active()) return;
@@ -61,9 +85,7 @@ async function terminal() {
         next = q.entries[0];
       if (q.enabled && next?.autoStart) {
         preflight(next.draft, fingerprint, hardware);
-        await start(next.draft);
-        q.entries.shift();
-        await writeQueue(db, q, hardware);
+        await start(next.draft, q);
         return;
       }
     } else auto = false;
@@ -90,6 +112,18 @@ async function handle(c: LabCommand) {
   switch (c.type) {
     case 'status':
       return controller.snapshot;
+    case 'currentDraft':
+      return controller.draft;
+    case 'version': {
+      const { version, manifest } = await readVersion(db, c.id);
+      const records = [];
+      for (const m of await db.list())
+        if (m.kind === 'record' && m.refs.includes(c.id)) {
+          const r = decode<PerformanceRecord>((await db.get(m.id))!);
+          records.push(m.imported ? { ...r, verified: false } : r);
+        }
+      return { version, manifest, records };
+    }
     case 'observe':
       generationSubscription = c.visible > 0;
       controller.observe(c.visible, c.slot);
@@ -116,16 +150,33 @@ async function handle(c: LabCommand) {
     case 'revise':
       return controller.revise(c.learning, c.scenarios);
     case 'population':
-      return controller.population(c.offset, c.limit);
+      return controller.population(c.offset, c.limit, c.filter, c.sort);
     case 'brain':
       return controller.selectedBrain(c.slot);
     case 'history':
-      return controller.history();
+      return controller.history(c.metric);
     case 'recover':
       await acquire();
       auto = false;
-      await controller.recover(c.id);
+      await controller.recover(c.id, c);
       return;
+    case 'checkpointInfo': {
+      const stored = await db.get(c.id);
+      if (stored?.meta.kind !== 'checkpoint')
+        throw Error('Speicherstand fehlt.');
+      const cp = decode<import('../storage/checkpoint').Checkpoint>(stored);
+      return {
+        phase: cp.phase,
+        reason: cp.reason,
+        generation: cp.counters.globalGeneration,
+        activeMs: cp.counters.activeMs,
+        time: cp.draft.time,
+        imported: !!stored.meta.imported,
+        sameRuntime: cp.runtime === runtime,
+        runId: cp.runId,
+        parent: cp.counters.parentCheckpoint,
+      };
+    }
     case 'library':
       return profiles(db);
     case 'create': {
@@ -208,9 +259,22 @@ async function handle(c: LabCommand) {
         expectedRevision: c.revision,
       });
     }
-    case 'queue':
-      return queue(db);
+    case 'queue': {
+      const q = await queue(db);
+      return { ...q, enabled: auto && q.enabled };
+    }
+    case 'dispatchQueue': {
+      if (active()) throw Error('Ein Lauf ist bereits aktiv.');
+      await acquire();
+      const q = await queue(db),
+        entry = q.entries[0];
+      if (!entry) throw Error('Warteschlange ist leer.');
+      await start(entry.draft, q);
+      return;
+    }
     case 'writeQueue':
+      if (controller.snapshot.phase === 'Recoverable')
+        throw Error('Zuerst die ausstehende Speicherung auflösen.');
       await acquire();
       await writeQueue(db, c.value, hardware);
       auto = c.value.enabled;

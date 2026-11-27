@@ -86,7 +86,8 @@ export function validateProfile(
     throw Error('Ungültige Profildaten.');
 }
 export async function readVersion(db: StorePort, id: string) {
-  const version = decode<Version>(await entry(db, id, 'version')),
+  const stored = await entry(db, id, 'version');
+  const version = decode<Version>(stored),
     manifest = decode<Manifest>(await entry(db, version.manifest, 'manifest'));
   const s = manifest.model,
     m = model(s.signature, s.hidden, s.activation, s.weightLimit, s.biasLimit);
@@ -97,7 +98,9 @@ export async function readVersion(db: StorePort, id: string) {
   )
     throw Error('Modellvertrag passt nicht.');
   return {
-    version,
+    version: stored.meta.imported
+      ? { ...version, origin: 'import' as const }
+      : version,
     manifest,
     genome: readGenome(await entry(db, version.genome, 'genome'), m),
   };

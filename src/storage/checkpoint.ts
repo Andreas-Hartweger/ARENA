@@ -26,6 +26,7 @@ export interface RunCounters {
   pendingLearning?: EvolutionOptions;
   pendingScenario?: Draft['scenarios'];
   previousSegments: string[];
+  parentCheckpoint?: string;
 }
 type SavedMember = Omit<Member, 'genome'> & { genome: string };
 export interface Checkpoint {
@@ -154,6 +155,7 @@ export function boundary(
       ...genomes.values(),
       ...ids,
       ...counters.previousSegments,
+      ...(counters.parentCheckpoint ? [counters.parentCheckpoint] : []),
       ...(draft.sourceVersion ? [draft.sourceVersion] : []),
     ],
     false,
@@ -188,6 +190,7 @@ export async function restore(
   id: string,
   runtime: string,
   hardware?: number,
+  branchRun?: string,
 ) {
   async function get(key: string) {
     const o = await db.get(key);
@@ -208,13 +211,24 @@ export async function restore(
   if (
     cp.contracts.length !== scenarios.length ||
     cp.contracts.some((k, i) => k !== scenarios[i].key) ||
+    !['terminal', 'readyToEvaluate'].includes(cp.phase) ||
     (cp.phase === 'terminal') !== (cp.nextGeneration === null) ||
     (cp.phase === 'readyToEvaluate' &&
       (cp.nextGeneration !== cp.history.length ||
         cp.population.length !== c.n)) ||
     (cp.phase === 'terminal' && cp.population.length) ||
     !Number.isSafeInteger(cp.counters.globalGeneration) ||
-    cp.counters.globalGeneration < cp.history.length
+    cp.counters.globalGeneration < cp.history.length ||
+    ![
+      cp.counters.logicalEpisodes,
+      cp.counters.goalStreak,
+      cp.counters.segment,
+      cp.counters.revision,
+    ].every((v) => Number.isSafeInteger(v) && v >= 0) ||
+    !Number.isFinite(cp.counters.activeMs) ||
+    cp.counters.activeMs < 0 ||
+    cp.counters.segment !== (cp.draft.options.segment ?? 0) ||
+    new Set(cp.history).size !== cp.history.length
   )
     throw Error('Invalid checkpoint counters or graph');
   const loaded = new Map<string, Genome>();
@@ -226,18 +240,69 @@ export async function restore(
     }
     return g;
   }
+  const fromRun = cp.runId;
+  const identity = (id: string) => {
+    if (!branchRun) return id;
+    const parts: unknown = JSON.parse(id);
+    if (!Array.isArray(parts) || parts.length !== 3 || parts[0] !== fromRun)
+      return id;
+    return JSON.stringify([branchRun, parts[1], parts[2]]);
+  };
+  function lineage<T extends Pick<Member, 'id' | 'parents' | 'inheritance'>>(
+    m: T,
+  ): T {
+    if (!branchRun) return m;
+    return {
+      ...m,
+      id: identity(m.id),
+      parents: m.parents.map(identity),
+      ...(m.inheritance
+        ? {
+            inheritance: {
+              ...m.inheritance,
+              parentByIndex: m.inheritance.parentByIndex.map(identity),
+            },
+          }
+        : {}),
+    };
+  }
   const population: Member[] = [];
   for (const { genome: key, ...fields } of cp.population)
-    population.push(Object.freeze({ ...fields, genome: await genome(key) }));
+    population.push(
+      Object.freeze({ ...lineage(fields), genome: await genome(key) }),
+    );
   const history: GenerationSummary[] = [];
-  for (const key of cp.history)
-    history.push(decode<GenerationSummary>(await get(key)));
+  for (const key of cp.history) {
+    const row = await get(key);
+    if (row.meta.kind !== 'history')
+      throw Error('Ungültige Generationsreferenz.');
+    const summary = decode<GenerationSummary>(row);
+    history.push(
+      branchRun
+        ? {
+            ...summary,
+            champion: {
+              ...summary.champion,
+              id: identity(summary.champion.id),
+            },
+            bestId: identity(summary.bestId),
+            records: summary.records.map(lineage),
+          }
+        : summary,
+    );
+  }
   const champion = cp.champion
     ? Object.freeze({
         ...cp.champion,
+        id: identity(cp.champion.id),
         genome: await genome(cp.champion.genome),
       })
     : null;
+  if (branchRun) {
+    cp.runId = branchRun;
+    cp.draft.options.runId = branchRun;
+    cp.counters.parentCheckpoint = id;
+  }
   const evolution = new Evolution(
     m,
     scenarios,

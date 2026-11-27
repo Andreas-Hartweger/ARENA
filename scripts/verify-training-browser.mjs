@@ -102,29 +102,48 @@ try {
   });
   let stopping = false,
     last;
+  let observedActiveMs = 0,
+    previousTime = performance.now(),
+    previousTicks = 0,
+    gaps = 0;
   for (;;) {
     last = await page.evaluate(() => window.testRun.status());
+    const currentTime = performance.now(),
+      interval = currentTime - previousTime;
+    const ticks = last.state.monitor?.ticks ?? 0;
+    if (interval <= 30000 && ticks > previousTicks)
+      observedActiveMs += interval;
+    if (interval > 30000) gaps++;
+    previousTime = currentTime;
+    previousTicks = ticks;
     appendFileSync(
       join(destination, 'samples.ndjson'),
-      JSON.stringify({ ms: performance.now() - start, ...last }) + '\n',
+      JSON.stringify({
+        ms: currentTime - start,
+        observedActiveMs,
+        gaps,
+        ...last,
+      }) + '\n',
     );
     if (last.state.phase === 'Completed') break;
     if (['Faulted', 'Recoverable', 'Cancelled'].includes(last.state.phase))
       throw Error(JSON.stringify(last.state));
-    if (mode === 'endurance' && !stopping && last.state.activeMs >= 7200000) {
+    if (mode === 'endurance' && !stopping && observedActiveMs >= 7200000) {
       await page.evaluate(() => window.testRun.finish());
       stopping = true;
     }
-    if (performance.now() - start > (mode === 'short' ? 120000 : 7500000))
+    if (mode === 'short' && performance.now() - start > 120000)
       throw Error('Test exceeded time budget');
     await wait(mode === 'short' ? 150 : 10000);
   }
   const durable = await page.evaluate(() => window.testRun.verify());
-  if (errors.length || (mode === 'endurance' && last.state.activeMs < 7200000))
+  if (errors.length || (mode === 'endurance' && observedActiveMs < 7200000))
     throw Error('Incomplete browser evidence');
   record('end', {
     ended: new Date().toISOString(),
     elapsedMs: performance.now() - start,
+    observedActiveMs,
+    gaps,
     last,
     durable,
     errors,

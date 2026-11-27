@@ -64,6 +64,10 @@ export function App() {
           ARENA
         </div>
         <span className="edition">FIRST DRIVE</span>
+        <nav className="drive-links" aria-label="ARENA">
+          <a href="#/training">Trainingslabor</a>
+          <a href="#/models">Modelle</a>
+        </nav>
         <div className="session">
           <b /> {error ? 'ANGEHALTEN' : hud?.paused ? 'PAUSE' : 'TRAINING'}{' '}
           <span> / </span> GT-01
@@ -87,6 +91,9 @@ export function App() {
             })}{' '}
             m <span>·</span> Uhrzeigersinn
           </div>
+          <a className="training-link" href="#/training?source=academy">
+            Streckentraining konfigurieren
+          </a>
           <svg
             className="map"
             viewBox="-126 -84 252 168"
@@ -134,6 +141,9 @@ export function App() {
           <div className="car-id">
             <b>07</b> ARENA GT-01
           </div>
+          <a className="training-link" href="#/training?source=gt01">
+            GT-01 trainieren
+          </a>
           <div className="speed">
             <strong>{Math.round(hud?.speed ?? 0)}</strong>
             <span>km/h</span>

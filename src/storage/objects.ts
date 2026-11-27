@@ -26,6 +26,8 @@ export interface ObjectMeta {
   protected: boolean;
   created: number;
   trashedAt?: number;
+  imported?: boolean;
+  sourceChecksum?: string;
 }
 export interface StoredObject {
   meta: ObjectMeta;

@@ -19,6 +19,7 @@ import {
   deletionPreview,
   jsonObject,
   type StorePort,
+  type StoredObject,
 } from '../storage/objects';
 
 export type Phase =
@@ -74,7 +75,6 @@ export class TrainingController {
   #learning?: Learning;
   #newScenarios?: Draft['scenarios'];
   #saveRequested = false;
-  #automaticCleanup = false;
   #hardTimer?: ReturnType<typeof setTimeout>;
   #tail: Promise<unknown> = Promise.resolve();
   readonly #db: StorePort;
@@ -148,24 +148,84 @@ export class TrainingController {
       monitor: this.metrics(),
     };
   }
-  population(offset = 0, limit = 100) {
-    const rows = this.#e?.history.at(-1)?.records ?? [];
+  population(
+    offset = 0,
+    limit = 100,
+    filter = '',
+    sort: 'slot' | 'fitness' = 'slot',
+  ) {
+    const query = filter.toLowerCase().trim();
+    const rows = (this.#e?.history.at(-1)?.records ?? []).filter(
+      (r) =>
+        !query ||
+        [
+          r.slot,
+          r.id,
+          r.hash,
+          r.origin,
+          r.operator,
+          ...r.parents,
+          ...r.episodes.map((e) => e.reason),
+        ].some((v) => String(v).toLowerCase().includes(query)),
+    );
+    if (sort === 'fitness')
+      rows.sort((a, b) => b.score - a.score || a.slot - b.slot);
     return rows.slice(
       Math.max(0, offset),
       Math.max(0, offset) + Math.min(128, limit),
     );
   }
-  history() {
-    return (
-      this.#e?.history.map((s) => ({
-        generation: s.generation,
-        fitness: s.fitness,
-        successes: s.successes,
-        lapTime: s.lapTimes?.worst ?? null,
-        diversity: s.diversity.D,
-        progress: s.progress.best,
-      })) ?? []
-    );
+  history(metric: 'fitness' | 'laps' | 'diversity' | 'progress' = 'fitness') {
+    const full = this.#e?.history ?? [];
+    const point = (s: GenerationSummary) => ({
+      generation: s.generation,
+      fitness: s.fitness,
+      successes: s.successes,
+      lapTime: s.lapTimes?.worst ?? null,
+      diversity: s.diversity.D,
+      progress: s.progress.best,
+    });
+    if (full.length <= 600) return full.map(point);
+    // Keep actual extrema for each visible series and a missing-value marker per bin.
+    const series = (s: GenerationSummary): (number | null)[] =>
+      metric === 'fitness'
+        ? [
+            s.fitness.best,
+            s.fitness.mean,
+            s.fitness.median,
+            s.fitness.q1,
+            s.fitness.q3,
+          ]
+        : [
+            metric === 'laps'
+              ? (s.lapTimes?.worst ?? null)
+              : metric === 'diversity'
+                ? s.diversity.D
+                : s.progress.best,
+          ];
+    const width = Math.ceil(
+        full.length / Math.floor(598 / (metric === 'fitness' ? 11 : 4)),
+      ),
+      selected = new Set([0, full.length - 1]);
+    for (let start = 0; start < full.length; start += width) {
+      const end = Math.min(start + width, full.length),
+        min: number[] = [],
+        max: number[] = [];
+      let gap = false;
+      selected.add(start);
+      for (let i = start; i < end; i++)
+        for (const [k, v] of series(full[i]).entries()) {
+          if (v === null) {
+            if (!gap) selected.add(i);
+            gap = true;
+            continue;
+          }
+          if (min[k] === undefined || v < series(full[min[k]])[k]!) min[k] = i;
+          if (max[k] === undefined || v > series(full[max[k]])[k]!) max[k] = i;
+        }
+      for (const i of [...min, ...max]) selected.add(i);
+    }
+    return [...selected].sort((a, b) => a - b).map((i) => point(full[i]));
   }
   champion() {
     return this.#e?.champion;
@@ -249,7 +309,7 @@ export class TrainingController {
       });
     };
   }
-  async start(input: Draft, source?: Genome) {
+  async start(input: Draft, source?: Genome, queueUpdate?: StoredObject) {
     if (!['Draft', 'Completed', 'Cancelled', 'Faulted'].includes(this.#phase))
       throw Error('Ein Trainingslauf ist aktiv.');
     for (const item of await this.#db.list())
@@ -259,6 +319,10 @@ export class TrainingController {
           throw Error('Vorhandenen Lauf zuerst wiederherstellen oder beenden.');
       }
     const draft = structuredClone(input);
+    if (queueUpdate && draft.volatile)
+      throw Error(
+        'Warteschlangenläufe benötigen einen dauerhaften Start-Checkpoint.',
+      );
     draft.options.runId = crypto.randomUUID();
     const { m, scenarios, allocation } = preflight(
       draft,
@@ -280,11 +344,16 @@ export class TrainingController {
     this.#makePool(allocation.workers);
     this.#startClock();
     this.#emit();
-    await this.#saveThen(undefined, true, () => {
-      this.#phase = 'Running';
-      this.#emit();
-      this.#dispatch();
-    });
+    await this.#saveThen(
+      undefined,
+      true,
+      () => {
+        this.#phase = 'Running';
+        this.#emit();
+        this.#dispatch();
+      },
+      queueUpdate,
+    );
   }
   #dispatch() {
     if (this.#phase !== 'Running' && this.#phase !== 'Stopping') return;
@@ -350,129 +419,189 @@ export class TrainingController {
         return !!reason || moreSegments;
       },
     });
-    this.#counts.goalStreak = streak;
-    this.#counts.globalGeneration++;
-    this.#counts.logicalEpisodes += stage.snapshot.summary.evaluations;
-    if (this.#learning) {
-      draft.options = { ...draft.options, ...stage.config };
-      this.#counts.revision++;
-      this.#learning = undefined;
-    }
-    this.#reason =
+    const counts = {
+      ...this.#counts,
+      goalStreak: streak,
+      globalGeneration: this.#counts.globalGeneration + 1,
+      logicalEpisodes:
+        this.#counts.logicalEpisodes + stage.snapshot.summary.evaluations,
+    };
+    const revised = this.#learning
+      ? { ...draft, options: { ...draft.options, ...stage.config } }
+      : draft;
+    if (this.#learning) counts.revision++;
+    this.#learning = undefined;
+    const stopped =
       reason ??
       (stage.snapshot.nextPopulation.length || moreSegments ? null : 'budget');
-    const held = e.population;
+    const nextScenarios = stopped ? undefined : this.#newScenarios;
+    this.#newScenarios = undefined;
     const mustSave =
-      !!this.#reason ||
-      moreSegments ||
+      !!stopped ||
+      !!nextScenarios ||
       this.#saveRequested ||
-      this.#counts.globalGeneration % draft.autosave === 0;
-    await this.#saveThen(stage, mustSave, async () => {
-      if (this.#reason) {
-        this.#freezeClock();
-        this.#phase = 'Completed';
-        this.#pool?.close();
+      counts.globalGeneration % draft.autosave === 0;
+    await this.#saveThen(
+      stage,
+      mustSave,
+      () => {
+        if (stopped) {
+          this.#freezeClock();
+          this.#phase = 'Completed';
+          this.#pool?.close();
+        }
         this.#emit();
-        return;
-      }
-      if (this.#newScenarios) {
-        if (this.#index) this.#counts.previousSegments.push(this.#index.latest);
-        this.#counts.segment++;
-        this.#counts.goalStreak = 0;
-        this.#counts.revision++;
-        this.#historyIds = [];
-        draft.scenarios = this.#newScenarios;
-        this.#newScenarios = undefined;
-        draft.options.segment = this.#counts.segment;
-        const { m, scenarios } = preflight(draft, fingerprint, this.#hardware);
-        this.#e = new Evolution(
-          m,
-          scenarios,
-          fingerprint,
-          draft.options,
-          undefined,
-          draft.weights,
-          {
-            population: held,
-            history: [],
-            champion: null,
-            generationBest: null,
-            adaptive: null,
-          },
-        );
-        await this.#saveThen(undefined, true, () => {
-          this.#emit();
-          this.#dispatch();
-        });
-        return;
-      }
-      this.#emit();
-      this.#dispatch();
-    });
+        if (!stopped) this.#dispatch();
+      },
+      undefined,
+      { counts, draft: revised, stopped, nextScenarios },
+    );
   }
   async #saveThen(
     stage: Stage | undefined,
     save: boolean,
     after: () => void | Promise<void>,
+    queueUpdate?: StoredObject,
+    proposed?: {
+      counts: RunCounters;
+      draft: Draft;
+      stopped: string | null;
+      nextScenarios?: Draft['scenarios'];
+    },
   ) {
-    const d = this.#draft!,
-      manual = this.#saveRequested;
+    const manual = this.#saveRequested;
     this.#saveRequested = false;
-    if (!save || d.volatile) {
+    let counts = proposed?.counts ?? this.#counts;
+    let draft = proposed?.draft ?? this.#draft!;
+    const reason = proposed?.stopped ?? null,
+      write = save && !draft.volatile;
+    const makeBoundary = (
+      e: Evolution,
+      s: Stage | undefined,
+      why: string | null,
+      history: string[],
+      index?: RunIndex,
+    ) =>
+      boundary(
+        e,
+        s,
+        draft,
+        this.#original!,
+        { ...counts, activeMs: this.#active() },
+        this.#runtime,
+        why,
+        history,
+        index,
+        manual,
+      );
+    let saved = write
+      ? makeBoundary(
+          this.#e!,
+          stage,
+          reason ?? (proposed?.nextScenarios ? 'segment' : null),
+          this.#historyIds,
+          this.#index,
+        )
+      : undefined;
+    let objects = saved?.objects ?? [],
+      successor: Evolution | undefined;
+    if (proposed?.nextScenarios) {
+      const old = saved;
+      counts = {
+        ...counts,
+        segment: counts.segment + 1,
+        revision: counts.revision + 1,
+        goalStreak: 0,
+        previousSegments: [
+          ...counts.previousSegments,
+          ...(old ? [old.checkpoint.id] : []),
+        ],
+      };
+      draft = {
+        ...draft,
+        options: { ...draft.options, segment: counts.segment },
+        scenarios: proposed.nextScenarios,
+      };
+      const { m, scenarios } = preflight(draft, fingerprint, this.#hardware);
+      successor = new Evolution(
+        m,
+        scenarios,
+        fingerprint,
+        draft.options,
+        undefined,
+        draft.weights,
+        {
+          population: this.#e!.population,
+          history: [],
+          champion: null,
+          generationBest: null,
+          adaptive: null,
+        },
+      );
+      if (old) {
+        saved = makeBoundary(successor, undefined, null, [], old.index);
+        // Both segment boundaries and the authoritative run pointer publish together.
+        objects = [
+          ...new Map(
+            [...objects, ...saved.objects].map((o) => [o.meta.id, o]),
+          ).values(),
+        ];
+      }
+    }
+    const publish = () => {
       stage?.publish();
+      this.#e = successor ?? this.#e;
+      this.#counts = { ...counts, activeMs: this.#counts.activeMs };
+      this.#draft = draft;
+      this.#reason = reason;
+      if (saved) {
+        this.#index = saved.index;
+        this.#durable = saved.checkpoint.counters.globalGeneration;
+        this.#historyIds = saved.checkpoint.history;
+      }
+      this.#pendingSave = undefined;
+      this.#error = null;
+    };
+    if (!write) {
+      publish();
       await after();
       return;
     }
-    const saved = boundary(
-      this.#e!,
-      stage,
-      d,
-      this.#original!,
-      { ...this.#counts, activeMs: this.#active() },
-      this.#runtime,
-      this.#reason ?? (this.#newScenarios ? 'segment' : null),
-      this.#historyIds,
-      this.#index,
-      manual,
-    );
     const commit = async () => {
-      await this.#db.commit(saved.objects, {
-        replace: ['run:' + this.#e!.config.runId],
+      await this.#db.commit(queueUpdate ? [...objects, queueUpdate] : objects, {
+        replace: [
+          'run:' + draft.options.runId,
+          ...(queueUpdate ? [queueUpdate.meta.id] : []),
+        ],
       });
-      this.#index = saved.index;
-      this.#durable = saved.checkpoint.counters.globalGeneration;
-      this.#historyIds = saved.checkpoint.history;
-      stage?.publish();
-      this.#pendingSave = undefined;
-      this.#error = null;
-      // Old manifest roots are released only after the new generation is durable.
-      this.#automaticCleanup = true;
+      publish();
+      try {
+        const garbage = deletionPreview(await this.#db.list(), []);
+        if (garbage.remove.length)
+          await this.#db.commit([], { remove: garbage.remove });
+      } catch (e) {
+        this.#error = 'Speicherbereinigung: ' + String(e);
+      }
     };
     try {
       await commit();
-    } catch (error) {
+    } catch (e) {
       this.#freezeClock();
       this.#phase = 'Recoverable';
-      this.#error = String(error);
+      this.#error = String(e);
       this.#pendingSave = async () => {
-        await commit();
-        this.#phase = 'Running';
         this.#startClock();
+        try {
+          await commit();
+        } catch (error) {
+          this.#freezeClock();
+          throw error;
+        }
+        this.#phase = 'Running';
         await after();
       };
       this.#emit();
       return;
-    }
-    if (this.#automaticCleanup) {
-      this.#automaticCleanup = false;
-      try {
-        const meta = await this.#db.list(),
-          obsolete = deletionPreview(meta, []);
-        if (obsolete.remove.length)
-          await this.#db.commit([], { remove: obsolete.remove });
-      } catch (error) {
-        this.#error = 'Speicherbereinigung: ' + String(error);
-      }
     }
     await after();
   }
@@ -578,27 +707,66 @@ export class TrainingController {
     this.#saveRequested = true;
     this.#emit();
   }
-  async recover(id: string) {
+  async recover(
+    id: string,
+    decision?: { sourceStopped?: boolean; additionalActiveMs?: number },
+  ) {
+    const source = await this.#db.get(id);
+    if (!source || source.meta.kind !== 'checkpoint')
+      throw Error('Speicherstand fehlt.');
+    const header = decode<import('../storage/checkpoint').Checkpoint>(source);
+    const row = await this.#db.get('run:' + header.runId);
+    const index = row ? decode<RunIndex>(row) : undefined;
+    const fork = !index || index.latest !== id || index.terminal;
+    if (source.meta.imported && !decision?.sourceStopped)
+      throw Error('Zuerst bestätigen, dass der Ursprungslauf angehalten ist.');
+    const additional = decision?.additionalActiveMs ?? 0;
+    if (
+      (header.draft.time && decision?.additionalActiveMs === undefined) ||
+      !Number.isFinite(additional) ||
+      additional < 0
+    )
+      throw Error(
+        'Für die unbekannte Aktivzeit seit der Sicherung eine konservative Anzahl Sekunden angeben.',
+      );
     const { cp, evolution } = await restore(
       this.#db,
       id,
       this.#runtime,
       this.#hardware,
+      fork ? crypto.randomUUID() : undefined,
     );
     if (cp.phase === 'terminal')
       throw Error('Terminaler Speicherstand ist abgeschlossen.');
-    const record = await this.#db.get('run:' + cp.runId);
-    if (!record) throw Error('Laufindex fehlt.');
-    const index = decode<RunIndex>(record);
-    if (index.latest !== id)
-      throw Error('Älterer Stand erfordert neuen Laufzweig.');
+    if (!['Draft', 'Completed', 'Cancelled', 'Faulted'].includes(this.#phase))
+      throw Error('Ein Trainingslauf ist aktiv.');
+    cp.counters.activeMs += additional;
+    let destination = index,
+      history = cp.history;
+    if (fork) {
+      const b = boundary(
+        evolution,
+        undefined,
+        cp.draft,
+        cp.original,
+        cp.counters,
+        this.#runtime,
+        null,
+        [],
+      );
+      await this.#db.commit(b.objects);
+      destination = b.index;
+      history = b.checkpoint.history;
+    }
     this.#init(cp.draft);
     this.#original = cp.original;
     this.#e = evolution;
     this.#counts = cp.counters;
     this.#durable = cp.counters.globalGeneration;
-    this.#index = index;
-    this.#historyIds = cp.history;
+    this.#index = destination;
+    this.#historyIds = history;
+    this.#learning = cp.counters.pendingLearning;
+    this.#newScenarios = cp.counters.pendingScenario;
     this.#makePool(
       preflight(cp.draft, fingerprint, this.#hardware).allocation.workers,
     );

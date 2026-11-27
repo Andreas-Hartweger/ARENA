@@ -19,18 +19,32 @@ export type LabCommand =
         | 'status'
         | 'library'
         | 'storage'
-        | 'queue'
-        | 'history';
+        | 'queue';
     }
+  | { type: 'history'; metric?: 'fitness' | 'laps' | 'diversity' | 'progress' }
   | { type: 'observe'; visible: number; slot: number | null }
   | {
       type: 'display';
       settings: Pick<Draft, 'mode' | 'rate' | 'profile' | 'custom'>;
     }
   | { type: 'revise'; learning: Learning; scenarios?: Draft['scenarios'] }
-  | { type: 'population'; offset: number; limit: number }
+  | { type: 'currentDraft' | 'dispatchQueue' }
+  | { type: 'version'; id: string }
+  | {
+      type: 'population';
+      offset: number;
+      limit: number;
+      filter?: string;
+      sort?: 'slot' | 'fitness';
+    }
   | { type: 'brain'; slot: number }
-  | { type: 'recover'; id: string }
+  | { type: 'checkpointInfo'; id: string }
+  | {
+      type: 'recover';
+      id: string;
+      sourceStopped?: boolean;
+      additionalActiveMs?: number;
+    }
   | { type: 'create'; name: string; draft: Draft; source?: string }
   | { type: 'profile'; id: string; changes: Partial<Profile> }
   | { type: 'champion'; profile: string }

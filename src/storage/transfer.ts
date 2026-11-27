@@ -16,15 +16,20 @@ import {
 } from './objects';
 import { TrainingDatabase } from './database';
 import { sha256 } from '../runtime/fingerprint';
-import {
-  readVersion,
-  validateProfile,
-  type Profile,
-  type Version,
-} from './library';
+import { readVersion, validateProfile, type Profile } from './library';
 import { restore, type Checkpoint, type RunIndex } from './checkpoint';
 import type { QueueState } from '../runtime/queue';
 export type PackageType = 'model' | 'checkpoint' | 'backup';
+function inertQueue(bytes: Uint8Array) {
+  const q = strictJson(bytes) as QueueState;
+  if (!Array.isArray(q.entries) || q.entries.length > 32)
+    throw Error('Ungültige Warteschlange.');
+  return {
+    ...q,
+    enabled: false,
+    entries: q.entries.map((e) => ({ ...e, autoStart: false })),
+  };
+}
 interface Entry {
   path: string;
   byteLength: number;
@@ -222,8 +227,15 @@ export async function previewPackage(db: TrainingDatabase, file: Blob) {
   for (const e of m.entries) {
     const value = (await item(e.id))!;
     const old = await db.get(e.id);
+    const importedQueue =
+      e.role === 'queue' &&
+      old?.meta.sourceChecksum === e.sha256 &&
+      old.meta.checksum ===
+        jsonObject('queue', e.id, inertQueue(value.bytes), e.refs).meta
+          .checksum;
     if (
       old &&
+      !importedQueue &&
       (old.meta.kind !== e.role ||
         old.meta.checksum !== e.sha256 ||
         JSON.stringify(old.meta.refs) !== JSON.stringify(e.refs) ||
@@ -318,31 +330,37 @@ export async function importPackage(
       let row = (await preview.item(e.id))!;
       const key = mapping.get(e.id) ?? e.id;
       const existing = await db.get(key);
-      if (existing && key === e.id && existing.meta.checksum === e.sha256)
+      if (
+        existing &&
+        key === e.id &&
+        !preview.conflicts.includes(e.id) &&
+        !mapping.has(e.id)
+      )
         continue;
       if (e.role !== 'genome') {
         let payload = decode<unknown>(row);
         if (variant) payload = remap(payload);
-        if (e.role === 'queue') {
-          const queue = payload as QueueState;
-          queue.enabled = false;
-          for (const q of queue.entries) q.autoStart = false;
-        }
-        if (e.role === 'version') {
-          const v = payload as Version;
-          v.origin = 'import';
-        }
-        if (e.role === 'record')
-          Object.assign(payload as object, { verified: false });
-        row = jsonObject(
-          e.role,
-          key,
-          payload,
-          e.refs.map((k) => mapping.get(k) ?? k),
-          m.roots.includes(e.id) || e.root,
-          e.role === 'checkpoint' && e.protected,
-        );
+        if (e.role === 'queue')
+          payload = inertQueue(
+            new TextEncoder().encode(JSON.stringify(payload)),
+          );
+        if (variant || e.role === 'queue')
+          row = jsonObject(
+            e.role,
+            key,
+            payload,
+            e.refs.map((k) => mapping.get(k) ?? k),
+            m.roots.includes(e.id) || e.root,
+            e.role === 'checkpoint' && e.protected,
+          );
       }
+      row.meta = {
+        ...row.meta,
+        imported: true,
+        sourceChecksum: e.sha256,
+        root: m.roots.includes(e.id) || row.meta.root,
+        protected: e.role === 'checkpoint' && e.protected,
+      };
       await db.stage(id, row);
       staged.push(key);
     }
