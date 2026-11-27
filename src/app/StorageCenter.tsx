@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { trainingLab } from './labClient';
 import { bytes, download, number, useLabQuery } from './labData';
 import { NumberField, type Act } from './RunForm';
@@ -129,6 +129,9 @@ export function StorageCenter({
   models: Profile[];
   active: boolean;
 }) {
+  const modelImport =
+    new URLSearchParams(location.hash.split('?')[1]).get('import') === 'model';
+  const fileInput = useRef<HTMLInputElement>(null);
   const lab = trainingLab(),
     [refresh, setRefresh] = useState(0),
     counter = revision + refresh;
@@ -147,6 +150,10 @@ export function StorageCenter({
         'training.arena-' + kind,
       ),
     );
+  const ready = !!s;
+  useEffect(() => {
+    if (modelImport && ready) fileInput.current?.focus();
+  }, [modelImport, ready]);
   if (!s)
     return (
       <p role={error ? 'alert' : 'status'}>
@@ -344,16 +351,29 @@ export function StorageCenter({
           <label>
             Paket zur Prüfung öffnen
             <input
+              ref={fileInput}
               type="file"
-              accept=".arena-model,.arena-checkpoint,.arena-backup,.zip"
+              accept={
+                modelImport
+                  ? '.arena-model'
+                  : '.arena-model,.arena-checkpoint,.arena-backup,.zip'
+              }
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 setPreview(undefined);
                 setVariant(false);
                 if (file)
-                  act(async () =>
-                    setPreview(await lab.call({ type: 'previewImport', file })),
-                  );
+                  act(async () => {
+                    const result = await lab.call<Preview>({
+                      type: 'previewImport',
+                      file,
+                    });
+                    if (modelImport && result.type !== 'model')
+                      throw Error(
+                        'Für diesen Einstieg ein Modellpaket auswählen.',
+                      );
+                    setPreview(result);
+                  });
                 e.target.value = '';
               }}
             />

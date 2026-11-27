@@ -29,6 +29,48 @@ type Details = {
   manifest: Awaited<ReturnType<typeof readVersion>>['manifest'];
   records: PerformanceRecord[];
 };
+function AnalysisPaths({ drive }: { drive: AnalysisResult }) {
+  const points = drive.results.flatMap((r) => r.path);
+  if (points.length < 2) return null;
+  const xs = points.map((p) => p.x),
+    ys = points.map((p) => -p.y),
+    minX = Math.min(...xs) - 2,
+    minY = Math.min(...ys) - 2;
+  return (
+    <figure>
+      <figcaption>
+        Gemessene Fahrspuren im gemeinsamen Streckenkoordinatensystem
+      </figcaption>
+      <svg
+        role="img"
+        aria-label="Fahrspuren der ausgewählten Versionen"
+        width="100%"
+        height="180"
+        viewBox={[
+          minX,
+          minY,
+          Math.max(...xs) - minX + 2,
+          Math.max(...ys) - minY + 2,
+        ].join(' ')}
+      >
+        {drive.results.map((r, i) => (
+          <polyline
+            key={r.version + i}
+            fill="none"
+            stroke={i ? '#7edbc5' : '#ff814f'}
+            strokeDasharray={i ? '2 1' : undefined}
+            strokeWidth="1"
+            points={r.path.map((p) => p.x + ',' + -p.y).join(' ')}
+          >
+            <title>
+              {i ? 'Vergleich' : 'Auswahl'} · {r.path.length} Messpunkte
+            </title>
+          </polyline>
+        ))}
+      </svg>
+    </figure>
+  );
+}
 function ProfileEditor({ p, act }: { p: Profile; act: Act }) {
   const [name, setName] = useState(p.name),
     [desc, setDesc] = useState(p.description),
@@ -357,6 +399,7 @@ function VersionView({
                 onChange={(e) => {
                   setOther(e.target.value);
                   setDiff(undefined);
+                  setDrive(undefined);
                 }}
               >
                 <option value="">Version auswählen</option>
@@ -372,7 +415,11 @@ function VersionView({
               </select>
             </label>
             <button
-              disabled={!other}
+              disabled={
+                !other ||
+                compat.data?.find((r) => r.dimension === 'Parametervergleich')
+                  ?.status !== 'Ja'
+              }
               onClick={() =>
                 act(async () =>
                   setDiff(
@@ -485,6 +532,7 @@ function VersionView({
                     ))}
                   </tbody>
                 </table>
+                <AnalysisPaths drive={drive} />
                 {drive.results.map((r, i) => (
                   <details key={i}>
                     <summary>Fahrspur und Fehlerwerte · {i + 1}</summary>
@@ -552,7 +600,9 @@ export function ModelLibrary(props: Props) {
     [filter, setFilter] = useState('all'),
     [order, setOrder] = useState('name'),
     [selected, setSelected] = useState(''),
-    [name, setName] = useState('');
+    [name, setName] = useState(''),
+    [method, setMethod] = useState('fresh'),
+    [seedVersion, setSeedVersion] = useState('');
   const shown = models
       .filter(
         (p) =>
@@ -574,29 +624,73 @@ export function ModelLibrary(props: Props) {
     <>
       <section className="lab-panel">
         <h2>Modell anlegen</h2>
-        <div className="toolbar">
-          <label>
-            Modellname
-            <input value={name} onChange={(e) => setName(e.target.value)} />
-          </label>
-          <button
-            className="primary"
-            disabled={!name.trim()}
-            onClick={() =>
-              act(async () => {
-                const p = await trainingLab().call<Profile>({
-                  type: 'create',
-                  name,
-                  draft,
-                });
-                setSelected(p.id);
-                setName('');
-              })
-            }
-          >
-            Neu initialisieren
-          </button>
-        </div>
+        <label>
+          Modellquelle
+          <select value={method} onChange={(e) => setMethod(e.target.value)}>
+            <option value="fresh">Neu initialisieren</option>
+            <option value="clone">Vorhandene Version klonen</option>
+            <option value="file">Modelldatei importieren</option>
+            <option value="starter" disabled>
+              Freigegebener Starter · nicht verfügbar
+            </option>
+          </select>
+        </label>
+        {method === 'file' ? (
+          <a href="#/storage?import=model">Modellpaket im Speicher öffnen</a>
+        ) : (
+          <div className="toolbar">
+            {method === 'clone' && (
+              <label>
+                Version für die Kopie
+                <select
+                  value={seedVersion}
+                  onChange={(e) => setSeedVersion(e.target.value)}
+                >
+                  <option value="">Version auswählen</option>
+                  {models
+                    .filter((p) => !p.trashedAt)
+                    .flatMap((p) =>
+                      p.versions.map((id, i) => (
+                        <option key={id} value={id}>
+                          {p.name} · Version {i + 1}
+                        </option>
+                      )),
+                    )}
+                </select>
+              </label>
+            )}
+            <label>
+              Modellname
+              <input value={name} onChange={(e) => setName(e.target.value)} />
+            </label>
+            <button
+              className="primary"
+              disabled={!name.trim() || (method === 'clone' && !seedVersion)}
+              onClick={() =>
+                act(async () => {
+                  const lab = trainingLab(),
+                    source = method === 'clone' ? seedVersion : undefined;
+                  const contract = source
+                    ? (await lab.call<Details>({ type: 'version', id: source }))
+                        .manifest.draft
+                    : draft;
+                  const p = await lab.call<Profile>({
+                    type: 'create',
+                    name,
+                    draft: contract,
+                    source,
+                  });
+                  setSelected(p.id);
+                  setName('');
+                })
+              }
+            >
+              {method === 'clone'
+                ? 'Gewählte Version klonen'
+                : 'Neu initialisieren'}
+            </button>
+          </div>
+        )}
         <p>
           Architektur und Seed stammen aus dem Laufentwurf. Ein freigegebenes
           Startermodell liegt noch nicht vor.

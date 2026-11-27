@@ -208,8 +208,12 @@ try {
   let reviewedModel = false;
   if (mode === 'short') {
     await nav('Modelle');
-    await field('Name der Kopie').fill('Isolierter Klon');
-    await button('Exakte Kopie anlegen').click();
+    await field('Modellquelle').selectOption('clone');
+    await field('Version für die Kopie').selectOption({
+      label: 'UI-Abnahme · Version 1',
+    });
+    await field('Modellname').fill('Isolierter Klon');
+    await button('Gewählte Version klonen').click();
     await page
       .getByRole('button', { name: /Isolierter Klon.*Version/ })
       .waitFor();
@@ -232,14 +236,29 @@ try {
     if (JSON.stringify(await read(left)) !== JSON.stringify(await read(right)))
       throw Error('Cloned models diverged on identical test scenario');
     await button('Laufchampion als Version sichern').click();
-    await field('Version')
+    await page
+      .locator('section')
+      .filter({
+        has: page.getByRole('heading', { name: 'UI-Abnahme', exact: true }),
+      })
+      .getByRole('combobox', { name: /^Version/ })
       .filter({ has: page.locator('option', { hasText: 'Version 2' }) })
       .waitFor();
     const download = page.waitForEvent('download');
     await button('Modell exportieren').click();
     const file = join(destination, 'roundtrip.arena-model');
     await (await download).saveAs(file);
-    await nav('Speicher');
+    await field('Modellquelle').selectOption('file');
+    await page
+      .getByRole('link', { name: 'Modellpaket im Speicher öffnen' })
+      .click();
+    await field('Paket zur Prüfung öffnen').waitFor();
+    if (
+      !(await field('Paket zur Prüfung öffnen').evaluate(
+        (input) => input === document.activeElement,
+      ))
+    )
+      throw Error('Import entry did not focus the file input');
     await field('Paket zur Prüfung öffnen').setInputFiles(file);
     await button('Geprüftes Paket importieren').click();
     await page.getByText('Import abgeschlossen.').waitFor();

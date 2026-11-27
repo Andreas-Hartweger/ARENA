@@ -23,6 +23,9 @@ import {
   createModel,
   readVersion,
   compareParameters,
+  editProfile,
+  profiles,
+  saveVersion,
 } from '../../src/storage/library';
 class MemoryStore implements StorePort {
   values = new Map<string, StoredObject>();
@@ -161,6 +164,73 @@ it('checks unopened goals, resource preflight, series cardinality and immutable 
   expect(
     compareParameters(v.genome, clone.genome).every((l) => l.changed === 0),
   ).toBe(true);
+});
+it('keeps model revisions and records specific to their measured version through rename, archive, promotion and rollback', async () => {
+  const db = new MemoryStore(),
+    d = defaultDraft();
+  d.hidden = [4];
+  const p = await createModel(db, 'Original', d, undefined, 8),
+    original = await readVersion(db, p.active);
+  const source = {
+    purpose: 'training' as const,
+    contract: 'test-contract',
+    track: 'academy',
+    vehicle: 'GT-01',
+    runtime: 'fixture',
+    sampleCount: 1,
+    seed: 42,
+    verified: true,
+  };
+  const best = await saveVersion(
+    db,
+    p.id,
+    original.genome,
+    d,
+    'champion',
+    'first',
+    { ...source, metric: 'fitness', value: 10 },
+  );
+  const fastest = await saveVersion(
+    db,
+    p.id,
+    original.genome,
+    d,
+    'lapRecord',
+    'second',
+    { ...source, metric: 'lapTime', value: 61 },
+  );
+  const unchanged = (await profiles(db))[0];
+  expect(unchanged.active).toBe(p.active);
+  expect(unchanged.preferred).toBe(p.preferred);
+  expect(unchanged.records).toHaveLength(2);
+  expect(best.id).not.toBe(fastest.id);
+  const changed = await editProfile(db, p.id, {
+    name: 'Kopie <Text>',
+    collection: 'Referenzen',
+    favorite: true,
+    archived: true,
+    active: fastest.id,
+  });
+  expect(changed.versions).toEqual([p.active, best.id, fastest.id]);
+  expect((await readVersion(db, p.active)).genome.parameters()).toEqual(
+    original.genome.parameters(),
+  );
+  await expect(
+    editProfile(db, p.id, { name: 'A'.repeat(65) }),
+  ).rejects.toThrow();
+  await expect(editProfile(db, p.id, { active: 'missing' })).rejects.toThrow();
+  await expect(editProfile(db, p.id, { trashedAt: -1 })).rejects.toThrow();
+  expect((await profiles(db))[0].active).toBe(fastest.id);
+  const other = { ...d, hidden: [8] };
+  await expect(
+    createModel(
+      db,
+      'Falscher Vertrag',
+      other,
+      { id: best.id, genome: original.genome },
+      8,
+    ),
+  ).rejects.toThrow();
 });
 it('round-trips STORE entries and enforces manifest, checksum, JSON and byte bounds', async () => {
   const good = jsonObject('settings', 'settings:test', { level: 1 });
