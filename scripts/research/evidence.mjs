@@ -42,10 +42,11 @@ export function storageProjection(ledger, entry, hardware) {
     fits: projected <= defaultDiskBudget,
   };
 }
-export async function fileHash(path) {
+export async function fileHash(path, pulse = () => {}) {
   const h = createHash('sha256');
   let size = 0;
   for await (const b of createReadStream(path)) {
+    pulse();
     h.update(b);
     size += b.length;
   }

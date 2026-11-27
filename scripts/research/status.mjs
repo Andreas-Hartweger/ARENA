@@ -1,12 +1,13 @@
 import { DatabaseSync } from 'node:sqlite';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
-import { slots } from './manifest.mjs';
+import { slots, sha } from './manifest.mjs';
 import { publishJSON } from './campaign.mjs';
 export function campaignStatus(dir) {
   const db = new DatabaseSync(join(dir, 'research.sqlite'), { readOnly: true });
   try {
+    db.exec('BEGIN');
     const assigned = JSON.parse(
       readFileSync(join(dir, 'campaign.json'), 'utf8'),
     );
@@ -41,7 +42,22 @@ export function campaignStatus(dir) {
         .all()
         .map((r) => r.id),
     );
-    const slotsWithStatus = slots.map((s) => {
+    const stops = new Map();
+    for (const file of readdirSync(dir)
+      .filter((name) => /^progress-[\w]+-[\dTZ.-]+\.json$/.test(name))
+      .sort()) {
+      const { digest, usage, ...progress } = JSON.parse(
+        readFileSync(join(dir, file), 'utf8'),
+      );
+      if (!usage || !digest || sha(JSON.stringify(progress)) !== digest)
+        throw Error('Damaged phase report');
+      for (const r of progress.deferred) deferred.add(r.id);
+      if (progress.stopped) stops.set(progress.stopped.id, progress.stopped);
+    }
+    const extras = [...definitions]
+      .filter((id) => id.startsWith('X-'))
+      .map((ExperimentID) => ({ ExperimentID, Phase: 'Interaction' }));
+    const slotsWithStatus = [...slots, ...extras].map((s) => {
       const id = s.ExperimentID,
         path = join(dir, 'experiments', id, 'experiment.json');
       if (existsSync(path)) {
@@ -49,13 +65,14 @@ export function campaignStatus(dir) {
         return {
           id,
           phase: s.Phase,
-          state: r.state,
+          state: r.state.toLowerCase(),
           outcome: r.outcome,
           episodes: r.regularEpisodes,
           generations: r.completed,
         };
       }
       const started = definitions.has(id);
+      const stop = stops.get(id);
       const reserved =
         started &&
         db
@@ -68,12 +85,17 @@ export function campaignStatus(dir) {
         phase: s.Phase,
         state: reserved
           ? 'running'
-          : started
-            ? 'started-unpublished'
-            : deferred.has(id)
-              ? 'deferred'
-              : 'not-started',
+          : stop
+            ? /budget exhausted/i.test(stop.error ?? '')
+              ? 'stopped-budget'
+              : 'failed'
+            : started
+              ? 'started-unpublished'
+              : deferred.has(id)
+                ? 'deferred'
+                : 'not-started',
         outcome: 'not-evaluated',
+        ...(stop ? { stop } : {}),
         episodes: null,
         generations: chunks.find((r) => r.experiment === id)?.generations ?? 0,
       };

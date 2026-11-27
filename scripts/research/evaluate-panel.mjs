@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import process from 'node:process';
 import { sha, hashJSON } from './manifest.mjs';
 import { digest } from '../evolution-runtime.mjs';
@@ -12,6 +13,30 @@ const { scenario } = await import('../../src/training/episode.ts');
 const { sameAssignment } = await import('../../src/runtime/compute.ts');
 const { canonical } = await import('../../src/ai/schema.ts');
 
+let sourceHash;
+function evaluationSources() {
+  return (sourceHash ??= sha(
+    execFileSync('git', [
+      'ls-tree',
+      '-r',
+      'HEAD',
+      '--',
+      'src/ai',
+      'src/physics',
+      'src/collision',
+      'src/vehicles',
+      'src/tracks',
+      'src/core',
+      'src/input',
+      'src/game',
+      'src/training',
+      'src/runtime/compute.ts',
+      'src/runtime/simulationWorker.ts',
+      'scripts/episode-worker.mjs',
+      'scripts/node-compute-port.mjs',
+    ]),
+  ));
+}
 export function loadCandidate(directory, experimentId, role = 'champion') {
   if (!/^[\w-]+$/.test(experimentId)) throw Error('Invalid experiment ID');
   const folder = join(directory, 'experiments', experimentId),
@@ -71,7 +96,7 @@ export async function evaluatePanel(
   panel,
   candidate,
   workers,
-  { traceCases = [] } = {},
+  { traceCases = [], portFactory = nodeComputePort } = {},
 ) {
   const final = panel.name !== 'development',
     scope = final ? 'validation' : 'research',
@@ -95,68 +120,82 @@ export async function evaluatePanel(
       weightLimit: m.weightLimit,
       biasLimit: m.biasLimit,
     };
+  if (!Number.isSafeInteger(workers) || workers < 1)
+    throw Error('Invalid evaluation worker count');
+  const pending = [];
+  for (const [slot, c] of panel.cases.entries()) {
+    clock.pulse();
+    const options = { ...candidate.draft.scenarios[0], ...c.scenario };
+    const s = scenario(digest, options);
+    if (s.modelSignature !== m.signature)
+      throw Error('Validation and model signatures differ');
+    const tracing = traceCases.includes(c.id);
+    const cache =
+      'case:' +
+      hashJSON([
+        scope,
+        panel.name,
+        c.effective,
+        s.key,
+        genome.hash,
+        process.version,
+        evaluationSources(),
+        tracing,
+      ]);
+    const existing = ledger.readManifest(cache);
+    if (existing) {
+      if (
+        existing.genome !== genome.hash ||
+        existing.effective !== c.effective ||
+        existing.id !== c.id ||
+        existing.contract !== s.key
+      )
+        throw Error('Cached assignment differs');
+      rows[slot] = existing;
+    } else {
+      const trace = tracing ? { everyTicks: 12, maxSamples: 1801 } : undefined;
+      pending.push({ slot, c, options, s, cache, trace });
+    }
+  }
   let next = 0,
     stopped = false;
   async function lane() {
-    const worker = nodeComputePort();
-    let reply,
-      fail,
-      current,
-      slot,
-      waitingReady = true;
-    const ready = new Promise((resolve, reject) => {
-      reply = resolve;
-      fail = reject;
-    });
-    worker.listen(
-      (event) => {
-        if (event.type === 'ready' && waitingReady) {
-          waitingReady = false;
-          reply();
-          return;
-        }
-        if (!current || !event.key || !sameAssignment(current, event.key))
-          return;
-        if (event.type === 'result') {
-          worker.send({ type: 'ack', key: current });
-          reply(event.result);
-        }
-        if (event.type === 'fault') fail(Error(event.message));
-      },
-      (error) => fail(error),
-    );
+    let worker, current, reply, fail, ready;
+    function connect() {
+      const port = portFactory();
+      worker = port;
+      ready = new Promise((ok, bad) => {
+        reply = ok;
+        fail = bad;
+      });
+      port.listen(
+        (event) => {
+          if (worker !== port) return;
+          if (event.type === 'ready' && !current) {
+            reply();
+            return;
+          }
+          if (!current || !event.key || !sameAssignment(current, event.key))
+            return;
+          if (event.type === 'result') {
+            port.send({ type: 'ack', key: current });
+            reply(event.result);
+          } else if (event.type === 'fault')
+            fail(
+              Object.assign(Error(event.message), {
+                transient: event.transient,
+              }),
+            );
+        },
+        (error) => {
+          if (worker === port) fail(Object.assign(error, { transient: true }));
+        },
+      );
+    }
     try {
-      await ready;
-      while (!stopped && (slot = next++) < rows.length) {
+      while (!stopped && next < pending.length) {
         clock.pulse();
-        const c = panel.cases[slot],
-          options = { ...candidate.draft.scenarios[0], ...c.scenario };
-        const s = scenario(digest, options);
-        if (s.modelSignature !== m.signature)
-          throw Error('Validation and model signatures differ');
-        const tracing = traceCases.includes(c.id),
-          trace = tracing ? { everyTicks: 12, maxSamples: 1801 } : undefined;
-        const cache =
-          'case:' +
-          hashJSON([
-            scope,
-            panel.name,
-            c.effective,
-            s.key,
-            genome.hash,
-            process.version,
-            tracing,
-          ]);
-        const existing = ledger.db
-          .prepare('SELECT data,hash FROM manifests WHERE id=?')
-          .get(cache);
-        if (existing) {
-          const value = JSON.parse(existing.data);
-          if (hashJSON(value) !== existing.hash)
-            throw Error('Damaged evaluation');
-          rows[slot] = value;
-          continue;
-        }
+        const { slot, c, options, s, cache, trace } = pending[next++];
         const runId = candidate.experimentId,
           sessionId = ledger.token,
           jobId = randomUUID(),
@@ -182,7 +221,7 @@ export async function evaluatePanel(
         let ticks = 0,
           last;
         for (let attempt = 0; attempt <= 1; attempt++) {
-          current = {
+          const assignment = {
             protocolVersion: 1,
             runId,
             sessionId,
@@ -198,12 +237,20 @@ export async function evaluatePanel(
             genomeHash: genome.hash,
             scenarioSeed: s.seed,
           };
-          const result = new Promise((ok, bad) => {
-            reply = ok;
-            fail = bad;
-          });
-          const parameters = genome.parameters();
+          let spent,
+            uncertain = false;
           try {
+            if (!worker) {
+              current = undefined;
+              connect();
+              await ready;
+            }
+            current = assignment;
+            const result = new Promise((ok, bad) => {
+              reply = ok;
+              fail = bad;
+            });
+            const parameters = genome.parameters();
             worker.send(
               {
                 type: 'assign',
@@ -225,16 +272,25 @@ export async function evaluatePanel(
               last.tick > max
             )
               throw Error('Invalid measured ticks');
+            spent = last.tick;
           } catch (error) {
-            ticks += max;
-            ledger.settle(
-              jobId,
-              { ms: 0, ticks, episodes: 0 },
-              'fault-uncertain',
-            );
-            throw error;
+            worker?.close();
+            worker = undefined;
+            uncertain = true;
+            spent = max;
+            last = {
+              ok: false,
+              reason: 'infrastructureFault',
+              tick: 0,
+              ticksUnknown: true,
+              transient: error.transient === true,
+              contract: s.key,
+              seed: s.seed,
+              modelSignature: m.signature,
+              message: String(error),
+            };
           }
-          ticks += last.tick;
+          ticks += spent;
           ledger.event(
             ledger.token,
             'measurement-attempt',
@@ -242,14 +298,23 @@ export async function evaluatePanel(
             {
               ...context,
               attempt,
-              workerLease: current.workerLease,
+              workerLease: assignment.workerLease,
               result: last.reason,
-              ticks: last.tick,
+              ticks: uncertain ? null : last.tick,
+              chargedTicks: spent,
+              uncertain,
+              ...(!last.ok ? { failure: last.message } : {}),
             },
             { ms: 0, ticks: 0, episodes: 0 },
             { ms: 0, ticks: 0, episodes: 0 },
           );
-          if (last.ok || !last.transient) break;
+          current = undefined;
+          if (
+            last.ok ||
+            last.reason !== 'infrastructureFault' ||
+            !last.transient
+          )
+            break;
         }
         current = undefined;
         const value = {
@@ -277,11 +342,11 @@ export async function evaluatePanel(
       stopped = true;
       throw error;
     } finally {
-      worker.close();
+      worker?.close();
     }
   }
   const lanes = await Promise.allSettled(
-    Array.from({ length: Math.min(workers, rows.length) }, () => lane()),
+    Array.from({ length: Math.min(workers, pending.length) }, () => lane()),
   );
   const failed = lanes.find((r) => r.status === 'rejected');
   if (failed) throw failed.reason;

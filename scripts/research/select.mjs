@@ -71,7 +71,8 @@ async function select() {
     readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
   );
   const development = loadPanel(directory, 'development'),
-    available = [];
+    available = [],
+    excluded = [];
   for (const slot of slots) {
     let relevant;
     if (phase === 'confirmation')
@@ -102,8 +103,6 @@ async function select() {
       Math.min(availableParallelism(), scale.workers),
     );
     const result = caseStatistics(outcome.actual);
-    if (outcome.actual.some((c) => !c.result.ok))
-      throw Error('Incomplete development validation');
     const file = slot.ExperimentID + (isPrefix ? '-prefix' : '') + '.json';
     let paired = null;
     if (slot.ExperimentID.startsWith('S')) {
@@ -124,6 +123,14 @@ async function select() {
       outcome,
       result,
     });
+    if (outcome.actual.some((c) => !c.result.ok)) {
+      excluded.push({
+        experimentId: slot.ExperimentID,
+        devFile: 'dev-' + file,
+        reason: 'incomplete development evidence',
+      });
+      continue;
+    }
     const gen = readFileSync(
       join(directory, 'experiments', slot.ExperimentID, 'generations.ndjson'),
       'utf8',
@@ -280,6 +287,7 @@ async function select() {
       ),
       candidates,
       data: available,
+      excluded,
       rules:
         'Erfolg, schlechteste Gruppe, gültige Zeit, Kontakt, Gras, Fortschritt, Aufwand, ID',
       usage: ledger.usage().charged,
@@ -315,6 +323,7 @@ async function select() {
       configs: best.map((c) => c.configId),
       ranked: grouped,
       data: available,
+      excluded,
       reasons: { tie: 'ConfigID lexikografisch', alternative: reserveReason },
       runtime,
       usage: ledger.usage().charged,
