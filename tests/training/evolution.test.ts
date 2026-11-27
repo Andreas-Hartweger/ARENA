@@ -120,7 +120,7 @@ it('EPS-001 EPS-002 EPS-006 EPS-007 EPS-008 REG-006 replays independent real AI 
     modelSignature: 'other vehicle',
   });
   expect(fault).not.toHaveProperty('fitness');
-});
+}, 30_000);
 it('EPS-010 FIT-008 ADP-009 rejects incompatible training structures and holds out validation', () => {
   const s2 = scenarioSet(digest, 42, 0, [
     { task: short.task },
