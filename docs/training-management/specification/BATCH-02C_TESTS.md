@@ -1,0 +1,216 @@
+# Testkatalog · 210 Abnahmepunkte
+
+192 entscheidungsspezifische Fälle + 18 Systemfälle; keine Anzahl von Vitest-Testfunktionen zugesichert. Jeder Fall braucht Fixture/Setup, echte Assertion, Resultat, SHA, Umgebung und Evidenzpfad. Positive Fälle gegen unabhängige Referenz/erwartete Invariante, negative Fälle gegen unveränderten letzten Commit. FAIL/SKIP/PENDING bleiben offen.
+
+| Test-ID | Entscheidung | Paket | Typ | Prüfung / erwartetes Ergebnis | Status |
+| --- | --- | --- | --- | --- | --- |
+| C-001A | D12.1.1 | TL-006 | Funktion | Alle Einstiege erzeugen denselben validierten Entwurf; kein impliziter Start. | Offen |
+| C-001B | D12.1.1 | TL-006 | Grenzfall/Schutz | Unvollständige oder inkompatible Vorauswahl blockiert Start. | Offen |
+| C-002A | D12.1.2 | TL-006 | Funktion | Vorlage ändern nach Start lässt Run-Snapshot unverändert. | Offen |
+| C-002B | D12.1.2 | TL-006 | Grenzfall/Schutz | Ungültige Kombination in beiden Modi ablehnen. | Offen |
+| C-003A | D12.1.3 | TL-004 | Funktion | Pause/Resume bewahrt Run; Clone hat neue ID. | Offen |
+| C-003B | D12.1.3 | TL-004 | Grenzfall/Schutz | Alte Session kann neuen Run nicht verändern. | Offen |
+| C-004A | D12.1.4 | TL-002 | Funktion | Gleiche logische Arbeit ergibt identische Ergebnisse in allen Modi. | Offen |
+| C-004B | D12.1.4 | TL-002 | Grenzfall/Schutz | Headless ohne Render- oder Trace-Anforderung verifizieren. | Offen |
+| C-005A | D12.1.5 | TL-004 | Funktion | Moduswechsel während Episode erhält Zustand und Fitness. | Offen |
+| C-005B | D12.1.5 | TL-004 | Grenzfall/Schutz | Keine Sensorfrequenz über Speed-Regler ändern. | Offen |
+| C-006A | D12.1.6 | TL-002 | Funktion | Pause/Resume exakt und Finish ohne Folgepopulation. | Offen |
+| C-006B | D12.1.6 | TL-002 | Grenzfall/Schutz | Cancel bei Teilgeneration bewahrt letzten Commit. | Offen |
+| C-007A | D12.1.7 | TL-006 | Funktion | Navigation zwischen Library/Training lässt Run weiterlaufen. | Offen |
+| C-007B | D12.1.7 | TL-006 | Grenzfall/Schutz | Zweiter Run während Pause abgelehnt. | Offen |
+| C-008A | D12.1.8 | TL-006 | Funktion | Reihenfolge und Freigabe eingehalten. | Offen |
+| C-008B | D12.1.8 | TL-006 | Grenzfall/Schutz | Fault stoppt Autostart. | Offen |
+| C-009A | D12.2.1 | TL-003 | Funktion | Parallel und sequenziell bei gleicher Runtime und Arbeit exakt. | Offen |
+| C-009B | D12.2.1 | TL-003 | Grenzfall/Schutz | Worker hat keine Selektionsautorität. | Offen |
+| C-010A | D12.2.2 | TL-005 | Funktion | h12 ->3/6/9, h16 ->4/8/12; Grenzwerte h1/2/fehlend. | Offen |
+| C-010B | D12.2.2 | TL-005 | Grenzfall/Schutz | Überhöhte Anzahl oder fehlendes Budget abweisen/drosseln. | Offen |
+| C-011A | D12.2.3 | TL-003 | Funktion | Umgekehrte und randomisierte Abschlussfolge gleiche Genom-/Fitnessbytes. | Offen |
+| C-011B | D12.2.3 | TL-003 | Grenzfall/Schutz | Doppelte, fehlende oder falsche Slots nicht committen. | Offen |
+| C-012A | D12.2.4 | TL-005 | Funktion | 1x und Max gleiche Tickfolge und Ergebnisse. | Offen |
+| C-012B | D12.2.4 | TL-005 | Grenzfall/Schutz | Kein Tickskip, keine Tickdaueränderung; Zielrate nicht als Istwert ausgeben. | Offen |
+| C-013A | D12.2.5 | TL-005 | Funktion | Langsamer UI-Consumer verliert nur alte Anzeige-Snapshots. | Offen |
+| C-013B | D12.2.5 | TL-005 | Grenzfall/Schutz | Kritisches Ergebnis nie fallenlassen; Budgetverletzung pausiert/blockiert. | Offen |
+| C-014A | D12.2.6 | TL-005 | Funktion | A/B gleicher Arbeitsumfang und bitgleiche Ergebnisse. | Offen |
+| C-014B | D12.2.6 | TL-005 | Grenzfall/Schutz | Originalbuffer bleibt nach Transfer lesbar und identisch. | Offen |
+| C-015A | D12.2.7 | TL-005 | Funktion | CPU ohne GPU-Compute vollständig funktionsfähig. | Offen |
+| C-015B | D12.2.7 | TL-005 | Grenzfall/Schutz | Nicht unterstütztes Backend nicht stillschweigend verwenden. | Offen |
+| C-016A | D12.2.8 | TL-005 | Funktion | Steuerbefehl wird zwischen Arbeitsschritten verarbeitet. | Offen |
+| C-016B | D12.2.8 | TL-005 | Grenzfall/Schutz | Keine UI-Blockade durch synchronous lange Schleife; Suspend kein simuliertes Zeitplus. | Offen |
+| C-017A | D12.2.9 | TL-003 | Funktion | Workerzahl/Modus/Trace/Retry bei gleichen Budgets identisch. | Offen |
+| C-017B | D12.2.9 | TL-003 | Grenzfall/Schutz | Unaufgelöster Fault blockiert Generation. | Offen |
+| C-018A | D12.3.1 | TL-004 | Funktion | Doppelklick startet genau einen Run. | Offen |
+| C-018B | D12.3.1 | TL-004 | Grenzfall/Schutz | Init-Fault hinterlässt keine aktiven Orphans. | Offen |
+| C-019A | D12.3.2 | TL-002 | Funktion | Pause in Tickabschnitt und Commit mit korrektem ACK. | Offen |
+| C-019B | D12.3.2 | TL-002 | Grenzfall/Schutz | Timeout nie als Paused ausgeben. | Offen |
+| C-020A | D12.3.3 | TL-002 | Funktion | Pausierter Lauf exakt gleich wie ununterbrochen. | Offen |
+| C-020B | D12.3.3 | TL-002 | Grenzfall/Schutz | Verlorener Workerzustand nicht als exakte Pause behandeln. | Offen |
+| C-021A | D12.3.4 | TL-004 | Funktion | Stop publiziert letzte vollständige Generation. | Offen |
+| C-021B | D12.3.4 | TL-004 | Grenzfall/Schutz | Cancel vor G0 erzeugt keinen Champion. | Offen |
+| C-022A | D12.3.5 | TL-004 | Funktion | Ziele nur auf vollständigen vergleichbaren Ergebnissen; Budget prüft ganze Generation. | Offen |
+| C-022B | D12.3.5 | TL-004 | Grenzfall/Schutz | Keine Teilselektion bei Zeitlimit; fehlende Runde kein 0s Ziel. | Offen |
+| C-023A | D12.3.6 | TL-006 | Funktion | Wartende versionierte Modellreferenz bleibt exakt. | Offen |
+| C-023B | D12.3.6 | TL-006 | Grenzfall/Schutz | Fehlendes Modell/Fault/Recovery blockiert automatische Folgeaufträge. | Offen |
+| C-024A | D12.3.7 | TL-006 | Funktion | 3x3 definierte Kombinationen erzeugen neun Runs. | Offen |
+| C-024B | D12.3.7 | TL-006 | Grenzfall/Schutz | Überlauf/ungültige Kombination atomar abweisen. | Offen |
+| C-025A | D12.3.8 | TL-004 | Funktion | Mutation ab bestätigter Grenze; alte Config unverändert. | Offen |
+| C-025B | D12.3.8 | TL-004 | Grenzfall/Schutz | Kein Mischen unterschiedlicher Fitnessverträge in Ranking/Champion. | Offen |
+| C-026A | D12.3.9 | TL-003 | Funktion | Retry erzeugt gleiche Auswertung und zählt Attempt getrennt. | Offen |
+| C-026B | D12.3.9 | TL-003 | Grenzfall/Schutz | NaN/Fault nie als Nullfitness; Queue hält. | Offen |
+| C-027A | D12.4.1 | TL-007 | Funktion | Ansichtswechsel erhält Run und Daten. | Offen |
+| C-027B | D12.4.1 | TL-007 | Grenzfall/Schutz | Kleine Viewports ohne abgeschnittene Pflichtsteuerung. | Offen |
+| C-028A | D12.4.2 | TL-007 | Funktion | Ghosts ändern keine Beobachtungen oder Physik. | Offen |
+| C-028B | D12.4.2 | TL-007 | Grenzfall/Schutz | Inkompatible Strecke nicht gemeinsam darstellen. | Offen |
+| C-029A | D12.4.3 | TL-007 | Funktion | Replay eines gespeicherten Genoms gleiche Aufgabe, kein Trainingseintrag. | Offen |
+| C-029B | D12.4.3 | TL-007 | Grenzfall/Schutz | Fehlendes historisches Genom/Trace klar anzeigen. | Offen |
+| C-030A | D12.4.4 | TL-007 | Funktion | Kamerawechsel ändert keine Episode. | Offen |
+| C-030B | D12.4.4 | TL-007 | Grenzfall/Schutz | Privilegierte menschliche Overlays gelangen nicht in AI. | Offen |
+| C-031A | D12.4.5 | TL-007 | Funktion | HUD zeigt echte Daten mit Tick/Session. | Offen |
+| C-031B | D12.4.5 | TL-007 | Grenzfall/Schutz | Fehlende LapTime nicht als 0s. | Offen |
+| C-032A | D12.4.6 | TL-007 | Funktion | Diagramm entspricht bestätigtem Summary; Datenreduktion erhält Extrema. | Offen |
+| C-032B | D12.4.6 | TL-007 | Grenzfall/Schutz | Unterschiedliche Bewertungsabschnitte nicht als gleich darstellen. | Offen |
+| C-033A | D12.4.7 | TL-007 | Funktion | Kandidat anklicken liefert korrekte ID und Lineage. | Offen |
+| C-033B | D12.4.7 | TL-007 | Grenzfall/Schutz | UI-Sortierung verändert Ranking nicht. | Offen |
+| C-034A | D12.4.8 | TL-007 | Funktion | Hidden Inspector fordert keinen Trace an. | Offen |
+| C-034B | D12.4.8 | TL-007 | Grenzfall/Schutz | Backpressure und Resize ohne unbounded Renderarbeit. | Offen |
+| C-035A | D12.5.1 | TL-008 | Funktion | Neuronenwerte mit unabhängiger Rechnung vergleichen. | Offen |
+| C-035B | D12.5.1 | TL-008 | Grenzfall/Schutz | Anzeigeänderung ändert Gehirn nicht; fehlenden Trace markieren. | Offen |
+| C-036A | D12.5.2 | TL-008 | Funktion | Sensorwert entspricht ObservationTick und Inputindex. | Offen |
+| C-036B | D12.5.2 | TL-008 | Grenzfall/Schutz | Kein versteckter Evaluatorwert in Eingaben. | Offen |
+| C-037A | D12.5.3 | TL-008 | Funktion | Alternative Gewichtung getrennt berechnen, Original bleibt gleich. | Offen |
+| C-037B | D12.5.3 | TL-008 | Grenzfall/Schutz | Geänderte Abbruchregel erfordert neue Episode. | Offen |
+| C-038A | D12.5.4 | TL-008 | Funktion | Filter/Sortierung stimmen mit bestätigten Records überein. | Offen |
+| C-038B | D12.5.4 | TL-008 | Grenzfall/Schutz | Nicht vorhandene historische Genome nicht vortäuschen. | Offen |
+| C-039A | D12.5.5 | TL-008 | Funktion | Ausgewählte Mutationsspur stimmt mit tatsächlichen Indizes überein. | Offen |
+| C-039B | D12.5.5 | TL-008 | Grenzfall/Schutz | Diagnose verändert RNG nicht. | Offen |
+| C-040A | D12.5.6 | TL-008 | Funktion | Identische Genome ergeben Null-Differenz und gleiche Fahrt. | Offen |
+| C-040B | D12.5.6 | TL-008 | Grenzfall/Schutz | Inkompatible Architektur nur Leistungs-, nicht Indexvergleich. | Offen |
+| C-041A | D12.5.7 | TL-005 | Funktion | Zähler stimmen mit Rohmessungen überein. | Offen |
+| C-041B | D12.5.7 | TL-005 | Grenzfall/Schutz | Nicht verfügbare CPU/RAM-Messwerte als unbekannt. | Offen |
+| C-042A | D12.5.8 | TL-006 | Funktion | Preset Roundtrip und Live-Änderungsregeln korrekt. | Offen |
+| C-042B | D12.5.8 | TL-006 | Grenzfall/Schutz | Keine direkte Genommutation oder ausführbarer Import. | Offen |
+| C-043A | D12.6.1 | TL-001 | Funktion | Kern ohne React/DOM und Referenzsuite bestanden. | Offen |
+| C-043B | D12.6.1 | TL-001 | Grenzfall/Schutz | UI/Worker kann Commit nicht umgehen. | Offen |
+| C-044A | D12.6.2 | TL-003 | Funktion | Gültige Nachricht genau einmal, gleiche Duplikate ignoriert. | Offen |
+| C-044B | D12.6.2 | TL-003 | Grenzfall/Schutz | Stale, widersprüchlich, unassigned abweisen; Konflikt fault. | Offen |
+| C-045A | D12.6.3 | TL-004 | Funktion | Gleichzeitige Pause/Stop/Cancel deterministisch behandelt. | Offen |
+| C-045B | D12.6.3 | TL-004 | Grenzfall/Schutz | Alter Resume nach Cancel wird abgelehnt. | Offen |
+| C-046A | D12.6.4 | TL-007 | Funktion | Pause liefert exakten verfügbaren Snapshot; unsubscribe beendet Detailarbeit. | Offen |
+| C-046B | D12.6.4 | TL-007 | Grenzfall/Schutz | Stale Snapshots anderer Session nicht anzeigen. | Offen |
+| C-047A | D12.6.5 | QA-C01 | Funktion | Reale Rohdaten, gleiche Arbeit und Qualitätsparität. | Offen |
+| C-047B | D12.6.5 | QA-C01 | Grenzfall/Schutz | Kein künstlich verkürzter Referenzlauf als voll markieren. | Offen |
+| C-048A | D12.6.6 | TL-001 | Funktion | Gültige Grenzwerte akzeptiert. | Offen |
+| C-048B | D12.6.6 | TL-001 | Grenzfall/Schutz | Fuzz/NaN/Infinity/negative Größen/invalid commands ohne Datenverlust abweisen. | Offen |
+| C-049A | D12.6.7 | REL-C01 | Funktion | Evidenz für alle Anforderungen und vollständiger Referenzlauf. | Offen |
+| C-049B | D12.6.7 | REL-C01 | Grenzfall/Schutz | Offener Gate-Punkt bleibt offen, keine Selbstabnahme. | Offen |
+| C-050A | D13.1.1 | MM-001 | Funktion | Rename/Clone erhalten richtige Identitäten. | Offen |
+| C-050B | D13.1.1 | MM-001 | Grenzfall/Schutz | ID-Konflikt überschreibt nichts. | Offen |
+| C-051A | D13.1.2 | MM-003 | Funktion | Profiländerung erhält Genom und Historie. | Offen |
+| C-051B | D13.1.2 | MM-003 | Grenzfall/Schutz | HTML/Pfade/Überlänge sicher ablehnen/darstellen. | Offen |
+| C-052A | D13.1.3 | MM-001 | Funktion | Import kann trainiert und unvalidiert zugleich sein. | Offen |
+| C-052B | D13.1.3 | MM-001 | Grenzfall/Schutz | Import kann sich nicht offiziell ernennen. | Offen |
+| C-053A | D13.1.4 | MM-003 | Funktion | Neue Version lässt v1 fahrbar. | Offen |
+| C-053B | D13.1.4 | MM-003 | Grenzfall/Schutz | Keine automatische Promotion neuerer Version. | Offen |
+| C-054A | D13.1.5 | MM-001 | Funktion | Roundtrip reproduziert Modellvertrag. | Offen |
+| C-054B | D13.1.5 | MM-001 | Grenzfall/Schutz | Gleiche Parameteranzahl bei anderer Sensorsemantik ablehnen. | Offen |
+| C-055A | D13.1.6 | MM-001 | Funktion | Records korrekt an konkrete Version gebunden. | Offen |
+| C-055B | D13.1.6 | MM-001 | Grenzfall/Schutz | Ungetestete Fähigkeit nicht als 0 oder validiert deklarieren. | Offen |
+| C-056A | D13.1.7 | MM-003 | Funktion | Bestfitness und schnellste Runde getrennte Rollen. | Offen |
+| C-056B | D13.1.7 | MM-003 | Grenzfall/Schutz | Neue andere Bewertung überschreibt alten Rekord nicht. | Offen |
+| C-057A | D13.1.8 | MM-001 | Funktion | Klon/Run/Version Ursprung nachvollziehbar. | Offen |
+| C-057B | D13.1.8 | MM-001 | Grenzfall/Schutz | Gelöschtes Elternmodell nicht als abrufbar ausgeben. | Offen |
+| C-058A | D13.1.9 | MM-003, MM-007 | Funktion | Sammlungen ohne Genome zu duplizieren. | Offen |
+| C-058B | D13.1.9 | MM-003, MM-007 | Grenzfall/Schutz | Archivierung verändert Referenzverfügbarkeit nicht. | Offen |
+| C-059A | D13.2.1 | MM-003, MM-007 | Funktion | Alle vier Wege mit validiertem Entwurf. | Offen |
+| C-059B | D13.2.1 | MM-003, MM-007 | Grenzfall/Schutz | Kein ungefragter Trainingsstart. | Offen |
+| C-060A | D13.2.2 | MM-003 | Funktion | G0 entspricht Seed-Referenz. | Offen |
+| C-060B | D13.2.2 | MM-003 | Grenzfall/Schutz | Keine 128 identischen Kopien als unabhängig deklarieren. | Offen |
+| C-061A | D13.2.3 | MM-003 | Funktion | Starter weitertrainieren erhält Original. | Offen |
+| C-061B | D13.2.3 | MM-003 | Grenzfall/Schutz | Nicht vorhandenen oder ungeprüften Starter nicht als validiert anzeigen. | Offen |
+| C-062A | D13.2.4 | MM-003 | Funktion | Clone fährt identisch im selben Szenario. | Offen |
+| C-062B | D13.2.4 | MM-003 | Grenzfall/Schutz | Mutation/Profiländerung des Klons verändert Original nicht. | Offen |
+| C-063A | D13.2.5 | MM-005 | Funktion | Gültige Datei erst nach Bestätigung veröffentlicht. | Offen |
+| C-063B | D13.2.5 | MM-005 | Grenzfall/Schutz | Import überschreibt/auto-startet nichts. | Offen |
+| C-064A | D13.2.6 | MM-003 | Funktion | Standard8547/max81795 korrekt. | Offen |
+| C-064B | D13.2.6 | MM-003 | Grenzfall/Schutz | Kein Abschneiden/Auffüllen alter Gewichte als Migration. | Offen |
+| C-065A | D13.2.7 | MM-003 | Funktion | 128 ->1+32+95; Ursprung geschützt. | Offen |
+| C-065B | D13.2.7 | MM-003 | Grenzfall/Schutz | Ein Genom nicht als exakter Checkpoint laden. | Offen |
+| C-066A | D13.2.8 | MM-003 | Funktion | Zwei Varianten unabhängig von gleichem Ursprung. | Offen |
+| C-066B | D13.2.8 | MM-003 | Grenzfall/Schutz | Neue schlechtere Version überschreibt Referenz nicht. | Offen |
+| C-067A | D13.2.9 | MM-003 | Funktion | Foundation kann versionierte Referenzkandidaten halten. | Offen |
+| C-067B | D13.2.9 | MM-003 | Grenzfall/Schutz | Keine fiktiven Super-KI Fähigkeiten/automatische offizielle Promotion. | Offen |
+| C-068A | D13.3.1 | MM-001 | Funktion | Zwei Tabs: nur legitimer Writer. | Offen |
+| C-068B | D13.3.1 | MM-001 | Grenzfall/Schutz | Stale lease verhindert alten Schreibzugriff. | Offen |
+| C-069A | D13.3.2 | MM-002 | Funktion | Restore erzeugt genau nächste logische Operation. | Offen |
+| C-069B | D13.3.2 | MM-002 | Grenzfall/Schutz | Fehlende Population/RNG/Phase führt zur Ablehnung. | Offen |
+| C-070A | D13.3.3 | MM-002 | Funktion | Initial und jede Grenze bestätigt gespeichert. | Offen |
+| C-070B | D13.3.3 | MM-002 | Grenzfall/Schutz | Quota-Fault pausiert; unsaved Modus nur ausdrücklich. | Offen |
+| C-071A | D13.3.4 | MM-004, MM-007 | Funktion | Speicheraktion zeigt tatsächlich gesicherten Stand. | Offen |
+| C-071B | D13.3.4 | MM-004, MM-007 | Grenzfall/Schutz | Pause wird nicht ungefragt für Save aufgehoben. | Offen |
+| C-072A | D13.3.5 | MM-002 | Funktion | Commitfehler erhält vorherigen Checkpoint. | Offen |
+| C-072B | D13.3.5 | MM-002 | Grenzfall/Schutz | Unterbrechung an jedem Schreibschritt erzeugt keine sichtbare Teilsicherung. | Offen |
+| C-073A | D13.3.6 | MM-002 | Funktion | Restart nach Gk exakt weiter. | Offen |
+| C-073B | D13.3.6 | MM-002 | Grenzfall/Schutz | Korrupter/incompatibler Stand nicht laden; neuere Historie nicht überschreiben. | Offen |
+| C-074A | D13.3.7 | MM-004 | Funktion | Retention erst nach erfolgreichem Commit; dedup korrekt. | Offen |
+| C-074B | D13.3.7 | MM-004 | Grenzfall/Schutz | Geschützte Daten nie automatisch löschen, bei Platzmangel blockieren. | Offen |
+| C-075A | D13.3.8 | MM-005 | Funktion | Frische Datenbank Restore ohne ursprüngliche Origin-Daten. | Offen |
+| C-075B | D13.3.8 | MM-005 | Grenzfall/Schutz | Fehlende Abhängigkeit/Fehler keine Teilübernahme. | Offen |
+| C-076A | D13.3.9 | MM-004 | Funktion | Restore aus Papierkorb; gemeinsame Genome erst ohne Referenz entfernen. | Offen |
+| C-076B | D13.3.9 | MM-004 | Grenzfall/Schutz | Aktiver/queued/checkpointgeschützter Inhalt nicht löschen. | Offen |
+| C-077A | D13.3.10 | MM-004 | Funktion | Backendvertrag testbar und verlustfreier Roundtrip. | Offen |
+| C-077B | D13.3.10 | MM-004 | Grenzfall/Schutz | Float32-Konvertierung nicht als identischer Checkpoint. | Offen |
+| C-078A | D13.4.1 | MM-005 | Funktion | Alle drei Typen roundtrip und eindeutig erkannt. | Offen |
+| C-078B | D13.4.1 | MM-005 | Grenzfall/Schutz | Falscher Typ oder fehlender Pflichtinhalt abweisen. | Offen |
+| C-079A | D13.4.2 | MM-005 | Funktion | LE Referenzvektor exakt; binärer Roundtrip kanonische Genome. | Offen |
+| C-079B | D13.4.2 | MM-005 | Grenzfall/Schutz | Falsche dtype/count/endian/NaN ablehnen. | Offen |
+| C-080A | D13.4.3 | MM-005 | Funktion | Gültige Pakete unter Budget importieren. | Offen |
+| C-080B | D13.4.3 | MM-005 | Grenzfall/Schutz | ZIP-Bomb, Pfad, duplicate und truncated Paket abweisen. | Offen |
+| C-081A | D13.4.4 | MM-005 | Funktion | Modell ausführbar aber alte Fitness nicht vergleichbar korrekt anzeigen. | Offen |
+| C-081B | D13.4.4 | MM-005 | Grenzfall/Schutz | Checkpoint mit falscher Runtime nicht exakt fortsetzen. | Offen |
+| C-082A | D13.4.5 | MM-005 | Funktion | Identisches Paket idempotent oder explizit Clone. | Offen |
+| C-082B | D13.4.5 | MM-005 | Grenzfall/Schutz | Gleiche ID abweichender Inhalt blockiert automatische Übernahme. | Offen |
+| C-083A | D13.4.6 | MM-006 | Funktion | Bekannte Formatmigration erhält kanonische Parameterbytes. | Offen |
+| C-083B | D13.4.6 | MM-006 | Grenzfall/Schutz | Unbekanntes Format oder veränderte Physik kein stilles Upgrade. | Offen |
+| C-084A | D13.4.7 | TL-008 | Funktion | Vergleich zweier Modelle unter gleichem Vertrag. | Offen |
+| C-084B | D13.4.7 | TL-008 | Grenzfall/Schutz | Identische deterministische Wiederholungen nicht als unabhängige Samples. | Offen |
+| C-085A | D13.4.8 | MM-005 | Funktion | Importclaims getrennt von lokalem Test. | Offen |
+| C-085B | D13.4.8 | MM-005 | Grenzfall/Schutz | Valid hash mit falschem official claim nicht trusted. | Offen |
+| C-086A | D13.4.9 | MM-005 | Funktion | Restore auf kompatiblem Rechner mit neuer Session. | Offen |
+| C-086B | D13.4.9 | MM-005 | Grenzfall/Schutz | Konfligierender Run verzweigt statt Historie überschreiben. | Offen |
+| C-087A | D13.4.10 | MM-006 | Funktion | 02C Datenverträge und stable-origin Test; später frischer Rechner ZIP Start. | Offen |
+| C-087B | D13.4.10 | MM-006 | Grenzfall/Schutz | Portkonflikt kein stiller Origin-Wechsel; Update löscht DB nicht. | Offen |
+| C-088A | D13.5.1 | MM-001 | Funktion | Transaktionen und echte Mehrtab-Integration. | Offen |
+| C-088B | D13.5.1 | MM-001 | Grenzfall/Schutz | Stale Writer blockiert auch nach Leasewechsel. | Offen |
+| C-089A | D13.5.2 | MM-001 | Funktion | Referenzdaten stimmen unabhängig überein. | Offen |
+| C-089B | D13.5.2 | MM-001 | Grenzfall/Schutz | Manipulierte Referenz/Version/dtype abweisen. | Offen |
+| C-090A | D13.5.3 | MM-002 | Funktion | Resume und ununterbrochen exakt gleich. | Offen |
+| C-090B | D13.5.3 | MM-002 | Grenzfall/Schutz | Finaler CP erzeugt keine zusätzliche Generation. | Offen |
+| C-091A | D13.5.4 | MM-004, MM-007 | Funktion | Preview entspricht tatsächlich freigebbaren managed bytes. | Offen |
+| C-091B | D13.5.4 | MM-004, MM-007 | Grenzfall/Schutz | Maximalgröße/Population über Budget im Preflight ablehnen. | Offen |
+| C-092A | D13.5.5 | MM-005 | Funktion | Backup Restore Roundtrip aller Referenzen. | Offen |
+| C-092B | D13.5.5 | MM-005 | Grenzfall/Schutz | Unterbrochener Import/Export keine falsche Erfolgsmeldung/Teildaten. | Offen |
+| C-093A | D13.5.6 | MM-006 | Funktion | Migration eines echten alten Fixtures samt Datenvergleichen. | Offen |
+| C-093B | D13.5.6 | MM-006 | Grenzfall/Schutz | Fehlgeschlagene Migration bewahrt Wiederherstellung; kein stiller Portwechsel. | Offen |
+| C-094A | D13.5.7 | QA-C01 | Funktion | Benchmark mit Pflichtautosave und Rohdaten. | Offen |
+| C-094B | D13.5.7 | QA-C01 | Grenzfall/Schutz | Keine ausgelassenen Writes oder verkürzten Tests als Erfolg verkaufen. | Offen |
+| C-095A | D13.5.8 | QA-C01 | Funktion | Gültige echte Browser-Restore- und Reproduktionstests. | Offen |
+| C-095B | D13.5.8 | QA-C01 | Grenzfall/Schutz | Destruktive Tests nur isoliert; Korruption/Fault gezielt injizieren. | Offen |
+| C-096A | D13.5.9 | REL-C01 | Funktion | Vollständige Evidenzmatrix und unabhängige Freigabe. | Offen |
+| C-096B | D13.5.9 | REL-C01 | Grenzfall/Schutz | Offene Pflichtprüfung blockiert Abschluss; keine Folgeaufgabe ohne Freigabe. | Offen |
+| SYS-01 | D12.6.5 D13.5.9 | QA-C01 | Referenz | 128×100 G0..99 Seed42 Academy GT01 Balanced; alle 12800 echten Episoden, keine G100. Vollständige Resultate und Championhash. Node seriell auf freigegebener Basis; Browser seriell und parallel gleicher Runtime vergleichen; separate cross-runtime Toleranzevidenz. | Offen |
+| SYS-02 | D12.2.9 D13.5.3 | QA-C01 | Reproduktion | Feste Arbeit, Pause und Restore nach mehreren Grenzzuständen, Worker 1/2/4, Moduswechsel, Trace on/off; kanonische Genom-/Fitness-/Rank-/Lineage-/Adaptive-Digests exakt; final kein Next. | Offen |
+| SYS-03 | D12.6.5 D13.5.7 | QA-C01 | Dauer | 20min realer Browser unter Last mit Navigation, Inspectorwechsel, Save, Resize; 2h Headless reale reguläre Episoden und Saves; keine unhandled errors, begrenzte managed buffers; Rohwerte und Umgebungen. | Offen |
+| SYS-04 | D12.2.6 D13.5.7 | QA-C01 | Benchmark | Gepaarte Warmup+>=3 Messungen, 02B Baseline, 02C serial/1/2/4/profiles, 30/30 und zulässige Frequenzen, trace on/off, autosave; >=15% reproduzierbare Regression untersuchen; gleiche Tickanzahl/Outputs. | Offen |
+| SYS-05 | D13.5.8 D13.3.5 | QA-C01 | Fault Injection | Echte IndexedDB mit getrennten Test-Origin/DB: abort vor write, mitten in staging, vor publish, nach publish vor cleanup; vorheriger oder neuer vollständiger Stand, keine Mischung. | Offen |
+| SYS-06 | D13.5.8 D13.4.9 | QA-C01 | Transfer | Frische Browserprofile, alle drei Pakettypen; transitive closure, bytes, refs; import collision/old run fork, queue disabled. Wiederherstellung ohne alte Origin. | Offen |
+| SYS-07 | D13.5.8 D13.5.1 | QA-C01 | Mehrtab | Zwei echte Tabs und Schreibversuche gleichzeitig, Web Lock/Fencing prüfen; stale writer nach Übernahme, schema upgrade blocked, kein verlorener Commit. | Offen |
+| SYS-08 | D13.5.8 D13.4.3 | QA-C01 | Fuzz | Seeded malformed ZIP corpus: central/local mismatch, truncated CRC, overflow, duplicate, traversal, encrypted, symlink, nested, unbounded sizes; keine Publikation, keine externe Ausführung. | Offen |
+| SYS-09 | D12.6.7 D13.5.9 | QA-C01 | Regression | npm ci/check/calibrate; alle früheren Tests und D10/D11 128 Abnahmepunkte wiederverifizieren; vorhandene UI/Physik/Sensorik/Controller; DR-02B-001 beachten. | Offen |
+| SYS-10 | D12.6.4 D13.5.9 | QA-C01 | UI | Echte Browser-Aufzeichnung aller Standard/Advanced/Headless flows, Storage Manager, Create/Clone/Import, Keyboard/Responsive, fehlende Daten, Recovery; keine Mock-Daten im Produkt. | Offen |
+| SYS-11 | D13.5.9 | REL-C01 | Team | TR01–08 anhand isolierter Demo nachweisen: Hauptzustand, Genom, Run/commit, Ressourcen und Taskcursor unverändert; Blocker/Scope requests dokumentieren. | Offen |
+| SYS-12 | D13.5.9 | PRE-C01 | Gate | 02B Report, full G0..99, A/B unabhängiges Review, ausdrückliche Mergefreigabe, gemergter SHA und CI; falls nicht vorhanden kein 02C Code. | Offen |
+| SYS-13 | D13.4.10 D13.5.6 | MM-006 | Release Vorbereitung | Lokale stabile Origin, neuer App-Build gleiche DB, Portkonflikt sichtbar; finale 03E Launcher/Offline/frischer Rechner als separate Pflicht im Releaseplan. | Offen |
+| SYS-14 | D12.3.8 D13.5.3 | QA-C01 | Segment | Lernparameter vor Reproduktion; Fitnesswechsel neue Segmentbewertung mit exakt erhaltener Population, getrennte Championhistorie; Checkpoint/Resume nach Segmentgrenze korrekt. | Offen |
+| SYS-15 | D13.5.2 D13.4.2 | QA-C01 | Digest | Unabhängige Python SHA256 Fixture; Node und Browser adapter gleicher header + count + LE bytes; kanonisches +0; raw digest getrennt; Hash collision mock prüft vollständige Gleichheit. | Offen |
+| SYS-16 | D13.5.4 D12.2.5 | QA-C01 | Limits | 1024×81795 Float64 ca639MiB pro Population; zwei Arbeitsstände ca1278MiB plus overhead: Profile/1GiB Diskbudget korrekt ablehnen oder höheres zulässiges Custom; kein Allokationsversuch vor Preflight. | Offen |
+| SYS-17 | D12.3.5 D13.3.6 | QA-C01 | Budget | Pause-/Save-/Crash-Grenzen, Zeitlimit optional hard abort, logisches Budget exakt; nach Crash unbekannter Zeitverbrauch konservativ markieren/benutzerbestätigen, nicht unbegrenzt automatisch neu starten. | Offen |
+| SYS-18 | D13.1.7 D13.5.9 | REL-C01 | Archiv | Historische G0/G31/final Champ sofern echte Bytes verfügbar mit SHA/Run/Seed/Contract sichern, andernfalls explizit fehlend; Rekonstruktion nicht als Original ausgeben. | Offen |

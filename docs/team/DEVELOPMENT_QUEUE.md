@@ -1,5 +1,11 @@
 # Entwicklungswarteschlange
 
+## Batch 02C
+
+PRE-C01 abgeschlossen. TL-001 und TL-002 in Arbeit. Die Reihenfolge und Abhängigkeiten der folgenden Pakete stehen im [bestätigten Arbeitsplan](../training-management/specification/BATCH-02C_TASKS.md).
+
+## Frühere Arbeitspakete
+
 Batch 02A ist abgeschlossen. [PR #5](https://github.com/Andreas-Hartweger/ARENA/pull/5) wurde am 25.11.2026 als `b2af946` in `main` gemergt. Die [CI auf `main`](https://github.com/Andreas-Hartweger/ARENA/actions/runs/45670859286) war erfolgreich.
 
 | Umfang          | Owner               | Freigabe / Status | Ergebnis und Abhängigkeiten                                                                                                                                                                                     |

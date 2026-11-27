@@ -192,7 +192,9 @@ export interface EpisodeFailure {
   message: string;
   transient?: boolean;
 }
-export function evaluate(
+// Each yield is one fully committed nonterminal tick. Holding the iterator keeps
+// the same world, driver caches, penalty integrators and progress deadline.
+export function* stepEpisode(
   s: Scenario,
   brain: Brain,
   trace?: TraceOptions,
@@ -338,6 +340,7 @@ export function evaluate(
           ...(trace ? { trace: { samples, truncated } } : {}),
         });
       }
+      yield frame;
     }
     throw Error('Episode exceeded tick limit');
   } catch (error) {
@@ -352,6 +355,17 @@ export function evaluate(
       modelSignature: brain.signature,
     } satisfies EpisodeFailure);
   }
+}
+export function evaluate(
+  s: Scenario,
+  brain: Brain,
+  trace?: TraceOptions,
+  stop?: () => 'cancelled' | 'externalReset' | undefined,
+) {
+  const steps = stepEpisode(s, brain, trace, stop);
+  let current = steps.next();
+  while (!current.done) current = steps.next();
+  return current.value;
 }
 export type EpisodeResult = ReturnType<typeof evaluate> | EpisodeFailure;
 export type ScoredEpisode = Extract<EpisodeResult, { ok: true }>;

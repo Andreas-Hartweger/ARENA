@@ -1,0 +1,101 @@
+{
+  "version": "arena.02c.plan.v1",
+  "status": "planning-not-runtime-format",
+  "physicsHz": 60,
+  "sensorHz": 30,
+  "decisionHz": 30,
+  "reference": {
+    "population": 128,
+    "evaluatedGenerations": 100,
+    "seed": 42,
+    "scenarioCount": 1,
+    "architecture": [
+      248,
+      32,
+      16,
+      3
+    ],
+    "dtype": "float64le"
+  },
+  "runtime": {
+    "maxActiveRuns": 1,
+    "maxQueue": 32,
+    "maxWorkers": 16,
+    "reserveLogicalCpu": 2,
+    "profiles": {
+      "Eco": {
+        "fraction": 0.25,
+        "managedMiB": 256
+      },
+      "Balanced": {
+        "fraction": 0.5,
+        "managedMiB": 512
+      },
+      "Performance": {
+        "fraction": 0.75,
+        "managedMiB": 1024
+      }
+    },
+    "customManagedMiBMaxProposed": 4096,
+    "chunkTicks": 64,
+    "chunkSoftMs": 8,
+    "statsHz": 5,
+    "inspectorMaxHz": 10,
+    "traceCandidates": 1,
+    "comparisonModels": 2,
+    "displaySamples": 600,
+    "ghostStandardMax": 8,
+    "ghostAdvancedMax": 16,
+    "acceleratedRates": [
+      1,
+      2,
+      5,
+      10,
+      25,
+      50,
+      "max",
+      "custom"
+    ]
+  },
+  "storage": {
+    "backend": "IndexedDB",
+    "budgetBytes": 1073741824,
+    "autosaveEveryGenerations": 1,
+    "intervals": [
+      1,
+      5,
+      10,
+      25
+    ],
+    "autoCheckpointsPerRun": 3,
+    "trashDays": 30,
+    "durableTraceMiBProposed": 64,
+    "liveTraceMiBProposed": 16,
+    "durableMidEpisode": false
+  },
+  "package": {
+    "formatVersion": 1,
+    "types": [
+      "model",
+      "checkpoint",
+      "backup"
+    ],
+    "maxBytesProposed": 1073741824,
+    "maxEntriesProposed": 16384,
+    "manifestMaxBytesProposed": 8388608,
+    "entryMaxBytesProposed": 67108864,
+    "jsonMaxBytesProposed": 8388608,
+    "maxDepthProposed": 32,
+    "maxPathLengthProposed": 160,
+    "methodProposed": "STORE"
+  },
+  "acceptance": {
+    "decisions": 96,
+    "tests": 210,
+    "tasks": 18,
+    "minBenchmarkRepeats": 3,
+    "browserMinMinutes": 20,
+    "headlessMinMinutes": 120,
+    "regressionInvestigatePercent": 15
+  }
+}

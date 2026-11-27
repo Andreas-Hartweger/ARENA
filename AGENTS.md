@@ -29,3 +29,7 @@ Nach der gemeinsamen D00/G07-Abnahme sind PRE-01–03 und FI-001–012 freigegeb
 ## Development Batch 02B
 
 Für PRE-B01 und EV-001–013 gilt der Auftrag vom 27.11.2026. A und B haben die gemeinsame Abnahme von 02A bestätigt. B arbeitet auf `feature/batch-02b-ai-evolution`. Geprüfte eigene Änderungen dürfen mit `git push -u origin HEAD` auf diesem Branch gesichert werden. Ein gemeinsamer PR nach main und CI-Prüfung sind erlaubt. A/B prüfen die Ergebnisse unabhängig. Ein Merge braucht die gesonderte Freigabe von A. Neue Abhängigkeiten, Force-Push, Tags und Folgepakete bleiben ausgeschlossen.
+
+## Development Batch 02C
+
+Nach dem Merge von PR #6 und erfolgreicher CI gibt A PRE-C01 und die 17 Folgeaufgaben im [02C-Arbeitsplan](docs/training-management/specification/BATCH-02C_TASKS.md) frei. Für die Arbeit gelten [TR-01 bis TR-08](docs/team/DEVELOPMENT_CONTINUITY_CONTRACT.md). Geprüfte eigene Änderungen dürfen ausschließlich auf `feature/batch-02c-training-model-management` mit `git push -u origin HEAD` gesichert werden. Ein gemeinsamer PR nach main und CI-Prüfung sind freigegeben. Den 02C-Merge entscheidet A gesondert.
