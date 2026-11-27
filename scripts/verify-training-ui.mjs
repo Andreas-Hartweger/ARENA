@@ -130,6 +130,30 @@ try {
     viewport: page.viewportSize(),
     started: new Date().toISOString(),
   });
+  if (mode === 'short') {
+    const readings = await page.evaluate(async () => {
+      const samples = [];
+      let prior = '';
+      const start = performance.now();
+      while (performance.now() - start < 12000) {
+        const node = document.querySelector('[data-sample-latency]');
+        const frame = node?.parentElement?.textContent ?? '';
+        if (node && frame !== prior) {
+          samples.push({
+            elapsedMs: performance.now() - start,
+            latencyMs: Number(node.getAttribute('data-sample-latency')),
+            frame,
+          });
+        }
+        prior = frame;
+        await new Promise((resolve) => window.setTimeout(resolve, 100));
+      }
+      return samples;
+    });
+    if (!readings.length || readings.some((r) => !Number.isFinite(r.latencyMs)))
+      throw Error('No finite live snapshot timing available');
+    save('snapshot-latency', readings);
+  }
   let activeMs = 0,
     prevGen = await gen(),
     prev = performance.now(),
