@@ -50,8 +50,7 @@ while (run.population.length) {
     ...statistics,
     ms: performance.now() - start,
     cpu: process.cpuUsage(cpu),
-    before,
-    after: process.memoryUsage(),
+    memory: { before, after: process.memoryUsage() },
   };
   appendFileSync(
     join(destination, 'generations.ndjson'),

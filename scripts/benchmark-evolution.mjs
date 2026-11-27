@@ -101,7 +101,13 @@ const seed = derivedSeed(42, 'scenario');
 const training = scenario(digest, { seed });
 if (suite === 'components') {
   const r = stream(42, 'mutation');
-  bench('rng-gaussian', {}, () => gaussian(r), { group: 1024 });
+  // Consume each measured result. Otherwise a JIT can discard pure work such
+  // as the logarithm and cosine after advancing the RNG state.
+  let checksum = 0;
+  const consume = (value) => {
+    checksum += value;
+  };
+  bench('rng-gaussian', {}, () => consume(gaussian(r)), { group: 1024 });
   const p = new Penalties(),
     l = new ProgressLedger(660, 8, 1, -8),
     sample = {
@@ -157,15 +163,18 @@ if (suite === 'components') {
       b = Genome.initialize(m, 222, digest),
       x = a.parameters(),
       c = { parameters: m.count };
-    bench('mutation', c, () => mutate(m, x, standardMutation, r));
-    bench('mutation-selected-trace', c, () =>
-      mutate(m, x, standardMutation, r, 64),
-    );
+    for (const details of [0, 64]) {
+      const name = details ? 'mutation-selected-trace' : 'mutation';
+      bench(name, c, (i) => {
+        const result = mutate(m, x, standardMutation, r, details);
+        consume(result.parameters[i % m.count] + result.details.length);
+      });
+    }
     for (const operator of ['uniform', 'neuron-wise'])
-      bench('crossover', { ...c, operator }, () =>
-        crossover(a, b, operator, r),
-      );
-    bench('sha256', c, () => digest(m.key, x));
+      bench('crossover', { ...c, operator }, (i) => {
+        consume(crossover(a, b, operator, r)[i % m.count]);
+      });
+    bench('sha256', c, (i) => consume(digest(m.key, x).charCodeAt(i % 64)));
   }
   for (const n of [8, 32, 128, 512, 1024]) {
     const m = model(training.modelSignature),
@@ -175,11 +184,11 @@ if (suite === 'components') {
     const scores = Array.from({ length: n }, (_, i) => i % 7);
     bench('selection-generation', { n }, () => {
       const order = ranking(scores, r);
-      for (let i = 0; i < n; i++) tournament(order, 3, r);
+      for (let i = 0; i < n; i++) consume(tournament(order, 3, r));
     });
-    bench('diversity-generation', { n, parameters: m.count }, () =>
-      diversity(genomes),
-    );
+    bench('diversity-generation', { n, parameters: m.count }, () => {
+      consume(diversity(genomes).D2);
+    });
   }
   for (const enabled of [false, true]) {
     const a = {
@@ -194,10 +203,13 @@ if (suite === 'components') {
       { n: 128, enabled },
       () => {
         state = adapt(state, 1, a, standardMutation);
+        consume(state.p + state.alpha);
       },
       { group: 256 },
     );
   }
+  if (!Number.isFinite(checksum)) throw Error('Invalid measurement checksum');
+  log.resultChecksum = checksum;
 }
 if (suite === 'world') {
   if (!baselineDirectory) throw Error('Missing 02A checkout');

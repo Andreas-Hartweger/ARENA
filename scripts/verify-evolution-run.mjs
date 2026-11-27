@@ -82,11 +82,22 @@ let evaluated = 0,
   firstSuccess = null,
   eliteRechecks = 0,
   previousBest = -Infinity,
+  championId,
+  championHash,
   finished = 0;
 const reasons = {},
   trackLength = 440 + 70 * Math.PI,
   timeline = [],
   hashes = [];
+const mutationCounts = () => ({
+  eligible: 0,
+  selected: 0,
+  changed: 0,
+  normal: 0,
+  large: 0,
+  clipped: 0,
+});
+let mutations = mutationCounts();
 let generationDigest = createHash('sha256');
 const clamp = (x) => Math.max(0, Math.min(1, x));
 for await (const line of createInterface({
@@ -177,6 +188,30 @@ for await (const line of createInterface({
     assert.equal(r.parents.length, 1);
     assert.ok(prev.has(r.parents[0]));
     assert.equal(r.operator, 'copy');
+    const layout = [
+      [7936, 32],
+      [512, 16],
+      [48, 3],
+    ];
+    assert.equal(r.mutation.layers.length, layout.length);
+    assert.deepEqual(r.mutation.details, []);
+    for (const [i, layer] of r.mutation.layers.entries()) {
+      for (const [j, group] of [layer.weight, layer.bias].entries()) {
+        assert.equal(group.eligible, layout[i][j]);
+        assert.equal(group.selected, group.normal + group.large);
+        assert.ok(
+          group.clipped <= group.selected && group.changed <= group.selected,
+        );
+        for (const k of Object.keys(mutations)) {
+          assert.ok(
+            Number.isInteger(group[k]) &&
+              group[k] >= 0 &&
+              group[k] <= group.eligible,
+          );
+          mutations[k] += group[k];
+        }
+      }
+    }
   }
   if (r.origin !== 'elite')
     assert.equal(r.id, JSON.stringify([run.config.runId, g, slot]));
@@ -194,6 +229,20 @@ for await (const line of createInterface({
     assert.equal(s.generation, g);
     assert.equal(s.evaluations, 128);
     assert.equal(s.attempts, 128);
+    assert.equal(s.order.length, 128);
+    assert.deepEqual(
+      [...s.order].sort((a, b) => a - b),
+      Array.from({ length: 128 }, (_, i) => i),
+    );
+    for (let i = 1; i < s.order.length; i++)
+      assert.ok(scores[s.order[i - 1]] >= scores[s.order[i]]);
+    assert.equal([...current.keys()][s.order[0]], s.bestId);
+    assert.deepEqual(
+      s.origins,
+      g ? { elite: 6, offspring: 122 } : { initial: 128 },
+    );
+    assert.deepEqual(s.operators, g ? { copy: 122 } : {});
+    assert.deepEqual(s.mutation, mutations);
     assert.equal(s.successes, laps.length);
     assert.equal(s.laps, laps.length);
     if (!laps.length) assert.equal(s.lapTimes, null);
@@ -218,6 +267,11 @@ for await (const line of createInterface({
     }))
       close(s.fitness[k], v);
     assert.ok(s.fitness.best >= previousBest);
+    if (s.fitness.best > previousBest) {
+      championId = s.bestId;
+      championHash = current.get(championId).hash;
+    }
+    assert.deepEqual(s.champion, { id: championId, fitness: s.fitness.best });
     previousBest = s.fitness.best;
     assert.equal(s.adaptive.p, 0.05);
     assert.equal(s.adaptive.alpha, 0.2);
@@ -243,6 +297,7 @@ for await (const line of createInterface({
     scores = [];
     durations = [];
     laps = [];
+    mutations = mutationCounts();
     generationDigest = createHash('sha256');
     finished++;
   }
@@ -251,6 +306,7 @@ assert.equal(finished, partial ? summaries.length : 100);
 assert.equal(evaluated, finished * 128);
 assert.equal(eliteRechecks, (finished - 1) * 6);
 assert.equal(prev.get(summaries[finished - 1].bestId)?.score, previousBest);
+if (end) assert.equal(end.champion, championHash);
 process.stdout.write(
   JSON.stringify(
     {
