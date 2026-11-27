@@ -15,6 +15,7 @@ import {
 } from './campaign.mjs';
 import { loadCandidate, loadPanel, evaluatePanel } from './evaluate-panel.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
+import { requireSelectionPredecessors } from './status.mjs';
 import { NodeStore } from './store.mjs';
 import { sha } from './manifest.mjs';
 const { createModel, profiles, readVersion } =
@@ -68,6 +69,7 @@ async function select() {
     publishJSON(join(folder, phase + '.json'), previous);
     return;
   }
+  requireSelectionPredecessors(directory, phase, ledger);
   const scale = JSON.parse(
     readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
   );

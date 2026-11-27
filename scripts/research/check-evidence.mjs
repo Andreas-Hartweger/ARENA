@@ -23,6 +23,7 @@ import { nodeComputePort } from '../node-compute-port.mjs';
 import { exportExperiment } from './evidence.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
 import { auditExperiment } from './audit-data.mjs';
+import { requireSelectionPredecessors } from './status.mjs';
 import { runExperiment } from './coordinator.mjs';
 import {
   evaluatePanel,
@@ -49,6 +50,11 @@ try {
   ledger.claim();
   const clock = new ActiveTime(ledger, { experimentId: 'qa' });
   try {
+    for (const phase of ['confirmation', 'long', 'freeze'])
+      assert.throws(
+        () => requireSelectionPredecessors(src, phase, ledger),
+        /predecessor/,
+      );
     const def = globalThis.structuredClone(
       experiment('B-evolution-43', 'qa', 1, 8).definition,
     );

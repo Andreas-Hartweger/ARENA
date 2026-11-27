@@ -123,6 +123,42 @@ export function campaignStatus(dir) {
     db.close();
   }
 }
+export function requireSelectionPredecessors(directory, target, ledger) {
+  const prefixes = {
+    confirmation: ['B-', 'S'],
+    long: ['B-', 'S', 'C'],
+    freeze: ['B-', 'S', 'C', 'L'],
+  }[target];
+  if (!prefixes) throw Error('Unknown selection phase');
+  const status = campaignStatus(directory);
+  for (const prefix of prefixes) {
+    const records = status.slots.filter((r) => r.id.startsWith(prefix));
+    const stopped = records.some((r) => r.state === 'stopped-budget');
+    for (const r of records) {
+      if (r.state === 'completed' || r.state === 'reused-historical') {
+        const audit = ledger.readManifest(
+          (prefix === 'B-' ? 'baseline-audit:' : 'experiment-audit:') + r.id,
+        );
+        if (!audit) throw Error('Missing completed experiment audit: ' + r.id);
+      } else if (
+        prefix === 'B-' ||
+        !(
+          r.state === 'deferred' ||
+          r.state === 'stopped-budget' ||
+          (stopped && r.state === 'not-started')
+        )
+      ) {
+        throw Error(
+          'Selection requires a completed or budget-accounted predecessor: ' +
+            r.id +
+            ' (' +
+            r.state +
+            ')',
+        );
+      }
+    }
+  }
+}
 if (process.argv[1]?.replaceAll('\\', '/').endsWith('/research/status.mjs')) {
   const r = campaignStatus(process.argv[2]);
   if (process.argv[3]) publishJSON(process.argv[3], r);
