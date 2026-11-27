@@ -406,6 +406,34 @@ if (suite === 'scale') {
     throw Error('Selected trace altered generation');
 }
 if (suite === 'endurance') {
+  const { DriveWorld } = await import('../src/game/world.ts');
+  function retainedByPublishedState(run) {
+    const seen = new Set(),
+      pending = [run.history, run.snapshot, run.population, run.champion];
+    let genomes = 0,
+      worlds = 0;
+    while (pending.length) {
+      const value = pending.pop();
+      if (!value || typeof value !== 'object' || seen.has(value)) continue;
+      seen.add(value);
+      if (value instanceof Genome) {
+        genomes++;
+        continue;
+      }
+      if (value instanceof DriveWorld) {
+        worlds++;
+        continue;
+      }
+      for (const child of Object.values(value)) pending.push(child);
+    }
+    if (worlds > 0 || genomes > run.population.length + 2)
+      throw Error('Unexpected retained world or genome');
+    return {
+      distinctGenomes: genomes,
+      worlds,
+      plainObjectsAndArrays: seen.size - genomes - worlds,
+    };
+  }
   const s = scenario(digest, {
       seed,
       task: { maxTicks: 8, graceTicks: 0, noProgressTicks: 8 },
@@ -421,9 +449,16 @@ if (suite === 'endurance') {
     while (run.population.length) {
       const t = performance.now(),
         g = run.commit(run.collect());
+      const generationMs = performance.now() - t;
+      const retained = [0, 99, 199].includes(g.generation)
+        ? retainedByPublishedState(run)
+        : undefined;
+      if (retained && globalThis.gc) globalThis.gc();
       samples.push({
         g: g.generation,
-        ms: performance.now() - t,
+        ms: generationMs,
+        retained,
+        forcedGc: !!(retained && globalThis.gc),
         history: run.history.length,
         livePopulation: run.population.length,
         champion: Boolean(run.champion),
