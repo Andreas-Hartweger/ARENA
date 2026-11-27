@@ -11,3 +11,7 @@ A wurde die Wahl zwischen einer begrenzten Rundenzahl, einer erweiterten Verglei
 ### FI-003 · Anschluss unter der Fahrzeugnase · entschieden am 25.11.2026
 
 Auf der Mittellinie liegt der lokale Anker 2,20 m hinter dem Frontsensor. Eine strikte Front-Halbraumprüfung schon am Anker würde auch auf der freien Geraden sämtliche Vorschaupunkte verwerfen. Der Auftraggeber delegierte die Entscheidung zur lokalen Verbindung ausdrücklich an die Umsetzung. Der Anschluss darf innerhalb der eigenen nachgewiesenen Fahrzeugkontur liegen und muss sowohl vom lokalen Ursprung als auch von der Frontmitte frei von Verdeckung sein. Jeder ausgegebene Punkt muss separat die frontale Sicht- und Reichweitenprüfung bestehen. Die Sichtbeweise für den übrigen Verlauf bleiben erforderlich. Umsetzung und Messbasis: `b1995a3`.
+
+## 27.11.2026 · SYS-03, Headless-Dauerprüfung
+
+A hat den Prüfpunkt mit einer Soll-Dauer von **2 Stunden** ausdrücklich als erledigt geschlossen und den zuletzt gestarteten Endabnahmelauf abbrechen lassen. Dessen letzte Stichprobe erfasste 50,08 s. Die beiden Vorläufe sind mit 96 min 7 s und 58 min 48 s getrennt protokolliert. Es besteht kein offener Antrag auf eine Änderung der Produktfunktionen. [Protokoll beim Ende der Läufe](../training-management/evidence/endurance/end.json)

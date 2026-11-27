@@ -1,0 +1,113 @@
+{
+  "note": "Independent Python fixture for digest framing, synthetic header NOT executable model. Actual 02B canonical model.key must use same framing. Canonical +0 accepted, raw -0 noncanonical exact checkpoint rejected.",
+  "header": "arena.synthetic.fixture.v1",
+  "parameters": [
+    0.0,
+    -0.0,
+    1.25,
+    -2.5,
+    0.125
+  ],
+  "rawHex": "00000000000000000000000000000080000000000000f43f00000000000004c0000000000000c03f",
+  "canonicalHex": "00000000000000000000000000000000000000000000f43f00000000000004c0000000000000c03f",
+  "rawSha256": "6d7c1db7d83d008f512b7af744633ebd3ecf2843e0860f5fdfb17a4b35ee27c8",
+  "canonicalRawSha256": "9ca11b279732cbdab609b42c354098457191fad24c80a67a3c810c8b8ea19bf4",
+  "fingerprint": "2c4fd5f7e619a47cfec8a0b7df5c291b73ae8643cd22bad9d38db562e06947f2",
+  "workerProfiles": [
+    {
+      "h": 1,
+      "cap": 1,
+      "counts": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "h": 2,
+      "cap": 1,
+      "counts": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "h": 4,
+      "cap": 2,
+      "counts": [
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "h": 12,
+      "cap": 10,
+      "counts": [
+        3,
+        6,
+        9
+      ]
+    },
+    {
+      "h": 16,
+      "cap": 14,
+      "counts": [
+        4,
+        8,
+        12
+      ]
+    },
+    {
+      "h": 32,
+      "cap": 16,
+      "counts": [
+        8,
+        16,
+        16
+      ]
+    }
+  ],
+  "checkpointExamples": [
+    {
+      "completed": 0,
+      "next": 0,
+      "phase": "readyToEvaluate"
+    },
+    {
+      "completed": 32,
+      "last": 31,
+      "next": 32,
+      "phase": "readyToEvaluate"
+    },
+    {
+      "completed": 100,
+      "last": 99,
+      "next": null,
+      "phase": "terminal"
+    }
+  ],
+  "genomeBytes": [
+    {
+      "n": 8547,
+      "population": 128,
+      "bytes": 8752128
+    },
+    {
+      "n": 8547,
+      "population": 1024,
+      "bytes": 70017024
+    },
+    {
+      "n": 81795,
+      "population": 128,
+      "bytes": 83758080
+    },
+    {
+      "n": 81795,
+      "population": 1024,
+      "bytes": 670064640
+    }
+  ]
+}

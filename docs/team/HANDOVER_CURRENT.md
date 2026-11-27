@@ -1,4 +1,10 @@
-# Übergabe an A und B · Batch 02B
+# Aktuelle Übergabe · Batch 02C
+
+Am 27.11.2026 erteilte A die bedingte Merge-Freigabe und delegierte die verbleibenden Review- und Abnahmeschritte. Codex prüfte den Stand von B `6818084` gegen `61cd54a`, insbesondere physische Kontaktkorrekturen, interpolierte Ziellinie, Fehlerisolation und deterministische Reproduktion. Der Datenabgleich aus der Übergabe umfasst 12.800 Ergebnisse und 594 Elite-Neubewertungen. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) wurde als `c74ab27daf3159329d9049076ab3c30c5a4759ea` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010) bestand.
+
+Die 18 freigegebenen Pakete von 02C werden in [PR #7](https://github.com/Andreas-Hartweger/ARENA/pull/7) übergeben. Der serielle und der parallele Chromium-Lauf stimmen über 100 Generationen mit je 128 Kandidaten überein. Die UI- und Speicherprüfungen sind bestanden. A hat den Headless-Prüfpunkt mit dem Sollwert 2 Stunden nach Abbruch geschlossen. Im letzten Endabnahmelauf sind 50,08 s gemessen, im längsten Vorlauf 96 min 7 s. Der [02C-Bericht](../training-management/BATCH-02C_COMPLETION_REPORT.md) führt Ergebnisse, Laufherkunft und den eigenständigen Freigabestatus des PR auf.
+
+## Historische Übergabe vor dem 02B-Review
 
 PRE-B01 und EV-001–012 sind technisch abgeschlossen. EV-013 ist von B übergeben. Das unabhängige A/B-Review von 02B (REL-003) und die ausdrückliche Merge-Freigabe durch A stehen aus. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) ist der gemeinsame Review-PR nach main.
 

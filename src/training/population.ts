@@ -29,6 +29,7 @@ export interface EvolutionOptions {
   generations?: number;
   budget?: number;
   segment?: number;
+  segmentedIdentity?: boolean;
   tournament?: number;
   eliteRate?: number;
   poolFraction?: number;
@@ -56,6 +57,7 @@ export function config(m: Model, opts: EvolutionOptions = {}) {
     generations: opts.generations ?? 100,
     budget: opts.budget ?? Number.MAX_SAFE_INTEGER,
     segment: opts.segment ?? 0,
+    ...(opts.segmentedIdentity ? { segmentedIdentity: true } : {}),
     tournament: opts.tournament ?? 3,
     eliteRate: opts.eliteRate ?? 0.05,
     poolFraction: opts.poolFraction ?? 1,
@@ -124,7 +126,9 @@ export interface Member {
   inheritance?: { parentByIndex: readonly string[]; truncated: boolean };
 }
 const identity = (c: Config, g: number, i: number) =>
-  JSON.stringify([c.runId, g, i]);
+  JSON.stringify(
+    c.segmentedIdentity ? [c.runId, c.segment, g, i] : [c.runId, g, i],
+  );
 function initialized(
   m: Model,
   c: Config,

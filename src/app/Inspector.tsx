@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Brain } from '../ai/network';
 import { registry } from '../ai/schema';
 import { standardProfile } from '../ai/profile';
 import type { Telemetry } from '../rendering/firstDrive';
 const channels = registry();
+const channelIndices = new Map(channels.map((c, i) => [c.id, i]));
 const groupLabels = {
   ego: 'Eigenes Fahrzeug',
   ray: 'Sensorstrahlen',
@@ -28,16 +29,76 @@ const percent = new Intl.NumberFormat('de-AT', {
   maximumFractionDigits: 1,
 });
 const fmt = (x: number | undefined | null) => (x == null ? '–' : x.toFixed(4));
+function SampleSeries({
+  label,
+  tick,
+  value,
+}: {
+  label: string;
+  tick: number | null | undefined;
+  value: number | null | undefined;
+}) {
+  const [samples, setSamples] = useState<
+    { tick: number; value: number | null }[]
+  >([]);
+  useEffect(() => {
+    if (
+      tick == null ||
+      value === undefined ||
+      (value !== null && !Number.isFinite(value))
+    )
+      return;
+    setSamples((previous) =>
+      previous.length && previous[previous.length - 1].tick >= tick
+        ? previous
+        : [...previous.slice(-599), { tick, value }],
+    );
+  }, [tick, value]);
+  if (!samples.length) return <p>Noch keine Messpunkte aufgezeichnet.</p>;
+  const first = samples[0].tick,
+    last = samples[samples.length - 1].tick;
+  const valid = samples.flatMap((p) => (p.value === null ? [] : [p.value]));
+  const min = Math.min(0, ...valid),
+    max = Math.max(0, ...valid);
+  let connected = false;
+  const path = samples
+    .map((p) => {
+      if (p.value === null) {
+        connected = false;
+        return '';
+      }
+      const point =
+        (connected ? 'L' : 'M') +
+        (4 + (392 * (p.tick - first)) / Math.max(1, last - first)) +
+        ' ' +
+        (75 - (70 * (p.value - min)) / (max - min || 1));
+      connected = true;
+      return point;
+    })
+    .join(' ');
+  return (
+    <figure>
+      <figcaption>
+        {label} · Tick {first} bis {last} · {samples.length} Messpunkte
+      </figcaption>
+      <svg aria-label={label} viewBox="0 0 400 80" style={{ height: 80 }}>
+        <path fill="none" stroke="#7edbc5" strokeWidth="2" d={path} />
+      </svg>
+    </figure>
+  );
+}
 export function Inspector({
   hud,
   brain,
   onPause,
   onStep,
+  seriesId,
 }: {
-  hud: Telemetry;
+  hud: Pick<Telemetry, 'ai' | 'paused' | 'index' | 'applied'>;
   brain?: Brain;
+  seriesId?: string;
   onPause: () => void;
-  onStep: () => void;
+  onStep?: () => void;
 }) {
   const [channel, setChannel] = useState(0),
     [layer, setLayer] = useState(0),
@@ -49,6 +110,8 @@ export function Inspector({
   const dims = brain?.dimensions ?? [],
     width = dims[layer + 1] ?? 0,
     fan = dims[layer] ?? 0;
+  const maskIndex = channelIndices.get(channels[channel].mask);
+  const validChannel = maskIndex === undefined || obs?.values[maskIndex] === 1;
   let offset = 0;
   for (let l = 0; l < layer; l++) offset += (dims[l] + 1) * dims[l + 1];
   const entry = ai?.layers[layer];
@@ -67,7 +130,7 @@ export function Inspector({
   return (
     <div className="ai-inspector">
       <button onClick={onPause}>{hud.paused ? 'Fortsetzen' : 'Pause'}</button>
-      <button disabled={!hud.paused} onClick={onStep}>
+      <button disabled={!hud.paused || !onStep} onClick={onStep}>
         Einzeltick
       </button>
       <h2>Sensor Inspector</h2>
@@ -128,7 +191,23 @@ export function Inspector({
       <p>
         Rohwert {fmt(obs?.raw[channel])} {channels[channel].unit} · Normiert{' '}
         {fmt(obs?.values[channel])}
+        {seriesId && maskIndex !== undefined && (
+          <>
+            {' '}
+            · Gültigkeitsmaske {maskIndex} ({channels[maskIndex].id}) ·{' '}
+            {obs ? (validChannel ? 'gültig' : 'ungültig') : 'unbekannt'}
+          </>
+        )}
       </p>
+      {seriesId && (
+        <SampleSeries
+          label="Normierter Wert des gewählten Sensorkanals"
+          key={[seriesId, channel].join('/')}
+          tick={obs?.index}
+          value={validChannel ? obs?.values[channel] : null}
+        />
+      )}
+
       <details>
         <summary>Strahlen am Messtick</summary>
         {obs?.rays.map((r, i) => (
@@ -233,6 +312,14 @@ export function Inspector({
         {ai?.output.map(fmt).join(' / ')} · Tanh{' '}
         {ai?.output.map((x) => fmt(Math.tanh(x))).join(' / ')}
       </p>
+      {seriesId && (
+        <SampleSeries
+          label="Aktivierung des gewählten Neurons"
+          key={[seriesId, layer, neuron].join('/')}
+          tick={ai?.decisionTick}
+          value={entry?.values[neuron]}
+        />
+      )}
       <table aria-label="Fahrbefehle">
         <thead>
           <tr>

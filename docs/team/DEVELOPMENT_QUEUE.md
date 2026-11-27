@@ -1,5 +1,11 @@
 # Entwicklungswarteschlange
 
+## Batch 02C
+
+Die 18 Arbeitspakete und ihre Lieferergebnisse stehen im [02C-Abschlussbericht](../training-management/BATCH-02C_COMPLETION_REPORT.md). Die 210 Abnahmepunkte und 96 Entscheidungen sind in der [Prüfmatrix](../training-management/ACCEPTANCE_RESULTS.md) einzeln zugeordnet. SYS-03 enthält die von A verkürzte Headless-Dauerprüfung. Das unabhängige 02C-Schlussreview und die Mergefreigabe stehen aus. [Arbeitsplan](../training-management/specification/BATCH-02C_TASKS.md) · [Referenzvergleich](../training-management/evidence/node-pool-reference.json)
+
+## Frühere Arbeitspakete
+
 Batch 02A ist abgeschlossen. [PR #5](https://github.com/Andreas-Hartweger/ARENA/pull/5) wurde am 25.11.2026 als `b2af946` in `main` gemergt. Die [CI auf `main`](https://github.com/Andreas-Hartweger/ARENA/actions/runs/45670859286) war erfolgreich.
 
 | Umfang          | Owner               | Freigabe / Status | Ergebnis und Abhängigkeiten                                                                                                                                                                                     |
@@ -11,7 +17,7 @@ Batch 02A ist abgeschlossen. [PR #5](https://github.com/Andreas-Hartweger/ARENA/
 
 ## Batch 02B · Stand vom 27.11.2026
 
-PRE-B01 und EV-001–012 sind technisch abgeschlossen. EV-013 ist von B übergeben. Das unabhängige A/B-Review von 02B (REL-003) und die ausdrückliche Merge-Freigabe durch A stehen aus.
+PRE-B01 und EV-001–013 sind abgeschlossen. A delegierte die ausstehenden technischen Review- und Abnahmeschritte und erteilte die Merge-Freigabe. PR #6 wurde als `c74ab27` integriert. [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010)
 
 | Paket   | Ergebnis                                                                                                    | Stand                                                             |
 | ------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -32,4 +38,4 @@ PRE-B01 und EV-001–012 sind technisch abgeschlossen. EV-013 ist von B übergeb
 
 [Abschlussbericht](../first-evolution/BATCH-02B_COMPLETION_REPORT.md) · [Abnahmematrix](../first-evolution/ACCEPTANCE_RESULTS.md)
 
-**NÄCHSTER PLANUNGSAUFTRAG ERFORDERLICH.**
+Der anschließend freigegebene Auftrag ist Batch 02C gemäß v0.10.

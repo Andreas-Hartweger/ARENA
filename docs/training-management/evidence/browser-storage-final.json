@@ -1,0 +1,195 @@
+{
+  "sha": "444d774df33f295ce8dfda7fb85aecad96bb5913",
+  "sourceDiff": "",
+  "node": "v24.22.3",
+  "os": "Windows 11 Pro",
+  "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+  "logicalCpus": 16,
+  "totalRam": 33820106752,
+  "power": "uncontrolled",
+  "backgroundLoad": "uncontrolled",
+  "renderer": null,
+  "browser": "158.0.8127.89",
+  "migration": {
+    "schema": 2,
+    "legacyChecksum": "8aee74175f5b9c0709f6619033560bee7a1176d3c9d237dd6ad6d77b75c2d158",
+    "genomeHash": "14279e546c364b2151a5f662af6af990adbf6ee14fe72ca66b1c5e6c20c6859c",
+    "rawChecksum": "93554edeac1e01576667ba0bd21263bcdd6ee79b08f17a1e58d11831520f0b28",
+    "parameterBytes": 8088,
+    "blockedReported": true,
+    "staleQueueRejected": true
+  },
+  "control": {
+    "queueFault": {
+      "phase": "Recoverable",
+      "committedBeforeRetry": 0,
+      "committedAfterRetry": 8,
+      "remaining": 1,
+      "automatic": false
+    },
+    "fifo": {
+      "firstRun": "b7a42885-4028-4140-88e4-c5347bbf0982",
+      "lastRun": "2ad01cb5-98b6-4305-b19f-853b4afd4f99",
+      "lastSeed": 32,
+      "completedRuns": 2
+    },
+    "duplicateSuppressed": true,
+    "conflictRejected": true,
+    "cancelledBeforeG0": true,
+    "pausedSave": true,
+    "isolatedAnalysis": {
+      "run": "7aca1886-fac2-49e7-b811-e7a022273642",
+      "session": "c12791bf-aeca-487d-bab9-c44331c5d2eb",
+      "generation": 0,
+      "workers": 1,
+      "cursor": 0,
+      "commit": 2,
+      "revision": 3,
+      "checkpoint": "checkpoint:b04958f3-734a-4660-addb-80e3aae0acdc",
+      "genome": "genome:e51b0f5b5833814bdb72a286ad8428e8e2b69326c00bc304ef67ae78e96040ca:01f7c79d46701b351916b2142c071e26d6efa516071e853ac00e77b6c9a0db50",
+      "ticks": 120,
+      "unchanged": true
+    }
+  },
+  "faults": {
+    "cases": [
+      "stale-before-write",
+      "old-epoch-after-takeover",
+      "rollback-mid-transaction",
+      "discard-before-publication",
+      "abandoned-staging",
+      "quota-before-publication",
+      "reopen-after-publication",
+      "python-digest"
+    ],
+    "canonical": "9ca11b279732cbdab609b42c354098457191fad24c80a67a3c810c8b8ea19bf4"
+  },
+  "transfer": {
+    "seen": [
+      {
+        "kind": "model",
+        "bytes": 93851,
+        "objects": 4,
+        "exportMs": 11.5,
+        "previewMs": 52.80000000447035,
+        "importMs": 16.799999997019768
+      },
+      {
+        "kind": "checkpoint",
+        "bytes": 183164,
+        "objects": 14,
+        "exportMs": 15.600000001490116,
+        "previewMs": 73.39999999850988,
+        "importMs": 25.700000002980232
+      },
+      {
+        "kind": "backup",
+        "bytes": 244546,
+        "objects": 23,
+        "exportMs": 21,
+        "previewMs": 115.79999999701977,
+        "importMs": 30.899999998509884
+      }
+    ],
+    "fork": "9ff108b5-b7de-4670-b846-b098cf797d1e",
+    "importedQueueDisabled": true,
+    "sourceGenome": "e51b0f5b5833814bdb72a286ad8428e8e2b69326c00bc304ef67ae78e96040ca"
+  },
+  "transferWindows": [
+    [
+      {
+        "kind": "model",
+        "bytes": 93851,
+        "objects": 4,
+        "exportMs": 11.5,
+        "previewMs": 52.80000000447035,
+        "importMs": 16.799999997019768
+      },
+      {
+        "kind": "checkpoint",
+        "bytes": 183164,
+        "objects": 14,
+        "exportMs": 15.600000001490116,
+        "previewMs": 73.39999999850988,
+        "importMs": 25.700000002980232
+      },
+      {
+        "kind": "backup",
+        "bytes": 244546,
+        "objects": 23,
+        "exportMs": 21,
+        "previewMs": 115.79999999701977,
+        "importMs": 30.899999998509884
+      }
+    ],
+    [
+      {
+        "kind": "model",
+        "bytes": 93851,
+        "objects": 4,
+        "exportMs": 12.899999998509884,
+        "previewMs": 52.69999999552965,
+        "importMs": 20
+      },
+      {
+        "kind": "checkpoint",
+        "bytes": 183164,
+        "objects": 14,
+        "exportMs": 17.799999997019768,
+        "previewMs": 74.69999999552965,
+        "importMs": 23.600000001490116
+      },
+      {
+        "kind": "backup",
+        "bytes": 244546,
+        "objects": 23,
+        "exportMs": 27,
+        "previewMs": 117.10000000149012,
+        "importMs": 30
+      }
+    ],
+    [
+      {
+        "kind": "model",
+        "bytes": 93851,
+        "objects": 4,
+        "exportMs": 14.200000002980232,
+        "previewMs": 54.100000001490116,
+        "importMs": 17.200000002980232
+      },
+      {
+        "kind": "checkpoint",
+        "bytes": 183164,
+        "objects": 14,
+        "exportMs": 19.19999999552965,
+        "previewMs": 74.60000000149012,
+        "importMs": 24.600000001490116
+      },
+      {
+        "kind": "backup",
+        "bytes": 244546,
+        "objects": 23,
+        "exportMs": 26.80000000447035,
+        "previewMs": 121.79999999701977,
+        "importMs": 31
+      }
+    ]
+  ],
+  "update": {
+    "origin": "http://127.0.0.1:13262",
+    "models": 2,
+    "genome": "e51b0f5b5833814bdb72a286ad8428e8e2b69326c00bc304ef67ae78e96040ca"
+  },
+  "conflict": true,
+  "fallback": {
+    "id": "checkpoint:c4165a9f-dc05-4986-a0aa-ee394da46b08",
+    "phase": "readyToEvaluate",
+    "failures": [
+      {
+        "id": "checkpoint:9b55beb1-7d0a-4fe1-be7d-87a81c563b00",
+        "reason": "Error: Stored checksum mismatch"
+      }
+    ]
+  },
+  "errors": []
+}

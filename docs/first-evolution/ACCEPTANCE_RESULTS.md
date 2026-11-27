@@ -1,5 +1,7 @@
 # Batch 02B · Abnahmematrix
 
+**Abnahme vom 27.11.2026.** A hat die ausstehenden Prüfschritte delegiert und den Merge nach erfolgreicher Prüfung ausdrücklich freigegeben. Das Review des von B übergebenen Stands ist abgeschlossen. PR #6 wurde als `c74ab27daf3159329d9049076ab3c30c5a4759ea` in `main` übernommen. Die CI auf diesem Commit ist grün. Die folgende Übergabe dokumentiert den Stand vor der Freigabe. [Review und Merge](https://github.com/Andreas-Hartweger/ARENA/pull/6) · [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010)
+
 Die Originalplanung führt 128 Abnahmepunkte und 103 Entscheidungen. Diese Matrix dokumentiert den technischen Stand von B. Das unabhängige Review von Batch 02B und die ausdrückliche Merge-Freigabe stehen aus.
 
 ## Prüfstände

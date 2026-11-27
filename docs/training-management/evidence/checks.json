@@ -1,0 +1,72 @@
+{
+  "productCommit": "444d774df33f295ce8dfda7fb85aecad96bb5913",
+  "uiMeasurementCommit": "384165e3e32ccdf827566efcc53a2888a81e3b9a",
+  "base": "c74ab27daf3159329d9049076ab3c30c5a4759ea",
+  "productCI": "https://github.com/Andreas-Hartweger/ARENA/actions/runs/46045742352",
+  "mainCI": "https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010",
+  "installation": {
+    "cleanDetachedCheckout": true,
+    "node": "v24.22.3",
+    "command": "npm ci --prefer-offline --no-audit",
+    "packages": 194,
+    "log": "checks/install.log"
+  },
+  "check": {
+    "command": "npm run check",
+    "testWorkerCap": 2,
+    "files": 34,
+    "tests": 233,
+    "failures": 0,
+    "steps": [
+      "TypeScript",
+      "ESLint",
+      "Prettier",
+      "Vitest",
+      "Vite build"
+    ],
+    "log": "checks/check.log",
+    "previousUnderConcurrentLoad": {
+      "testsPassed": 231,
+      "wallTimeouts": [
+        "INT-003 (5 s)",
+        "EPS-004 (20 s)"
+      ],
+      "assertionFailures": 0,
+      "change": "Limited only concurrent Vitest processes, unchanged tests and deadlines."
+    }
+  },
+  "calibration": {
+    "command": "node scripts/calibrate.mjs",
+    "npmEntry": "npm run calibrate",
+    "jsonEqualTo02B": true,
+    "actual": "checks/calibrate.json",
+    "reference": "../../first-evolution/evidence/calibration.json"
+  },
+  "specification": {
+    "filesMatchedByteForByte": 26,
+    "archiveSHA256": "2622ba8fe218f85c6cf335b179c4a5caec354721a7d33a35f17b29deaf73b019",
+    "separateMasterPlanMatchesArchive": true,
+    "masterPlanSHA256": "d3f77841419bb6c61582ffd22df19243a3f1fdfdd2cef6a3f0d4b76bc19d5af6"
+  },
+  "bundleSizesDecimalKB": {
+    "firstDrive": 570.49,
+    "sharedEntry": 222.19,
+    "trainingLab": 74.46,
+    "warningThreshold": 500
+  },
+  "validationCommit": "1b99d131ded2484f4f0a0122bb73bd52001825c0",
+  "validationCI": "https://github.com/Andreas-Hartweger/ARENA/actions/runs/46047158802",
+  "legacyWorld": {
+    "baseline": "61cd54a2be454915647b9089bc6da5c5d1bc16d8",
+    "current": "1b99d131ded2484f4f0a0122bb73bd52001825c0",
+    "evidence": "checks/legacy-world-parity.json",
+    "outcome": "Five matching trace sets across the earlier world, present world with diagnostic feed off, and present world with feed on."
+  },
+  "headless": {
+    "status": "Erledigt auf Anweisung von A, Messung vorzeitig beendet",
+    "completedTwoHours": false,
+    "evidence": "endurance/end.json",
+    "requiredHours": 2,
+    "finalMeasuredActiveMs": 50083.3487
+  }
+}

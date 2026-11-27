@@ -19,3 +19,11 @@ Auf die ausdrückliche Frage nach dem offenen Review in Masterplan v0.9 bestäti
 PRE-B01 und EV-001–012 sind technisch abgeschlossen. EV-013 ist von B übergeben. Das unabhängige A/B-Review von 02B (REL-003) und die ausdrückliche Merge-Freigabe durch A stehen aus. Der echte Referenzlauf wertete G0–G99 mit jeweils 128 Modellen aus. 12.800 gültige Kandidatenergebnisse, 664 gültige Runden, 594 erneut geprüfte Eliten. Der lokale Check bestand 213 Tests in 29 Dateien. Die Kalibrierung entsprach PRE-B01. Die Fehlerprüfung auf `bb9d721` ergänzt die Identität von Fehlresultaten und den Status nach Abbruch. Der aktuelle Koordinator reproduzierte alle 100 Generationen aus den Rohdaten. Die Fortsetzung umfasste ausschließlich die fehlenden 2.944 realen Fahrten nach G76. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) · [Abschlussbericht](../first-evolution/BATCH-02B_COMPLETION_REPORT.md) · [Abnahmematrix](../first-evolution/ACCEPTANCE_RESULTS.md)
 
 **NÄCHSTER PLANUNGSAUFTRAG ERFORDERLICH.**
+
+## 27.11.2026 · Freigabe von A und Übergang zu 02C
+
+Am 27.11.2026 erteilte A die bedingte Merge-Freigabe und delegierte die verbleibenden Review- und Abnahmeschritte. Codex prüfte den Stand von B `6818084` gegen `61cd54a`, insbesondere physische Kontaktkorrekturen, interpolierte Ziellinie, Fehlerisolation und deterministische Reproduktion. Der Datenabgleich aus der Übergabe umfasst 12.800 Ergebnisse und 594 Elite-Neubewertungen. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) wurde als `c74ab27daf3159329d9049076ab3c30c5a4759ea` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010) bestand.
+
+## 27.11.2026 · Prüfergebnisse des Trainingslabors
+
+Nach dem Merge von 02B und grüner Main-CI wurde `feature/batch-02c-training-model-management` bearbeitet. Das Labor, die Modellbibliothek und die Speicherverwaltung stehen in [PR #7](https://github.com/Andreas-Hartweger/ARENA/pull/7). A beendete die beiden Vorläufe um 19:07 Uhr und den anschließend einzeln gestarteten Endabnahmelauf um 19:14 Uhr. Der Prüfpunkt ist auf Anweisung von A geschlossen. Der [02C-Bericht](../training-management/BATCH-02C_COMPLETION_REPORT.md) enthält die gemessenen Laufzeiten, das Ergebnis der Altprüfungen, den unabhängigen Freigabeschritt und Links zur Abnahmematrix.

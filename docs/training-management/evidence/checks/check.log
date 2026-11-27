@@ -1,0 +1,59 @@
+
+> project-arena@0.2.0-rc.1 check
+> npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build
+
+
+> project-arena@0.2.0-rc.1 typecheck
+> tsc --noEmit && tsc -p tsconfig.headless.json
+
+
+> project-arena@0.2.0-rc.1 lint
+> eslint .
+
+
+> project-arena@0.2.0-rc.1 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> project-arena@0.2.0-rc.1 test
+> vitest run
+
+
+ RUN  v4.1.12 C:/Users/finde/AppData/Local/Temp/arena-02c-verify-444d774
+
+
+ Test Files  34 passed (34)
+      Tests  233 passed (233)
+   Start at  19:09:32
+   Duration  26.69s (transform 1.80s, setup 0ms, import 4.81s, tests 39.52s, environment 4ms)
+
+
+> project-arena@0.2.0-rc.1 build
+> vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 83 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/assets/fingerprint-aJ3bFD_N.js        0.05 kB
+dist/index.html                            0.43 kB │ gzip:   0.28 kB
+dist/assets/fingerprint-COg-4IZO.js        2.18 kB
+dist/assets/episode.worker-BJxo9K9o.js    59.11 kB
+dist/assets/analysis.worker-BSgovF7A.js   64.58 kB
+dist/assets/lab.worker-CKJfIBLe.js       138.87 kB
+dist/assets/TrainingLab-D0oNrPbb.css       4.65 kB │ gzip:   1.63 kB
+dist/assets/index-JCmdNjkm.css             5.43 kB │ gzip:   2.00 kB
+dist/assets/camera-r0c7WQ17.js            50.78 kB │ gzip:  19.02 kB
+dist/assets/TrainingLab-DvV3-j4W.js       74.46 kB │ gzip:  23.67 kB
+dist/assets/index-Cd1ZoSri.js            222.19 kB │ gzip:  69.68 kB
+dist/assets/App-BX4cAeEA.js              570.49 kB │ gzip: 144.74 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 337ms

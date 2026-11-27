@@ -192,11 +192,14 @@ export interface EpisodeFailure {
   message: string;
   transient?: boolean;
 }
-export function evaluate(
+// Each yield is one fully committed nonterminal tick. Holding the iterator keeps
+// the same world, driver caches, penalty integrators and progress deadline.
+export function* stepEpisode(
   s: Scenario,
   brain: Brain,
   trace?: TraceOptions,
   stop?: () => 'cancelled' | 'externalReset' | undefined,
+  inspect?: () => boolean,
 ) {
   let tick = 0;
   try {
@@ -245,7 +248,8 @@ export function evaluate(
           modelSignature: brain.signature,
         } satisfies EpisodeFailure);
       const sampled = !!trace && (tick - 1) % trace.everyTicks === 0;
-      world.trace = sampled && samples.length < trace!.maxSamples;
+      const record = sampled && samples.length < trace!.maxSamples;
+      world.trace = record || (inspect?.() ?? false);
       const frame = world.step(commands),
         car = frame.cars[0],
         p = car.physics!,
@@ -280,7 +284,7 @@ export function evaluate(
         ledger.highwater - before,
       );
       if (sampled) {
-        if (world.trace)
+        if (record)
           samples.push({
             tick,
             position: car.state.positionM,
@@ -338,6 +342,7 @@ export function evaluate(
           ...(trace ? { trace: { samples, truncated } } : {}),
         });
       }
+      yield frame;
     }
     throw Error('Episode exceeded tick limit');
   } catch (error) {
@@ -352,6 +357,17 @@ export function evaluate(
       modelSignature: brain.signature,
     } satisfies EpisodeFailure);
   }
+}
+export function evaluate(
+  s: Scenario,
+  brain: Brain,
+  trace?: TraceOptions,
+  stop?: () => 'cancelled' | 'externalReset' | undefined,
+) {
+  const steps = stepEpisode(s, brain, trace, stop);
+  let current = steps.next();
+  while (!current.done) current = steps.next();
+  return current.value;
 }
 export type EpisodeResult = ReturnType<typeof evaluate> | EpisodeFailure;
 export type ScoredEpisode = Extract<EpisodeResult, { ok: true }>;

@@ -1,0 +1,57 @@
+[
+  {
+    "elapsedMs": 0.10000000149011612,
+    "latencyMs": 57.699951171875,
+    "frame": "Übertragung zur Ansicht 58 ms · Slot 0 · Versuch 1 · Snapshot 4 · Tick 915 · 15,25 s simuliert · 0 km/h · Sensortick 914 · Entscheidungstick 914"
+  },
+  {
+    "elapsedMs": 4125.39999999851,
+    "latencyMs": 0.699951171875,
+    "frame": "Übertragung zur Ansicht 1 ms · Slot 0 · Versuch 1 · Snapshot 1 · Tick 219 · 3,65 s simuliert · 28,2 km/h · Sensortick 218 · Entscheidungstick 218"
+  },
+  {
+    "elapsedMs": 4335.60000000149,
+    "latencyMs": 8.89990234375,
+    "frame": "Übertragung zur Ansicht 9 ms · Slot 0 · Versuch 1 · Snapshot 2 · Tick 517 · 8,62 s simuliert · 49,5 km/h · Sensortick 516 · Entscheidungstick 516"
+  },
+  {
+    "elapsedMs": 4444.70000000298,
+    "latencyMs": 18,
+    "frame": "Übertragung zur Ansicht 18 ms · Slot 0 · Versuch 1 · Snapshot 3 · Tick 810 · 13,5 s simuliert · 7,5 km/h · Sensortick 808 · Entscheidungstick 808"
+  },
+  {
+    "elapsedMs": 4553.20000000298,
+    "latencyMs": 26.999755859375,
+    "frame": "Übertragung zur Ansicht 27 ms · Slot 0 · Versuch 1 · Snapshot 4 · Tick 1001 · 16,68 s simuliert · 0 km/h · Sensortick 1000 · Entscheidungstick 1000"
+  },
+  {
+    "elapsedMs": 4661.80000000447,
+    "latencyMs": 34.89990234375,
+    "frame": "Übertragung zur Ansicht 35 ms · Slot 0 · Versuch 1 · Snapshot 5 · Tick 1155 · 19,25 s simuliert · 0 km/h · Sensortick 1154 · Entscheidungstick 1154"
+  },
+  {
+    "elapsedMs": 4771.30000000447,
+    "latencyMs": 43.099853515625,
+    "frame": "Übertragung zur Ansicht 43 ms · Slot 0 · Versuch 1 · Snapshot 6 · Tick 1331 · 22,18 s simuliert · 0 km/h · Sensortick 1330 · Entscheidungstick 1330"
+  },
+  {
+    "elapsedMs": 8031.20000000298,
+    "latencyMs": 9.199951171875,
+    "frame": "Übertragung zur Ansicht 9 ms · Slot 0 · Versuch 1 · Snapshot 2 · Tick 489 · 8,15 s simuliert · 70,4 km/h · Sensortick 488 · Entscheidungstick 488"
+  },
+  {
+    "elapsedMs": 8140.20000000298,
+    "latencyMs": 18.300048828125,
+    "frame": "Übertragung zur Ansicht 18 ms · Slot 0 · Versuch 1 · Snapshot 3 · Tick 963 · 16,05 s simuliert · 0 km/h · Sensortick 962 · Entscheidungstick 962"
+  },
+  {
+    "elapsedMs": 8248.70000000298,
+    "latencyMs": 26.699951171875,
+    "frame": "Übertragung zur Ansicht 27 ms · Slot 0 · Versuch 1 · Snapshot 4 · Tick 1532 · 25,53 s simuliert · 0 km/h · Sensortick 1530 · Entscheidungstick 1530"
+  },
+  {
+    "elapsedMs": 11932.39999999851,
+    "latencyMs": 14.5,
+    "frame": "Übertragung zur Ansicht 15 ms · Slot 0 · Versuch 1 · Snapshot 1 · Tick 145 · 2,42 s simuliert · 11 km/h · Sensortick 144 · Entscheidungstick 144"
+  }
+]

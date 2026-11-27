@@ -1,4 +1,8 @@
-import { digest, environment } from './evolution-runtime.mjs';
+import {
+  digest,
+  environment,
+  includeSourceDirectory,
+} from './evolution-runtime.mjs';
 import { execFileSync } from 'node:child_process';
 import { writeFileSync, existsSync } from 'node:fs';
 import { performance } from 'node:perf_hooks';
@@ -220,6 +224,7 @@ if (suite === 'world' || suite === 'parity') {
   }).trim();
   if (log.baseline !== '61cd54a2be454915647b9089bc6da5c5d1bc16d8')
     throw Error('Wrong baseline');
+  includeSourceDirectory(pathToFileURL(join(base, 'src')));
   const snapshots = new Map();
   log.paired = [];
   for (const [label, root, measure] of [

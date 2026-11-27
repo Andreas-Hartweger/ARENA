@@ -1,0 +1,1881 @@
+{
+  "originalMatrix": "../../first-evolution/ACCEPTANCE_RESULTS.md",
+  "testBaseline": "c74ab27daf3159329d9049076ab3c30c5a4759ea",
+  "testedAt": "1b99d131ded2484f4f0a0122bb73bd52001825c0",
+  "inheritedFiles": [
+    {
+      "file": "tests/viewport.test.ts",
+      "unchangedGitBlob": "5f0fb42205eea622d414a9112df79be98f6de05b",
+      "cases": 9
+    },
+    {
+      "file": "tests/ai/controls.test.ts",
+      "unchangedGitBlob": "98b8ee27f8ea449ccb29aa415ac69b58720e7de9",
+      "cases": 4
+    },
+    {
+      "file": "tests/ai/network.test.ts",
+      "unchangedGitBlob": "f62c4647c894edcb0b7136ec91a8ca3620f078e3",
+      "cases": 5
+    },
+    {
+      "file": "tests/ai/perception.test.ts",
+      "unchangedGitBlob": "e52221e2fd7e9c132c739dd5b0c79917a6f70d14",
+      "cases": 9
+    },
+    {
+      "file": "tests/ai/visibility.test.ts",
+      "unchangedGitBlob": "25ab0b178d1b66694afdb7e132e528f5850cf351",
+      "cases": 4
+    },
+    {
+      "file": "tests/ai/world.test.ts",
+      "unchangedGitBlob": "3fb7592db6e73ee58539e96d54f23b11fe1a58ab",
+      "cases": 4
+    },
+    {
+      "file": "tests/core/clock.test.ts",
+      "unchangedGitBlob": "c1e8526db7e6d5e5a391d2167e52e7df27d2c5aa",
+      "cases": 10
+    },
+    {
+      "file": "tests/core/math.test.ts",
+      "unchangedGitBlob": "c7f0f608431a79cef1bae38f9fcc5519aa97f972",
+      "cases": 9
+    },
+    {
+      "file": "tests/core/random.test.ts",
+      "unchangedGitBlob": "b803d8a968aae53fce780e0b566c22856c0c7e2b",
+      "cases": 7
+    },
+    {
+      "file": "tests/input/browserKeyboard.test.ts",
+      "unchangedGitBlob": "73d04d350f396b42cca78c892cb96a41720e479b",
+      "cases": 11
+    },
+    {
+      "file": "tests/input/controlInput.test.ts",
+      "unchangedGitBlob": "d09f9dd9253e146bc1868ea0389105a5f24c9252",
+      "cases": 7
+    },
+    {
+      "file": "tests/input/keyboardControls.test.ts",
+      "unchangedGitBlob": "ced94982c3ad639142c8b7c4ae7198a8654cd792",
+      "cases": 8
+    },
+    {
+      "file": "tests/physics/energy.test.ts",
+      "unchangedGitBlob": "58c9b2565e4dbedd410ee1b0e01e7a3a2ae7801d",
+      "cases": 3
+    },
+    {
+      "file": "tests/physics/handling.test.ts",
+      "unchangedGitBlob": "f8ce31752125d6bbbc2638efb668e02be69e375d",
+      "cases": 4
+    },
+    {
+      "file": "tests/physics/integration.test.ts",
+      "unchangedGitBlob": "c12f0d1b2fd261736aac257cf0d050a5dfd3af52",
+      "cases": 10
+    },
+    {
+      "file": "tests/physics/longitudinal.test.ts",
+      "unchangedGitBlob": "b816435bafe2ceb0b10a211cebd7ba77ef3f2f73",
+      "cases": 6
+    },
+    {
+      "file": "tests/physics/surface.test.ts",
+      "unchangedGitBlob": "8f2aabc016f7c0dd072fb8e4f5a72ba172ff8049",
+      "cases": 3
+    },
+    {
+      "file": "tests/physics/tires.test.ts",
+      "unchangedGitBlob": "2e67fa797d6f6475d7f5320cb21be24ab80eecec",
+      "cases": 3
+    },
+    {
+      "file": "tests/rendering/drive.test.ts",
+      "unchangedGitBlob": "c8b6b6d57b82dc99f8ebde0b40f00c1b1b30cd7f",
+      "cases": 3
+    },
+    {
+      "file": "tests/collision/contacts.test.ts",
+      "unchangedGitBlob": "2f732c4079638de2a703fa897adf766eab0eaef5",
+      "cases": 9
+    },
+    {
+      "file": "tests/tracks/academy.test.ts",
+      "unchangedGitBlob": "51f63447df27332391e36bc6a16608cd1b544f1c",
+      "cases": 9
+    },
+    {
+      "file": "tests/training/config.test.ts",
+      "unchangedGitBlob": "b70066bf91aa3fd35c31a6cb25cfd90a6ada029f",
+      "cases": 2
+    },
+    {
+      "file": "tests/training/evolution.test.ts",
+      "unchangedGitBlob": "9b6db25db32b7859033a1327fade83a9d74b39d8",
+      "cases": 13
+    },
+    {
+      "file": "tests/training/fitness.test.ts",
+      "unchangedGitBlob": "4affcfe51daf37bfc82a98db3939cc8085ee347f",
+      "cases": 20
+    },
+    {
+      "file": "tests/training/genetics.test.ts",
+      "unchangedGitBlob": "9705a13a7f725c9a4b85a9e129d7cf28b584e2de",
+      "cases": 14
+    },
+    {
+      "file": "tests/training/terminal.test.ts",
+      "unchangedGitBlob": "22bb24134940bfa24dffddf85830b49c661a81ae",
+      "cases": 1
+    },
+    {
+      "file": "tests/training/worldFeed.test.ts",
+      "unchangedGitBlob": "f3fa4dddc1a9568c5e0930e89af8ed7230e76fd8",
+      "cases": 3
+    },
+    {
+      "file": "tests/game/world.test.ts",
+      "unchangedGitBlob": "4c4f80cd7d1c1469c752e7bedb9d4541a84c471e",
+      "cases": 5
+    },
+    {
+      "file": "tests/vehicles/vehicle.test.ts",
+      "unchangedGitBlob": "36e99f828e8cf28ee91de7af5eb55143f0b9fbe9",
+      "cases": 18
+    }
+  ],
+  "originalVitestCases": 213,
+  "currentVitestCases": 233,
+  "originalAcceptanceIds": 128,
+  "reuse": "Die unveränderten 29 ursprünglichen Testdateien liefen im aktuellen Gesamtcheck. Eigenständige Browser-, Referenz- und Performancemessungen sind je Katalogpunkt separat verlinkt. Die historischen Messwerte verbleiben bei ihrer damaligen Laufherkunft.",
+  "coverage": [
+    {
+      "id": "FIT-001",
+      "criterion": "Hierarchie",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/fitness.test.ts",
+        "../team/DECISION_REQUESTS.md"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "FIT-002",
+      "criterion": "Detailformel",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "specification/reference_vectors.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "FIT-003",
+      "criterion": "Nullfortschritt",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "FIT-004",
+      "criterion": "Zeit",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "FIT-005",
+      "criterion": "Profile",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "FIT-006",
+      "criterion": "Custom",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "FIT-007",
+      "criterion": "Protected rules",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "FIT-008",
+      "criterion": "Aggregation",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "FIT-009",
+      "criterion": "Saturation",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "evidence/reference-audit.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log",
+        "checks/legacy-outcome-verification.json",
+        "checks/legacy-reproduction-verification.json"
+      ]
+    },
+    {
+      "id": "PRG-001",
+      "criterion": "Start",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-002",
+      "criterion": "Highwater",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-003",
+      "criterion": "Checkpoint",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-004",
+      "criterion": "Lap",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-005",
+      "criterion": "Multi-lap",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-006",
+      "criterion": "Invalidation",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-007",
+      "criterion": "Correction",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-008",
+      "criterion": "Shortcuts",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-009",
+      "criterion": "Accepted movement",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-010",
+      "criterion": "Recovery",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-011",
+      "criterion": "Reverse",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PRG-012",
+      "criterion": "Terminal order",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-001",
+      "criterion": "Normal speed",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-002",
+      "criterion": "Contact grouping",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-003",
+      "criterion": "Contact duration",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-004",
+      "criterion": "Rollback",
+      "originalEvidence": [
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-005",
+      "criterion": "Grass",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-006",
+      "criterion": "Idle",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-007",
+      "criterion": "Wrong way",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-008",
+      "criterion": "Slip",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-009",
+      "criterion": "Steering",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-010",
+      "criterion": "Time clipping",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-011",
+      "criterion": "No double credit",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PEN-012",
+      "criterion": "Raw metrics",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-001",
+      "criterion": "Start state",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-002",
+      "criterion": "Grace",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-003",
+      "criterion": "Renewal",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-004",
+      "criterion": "Limit",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-005",
+      "criterion": "Success",
+      "originalEvidence": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/fitness.test.ts",
+        "../../tests/training/terminal.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-006",
+      "criterion": "Collision",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-007",
+      "criterion": "Cancel",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-008",
+      "criterion": "Fault",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-009",
+      "criterion": "Retry",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EPS-010",
+      "criterion": "Multi-scenario",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "RNG-001",
+      "criterion": "Mulberry",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts",
+        "specification/reference_vectors.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "RNG-002",
+      "criterion": "FNV",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "RNG-003",
+      "criterion": "Box-Muller",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "RNG-004",
+      "criterion": "Integer draw",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "RNG-005",
+      "criterion": "Separate streams",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "RNG-006",
+      "criterion": "Canonical order",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "RNG-007",
+      "criterion": "Retry reproducibility",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "RNG-008",
+      "criterion": "Cross runtime",
+      "originalEvidence": [
+        "evidence/runtime-release.json"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "browser-scale.json"
+      ]
+    },
+    {
+      "id": "GEN-001",
+      "criterion": "Layout",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "GEN-002",
+      "criterion": "Immutable",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "GEN-003",
+      "criterion": "Compatibility",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "GEN-004",
+      "criterion": "Hash",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "GEN-005",
+      "criterion": "Identity",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "GEN-006",
+      "criterion": "Import limits",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "POP-001",
+      "criterion": "Population size",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "POP-002",
+      "criterion": "Independent init",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "POP-003",
+      "criterion": "Seeded",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "POP-004",
+      "criterion": "Budget",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "evidence/reference-audit.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "POP-005",
+      "criterion": "Budget remainder",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "POP-006",
+      "criterion": "Champion",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "POP-007",
+      "criterion": "Retention",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "evidence/retention.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "SEL-001",
+      "criterion": "Elite count",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "SEL-002",
+      "criterion": "Dedupe",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "SEL-003",
+      "criterion": "Pool",
+      "originalEvidence": [
+        "../../tests/training/config.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/config.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "SEL-004",
+      "criterion": "Tournament",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "SEL-005",
+      "criterion": "Distribution",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "SEL-006",
+      "criterion": "Tie",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "CRX-001",
+      "criterion": "Uniform",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "CRX-002",
+      "criterion": "Neuronwise",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "CRX-003",
+      "criterion": "Second parent",
+      "originalEvidence": [
+        "../../tests/training/config.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/config.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "CRX-004",
+      "criterion": "Contract",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "CRX-005",
+      "criterion": "Protection",
+      "originalEvidence": [
+        "../../tests/training/config.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/config.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-001",
+      "criterion": "Zero / full",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-002",
+      "criterion": "Minimum",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-003",
+      "criterion": "Layer scale",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-004",
+      "criterion": "Bias",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-005",
+      "criterion": "Large mix",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-006",
+      "criterion": "Clip",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-007",
+      "criterion": "Stats",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-008",
+      "criterion": "Distribution",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-009",
+      "criterion": "Bernoulli",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "MUT-010",
+      "criterion": "Frozen",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIV-001",
+      "criterion": "Exact duplicates",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIV-002",
+      "criterion": "Reference",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIV-003",
+      "criterion": "Layerwise",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIV-004",
+      "criterion": "Complexity",
+      "originalEvidence": [
+        "evidence/benchmark-scale.json",
+        "evidence/benchmark-components-verified.json"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "browser-scale.json"
+      ]
+    },
+    {
+      "id": "ADP-001",
+      "criterion": "Reference",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "ADP-002",
+      "criterion": "Cumulative",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "ADP-003",
+      "criterion": "Alternation",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "ADP-004",
+      "criterion": "Single mode",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "ADP-005",
+      "criterion": "Limits",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "ADP-006",
+      "criterion": "Immigrants",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "ADP-007",
+      "criterion": "Rescue",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts",
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "ADP-008",
+      "criterion": "Disabled",
+      "originalEvidence": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/genetics.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "ADP-009",
+      "criterion": "Contracts",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EVO-001",
+      "criterion": "Complete generation",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EVO-002",
+      "criterion": "Invalid results",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EVO-003",
+      "criterion": "Atomic failure",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EVO-004",
+      "criterion": "Reorder",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EVO-005",
+      "criterion": "Retry",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "EVO-006",
+      "criterion": "Elite invariant",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "evidence/reference-audit.json",
+        "evidence/generation-replay.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log",
+        "checks/legacy-outcome-verification.json",
+        "checks/legacy-reproduction-verification.json"
+      ]
+    },
+    {
+      "id": "EVO-007",
+      "criterion": "Full reference",
+      "originalEvidence": [
+        "evidence/reference-audit.json"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "node-pool-reference.json"
+      ]
+    },
+    {
+      "id": "EVO-008",
+      "criterion": "Baseline fixture",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "evidence/short-random/end.json",
+        "evidence/short-evolution/end.json",
+        "evidence/short-repeat.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log",
+        "checks/legacy-outcome-verification.json",
+        "checks/legacy-reproduction-verification.json"
+      ]
+    },
+    {
+      "id": "EVO-009",
+      "criterion": "No leakage",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIA-001",
+      "criterion": "Quantiles",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIA-002",
+      "criterion": "Missing laps",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIA-003",
+      "criterion": "Snapshots",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIA-004",
+      "criterion": "Trace invariance",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "evidence/benchmark-scale.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIA-005",
+      "criterion": "Budgeted trace",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIA-006",
+      "criterion": "Provenance",
+      "originalEvidence": [
+        "../../tests/training/config.test.ts",
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/config.test.ts",
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "DIA-007",
+      "criterion": "Timing separate",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "evidence/reference-audit.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log",
+        "checks/legacy-outcome-verification.json",
+        "checks/legacy-reproduction-verification.json"
+      ]
+    },
+    {
+      "id": "REG-001",
+      "criterion": "Baseline",
+      "originalEvidence": [
+        "../../tests/training/config.test.ts",
+        "evidence/tests.json",
+        "../team/DEVELOPMENT_PROGRESS.md"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/config.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "REG-002",
+      "criterion": "Physics",
+      "originalEvidence": [
+        "../../tests/training/worldFeed.test.ts",
+        "evidence/calibration.json",
+        "evidence/world-parity.json",
+        "evidence/benchmark-world.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log",
+        "checks/legacy-world-parity.json",
+        "checks/calibrate.json"
+      ]
+    },
+    {
+      "id": "REG-003",
+      "criterion": "AI",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts",
+        "evidence/browser.json",
+        "evidence/benchmark-world.json"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log",
+        "browser-scale.json",
+        "checks/legacy-world-parity.json"
+      ]
+    },
+    {
+      "id": "REG-004",
+      "criterion": "World atomicity",
+      "originalEvidence": [
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/worldFeed.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "REG-005",
+      "criterion": "Browser",
+      "originalEvidence": [
+        "evidence/browser.json"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "ui-entry/end.json"
+      ]
+    },
+    {
+      "id": "REG-006",
+      "criterion": "Isolation",
+      "originalEvidence": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "unchangedSuitesExercisedAgain": [
+        "../../tests/training/evolution.test.ts"
+      ],
+      "currentEvidence": [
+        "checks/check.log"
+      ]
+    },
+    {
+      "id": "PERF-001",
+      "criterion": "Components",
+      "originalEvidence": [
+        "evidence/benchmark-components-verified.json"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "checks/legacy-components.json"
+      ]
+    },
+    {
+      "id": "PERF-002",
+      "criterion": "Episode",
+      "originalEvidence": [
+        "evidence/benchmark-world.json"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "node-windows/end.json"
+      ]
+    },
+    {
+      "id": "PERF-003",
+      "criterion": "Scale",
+      "originalEvidence": [
+        "evidence/benchmark-scale.json"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "browser-scale.json"
+      ]
+    },
+    {
+      "id": "PERF-004",
+      "criterion": "Memory",
+      "originalEvidence": [
+        "evidence/retention.json"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "endurance/end.json"
+      ]
+    },
+    {
+      "id": "PERF-005",
+      "criterion": "Regression",
+      "originalEvidence": [
+        "evidence/benchmark-world.json",
+        "BATCH-02B_COMPLETION_REPORT.md"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "serial-investigation/end.json"
+      ]
+    },
+    {
+      "id": "REL-001",
+      "criterion": "Traceability",
+      "originalEvidence": [
+        "evidence/package-verification.json",
+        "BATCH-02B_COMPLETION_REPORT.md"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "checks.json"
+      ]
+    },
+    {
+      "id": "REL-002",
+      "criterion": "Workflow",
+      "originalEvidence": [
+        "../team/HANDOVER_CURRENT.md",
+        "https://github.com/Andreas-Hartweger/ARENA/pull/6/checks"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "checks.json"
+      ]
+    },
+    {
+      "id": "REL-003",
+      "criterion": "Independent gate",
+      "originalEvidence": [
+        "BATCH-02B_COMPLETION_REPORT.md",
+        "https://github.com/Andreas-Hartweger/ARENA/pull/6/checks"
+      ],
+      "unchangedSuitesExercisedAgain": [],
+      "currentEvidence": [
+        "checks.json"
+      ]
+    }
+  ]
+}

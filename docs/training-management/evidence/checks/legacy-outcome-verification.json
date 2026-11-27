@@ -1,0 +1,103 @@
+{
+  "sha": "18839aabbfc18bea1547e55b13dacdb834c1bee1",
+  "evidenceChecksPassed": true,
+  "referenceComplete": true,
+  "completedGenerations": 100,
+  "evaluated": 12800,
+  "eliteRechecks": 594,
+  "prefixMatches": 22,
+  "reasons": {
+    "noProgress": 12076,
+    "timeout": 60,
+    "completed": 664
+  },
+  "successes": 664,
+  "allLaps": 664,
+  "firstSuccess": 31,
+  "fastestLapSeconds": 59.663774729747736,
+  "totalTicks": 30575844,
+  "totalSimulatedSeconds": 509592.2897765849,
+  "elapsedSeconds": 983.4314081,
+  "championGenome": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+  "timeline": [
+    {
+      "generation": 0,
+      "best": 167.18011493946813,
+      "worst": 0,
+      "mean": 14.985159472396074,
+      "median": 0,
+      "q1": 0,
+      "q3": 10,
+      "successes": 0,
+      "laps": 0,
+      "progressBest": 118.83098121195803,
+      "unique": 128
+    },
+    {
+      "generation": 24,
+      "best": 776.7783917326103,
+      "worst": 0,
+      "mean": 204.34314639028656,
+      "median": 176.217743547795,
+      "q1": 125.69686718633172,
+      "q3": 231.14375709920222,
+      "successes": 0,
+      "laps": 0,
+      "progressBest": 530.3096439875512,
+      "unique": 128
+    },
+    {
+      "generation": 31,
+      "best": 4269.33366254004,
+      "worst": 5.5003522937836635,
+      "mean": 246.21821799155023,
+      "median": 165.58784689461203,
+      "q1": 137.1456384438252,
+      "q3": 241.97477340578843,
+      "successes": 1,
+      "laps": 1,
+      "progressBest": 667.9114857512855,
+      "unique": 128
+    },
+    {
+      "generation": 49,
+      "best": 4275.771428196007,
+      "worst": 0,
+      "mean": 427.5624181405021,
+      "median": 168.97973953142412,
+      "q1": 99.82196332231973,
+      "q3": 302.4366743493854,
+      "successes": 7,
+      "laps": 7,
+      "progressBest": 667.9114857512855,
+      "unique": 128
+    },
+    {
+      "generation": 74,
+      "best": 4275.89876124427,
+      "worst": 3.3301255611488045,
+      "mean": 521.709756093717,
+      "median": 220.77863368730027,
+      "q1": 147.7355925774865,
+      "q3": 352.3780933402663,
+      "successes": 9,
+      "laps": 9,
+      "progressBest": 667.9114857512855,
+      "unique": 128
+    },
+    {
+      "generation": 99,
+      "best": 4280.189069348133,
+      "worst": 3.571691079895345,
+      "mean": 1152.0460265777624,
+      "median": 523.5895065630044,
+      "q1": 171.3873304728432,
+      "q3": 835.5599025567996,
+      "successes": 25,
+      "laps": 25,
+      "progressBest": 667.9114857512855,
+      "unique": 128
+    }
+  ],
+  "candidateDataDigest": "8891f1ad77725f09d556a02bb1922f62a513457fd0a0ea2a2b2839910ea40f60"
+}

@@ -1,0 +1,54 @@
+{
+  "sha": "cfe0fd771631de40abe71a4e0b495ad90479ef3e",
+  "sourceDiff": "",
+  "node": "v24.22.3",
+  "os": "Windows 11 Pro",
+  "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+  "logicalCpus": 16,
+  "totalRam": 33820106752,
+  "power": "uncontrolled",
+  "backgroundLoad": "uncontrolled",
+  "renderer": null,
+  "browser": "158.0.8127.89",
+  "migration": {
+    "schema": 2,
+    "legacyChecksum": "8aee74175f5b9c0709f6619033560bee7a1176d3c9d237dd6ad6d77b75c2d158",
+    "blockedReported": true,
+    "staleQueueRejected": true
+  },
+  "faults": {
+    "cases": [
+      "stale-before-write",
+      "rollback-mid-transaction",
+      "discard-before-publication",
+      "abandoned-staging",
+      "quota-before-publication",
+      "reopen-after-publication",
+      "python-digest"
+    ],
+    "canonical": "9ca11b279732cbdab609b42c354098457191fad24c80a67a3c810c8b8ea19bf4"
+  },
+  "transfer": {
+    "seen": [
+      {
+        "kind": "model",
+        "bytes": 93851,
+        "objects": 4
+      },
+      {
+        "kind": "checkpoint",
+        "bytes": 183164,
+        "objects": 14
+      },
+      {
+        "kind": "backup",
+        "bytes": 244546,
+        "objects": 23
+      }
+    ],
+    "fork": "657577bf-2e98-40e7-a080-1d0cd62b62ad",
+    "importedQueueDisabled": true,
+    "sourceGenome": "e51b0f5b5833814bdb72a286ad8428e8e2b69326c00bc304ef67ae78e96040ca"
+  },
+  "errors": []
+}

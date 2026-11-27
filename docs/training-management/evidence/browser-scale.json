@@ -1,0 +1,301 @@
+{
+  "sha": "8a23ca0ae89a9db183af0019b281b4a0c6dec9e8",
+  "sourceDiff": "",
+  "node": "v24.22.3",
+  "os": "Windows 11 Pro",
+  "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+  "logicalCpus": 16,
+  "totalRam": 33820106752,
+  "power": "uncontrolled",
+  "backgroundLoad": "uncontrolled",
+  "renderer": null,
+  "browser": "158.0.8127.89",
+  "tolerance": {
+    "contract": {
+      "node": "93106067cf785d360010f17d95472bebf2689e28ec47a1865ccd5301c1308e5b",
+      "browser": "93106067cf785d360010f17d95472bebf2689e28ec47a1865ccd5301c1308e5b"
+    },
+    "reason": {
+      "node": "timeout",
+      "browser": "timeout"
+    },
+    "ticks": {
+      "node": 600,
+      "browser": 600
+    },
+    "uniform": {
+      "length": 32,
+      "maxAbs": 0,
+      "limit": 0
+    },
+    "gaussian": {
+      "length": 32,
+      "maxAbs": 1.1102230246251565e-16,
+      "limit": 1e-9
+    },
+    "genes": {
+      "length": 8547,
+      "maxAbs": 6.938893903907228e-18,
+      "limit": 1e-9
+    },
+    "fitness": {
+      "length": 7,
+      "maxAbs": 1.6342482922482304e-13,
+      "limit": 1e-9
+    },
+    "errors": {
+      "length": 6,
+      "maxAbs": 5.551115123125783e-17,
+      "limit": 1e-9
+    },
+    "positions": {
+      "length": 6,
+      "maxAbs": 7.105427357601002e-15,
+      "limit": 1e-9
+    },
+    "observation": {
+      "length": 744,
+      "maxAbs": 1.1102230246251565e-16,
+      "limit": 1e-9
+    },
+    "activations": {
+      "length": 153,
+      "maxAbs": 3.3306690738754696e-16,
+      "limit": 1e-9
+    }
+  },
+  "stress": [
+    {
+      "params": {
+        "n": 512,
+        "widths": [
+          4
+        ],
+        "maxTicks": 6
+      },
+      "rows": [
+        {
+          "type": "generation",
+          "generation": 0,
+          "evaluations": 512,
+          "logicalHash": "220ac5a2bb1e1cb2c5904d839aee701a8eacdf07b0eb3765b21f4b9731fb9fcf",
+          "nextHashes": "ce3f6657c704f87fe097b3c70bbd2105ce9c4ab8d23238dd990685cbcdd1a5bb",
+          "champion": "aabe3bd4f6a104126f4fafb67a945bcb89522466975e62e17a43d1675b7ec4ba",
+          "best": 0.009005669318611353,
+          "successes": 0,
+          "ticks": 3072,
+          "ms": 7596.30000000447,
+          "saveMs": 429.80000000447035,
+          "gcMs": 30.5,
+          "estimated": 39804096,
+          "monitor": {
+            "evaluated": 512,
+            "ticks": 3072,
+            "computeMs": 10467.000000163913,
+            "attempts": 512,
+            "transferredBytes": 4141056,
+            "receivedMessages": 1026,
+            "oldestSignalMs": 0,
+            "busy": 0,
+            "workers": 2
+          },
+          "outcome": "14a9df207de8625d8ca09b214bdf7b9b8a970a67310fef56c68ed4fb80d0baa6",
+          "diskBytes": 9135220
+        },
+        {
+          "type": "generation",
+          "generation": 1,
+          "evaluations": 512,
+          "logicalHash": "7f18f952e044919b15979763a8b65e80522a063790182256a4a1e5e629c17a5e",
+          "nextHashes": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "champion": "aabe3bd4f6a104126f4fafb67a945bcb89522466975e62e17a43d1675b7ec4ba",
+          "best": 0.009005669318611353,
+          "successes": 0,
+          "ticks": 3072,
+          "ms": 3776.3000000044703,
+          "saveMs": 85.69999999552965,
+          "gcMs": 33.900000005960464,
+          "estimated": 39804096,
+          "monitor": {
+            "evaluated": 1024,
+            "ticks": 6144,
+            "computeMs": 16491.100000306964,
+            "attempts": 1024,
+            "transferredBytes": 8282112,
+            "receivedMessages": 2050,
+            "oldestSignalMs": 0,
+            "busy": 0,
+            "workers": 2
+          },
+          "outcome": "0866adae2b3dd32cd663273bbe00e93a1ec1805b2aa476991a962dbb5ac2cdf6",
+          "diskBytes": 9997102
+        }
+      ],
+      "end": {
+        "type": "end",
+        "restoreMs": 46.600000001490116,
+        "generations": 2,
+        "evaluations": 1024,
+        "ms": 11920.60000000149,
+        "champion": "aabe3bd4f6a104126f4fafb67a945bcb89522466975e62e17a43d1675b7ec4ba",
+        "checkpoints": 3
+      }
+    },
+    {
+      "params": {
+        "n": 1024,
+        "widths": [
+          4
+        ],
+        "maxTicks": 6
+      },
+      "rows": [
+        {
+          "type": "generation",
+          "generation": 0,
+          "evaluations": 1024,
+          "logicalHash": "79405399fcc57270c4cae21b6874c0ca87e461def0782ca7f63d08a83a138577",
+          "nextHashes": "910042bb8c49103ddf2502e14fa842c6816838b4ceb50e38546f060b19ab049c",
+          "champion": "aabe3bd4f6a104126f4fafb67a945bcb89522466975e62e17a43d1675b7ec4ba",
+          "best": 0.009005669318611353,
+          "successes": 0,
+          "ticks": 6144,
+          "ms": 7168.5,
+          "saveMs": 856.6999999955297,
+          "gcMs": 82.30000000447035,
+          "estimated": 54377664,
+          "monitor": {
+            "evaluated": 1024,
+            "ticks": 6144,
+            "computeMs": 8000.69999987632,
+            "attempts": 1024,
+            "transferredBytes": 8282112,
+            "receivedMessages": 2050,
+            "oldestSignalMs": 0,
+            "busy": 0,
+            "workers": 2
+          },
+          "outcome": "8d5f9916269f7f93464c188c7ce253ab4faa5153606c234d9447dda1397ca26a",
+          "diskBytes": 18276759
+        },
+        {
+          "type": "generation",
+          "generation": 1,
+          "evaluations": 1024,
+          "logicalHash": "95fa7154688de688195efc1f28fabce9c3a7d3af32e86ae5760912e8bc1cad23",
+          "nextHashes": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "champion": "aabe3bd4f6a104126f4fafb67a945bcb89522466975e62e17a43d1675b7ec4ba",
+          "best": 0.009005669318611353,
+          "successes": 0,
+          "ticks": 6144,
+          "ms": 5854.5,
+          "saveMs": 265.3999999985099,
+          "gcMs": 141.90000000596046,
+          "estimated": 54377664,
+          "monitor": {
+            "evaluated": 2048,
+            "ticks": 12288,
+            "computeMs": 16569.399999812245,
+            "attempts": 2048,
+            "transferredBytes": 16564224,
+            "receivedMessages": 4098,
+            "oldestSignalMs": 0,
+            "busy": 0,
+            "workers": 2
+          },
+          "outcome": "5e487e1c747ea3ca712874498583293ff5ad36e65cf7013780a4a31d828a2c4a",
+          "diskBytes": 19997530
+        }
+      ],
+      "end": {
+        "type": "end",
+        "restoreMs": 178.60000000149012,
+        "generations": 2,
+        "evaluations": 2048,
+        "ms": 14146.39999999851,
+        "champion": "aabe3bd4f6a104126f4fafb67a945bcb89522466975e62e17a43d1675b7ec4ba",
+        "checkpoints": 3
+      }
+    },
+    {
+      "params": {
+        "n": 8,
+        "widths": [
+          128,
+          128,
+          128,
+          128
+        ],
+        "maxTicks": 6
+      },
+      "rows": [
+        {
+          "type": "generation",
+          "generation": 0,
+          "evaluations": 8,
+          "logicalHash": "1d326828031eab0f787cf9fcaa3b24bb630be2616c6eb2a1c2d4bfee23b3102f",
+          "nextHashes": "d5e7e103ce1e55207190baf99ed878a89fd6ffe52d74b33498c44d95d1100fc0",
+          "champion": "6365cca15f32ca81a79395e16c6b5330022285b6b9658faef0181bc3245758ea",
+          "best": 0.008955803974970422,
+          "successes": 0,
+          "ticks": 48,
+          "ms": 983.7000000029802,
+          "saveMs": 472.70000000298023,
+          "gcMs": 1.2000000029802322,
+          "estimated": 40968768,
+          "monitor": {
+            "evaluated": 8,
+            "ticks": 48,
+            "computeMs": 192,
+            "attempts": 8,
+            "transferredBytes": 5234880,
+            "receivedMessages": 18,
+            "oldestSignalMs": 0,
+            "busy": 0,
+            "workers": 2
+          },
+          "outcome": "c8437e2cff345a1379d28059652b6fe56e6bb37dc4ba6025a4d4f2553db175f5",
+          "diskBytes": 9844267
+        },
+        {
+          "type": "generation",
+          "generation": 1,
+          "evaluations": 8,
+          "logicalHash": "095aac409e63059be759416e788d00516c1a0df8cdd2db53248eef6d6625e2de",
+          "nextHashes": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "champion": "07b709a52fc133188174ae26c1dbf9a57856febbb50631e70740ba4753f5d7cc",
+          "best": 0.008957699894409643,
+          "successes": 0,
+          "ticks": 48,
+          "ms": 235.39999999850988,
+          "saveMs": 73.89999999850988,
+          "gcMs": 1.6000000014901161,
+          "estimated": 40968768,
+          "monitor": {
+            "evaluated": 16,
+            "ticks": 96,
+            "computeMs": 294.90000000596046,
+            "attempts": 16,
+            "transferredBytes": 10469760,
+            "receivedMessages": 34,
+            "oldestSignalMs": 0,
+            "busy": 0,
+            "workers": 2
+          },
+          "outcome": "405460041b9f3eb587e163fcd9e9d6135232279ac6ac8da533c9960037851f9f",
+          "diskBytes": 9869098
+        }
+      ],
+      "end": {
+        "type": "end",
+        "restoreMs": 66,
+        "generations": 2,
+        "evaluations": 16,
+        "ms": 1801.7999999970198,
+        "champion": "07b709a52fc133188174ae26c1dbf9a57856febbb50631e70740ba4753f5d7cc",
+        "checkpoints": 3
+      }
+    }
+  ],
+  "scope": "Cross-runtime 600-tick fixture; deliberately short six-tick stress episodes with mandatory IndexedDB saves and restore, separate from full reference."
+}

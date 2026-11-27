@@ -196,7 +196,8 @@ function summarize(
     simulatedSeconds: episodes.reduce((n, e) => n + e.duration, 0),
   });
 }
-type Summary = ReturnType<typeof summarize>;
+export type GenerationSummary = ReturnType<typeof summarize>;
+type Summary = GenerationSummary;
 type Phase =
   | 'initialized'
   | 'evaluating'
@@ -204,23 +205,39 @@ type Phase =
   | 'committed'
   | 'blocked'
   | 'cancelled';
-type CommittedSnapshot = Readonly<{
+export type CommittedSnapshot = Readonly<{
   historyIndex: number;
   summary: Summary;
   generationBest: Genome;
   champion: Readonly<{ id: string; fitness: number; genome: Genome }>;
   nextPopulation: readonly Member[];
 }>;
+export interface EvolutionBoundary {
+  historyOffset?: number;
+  population: readonly Member[];
+  history: readonly GenerationSummary[];
+  champion: CommittedSnapshot['champion'] | null;
+  generationBest: Genome | null;
+  adaptive: AdaptiveState | null;
+}
 export class Evolution {
-  readonly config;
+  #config: ReturnType<typeof config>;
+  get config() {
+    return this.#config;
+  }
   readonly scenarios: readonly Scenario[];
   readonly weights: readonly number[];
   readonly #digest: Digest;
   #population: readonly Member[];
   #history: readonly Summary[] = Object.freeze([]);
+  #historyOffset = 0;
   #champion: { id: string; fitness: number; genome: Genome } | null = null;
   #lastError: string | null = null;
   #phase: Phase = 'initialized';
+  #adaptive: AdaptiveState | null = null;
+  get adaptive() {
+    return this.#adaptive;
+  }
   #committed: CommittedSnapshot | null = null;
   #busy = false;
   constructor(
@@ -230,8 +247,9 @@ export class Evolution {
     opts: EvolutionOptions = {},
     seed?: Genome,
     weights?: readonly number[],
+    boundary?: EvolutionBoundary,
   ) {
-    this.config = config(m, opts);
+    this.#config = config(m, opts);
     this.#digest = digest;
     if (
       !scenarios.length ||
@@ -256,10 +274,67 @@ export class Evolution {
     this.weights = normalized(weights ?? scenarios.map(() => 1));
     if (this.weights.length !== scenarios.length)
       throw Error('Missing scenario weight');
-    this.#population =
-      this.config.budget < this.config.n * scenarios.length
+    this.#population = boundary
+      ? Object.freeze([...boundary.population])
+      : this.config.budget < this.config.n * scenarios.length
         ? Object.freeze([])
         : initialPopulation(m, this.config, digest, seed);
+    if (boundary) {
+      const { history, champion, generationBest, adaptive } = boundary,
+        g = (boundary.historyOffset ?? 0) + history.length;
+      this.#historyOffset = boundary.historyOffset ?? 0;
+      if (
+        !Number.isSafeInteger(this.#historyOffset) ||
+        this.#historyOffset < 0 ||
+        (this.#historyOffset > 0 && !history.length) ||
+        g > this.config.generations ||
+        g > 0 !== !!champion ||
+        g > 0 !== !!generationBest ||
+        g > 0 !== !!adaptive ||
+        (this.#population.length !== 0 &&
+          this.#population.length !== this.config.n) ||
+        (g === this.config.generations && this.#population.length) ||
+        new Set(this.#population.map((x) => x.id)).size !==
+          this.#population.length ||
+        this.#population.some(
+          (x) =>
+            x.genome.model.key !== m.key ||
+            x.genome.model.weightLimit !== m.weightLimit ||
+            x.genome.model.biasLimit !== m.biasLimit,
+        ) ||
+        history.some(
+          (h, i) =>
+            h.version !== 'arena.generation.v1' ||
+            h.generation !== this.#historyOffset + i ||
+            h.records.length !== this.config.n ||
+            h.evaluations !== this.config.n * scenarios.length,
+        )
+      )
+        throw Error('Invalid evolution boundary');
+      const last = history.at(-1);
+      if (
+        last &&
+        (!champion ||
+          champion.fitness !== last.champion.fitness ||
+          champion.id !== last.champion.id ||
+          champion.genome.model.key !== m.key ||
+          generationBest?.hash !== last.records[last.order[0]].hash)
+      )
+        throw Error('Checkpoint best model mismatch');
+      this.#history = Object.freeze([...history]);
+      this.#champion = champion;
+      this.#adaptive = adaptive;
+      if (last && champion && generationBest) {
+        this.#committed = Object.freeze({
+          historyIndex: g - 1,
+          summary: last,
+          generationBest,
+          champion,
+          nextPopulation: this.#population,
+        });
+        this.#phase = 'committed';
+      }
+    }
     Object.freeze(this);
   }
   get population() {
@@ -267,6 +342,29 @@ export class Evolution {
   }
   get history() {
     return this.#history;
+  }
+  get historyOffset() {
+    return this.#historyOffset;
+  }
+  get nextGeneration() {
+    return this.#historyOffset + this.history.length;
+  }
+  // Keep the latest full summary for selection and inspector reads. The caller owns history retention.
+  compactHistory(written: number) {
+    if (
+      !Number.isSafeInteger(written) ||
+      written < 0 ||
+      written > this.nextGeneration
+    )
+      throw Error('Unknown history boundary');
+    const release = Math.max(
+      0,
+      Math.min(written - this.#historyOffset, this.history.length - 1),
+    );
+    if (release) {
+      this.#history = Object.freeze(this.history.slice(release));
+      this.#historyOffset += release;
+    }
   }
   get champion() {
     return this.#champion;
@@ -284,7 +382,7 @@ export class Evolution {
     if (this.#busy || !this.population.length)
       throw Error('No open generation');
     const rows: EvaluationRow[] = [],
-      generation = this.history.length,
+      generation = this.nextGeneration,
       c = this.config;
     this.#busy = true;
     this.#phase = 'evaluating';
@@ -339,13 +437,33 @@ export class Evolution {
     }
   }
   commit(rows: readonly EvaluationRow[]) {
+    const staged = this.prepare(rows);
+    staged.publish();
+    return staged.snapshot.summary;
+  }
+  prepare(
+    rows: readonly EvaluationRow[],
+    options: {
+      stopAfter?: (summary: GenerationSummary) => boolean;
+      learning?: Pick<
+        EvolutionOptions,
+        | 'tournament'
+        | 'eliteRate'
+        | 'poolFraction'
+        | 'crossProbability'
+        | 'operator'
+        | 'mutation'
+        | 'adaptation'
+      >;
+    } = {},
+  ) {
     if (this.#busy || !this.population.length)
       throw Error('No open generation');
     this.#busy = true;
     let interrupted = false;
     try {
       const c = this.config,
-        g = this.history.length,
+        g = this.nextGeneration,
         n = c.n,
         sc = this.scenarios.length,
         slots = new Map<number, EvaluationRow>();
@@ -449,7 +567,7 @@ export class Evolution {
               genome: this.#population[best].genome,
             })
           : this.#champion;
-      const prev = this.history.at(-1)?.adaptive ?? null,
+      const prev = this.#adaptive,
         adaptive = adapt(prev, champion.fitness, c.adaptation, c.mutation);
       const summary = summarize(
         records,
@@ -460,9 +578,29 @@ export class Evolution {
         { p: prev?.p ?? c.mutation.p, alpha: prev?.alpha ?? c.mutation.alpha },
         order,
       );
+      const stop = options.stopAfter?.(summary) ?? false;
+      const revised = options.learning
+        ? config(this.#population[0].genome.model, {
+            ...c,
+            ...options.learning,
+            mutation: { ...c.mutation, ...options.learning.mutation },
+            adaptation: { ...c.adaptation, ...options.learning.adaptation },
+          })
+        : c;
+      const nextAdaptive =
+        options.learning?.mutation || options.learning?.adaptation
+          ? adapt(null, champion.fitness, revised.adaptation, revised.mutation)
+          : adaptive;
       const next =
-        g + 1 < c.generations && (g + 2) * n * sc <= c.budget
-          ? reproduce(this.#population, order, c, g + 1, adaptive, this.#digest)
+        !stop && g + 1 < c.generations && (g + 2) * n * sc <= c.budget
+          ? reproduce(
+              this.#population,
+              order,
+              revised,
+              g + 1,
+              nextAdaptive,
+              this.#digest,
+            )
           : Object.freeze([]);
       const history = Object.freeze([...this.history, summary]);
       const snapshot = Object.freeze({
@@ -472,13 +610,26 @@ export class Evolution {
         champion,
         nextPopulation: next,
       });
-      this.#history = history;
-      this.#champion = champion;
-      this.#population = next;
-      this.#lastError = null;
-      this.#committed = snapshot;
-      this.#phase = 'committed';
-      return summary;
+      const source = this.#population;
+      this.#phase = 'staged';
+      return Object.freeze({
+        snapshot,
+        history,
+        config: revised,
+        nextAdaptive,
+        publish: () => {
+          if (this.#busy || this.#population !== source)
+            throw Error('Stale generation stage');
+          this.#history = history;
+          this.#champion = champion;
+          this.#population = next;
+          this.#lastError = null;
+          this.#committed = snapshot;
+          this.#config = revised;
+          this.#adaptive = nextAdaptive;
+          this.#phase = 'committed';
+        },
+      });
     } catch (error) {
       this.#lastError = String(error);
       this.#phase = interrupted ? 'cancelled' : 'blocked';

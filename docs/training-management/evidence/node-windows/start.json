@@ -1,0 +1,73 @@
+{
+  "sha": "1f92edefe3ad519a918c4c07734b38a6427f74b6",
+  "sourceDiff": "",
+  "node": "v24.22.3",
+  "os": "Windows 11 Pro",
+  "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+  "logicalCpus": 16,
+  "totalRam": 33820106752,
+  "power": "uncontrolled",
+  "backgroundLoad": "Isolated browser reference, UI stability and headless endurance may run concurrently",
+  "renderer": null,
+  "baselineSha": "c74ab27daf3159329d9049076ab3c30c5a4759ea",
+  "profiles": {
+    "Eco": 4,
+    "Balanced": 8,
+    "Performance": 12
+  },
+  "hardware": 16,
+  "priority": "below normal",
+  "autosave": false,
+  "workloads": [
+    {
+      "name": "regular-30",
+      "n": 8,
+      "hz": 30,
+      "maxTicks": 0,
+      "trace": false
+    },
+    {
+      "name": "window-30",
+      "n": 32,
+      "hz": 30,
+      "maxTicks": 600,
+      "trace": false
+    },
+    {
+      "name": "window-30-trace",
+      "n": 32,
+      "hz": 30,
+      "maxTicks": 600,
+      "trace": true
+    },
+    {
+      "name": "window-10",
+      "n": 8,
+      "hz": 10,
+      "maxTicks": 600,
+      "trace": false
+    },
+    {
+      "name": "window-15",
+      "n": 8,
+      "hz": 15,
+      "maxTicks": 600,
+      "trace": false
+    },
+    {
+      "name": "window-20",
+      "n": 8,
+      "hz": 20,
+      "maxTicks": 600,
+      "trace": false
+    },
+    {
+      "name": "window-60",
+      "n": 8,
+      "hz": 60,
+      "maxTicks": 600,
+      "trace": false
+    }
+  ],
+  "method": "Fixed identical populations, warm-up per runtime and workload, three alternately ordered windows; times include evaluation, canonical commit and complete population setup is outside the timer."
+}

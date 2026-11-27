@@ -1,0 +1,326 @@
+.lab-shell {
+  min-height: 100dvh;
+  background: #121719;
+  color: #f4f3ed;
+  --line: #384144;
+  --muted: #aab6b6;
+  --accent: #ff8053;
+}
+.lab-head,
+.lab-shell > nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: #191f22;
+  border-bottom: 1px solid var(--line);
+  padding: 0.9rem max(4vw, calc((100vw - 1480px) / 2));
+}
+.lab-shell a {
+  color: inherit;
+  text-decoration: none;
+}
+.back-drive {
+  margin-left: auto;
+  font-weight: 650;
+  color: var(--muted);
+}
+.lab-shell > nav {
+  padding-block: 0;
+  gap: 1.75rem;
+  overflow-x: auto;
+}
+.lab-shell > nav a {
+  display: block;
+  padding: 0.85rem 0.12rem;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  font-weight: 650;
+}
+.lab-shell > nav a[aria-current] {
+  color: #fff;
+  border-color: var(--accent);
+}
+.lab-page {
+  width: min(92%, 1480px);
+  margin: auto;
+  padding: 1.8rem 0 4rem;
+}
+.page-title,
+.panel-title,
+.toolbar,
+.run-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.page-title,
+.panel-title {
+  justify-content: space-between;
+}
+.lab-page h1 {
+  font-size: clamp(2rem, 4.4vw, 3.8rem);
+  letter-spacing: -0.055em;
+  margin: 0 0 0.4em;
+  font-weight: 730;
+}
+.lab-page h2 {
+  font-size: 1.35rem;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.8rem;
+}
+.panel-title h2 {
+  margin: 0;
+}
+.panel-title {
+  margin-bottom: 1rem;
+}
+.phase {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid #55635c;
+  border-radius: 1rem;
+  font-size: 0.84rem;
+  color: #cfd7ce;
+}
+.phase-Running {
+  border-color: #639c86;
+  color: #a4e0c9;
+}
+.lab-page button,
+.lab-page input,
+.lab-page select,
+.lab-page textarea {
+  font: inherit;
+  border-radius: 0.3rem;
+  border: 1px solid #4b575b;
+  color: inherit;
+  background: #242d30;
+  max-width: 100%;
+  padding: 0.48rem 0.7rem;
+}
+.lab-page button {
+  font-weight: 600;
+}
+.lab-page button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.lab-page button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1c1510;
+}
+.lab-page button[aria-pressed='true'] {
+  border-color: #ff986d;
+  color: #ffc6aa;
+}
+.lab-shell :focus-visible {
+  outline: 2px solid #ffa579;
+  outline-offset: 2px;
+}
+.lab-page label {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  font-size: 0.87rem;
+  font-weight: 550;
+  color: #d5ddd9;
+}
+.lab-page label.check {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: center;
+}
+.lab-page input[type='checkbox'] {
+  accent-color: var(--accent);
+}
+.lab-page .toolbar {
+  align-items: end;
+  margin: 0.75rem 0;
+}
+.toolbar small,
+.panel-title span,
+.panel-title small,
+.empty,
+.lab-page dt,
+.technical {
+  color: var(--muted);
+}
+.lab-panel {
+  min-width: 0;
+  background: #1a2023;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: clamp(0.85rem, 1.75vw, 1.55rem);
+  margin: 0.9rem 0;
+}
+.lab-columns,
+.library-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.library-columns {
+  grid-template-columns: minmax(200px, 1fr) minmax(0, 2fr);
+}
+.metrics,
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  margin: 1.2rem 0;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 0.3rem;
+  overflow: hidden;
+}
+.metrics > div,
+.facts > div {
+  background: #1b2225;
+  padding: 0.8rem;
+}
+.lab-page dt {
+  font-size: 0.8rem;
+}
+.lab-page dd {
+  margin: 0.2rem 0 0;
+  font-variant-numeric: tabular-nums;
+}
+.metrics dd {
+  font-size: clamp(1.2rem, 2.5vw, 1.9rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+.lab-page fieldset {
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(175px, 100%), 1fr));
+  gap: 0.8rem;
+  min-width: 0;
+  margin: 0.8rem 0;
+}
+.lab-page legend {
+  padding: 0 0.35rem;
+  color: #ffb48e;
+}
+.lab-page details {
+  margin: 0.8rem 0;
+  border-top: 1px solid var(--line);
+  padding: 0.7rem 0;
+}
+.lab-page summary {
+  cursor: pointer;
+}
+.lab-page textarea {
+  width: 100%;
+  resize: vertical;
+}
+.lab-page pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+  max-height: 28rem;
+  overflow: auto;
+}
+.lab-page code,
+.lab-page small {
+  overflow-wrap: anywhere;
+}
+.lab-page table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9rem;
+}
+.lab-page :is(th, td) {
+  border-bottom: 1px solid var(--line);
+  padding: 0.45rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.lab-page td svg {
+  width: min(8rem, 100%);
+  height: 20px;
+}
+.track-view,
+.history-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.3rem;
+  background: #121819;
+}
+.track-view {
+  touch-action: none;
+}
+.history-chart text {
+  fill: #aab6b6;
+  font-size: 10px;
+}
+.legend {
+  display: flex;
+  gap: 0.8rem;
+  font-size: 0.8rem;
+  flex-wrap: wrap;
+}
+.empty {
+  margin: 1rem 0;
+  line-height: 1.5;
+}
+.lab-alert {
+  padding: 0.8rem;
+  border: 1px solid #bb7559;
+  background: #3a2721;
+  border-radius: 0.3rem;
+  overflow-wrap: anywhere;
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.45rem 0;
+  width: 100%;
+  text-align: left;
+}
+.list-item span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.queue-list li {
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+.lab-loading {
+  padding: 3vw;
+}
+@media (max-width: 780px) {
+  .lab-columns,
+  .library-columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .lab-shell > nav {
+    gap: 0.9rem;
+  }
+  .lab-page {
+    width: 94%;
+  }
+  .lab-head {
+    gap: 0.65rem;
+  }
+  .lab-head .edition {
+    padding-left: 0.6rem;
+  }
+  .lab-head .back-drive {
+    font-size: 0.85rem;
+  }
+  .lab-panel {
+    overflow-x: auto;
+  }
+  .lab-shell nav a {
+    white-space: nowrap;
+  }
+}

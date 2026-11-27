@@ -1,0 +1,24 @@
+# Arbeitspakete (18 inkl. PRE/QA/REL)
+
+A plant und gibt frei; B implementiert. Reihenfolge nach Abhängigkeiten, nicht unabhängig davon. Alle Pakete zunächst offen; PRE-C01 blockiert Code bis 02B angenommen/gemergt ist. Keine neue Bibliothek ohne explizite Freigabe.
+
+| ID | Arbeitspaket | Abhängigkeiten | Lieferergebnis | Entscheidungen | Owner | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| PRE-C01 | 02B Gate | — | A/B Review, vollständige 02B-Evidenz, gemergte freigegebene Basis, Baseline npm ci/check/calibrate, vorhandene Genome sichern. | PRE-C01 | B / A Review | Offen |
+| TL-001 | Team und Datenverträge | PRE-C01 | AGENTS scoped, TR-Vertrag, Command/Snapshot/Storage/Compute Ports, Runtime-Identitäten. | D12.6.1 D12.6.6 | B / A Review | Offen |
+| TL-002 | Kooperative Episode | TL-001 | Gemeinsamer tickweiser Evaluator, synchronous reference wrapper, Pause/Resume/Trace ohne neue Physik. | D12.1.4 D12.1.6 D12.3.2 D12.3.3 | B / A Review | Offen |
+| TL-003 | Worker Pool / Protokoll | TL-002 | Coordinator worker, Worker pool, DTOs, Scheduler, canonical reduction, fault fencing, Retry. | D12.2.1 D12.2.3 D12.2.9 D12.6.2 D12.3.9 | B / A Review | Offen |
+| TL-004 | Evolution Stage und Run Control | TL-003 | Prepare/commit, goals, stop/cancel, config revisions, segments, checkpoint export/hydrate. | D12.1.3 D12.1.5 D12.3.1 D12.3.4 D12.3.5 D12.3.8 D12.6.3 | B / A Review | Offen |
+| TL-005 | Runtime Performance | TL-003 TL-004 | Profile, chunking, target rate, bounded buffers, performance monitor, profile probes. | D12.2.2 D12.2.4 D12.2.5 D12.2.6 D12.2.7 D12.2.8 D12.5.7 | B / A Review | Offen |
+| MM-001 | Registry und Storage Adapter | TL-001 | IDs, canonical genome bytes, DB stores, lease, immutable references, provenance, records. | D13.1.1 D13.1.3 D13.1.5 D13.1.6 D13.1.8 D13.3.1 D13.5.1 D13.5.2 | B / A Review | Offen |
+| MM-002 | Checkpoint und Recovery | MM-001 TL-004 | Boundary snapshots, durable autosave, hydrate, retention, fault recovery, run ownership. | D13.3.2 D13.3.3 D13.3.5 D13.3.6 D13.5.3 | B / A Review | Offen |
+| MM-003 | Model Management und Creation | MM-001 TL-004 | Library API, immutable versions, champions, creation/clone/branch, model manifest. | D13.1.2 D13.1.4 D13.1.7 D13.1.9 D13.2.1 D13.2.2 D13.2.3 D13.2.4 D13.2.6 D13.2.7 D13.2.8 D13.2.9 | B / A Review | Offen |
+| MM-004 | Storage Manager | MM-002 MM-003 | Quotas, reclaim preview, archive/trash, GC, manual save, protected references. | D13.3.4 D13.3.7 D13.3.9 D13.3.10 D13.5.4 | B / A Review | Offen |
+| MM-005 | Pakete und Transfer | MM-004 | ZIP manifest, byte checks, bounded staged import/export, conflict mapping, backup restore, compatibility. | D13.2.5 D13.3.8 D13.4.1 D13.4.2 D13.4.3 D13.4.4 D13.4.5 D13.4.8 D13.4.9 D13.5.5 | B / A Review | Offen |
+| MM-006 | Migration und Updateverträge | MM-005 | Schema migration fixtures, recovery, stable origin/update contract; final ZIP launcher 03E. | D13.4.6 D13.4.10 D13.5.6 | B / A Review | Offen |
+| TL-006 | Queue, Vorlagen und Serien | TL-004 MM-002 MM-003 | Draft/immutable queue, templates, serial experiments, app-wide run ownership. | D12.1.1 D12.1.2 D12.1.7 D12.1.8 D12.3.6 D12.3.7 D12.5.8 | B / A Review | Offen |
+| TL-007 | Training UI und Visualisierung | TL-005 TL-006 | Dashboard, camera, selected live/ghost, HUD, plots, population, actual traces. | D12.4.1 D12.4.2 D12.4.3 D12.4.4 D12.4.5 D12.4.6 D12.4.7 D12.4.8 D12.6.4 | B / A Review | Offen |
+| TL-008 | Inspectors und Compare | TL-007 MM-003 MM-005 | Brain/sensors/fitness/evolution/population, genome diff, isolated benchmark/replay. | D12.5.1 D12.5.2 D12.5.3 D12.5.4 D12.5.5 D12.5.6 D13.4.7 | B / A Review | Offen |
+| MM-007 | Library und Storage UI | MM-006 TL-006 TL-008 | Creation wizard, library, save center, storage manager, recovery, import preview, links, disabled reasons. | D13.1.9 D13.3.4 D13.5.4 D13.2.1 | B / A Review | Offen |
+| QA-C01 | Systemtests und Benchmarks | TL-008 MM-007 | Alle Fälle, vollständiger echter Referenzlauf, browser serial/parallel, endurance, performance, faults. | D12.6.5 D13.5.7 D13.5.8 | B / A Review | Offen |
+| REL-C01 | Abschluss und Review | QA-C01 | Evidenzmatrix, PR/CI, A/B Review, separate Mergefreigabe; kein D14 Code. | D12.6.7 D13.5.9 | B / A Review | Offen |

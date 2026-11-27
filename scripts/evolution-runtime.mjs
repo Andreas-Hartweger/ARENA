@@ -4,11 +4,25 @@ import { createHash } from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import { execFileSync } from 'node:child_process';
 import os from 'node:os';
+import { URL } from 'node:url';
 import process from 'node:process';
+const sourceRoots = [
+  new URL('../src/', import.meta.url).href,
+  new URL('../tests/', import.meta.url).href,
+];
+export function includeSourceDirectory(directory) {
+  sourceRoots.push(
+    directory.href.endsWith('/') ? directory.href : directory.href + '/',
+  );
+}
 registerHooks({
   resolve(name, ctx, next) {
     return next(
-      name.startsWith('.') && !extname(name) ? name + '.ts' : name,
+      name.startsWith('.') &&
+        !extname(name) &&
+        sourceRoots.some((root) => ctx.parentURL?.startsWith(root))
+        ? name + '.ts'
+        : name,
       ctx,
     );
   },
