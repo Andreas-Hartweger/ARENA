@@ -38,6 +38,12 @@ Die Fahrt startet mit menschlicher Steuerung. Drücke **F3**, wähle unter **Int
 
 **Seed 42 · untrainiert** verwendet reproduzierbare Zufallsgewichte. Der Sensor Inspector zeigt die Sichtstrahlen und die Messwerte am angegebenen Messtick. Im Brain Inspector lassen sich Schicht, Neuron und Eingangsverbindung auswählen. Ein Wechsel zurück auf **Mensch** startet eine frische Fahrt. Die Messergebnisse und offenen Freigaben stehen im [Bericht zu Batch 02A](docs/first-intelligence/BATCH-02A_COMPLETION_REPORT.md).
 
+## Trainingslabor und Modelle
+
+Im Menü der Testfahrt führt **Trainingslabor** zum Laufentwurf. Strecke, Fahrzeug und Modellversion lassen sich auch aus ihrem jeweiligen Bereich übernehmen. Nach der Vorprüfung startet **Training starten** den Lauf. **Headless** und **Max** rechnen mit dem gewählten Workerprofil ohne grafische Beobachtung und ohne Echtzeitwartezeit. Die reguläre Referenz verwendet 60 Hz für die Physik und 30 Hz für Sensorik und Inferenz.
+
+Unter **Modelle** lassen sich Versionen anlegen, klonen und unter einem gemeinsamen Szenario vergleichen. **Speicher** zeigt Checkpoints, Datenbudget, Paketimport und Backups. Für spätere Sitzungen denselben Browser, dasselbe Profil und dieselbe lokale Serveradresse einschließlich Port verwenden. Der Prüfumfang und die Bedienhinweise stehen im [Bericht zum Trainingslabor](docs/training-management/BATCH-02C_COMPLETION_REPORT.md).
+
 ## Fahrzeugphysik lokal prüfen
 
 `npm run calibrate` führt den GT-01 in Node.js auf definierten Testuntergründen aus und gibt die Messwerte als JSON aus. `npm run check` prüft zusätzlich den Simulationskern mit ausschließlich ES2022-Standardtypen. Die Kalibrierung isoliert die freie Bewegung auf definiertem Untergrund. Im Browser verarbeitet der Welttick zusätzlich Streckenkontakte, Tore und Recovery. Messwerte, Review-Einstieg und offene Abnahmen stehen im [Entwicklungsprotokoll](docs/DEVELOPMENT_LOG.md#fd-003--recovery-der-fahrzeugphysik).

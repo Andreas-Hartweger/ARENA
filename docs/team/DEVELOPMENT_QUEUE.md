@@ -2,7 +2,7 @@
 
 ## Batch 02C
 
-PRE-C01 ist abgeschlossen. Der parallele Node-Referenzlauf hat alle 12.800 Kandidatendatensätze mit der freigegebenen Referenz abgeglichen. Die browserbasierte Laufsteuerung, Modellbibliothek, Warteschlange und Speicherverwaltung sind implementiert und in Prüfung. QA-C01 und REL-C01 bleiben offen. [Arbeitsplan](../training-management/specification/BATCH-02C_TASKS.md) · [Referenzvergleich](../training-management/evidence/node-pool-reference.json)
+Die 18 Arbeitspakete und ihre Lieferergebnisse stehen im [02C-Abschlussbericht](../training-management/BATCH-02C_COMPLETION_REPORT.md). Die 210 Abnahmepunkte und 96 Entscheidungen sind in der [Prüfmatrix](../training-management/ACCEPTANCE_RESULTS.md) einzeln zugeordnet. SYS-03 enthält die von A verkürzte Headless-Dauerprüfung. Das unabhängige 02C-Schlussreview und die Mergefreigabe stehen aus. [Arbeitsplan](../training-management/specification/BATCH-02C_TASKS.md) · [Referenzvergleich](../training-management/evidence/node-pool-reference.json)
 
 ## Frühere Arbeitspakete
 

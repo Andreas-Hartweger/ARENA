@@ -23,3 +23,7 @@ PRE-B01 und EV-001–012 sind technisch abgeschlossen. EV-013 ist von B übergeb
 ## 27.11.2026 · Freigabe von A und Übergang zu 02C
 
 Am 27.11.2026 erteilte A die bedingte Merge-Freigabe und delegierte die verbleibenden Review- und Abnahmeschritte. Codex prüfte den Stand von B `6818084` gegen `61cd54a`, insbesondere physische Kontaktkorrekturen, interpolierte Ziellinie, Fehlerisolation und deterministische Reproduktion. Der Datenabgleich aus der Übergabe umfasst 12.800 Ergebnisse und 594 Elite-Neubewertungen. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) wurde als `c74ab27daf3159329d9049076ab3c30c5a4759ea` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010) bestand.
+
+## 27.11.2026 · Prüfergebnisse des Trainingslabors
+
+Nach dem Merge von 02B und grüner Main-CI wurde `feature/batch-02c-training-model-management` bearbeitet. Das Labor, die Modellbibliothek und die Speicherverwaltung stehen in [PR #7](https://github.com/Andreas-Hartweger/ARENA/pull/7). A beendete die beiden Vorläufe um 19:07 Uhr und den anschließend einzeln gestarteten Endabnahmelauf um 19:14 Uhr. Der Prüfpunkt ist auf Anweisung von A geschlossen. Der [02C-Bericht](../training-management/BATCH-02C_COMPLETION_REPORT.md) enthält die gemessenen Laufzeiten, das Ergebnis der Altprüfungen, den unabhängigen Freigabeschritt und Links zur Abnahmematrix.

@@ -1,0 +1,36 @@
+{
+  "archiveSource": "8a23ca0ae89a9db183af0019b281b4a0c6dec9e8",
+  "referenceSource": "b6b28f3525e3fb1904f2fb62e88a74bf7dbf406e",
+  "verifiedSummaryDigests": 100,
+  "episodes": 12800,
+  "simulationTicks": 30575874,
+  "reasons": {
+    "noProgress": 12076,
+    "timeout": 60,
+    "completed": 664
+  },
+  "firstSuccessfulGeneration": 31,
+  "validLaps": 664,
+  "fastestLapSeconds": 59.66377472974769,
+  "finalChampion": "8e3d307775f012a80c85481b1eb34cbb3d78e047136a70f2c6fba7b57b2a07f4",
+  "championFiles": [
+    {
+      "generation": 0,
+      "fingerprint": "7362430fee3b90d5606f875101f90e407c42ccebc81a560a32d76ef1cd452548",
+      "rawSha256": "95e56115eff482d1eb43debb5608712213062b9d01209cefa46d4183acd07e5e",
+      "bytes": 68376
+    },
+    {
+      "generation": 31,
+      "fingerprint": "0d8b7d4bdd78210b843e985323938c25b25954615d230bca161725de7411325d",
+      "rawSha256": "bf4e6f1feac642877b2fe60382ac56e5362ddba32636a923753bb6e990e51649",
+      "bytes": 68376
+    },
+    {
+      "generation": 99,
+      "fingerprint": "8e3d307775f012a80c85481b1eb34cbb3d78e047136a70f2c6fba7b57b2a07f4",
+      "rawSha256": "f07f411477f92dd3ddfd08dee92ec5043169d986b7cb977726843f2f56f8d812",
+      "bytes": 68376
+    }
+  ]
+}

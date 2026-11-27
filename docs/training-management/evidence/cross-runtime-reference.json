@@ -1,0 +1,41 @@
+{
+  "method": "Pair one Node and one Chromium candidate by generation and population slot on the same scenario and seed; equality by field. This describes observed cross-runtime outcomes.",
+  "nodeCandidateArchive": "../../first-evolution/evidence/reference-release/episodes.ndjson.gz",
+  "nodeArchiveSHA256": "f11abab76aadded0d4595ced107b3c40f254ab996e5468cc159d18dae18bedf7",
+  "browserCandidateArchive": "browser-archive/browser-generations.ndjson.gz",
+  "browserArchiveSHA256": "3ab7ac886a0822715bdf0056b20005757eeec976ea91933f77952b33df877388",
+  "pairs": 12800,
+  "matchedPairs": {
+    "identity": 12800,
+    "parents": 12800,
+    "genomeFingerprint": 137,
+    "termination": 12800,
+    "ticks": 12799,
+    "lapCount": 12800
+  },
+  "firstDifference": {
+    "genomeFingerprint": {
+      "generation": 1,
+      "slot": 6
+    },
+    "ticks": {
+      "generation": 99,
+      "slot": 112
+    }
+  },
+  "browserMinusNodeTotalTicks": 30,
+  "maxAbsoluteScoreDifference": {
+    "absolute": 2.996687561317117,
+    "generation": 92,
+    "slot": 100,
+    "node": 859.1913931092048,
+    "browser": 862.1880806705219
+  },
+  "maxAbsoluteLapDifferenceAmongPairedLaps": {
+    "absoluteSeconds": 0.4934540556597824,
+    "generation": 99,
+    "slot": 112,
+    "node": 92.74388880108559,
+    "browser": 93.23734285674537
+  }
+}
