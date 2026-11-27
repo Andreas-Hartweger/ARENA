@@ -16,6 +16,8 @@ node scripts/verify-evolution-run.mjs .npm-cache/reference-01
 
 Die vorhandene Referenz unter `docs/first-evolution/evidence/reference-release` kann direkt mit `node scripts/verify-evolution-run.mjs docs/first-evolution/evidence/reference-release docs/first-evolution/evidence/comparison-prefix.json` nachgerechnet werden. Für einen noch laufenden Lauf prüft `--partial` dessen bereits vollständig gespeicherte Generationen. Der Prüfer liest unkomprimierte oder gzip-komprimierte Einzelzeilen.
 
+Mit `node scripts/replay-evolution-audit.mjs docs/first-evolution/evidence/reference-release` lässt sich zusätzlich der aktuelle Koordinator gegen die gespeicherten Einzelergebnisse prüfen. Er rekonstruiert Genom und Abstammung jedes Slots und vergleicht sämtliche Kandidaten- und Generationsdaten. Je Generation fährt er das beste Modell und ein wechselndes zweites Modell noch einmal in einer frischen Welt. Im vollständigen Lauf sind das 200 Kontrollfahrten.
+
 ```sh
 node scripts/run-evolution.mjs .npm-cache/evolution-8x4 short 8 4
 node scripts/run-evolution.mjs .npm-cache/random-8x4 random 8 4
@@ -48,6 +50,7 @@ Die Suiten `components`, `world`, `scale` und `endurance` schreiben jeweils eine
 
 ```sh
 node scripts/benchmark-evolution.mjs world .npm-cache/world-01.json /path/to/arena-02a-checkout
+node scripts/benchmark-evolution.mjs parity .npm-cache/parity-01.json /path/to/arena-02a-checkout
 node scripts/benchmark-evolution.mjs components .npm-cache/components-01.json
 node scripts/benchmark-evolution.mjs scale .npm-cache/scale-01.json
 node --expose-gc scripts/benchmark-evolution.mjs endurance .npm-cache/endurance-01.json
