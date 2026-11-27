@@ -1,0 +1,54 @@
+{
+  "summary": [
+    {
+      "work": "window-30",
+      "method": "02B",
+      "ms": 16212.027100000007,
+      "minMs": 15563.6771,
+      "maxMs": 32089.64909999998,
+      "ticks": 19200,
+      "ticksPerSecond": 1184.3059403718855,
+      "speedup": 1,
+      "efficiency": null,
+      "hash": "8ce4c75a5c3b957053deed7bb7a04546519d02dbf71be8112b77556a1338f19a"
+    },
+    {
+      "work": "window-30",
+      "method": "02C",
+      "ms": 16156.794399999992,
+      "minMs": 15187.478600000002,
+      "maxMs": 18518.772799999977,
+      "ticks": 19200,
+      "ticksPerSecond": 1188.3545414181917,
+      "speedup": 1.0034185432229066,
+      "efficiency": null,
+      "hash": "8ce4c75a5c3b957053deed7bb7a04546519d02dbf71be8112b77556a1338f19a"
+    },
+    {
+      "work": "window-10",
+      "method": "02B",
+      "ms": 1989.289700000023,
+      "minMs": 1880.9513000000152,
+      "maxMs": 2404.6304000000237,
+      "ticks": 4800,
+      "ticksPerSecond": 2412.921556875273,
+      "speedup": 1,
+      "efficiency": null,
+      "hash": "83d1c8577915e6f2b81b3c64a28ab706df22dd6baed99015fa3b7e0cd5e5668a"
+    },
+    {
+      "work": "window-10",
+      "method": "02C",
+      "ms": 1931.4494000000414,
+      "minMs": 1866.8167999999714,
+      "maxMs": 2047.2187999999733,
+      "ticks": 4800,
+      "ticksPerSecond": 2485.180300348483,
+      "speedup": 1.0299465779429584,
+      "efficiency": null,
+      "hash": "83d1c8577915e6f2b81b3c64a28ab706df22dd6baed99015fa3b7e0cd5e5668a"
+    }
+  ],
+  "repetitions": 3,
+  "matched": true
+}

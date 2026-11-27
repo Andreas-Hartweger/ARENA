@@ -1,0 +1,55 @@
+{
+  "straight": {
+    "accelerationTicks": 229,
+    "accelerationSeconds": 3.816666666666667,
+    "topSpeedKmh": 248.3411744176448,
+    "finalSecondSpreadKmh": 0,
+    "brakeDistanceM": 31.174882008147208,
+    "brakeTicks": 137,
+    "brakeSeconds": 2.283333333333333,
+    "reversePeakKmh": 29.675641478334406
+  },
+  "turn": {
+    "ticks": 120,
+    "maxEnergyGainJ": 0,
+    "maxUtilization": 1.0000000000000002,
+    "maxSteeringRad": 0.5019795168012625,
+    "maxYawRadPerSecond": 0.6297941838642575,
+    "combinedForceTicks": 120
+  },
+  "surface": {
+    "asphaltGripN": 7970.625,
+    "transition": [
+      {
+        "elapsedSeconds": 0.016666666666666666,
+        "gripN": 2869.425,
+        "rollingResistance": 0.025833333333333333
+      },
+      {
+        "elapsedSeconds": 0.03333333333333333,
+        "gripN": 2869.425,
+        "rollingResistance": 0.03666666666666667
+      },
+      {
+        "elapsedSeconds": 0.05,
+        "gripN": 2869.425,
+        "rollingResistance": 0.0475
+      },
+      {
+        "elapsedSeconds": 0.06666666666666667,
+        "gripN": 2869.425,
+        "rollingResistance": 0.05833333333333333
+      },
+      {
+        "elapsedSeconds": 0.08333333333333333,
+        "gripN": 2869.425,
+        "rollingResistance": 0.06916666666666667
+      },
+      {
+        "elapsedSeconds": 0.1,
+        "gripN": 2869.425,
+        "rollingResistance": 0.08
+      }
+    ]
+  }
+}

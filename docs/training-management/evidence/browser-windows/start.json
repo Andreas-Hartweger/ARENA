@@ -1,0 +1,65 @@
+{
+  "sha": "384165e3e32ccdf827566efcc53a2888a81e3b9a",
+  "sourceDiff": "",
+  "node": "v24.22.3",
+  "os": "Windows 11 Pro",
+  "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+  "logicalCpus": 16,
+  "totalRam": 33820106752,
+  "power": "uncontrolled",
+  "backgroundLoad": "Other isolated project acceptance workloads may run concurrently",
+  "renderer": null,
+  "driver": "158.0.8127.89",
+  "modes": [
+    {
+      "name": "max-0",
+      "workers": 0,
+      "rate": "max",
+      "trace": false
+    },
+    {
+      "name": "max-1",
+      "workers": 1,
+      "rate": "max",
+      "trace": false
+    },
+    {
+      "name": "max-2",
+      "workers": 2,
+      "rate": "max",
+      "trace": false
+    },
+    {
+      "name": "max-4",
+      "workers": 4,
+      "rate": "max",
+      "trace": false
+    },
+    {
+      "name": "trace",
+      "workers": 2,
+      "rate": "max",
+      "trace": true
+    },
+    {
+      "name": "observed",
+      "workers": 2,
+      "rate": "max",
+      "trace": false,
+      "observe": true
+    },
+    {
+      "name": "10x",
+      "workers": 2,
+      "rate": 10,
+      "trace": false
+    },
+    {
+      "name": "1x",
+      "workers": 2,
+      "rate": 1,
+      "trace": false
+    }
+  ],
+  "work": "8 individuals, 2 generations, real 60/30, explicit short 180-tick task, warm-up G0, measure only G1, mandatory initial/boundary/final IndexedDB saves. Alternating order. Three repeats."
+}
