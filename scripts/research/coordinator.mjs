@@ -182,6 +182,9 @@ export async function runExperiment(
                 ...context,
                 slot: k.slot,
                 scenario: k.scenarioIndex,
+                contract: k.contractId,
+                genome: k.genomeHash,
+                seed: k.scenarioSeed,
                 jobId: k.jobId,
                 attempt: 0,
                 lease: k.workerLease,
@@ -206,6 +209,34 @@ export async function runExperiment(
               msg.key?.sessionId === active.key.sessionId &&
               msg.key.workerLease === active.key.workerLease
             ) {
+              if (
+                msg.type === 'fault' ||
+                (msg.type === 'result' && !msg.result.ok)
+              ) {
+                const k = msg.key;
+                ledger.transaction(() => {
+                  ledger.assertLease();
+                  ledger.manifest('failed:' + idOf(k) + ':' + k.attempt, {
+                    experimentId: exp,
+                    runId: k.runId,
+                    sessionId: k.sessionId,
+                    segment: k.segmentId,
+                    generation: k.generation,
+                    slot: k.slot,
+                    scenario: k.scenarioIndex,
+                    jobId: k.jobId,
+                    attempt: k.attempt,
+                    lease: k.workerLease,
+                    genome: k.genomeHash,
+                    contract: k.contractId,
+                    seed: k.scenarioSeed,
+                    failure:
+                      msg.type === 'result'
+                        ? msg.result
+                        : { message: msg.message, transient: msg.transient },
+                  });
+                });
+              }
               if (msg.type === 'result') {
                 const transient = !msg.result.ok && msg.result.transient;
                 closeAttempt(msg.result.tick, transient ? 'lost' : 'result');
