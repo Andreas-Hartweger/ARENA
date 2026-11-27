@@ -261,6 +261,48 @@ it('POP-004 POP-005 POP-007 EVO-008 DIA-002 budgets whole generations, stores co
   expect(() => r.collect()).toThrow();
   expect(start({ budget: 7 }).population).toHaveLength(0);
 });
+it('ADP-003 ADP-006 ADP-007 GEN-005 CRX-004 DIA-006 composes the optional operators through a full rescue window', () => {
+  const run = new Evolution(m, [short], digest, {
+    n: 32,
+    generations: 47,
+    crossProbability: 0.1,
+    adaptation: {
+      probabilityEnabled: true,
+      strengthEnabled: true,
+      immigrantRate: 0.05,
+      rescueEnabled: true,
+    },
+  });
+  let crosses = 0;
+  for (let g = 0; g < 47; g++) {
+    // An explicitly constant landscape exercises each stagnation deadline exactly.
+    const result = run.commit(run.collect(() => base));
+    if (g === 15) expect(result.adaptive.p).toBeCloseTo(0.075);
+    if (g === 30) expect(result.adaptive.alpha).toBeCloseTo(0.3);
+    if (g === 45) expect(result.adaptive.p).toBeCloseTo(0.1125);
+    if (g === 0) continue;
+    const immigrants = g === 46 ? 5 : 2;
+    expect(result.origins).toEqual({
+      elite: 2,
+      offspring: 30 - immigrants,
+      immigrant: immigrants,
+    });
+    for (const member of result.records.slice(-immigrants)) {
+      expect(member.parents).toEqual([]);
+      expect(member.mutation).toBeUndefined();
+      expect(member.birth).toBe(g);
+    }
+    for (const child of result.records.slice(2, 32 - immigrants)) {
+      expect(child.mutation).toBeDefined();
+      if (child.operator === 'neuron-wise') {
+        crosses++;
+        expect(child.parents).toHaveLength(2);
+      }
+    }
+  }
+  expect(crosses).toBeGreaterThan(0);
+  expect(run.population).toHaveLength(0);
+});
 it('DIA-001 DIA-003 DIA-004 DIA-005 DIA-006 DIA-007 EVO-009 REG-003 verifies real selected traces and identical reproduction', () => {
   expect(distribution([3, 1, 4, 2])).toEqual({
     best: 4,
