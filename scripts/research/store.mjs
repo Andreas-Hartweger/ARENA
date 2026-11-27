@@ -67,7 +67,8 @@ export class NodeStore {
     });
   }
   commit(values, options = {}, batch) {
-    return this.ledger.transaction(() => {
+    this.afterCommit = undefined;
+    const revision = this.ledger.transaction(() => {
       this.ledger.assertLease();
       const state = this.status(),
         budget = options.budget ?? state.budget;
@@ -157,5 +158,7 @@ export class NodeStore {
       this.onCommit?.(values, state.revision + 1);
       return state.revision + 1;
     });
+    this.afterCommit?.();
+    return revision;
   }
 }

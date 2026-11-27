@@ -355,14 +355,19 @@ export class TrainingController {
       });
     };
   }
-  async start(input: Draft, source?: Genome, queueUpdate?: StoredObject) {
+  async start(
+    input: Draft,
+    source?: Genome,
+    queueUpdate?: StoredObject,
+    researchRunId?: string,
+  ) {
     if (!['Draft', 'Completed', 'Cancelled', 'Faulted'].includes(this.#phase))
       throw Error('Ein Trainingslauf ist aktiv.');
     const previous = this.#phase;
     this.#phase = 'Validating';
     this.#emit();
     try {
-      await this.#initialize(input, source, queueUpdate);
+      await this.#initialize(input, source, queueUpdate, researchRunId);
     } catch (error) {
       if (this.#phase === 'Validating') {
         this.#phase = previous;
@@ -371,7 +376,12 @@ export class TrainingController {
       throw error;
     }
   }
-  async #initialize(input: Draft, source?: Genome, queueUpdate?: StoredObject) {
+  async #initialize(
+    input: Draft,
+    source?: Genome,
+    queueUpdate?: StoredObject,
+    researchRunId?: string,
+  ) {
     for (const item of await this.#db.list())
       if (item.kind === 'run') {
         const record = await this.#db.get(item.id);
@@ -383,7 +393,13 @@ export class TrainingController {
       throw Error(
         'Warteschlangenläufe benötigen einen dauerhaften Start-Checkpoint.',
       );
-    draft.options.runId = crypto.randomUUID();
+    if (
+      researchRunId !== undefined &&
+      (!/^[a-zA-Z0-9._-]{1,100}$/.test(researchRunId) ||
+        (await this.#db.get('run:' + researchRunId)))
+    )
+      throw Error('Invalid or already published research run ID');
+    draft.options.runId = researchRunId ?? crypto.randomUUID();
     const { m, scenarios, allocation, estimated } = preflight(
       draft,
       fingerprint,

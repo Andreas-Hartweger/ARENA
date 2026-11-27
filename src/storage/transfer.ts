@@ -14,7 +14,11 @@ import {
   type ObjectMeta,
   type StoredObject,
 } from './objects';
-import { TrainingDatabase } from './database';
+import type { TrainingDatabase } from './database';
+type TransferStore = Pick<
+  TrainingDatabase,
+  'list' | 'get' | 'commit' | 'status' | 'stage' | 'discardStage'
+>;
 import { sha256 } from '../runtime/fingerprint';
 import { readVersion, validateProfile, type Profile } from './library';
 import { restore, type Checkpoint, type RunIndex } from './checkpoint';
@@ -75,7 +79,7 @@ function allowedFields(o: object, required: string[], optional: string[] = []) {
 const allowedId = (s: unknown) =>
   typeof s === 'string' && /^[a-zA-Z0-9_.:-]{1,180}$/.test(s);
 export async function exportPackage(
-  db: TrainingDatabase,
+  db: TransferStore,
   type: PackageType,
   roots: string[],
   runtime: string,
@@ -133,7 +137,7 @@ export async function exportPackage(
     await db.commit([], { remove: [pin] });
   }
 }
-export async function previewPackage(db: TrainingDatabase, file: Blob) {
+export async function previewPackage(db: TransferStore, file: Blob) {
   const status = await db.status(),
     source = await scanArchive(
       file,
@@ -450,7 +454,7 @@ export async function previewPackage(db: TrainingDatabase, file: Blob) {
   };
 }
 export async function importPackage(
-  db: TrainingDatabase,
+  db: TransferStore,
   preview: Awaited<ReturnType<typeof previewPackage>>,
   variant = false,
 ) {
