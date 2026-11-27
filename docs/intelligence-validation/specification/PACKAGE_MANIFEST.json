@@ -1,0 +1,101 @@
+{
+  "version": "0.11",
+  "files": {
+    "ARENA_HANDOVER_005.md": {
+      "sha256": "826549d82d195c81dcdfc8698d36eb251ed9ed77891fa78d3d6cee524f203748",
+      "bytes": 590
+    },
+    "BATCH-02D_CODEX_PROMPT.md": {
+      "sha256": "a19a17aa62e1c5fb4113b33cf81bc3bf2cae3b2ed4636f48a735b6c656282898",
+      "bytes": 5739
+    },
+    "BATCH-02D_SPECIFICATION.md": {
+      "sha256": "cc2019305d0a7d0b2d9580ca215f954895aff1d50f9dec36d00c5ba6b61649e3",
+      "bytes": 1283
+    },
+    "BATCH-02D_TASKS.md": {
+      "sha256": "6e7fc9619f63d76ac57e388080d6d48f995f75d6475169b3cd1587cf92135adc",
+      "bytes": 2786
+    },
+    "BATCH-02D_TESTS.md": {
+      "sha256": "05f6055740d70dac464b67c3a2f295aee80d46829a14315a59092a6ab966bd9c",
+      "bytes": 18363
+    },
+    "BUDGET_COMPUTE_SPEC.md": {
+      "sha256": "300e550cd03e85331ef535581bc59c9ba01715a3f5454e0f1ed8886819c72664",
+      "bytes": 4024
+    },
+    "CONSISTENCY_REVIEW.md": {
+      "sha256": "63aaf2224e6bee8f678c230dfc025a3767dfbf467f5b0df0c84245219a3a17a3",
+      "bytes": 2064
+    },
+    "DECISIONS_D14.md": {
+      "sha256": "318b5f60f52ebdc7894c7ffca18db46ff7cfe6f62c9af36ab71d3f79579176cf",
+      "bytes": 9779
+    },
+    "DEVELOPMENT_CONTINUITY_CONTRACT.md": {
+      "sha256": "3fc6ec2951ffe3f3fea9eba16ec6f74bf192008358f391d068738a4acbc6ae4e",
+      "bytes": 2634
+    },
+    "EXPERIMENT_MATRIX.md": {
+      "sha256": "c391fe32bc21e9e2d755d8a515f0bf50e56a68f372299db591470d571865f5ac",
+      "bytes": 4836
+    },
+    "FUTURE_ROADMAP.md": {
+      "sha256": "71c28b2697d661b711e8f7be9ab4ced675bada648ae9ad90489310d5748166aa",
+      "bytes": 4490
+    },
+    "GITHUB_INTERFACE_REVIEW.md": {
+      "sha256": "b70d063b460da2bbccdf93211a53fab2158d17ac22f4a0ba6e4eb9566b0eb2ff",
+      "bytes": 1628
+    },
+    "README.md": {
+      "sha256": "e0ef29b9818f59ed48f79971e9f22d93ad6e3d6522cc04c77dbfb8b2eed27ba2",
+      "bytes": 617
+    },
+    "REFERENCE_02B.md": {
+      "sha256": "d324b1eae55d317ce000bb71350acef0ebc372b561e952a3250352f868f6f8dd",
+      "bytes": 1271
+    },
+    "RESEARCH_RUNTIME_SPEC.md": {
+      "sha256": "2fe6ffe31a3638438ef8a2de8d1b101e9c747379d4d1e1fa66ee3033564254c8",
+      "bytes": 6084
+    },
+    "TRACEABILITY_MATRIX.md": {
+      "sha256": "687842b1d676ca07142857707b1c0c496483f58937d19fad4e5324f27ca75c31",
+      "bytes": 4597
+    },
+    "VALIDATION_PROMOTION_SPEC.md": {
+      "sha256": "65d85a35e89ec20791396be9b9c613bd2b2a9ceb2b978c45a227fca6a224abbd",
+      "bytes": 6272
+    },
+    "decisions.csv": {
+      "sha256": "dd09e4460f38ca8a15a5f650f2eda3be2124dc875bc4ed663cfbaff3ebd35d7a",
+      "bytes": 9347
+    },
+    "experiments.csv": {
+      "sha256": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+      "bytes": 12008
+    },
+    "matrix.csv": {
+      "sha256": "ab2fd1877a6a9b04ec1edb01df0eef4fb991d041e625abb28c28b8df00aabae0",
+      "bytes": 3730
+    },
+    "research_config.json": {
+      "sha256": "17c2f823fde7c34dbdeb5548d695c4de2c67bf9ee80e453bb0de463a676beca5",
+      "bytes": 46651
+    },
+    "tasks.csv": {
+      "sha256": "832d6d83c4a89223175533e2e9d947efec9a03d091f38d9fe31361fb71a3eab2",
+      "bytes": 2488
+    },
+    "tests.csv": {
+      "sha256": "ffeb1a06e55355b4816211a1f8bf18e16631a7abe85174f067f5d8982ab4b2a6",
+      "bytes": 16062
+    },
+    "ARENA_MASTERPLAN_v0.11.xlsx": {
+      "sha256": "03ca599f472d76f916dee55c9f47e35f9b481f3e066b05edce665b6a09ac9329",
+      "bytes": 340091
+    }
+  }
+}

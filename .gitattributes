@@ -1,3 +1,4 @@
 * text=auto eol=lf
 docs/training-management/specification/** -text
+docs/intelligence-validation/specification/** -text
 docs/training-management/evidence/checks/*.log -text -whitespace

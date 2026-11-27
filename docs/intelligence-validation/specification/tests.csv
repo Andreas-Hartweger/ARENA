@@ -1,0 +1,159 @@
+﻿ID,Decision,Task,Type,Expected,Status
+D-001A,D14.1.1,RS-002,Funktion,"Historische vier Rollen anhand der Originalrecords rekonstruieren, Fingerprints und erneute Fahrt prüfen.",Offen
+D-001B,D14.1.1,RS-002,Schutz/Negativ,Falscher Hash oder fehlende Herkunft verhindert Archivfreigabe.,Offen
+D-002A,D14.1.2,RS-006,Funktion,G0 und gleich budgetierte Zufallssuche mit gleicher Initialisierung vergleichen.,Offen
+D-002B,D14.1.2,RS-006,Schutz/Negativ,Programmierte Referenz nicht als erlernt klassifizieren.,Offen
+D-003A,D14.1.3,RS-010,Funktion,Bericht getrennte Kennzahlen und Rollen prüfen.,Offen
+D-003B,D14.1.3,RS-010,Schutz/Negativ,Hohe Fitness ohne Qualitätsgate ergibt keine Freigabe.,Offen
+D-004A,D14.1.4,RS-005,Funktion,Erfolgsquoten und gültige Zeitquantile aus Rohdaten nachrechnen.,Offen
+D-004B,D14.1.4,RS-005,Schutz/Negativ,"Keine gültige Runde ergibt null Zeitstatistik, nicht 0.",Offen
+D-005A,D14.1.5,RS-006,Funktion,Vergleiche Pop32/128 mit gleichem vollständigem Budget.,Offen
+D-005B,D14.1.5,RS-006,Schutz/Negativ,Unterschiedliche Fitnessverträge nicht numerisch gleichsetzen.,Offen
+D-006A,D14.1.6,RS-003,Funktion,Standard-Szenario reproduzieren und gültige Variation initialisieren.,Offen
+D-006B,D14.1.6,RS-003,Schutz/Negativ,Holdout nicht im Trainingsplan zulassen.,Offen
+D-007A,D14.1.7,RS-010,Funktion,Bericht Forschungsziel vs Pflichtgate unterscheiden.,Offen
+D-007B,D14.1.7,RS-010,Schutz/Negativ,Populationserfolg nicht als Einzelmodellzuverlässigkeit ausgeben.,Offen
+D-008A,D14.1.8,RS-001,Funktion,Experiment mit unveränderlicher Referenz ausführen.,Offen
+D-008B,D14.1.8,RS-001,Schutz/Negativ,Referenzüberschreiben verweigern.,Offen
+D-009A,D14.2.1,RS-007,Funktion,Matrix Populationen und Generationen prüfen.,Offen
+D-009B,D14.2.1,RS-007,Schutz/Negativ,Nicht teilbares Budget nur vollständige Generationen.,Offen
+D-010A,D14.2.2,RS-007,Funktion,Gepaarte Selektionstests mit gültigen Kombinationen.,Offen
+D-010B,D14.2.2,RS-007,Schutz/Negativ,Turnier größer als verfügbarer Pool ablehnen.,Offen
+D-011A,D14.2.3,RS-007,Funktion,Bei n128 Standard sechs Eliten; alle neu bewerten.,Offen
+D-011B,D14.2.3,RS-007,Schutz/Negativ,Keine Elite durch Immigrants verdrängen.,Offen
+D-012A,D14.2.4,RS-007,Funktion,Ausgewählte und tatsächlich geänderte Parameter zählen.,Offen
+D-012B,D14.2.4,RS-007,Schutz/Negativ,p=0 und geschützte Schicht bleiben unverändert.,Offen
+D-013A,D14.2.5,RS-007,Funktion,"Seedgleiche Mutationsvektoren, Skalierung je Schicht prüfen.",Offen
+D-013B,D14.2.5,RS-007,Schutz/Negativ,Grenzen ±8/±4 und endliche Parameter schützen.,Offen
+D-014A,D14.2.6,RS-007,Funktion,Beide vorhandenen Verfahren mit realen Eltern vergleichen.,Offen
+D-014B,D14.2.6,RS-007,Schutz/Negativ,Inkompatible Signatur nicht kreuzen.,Offen
+D-015A,D14.2.7,RS-007,Funktion,Synthetische Stagnation plus echte Fahrversuche.,Offen
+D-015B,D14.2.7,RS-007,Schutz/Negativ,Keine Änderung außerhalb Caps; neue Logik separat versionieren.,Offen
+D-016A,D14.2.8,RS-007,Funktion,Rescue-Trigger und neue Genome nachweisen.,Offen
+D-016B,D14.2.8,RS-007,Schutz/Negativ,Keine unbewerteten Immigrants im Ranking.,Offen
+D-017A,D14.2.9,RS-005,Funktion,Aus Rohdaten Diversitätswerte reproduzieren.,Offen
+D-017B,D14.2.9,RS-005,Schutz/Negativ,Diagnose ändert RNG/Elternwahl nicht.,Offen
+D-018A,D14.2.10,RS-007,Funktion,Roadmap und Algorithmus-ID getrennt prüfen.,Offen
+D-018B,D14.2.10,RS-007,Schutz/Negativ,Kein unfreigegebener Algorithmus als Pflicht in 02D.,Offen
+D-019A,D14.3.1,RS-008,Funktion,Parameterzahl und Genombytes je Architektur nachrechnen.,Offen
+D-019B,D14.3.1,RS-008,Schutz/Negativ,Über Foundation-Cap nicht starten.,Offen
+D-020A,D14.3.2,RS-008,Funktion,Parameterzahlen 8571/8547/8331/8403 prüfen.,Offen
+D-020B,D14.3.2,RS-008,Schutz/Negativ,Nicht kompatible Gewichte nicht übernehmen.,Offen
+D-021A,D14.3.3,RS-008,Funktion,Alle drei Modellverträge und Referenzausgaben prüfen.,Offen
+D-021B,D14.3.3,RS-008,Schutz/Negativ,Linearer Ausgang und Controller unverändert.,Offen
+D-022A,D14.3.4,RS-008,Funktion,Deterministische Gewichte und G0-Statistik prüfen.,Offen
+D-022B,D14.3.4,RS-008,Schutz/Negativ,Kein vortrainiertes Gehirn als From Scratch deklarieren.,Offen
+D-023A,D14.3.5,RS-008,Funktion,Tickfolge und Inferenzzahl jeder Frequenz prüfen.,Offen
+D-023B,D14.3.5,RS-008,Schutz/Negativ,Keine heimlichen Skips oder Frequenzwechsel.,Offen
+D-024A,D14.3.6,RS-005,Funktion,Kanalregister und Diagnose gegen tatsächlichen Tick prüfen.,Offen
+D-024B,D14.3.6,RS-005,Schutz/Negativ,Nicht verfügbare Werte korrekt maskieren; kein Holdout-Zugriff.,Offen
+D-025A,D14.3.7,RS-008,Funktion,Identische Budgets für unterschiedliche Größen nachweisen.,Offen
+D-025B,D14.3.7,RS-008,Schutz/Negativ,Gepaarter Seed bedeutet nicht identische Gewichte.,Offen
+D-026A,D14.3.8,RS-005,Funktion,Profiling und gleichwertige Rechenpfade vergleichen.,Offen
+D-026B,D14.3.8,RS-005,Schutz/Negativ,Abweichende numerische Ergebnisse nicht als exact parity ausgeben.,Offen
+D-027A,D14.3.9,RS-008,Funktion,Modellbeschreibung und bestehende Controllerzustände prüfen.,Offen
+D-027B,D14.3.9,RS-008,Schutz/Negativ,Keine versteckten erlernten Zustände im Foundation-Vertrag.,Offen
+D-028A,D14.3.10,REL-D01,Funktion,Roadmap enthält Alternativen und gemeinsame Benchmarks.,Offen
+D-028B,D14.3.10,REL-D01,Schutz/Negativ,Keine ungeprüfte Universalitätsbehauptung.,Offen
+D-029A,D14.4.1,RS-008,Funktion,D10-Profilvektoren und gemeinsame Fahrdaten prüfen.,Offen
+D-029B,D14.4.1,RS-008,Schutz/Negativ,Keine direkte Rangfolge aus inkompatiblen Scores.,Offen
+D-030A,D14.4.2,RS-003,Funktion,Formel und Fortschrittsvektoren nachrechnen.,Offen
+D-030B,D14.4.2,RS-003,Schutz/Negativ,"Korrektur, Rückwärtsweg, Abkürzung nicht doppelt werten.",Offen
+D-031A,D14.4.3,RS-005,Funktion,Normalisierte Strafen aus Rohdaten prüfen.,Offen
+D-031B,D14.4.3,RS-005,Schutz/Negativ,Früh scheitern nicht als Zeitbonus behandeln.,Offen
+D-032A,D14.4.4,RS-009,Funktion,Rundenzeit und Aufgabenzeit separat prüfen.,Offen
+D-032B,D14.4.4,RS-009,Schutz/Negativ,Schneller ungültiger Fahrer erhält keinen Rekord.,Offen
+D-033A,D14.4.5,RS-005,Funktion,Trace und echter Fahrzeugzustand zeitlich abgleichen.,Offen
+D-033B,D14.4.5,RS-005,Schutz/Negativ,Ideallinie/Score nicht als heimliche Eingabe.,Offen
+D-034A,D14.4.6,RS-003,Funktion,Recovery-Fahrt ohne Reset und mit gültigem Ziel prüfen.,Offen
+D-034B,D14.4.6,RS-003,Schutz/Negativ,Teleport/Auto-Reset macht Versuch ungültig.,Offen
+D-035A,D14.4.7,RS-009,Funktion,Segmentwechsel und erneute Bewertung nachweisen.,Offen
+D-035B,D14.4.7,RS-009,Schutz/Negativ,Keine alten Scores in neuen Vertrag übernehmen.,Offen
+D-036A,D14.4.8,RS-010,Funktion,Bekannte Korrekturüberlappung und Tortricks reproduzieren.,Offen
+D-036B,D14.4.8,RS-010,Schutz/Negativ,Exploiter nicht zum offiziellen Champion erklären.,Offen
+D-037A,D14.4.9,REL-D01,Funktion,Scope und Modellverträge prüfen.,Offen
+D-037B,D14.4.9,REL-D01,Schutz/Negativ,Keine Gegnerfähigkeit ohne Testnachweis.,Offen
+D-038A,D14.4.10,REL-D01,Funktion,Mehrdimensionale Analyse getrennt von GA-Ranking.,Offen
+D-038B,D14.4.10,REL-D01,Schutz/Negativ,Keine unangekündigte Änderung der Auswahlfunktion.,Offen
+D-039A,D14.5.1,RS-006,Funktion,Alle 47 eindeutigen Konfigurationen und IDs prüfen.,Offen
+D-039B,D14.5.1,RS-006,Schutz/Negativ,Keine vollständige Ausführung behaupten wenn Budget stoppt.,Offen
+D-040A,D14.5.2,RS-006,Funktion,Seedgruppen und gepaarte Vergleiche prüfen.,Offen
+D-040B,D14.5.2,RS-006,Schutz/Negativ,Schlechte Seeds nicht austauschen.,Offen
+D-041A,D14.5.3,RS-004,Funktion,Pop1024 teilt alle drei Budgets; Mehrszenario zählt Episoden.,Offen
+D-041B,D14.5.3,RS-004,Schutz/Negativ,Keine Teilgeneration veröffentlichen.,Offen
+D-042A,D14.5.4,RS-009,Funktion,Auswahlregel mit langsamer Lernkurve prüfen.,Offen
+D-042B,D14.5.4,RS-009,Schutz/Negativ,Nicht nur G0-Bestfitness oder Holdout selektieren.,Offen
+D-043A,D14.5.5,RS-009,Funktion,Kombination aus bestätigten Bereichen registrieren.,Offen
+D-043B,D14.5.5,RS-009,Schutz/Negativ,Ausserhalb erlaubter Werte oder Budget ablehnen.,Offen
+D-044A,D14.5.6,RS-004,Funktion,Crash und Restart ohne Doppelzählung prüfen.,Offen
+D-044B,D14.5.6,RS-004,Schutz/Negativ,Keine eigenmächtige Produktänderung/Promotion.,Offen
+D-045A,D14.5.7,RS-004,Funktion,Budgetledger mit zwei Maschinen und Reserven prüfen.,Offen
+D-045B,D14.5.7,RS-004,Schutz/Negativ,Neue Dispatches vor Grenzüberschreitung verweigern.,Offen
+D-046A,D14.5.8,RS-009,Funktion,Vollständige lange Generationen und Checkpoints prüfen.,Offen
+D-046B,D14.5.8,RS-009,Schutz/Negativ,Keine Endlosläufe ohne freigegebenes Budget.,Offen
+D-047A,D14.5.9,RS-004,Funktion,Hard budget und Soft stop am Boundary prüfen.,Offen
+D-047B,D14.5.9,RS-004,Schutz/Negativ,Abgebrochen nicht als voll ausgeführt markieren.,Offen
+D-048A,D14.5.10,RS-005,Funktion,"1/2/4/6/8 Worker soweit zulässig, gleiche Ergebnisse.",Offen
+D-048B,D14.5.10,RS-005,Schutz/Negativ,Keine Tick-/Sensor-/Inferenz-Skips; keine ungemessene Beschleunigung behaupten.,Offen
+D-049A,D14.5.11,RS-005,Funktion,Experimentpaket aus Rohdaten reproduzieren.,Offen
+D-049B,D14.5.11,RS-005,Schutz/Negativ,Fehlende Evidenz nicht als Erfolg markieren.,Offen
+D-050A,D14.6.1,RS-010,Funktion,"Manifesthash, Zugriffstrennung und Freeze prüfen.",Offen
+D-050B,D14.6.1,RS-010,Schutz/Negativ,Holdout-Feedback nicht zur Auswahl neuer Modelle nutzen.,Offen
+D-051A,D14.6.2,RS-003,Funktion,60 eindeutige gültige Zustände prüfen.,Offen
+D-051B,D14.6.2,RS-003,Schutz/Negativ,Überlappende/ungültige Starts vor Freeze ablehnen.,Offen
+D-052A,D14.6.3,RS-010,Funktion,54 mit 16/18/20 besteht.,Offen
+D-052B,D14.6.3,RS-010,Schutz/Negativ,54 mit 14/20/20 scheitert.,Offen
+D-053A,D14.6.4,RS-010,Funktion,Grenzwerte inklusive Gleichheit prüfen.,Offen
+D-053B,D14.6.4,RS-010,Schutz/Negativ,Keine Zeit aus fehlgeschlagener Fahrt verwenden.,Offen
+D-054A,D14.6.5,RS-010,Funktion,Rohdaten inklusive Cluster und Graszeit nachrechnen.,Offen
+D-054B,D14.6.5,RS-010,Schutz/Negativ,Schwerer Kontakt in gescheiterter Fahrt verhindert Gate.,Offen
+D-055A,D14.6.6,RS-003,Funktion,Durchgehende drei Runden samt Tor-/Zeitfolge prüfen.,Offen
+D-055B,D14.6.6,RS-003,Schutz/Negativ,Drei einzelne Runden gelten nicht als Multi-Lap.,Offen
+D-056A,D14.6.7,RS-003,Funktion,Erfolgreiche physische Rückkehr und Weiterfahrt prüfen.,Offen
+D-056B,D14.6.7,RS-003,Schutz/Negativ,Reset oder zu spätes Ziel scheitert.,Offen
+D-057A,D14.6.8,RS-005,Funktion,Zeit bis Erfolg inkl. zensierte Fälle berichten.,Offen
+D-057B,D14.6.8,RS-005,Schutz/Negativ,Keine allgemeine 90%-Garantie aus festem Panel.,Offen
+D-058A,D14.6.9,RS-010,Funktion,Schnelle/auffällige/fehlgeschlagene Fälle auditieren.,Offen
+D-058B,D14.6.9,RS-010,Schutz/Negativ,Bekannter Exploit sperrt Promotion.,Offen
+D-059A,D14.6.10,QA-D01,Funktion,Vergleich auf gleicher Szenariomenge und gleicher Rolle.,Offen
+D-059B,D14.6.10,QA-D01,Schutz/Negativ,Regression nicht als Verbesserung verschweigen.,Offen
+D-060A,D14.6.11,RS-011,Funktion,"Freeze, Test, Gate und Manifest verknüpfen.",Offen
+D-060B,D14.6.11,RS-011,Schutz/Negativ,Fehlgeschlagener Kandidat bleibt Research; kein Holdout-Recycling.,Offen
+D-061A,D14.7.1,RS-011,Funktion,Offizielle Registry mit bestandenen Rollen prüfen.,Offen
+D-061B,D14.7.1,RS-011,Schutz/Negativ,"Keine Pflicht, drei Modelle zu veröffentlichen.",Offen
+D-062A,D14.7.2,RS-011,Funktion,Metadaten und Solo-Fähigkeitsnachweise prüfen.,Offen
+D-062B,D14.7.2,RS-011,Schutz/Negativ,Keine Difficulty-Einstufung aus Fitness allein.,Offen
+D-063A,D14.7.3,RS-011,Funktion,Import/Load/Clone und kompatible Fahrt prüfen.,Offen
+D-063B,D14.7.3,RS-011,Schutz/Negativ,Beschädigtes/inkompatibles Modell sichtbar ablehnen.,Offen
+D-064A,D14.7.4,RS-002,Funktion,Rekonstruktion und Roundtrip prüfen.,Offen
+D-064B,D14.7.4,RS-002,Schutz/Negativ,GC löscht keine geschützte Referenz.,Offen
+D-065A,D14.7.5,RS-011,Funktion,Version A->B und Rollback mit Nachweisen prüfen.,Offen
+D-065B,D14.7.5,RS-011,Schutz/Negativ,Unvalidiertes oder inkompatibles Modell nicht aktivieren.,Offen
+D-066A,D14.7.6,REL-D01,Funktion,Bericht und maschinenlesbares Register abgleichen.,Offen
+D-066B,D14.7.6,REL-D01,Schutz/Negativ,Nicht gestartete Versuche nicht als abgeschlossen markieren.,Offen
+D-067A,D14.7.7,RS-004,Funktion,"Serial/parallel, Resume und Faults mit echtem Runner prüfen.",Offen
+D-067B,D14.7.7,RS-004,Schutz/Negativ,Keine zweite konkurrierende Engine oder geschwächte Tests.,Offen
+D-068A,D14.7.8,REL-D01,Funktion,Technisch bestanden/Modell nicht bereit als separaten Zustand prüfen.,Offen
+D-068B,D14.7.8,REL-D01,Schutz/Negativ,First Release ohne validierten Starter blockieren.,Offen
+D-069A,D14.7.9,PRE-D01,Funktion,"Gate mit konkretem SHA, Review, Freigabe und CI prüfen.",Offen
+D-069B,D14.7.9,PRE-D01,Schutz/Negativ,Eigenreview/fehlende Abnahme nicht als unabhängig akzeptieren.,Offen
+D-070A,D14.7.10,REL-D01,Funktion,Roadmap mit Abhängigkeiten und Umfangsschutz prüfen.,Offen
+D-070B,D14.7.10,REL-D01,Schutz/Negativ,Keine Post-Launch-Features ungefragt in 02D implementieren.,Offen
+D-SYS-01,System,PRE-D01,Integration/Gate,"02C PR SHA, unabhängiges Review, vollständige 210 Prüfpunkte, CI main und lokale Baseline belegt; fehlende Gates blockieren Code.",Offen
+D-SYS-02,System,RS-004,Integration/Gate,"02B 128×100 Seed42 exakt gleiche kanonische Referenz auf gleicher Runtime; G0..99, keine G100-Auswertung.",Offen
+D-SYS-03,System,RS-004,Integration/Gate,"Serial/Parallel 1/2/max zulässig: gleiche Kandidaten, Fitness, Reihenfolge, Folgegenome und Champion; Node/Browser Toleranz separat.",Offen
+D-SYS-04,System,RS-004,Integration/Gate,Pause/Stop/Cancel/Retry/Crash mit echter CP-Restore; keine doppelte Budgetbuchung oder verlorene Ergebnisse.,Offen
+D-SYS-05,System,RS-004,Integration/Gate,Reserve für Worst-Case-Ticks vor Dispatch; auch abgebrochene/retry Ticks zählen; bei ungewissem Verbrauch fail closed.,Offen
+D-SYS-06,System,RS-003,Integration/Gate,"Standard-Szenario unverändert; alternative Starts mit gerichteten Toren, gültiger Anfahrt, OBB/Kollision, Geschwindigkeit und Vertrag.",Offen
+D-SYS-07,System,RS-003,Integration/Gate,"Recovery Zustand 20s plus echte 20m innerhalb 5s, kein Teleport; unabhängiger Fortschrittsprüfer.",Offen
+D-SYS-08,System,RS-010,Integration/Gate,Freeze Manifest und Testpanel vor Modellauswahl; doppelte effektive Zustände und Train/Dev/Test Überschneidungen ablehnen.,Offen
+D-SYS-09,System,RS-010,Integration/Gate,"Holdout-Fehler, fehlende Metrik, 53/60, 15/20 oder schwerer Kontakt blockieren Gate; 54/60 bei 16+18+20 zulässig.",Offen
+D-SYS-10,System,RS-010,Integration/Gate,"Drei-Runden-Fahrt ohne Reset, echte Zeitinterpolation, NoProgress und schwere Kontakte prüfen.",Offen
+D-SYS-11,System,RS-005,Integration/Gate,"Gepaarte Benchmarks mindestens drei Wiederholungen, echte volle Episoden, Rohdaten und >15% Regression untersuchen.",Offen
+D-SYS-12,System,RS-006,Integration/Gate,"Matrix exakt 47 Varianten, 122 Slots, 1512448 Episoden; Baseline 8192 Prefix und Random fair.",Offen
+D-SYS-13,System,RS-009,Integration/Gate,Budgetbedingte Auslassung als nicht gestartet/abgebrochen; Referenz und langsam lernende Varianten geschützt.,Offen
+D-SYS-14,System,RS-002,Integration/Gate,"G0/G31/final/speed Hash und Herkunft, rekonstruiert explizit, Export/Restore; fehlend sichtbar.",Offen
+D-SYS-15,System,RS-011,Integration/Gate,"Registry keine automatische Ersatz-KI, keine Originalmutation, inkompatibler Rollback fail closed.",Offen
+D-SYS-16,System,QA-D01,Integration/Gate,"Alle früheren Tests und Kalibrierung, reale Browser/Node-Integration, Speicher/Worker/Import/Export regressionsfrei.",Offen
+D-SYS-17,System,REL-D01,Integration/Gate,"Technische Abnahme und Model Readiness getrennt; kein Starter blockiert First Release, nicht alle unabhängigen 03 Aufgaben.",Offen
+D-SYS-18,System,REL-D01,Integration/Gate,Keine Git-Schreibaktion außerhalb genehmigter Branch/bedingtem Vorgängermerge; keine unautorisierte Folgearbeit.,Offen

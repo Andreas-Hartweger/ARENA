@@ -1,0 +1,2 @@
+# Handover 005 · A → B
+A bestätigt 70 D14 Entscheidungen und zukünftige bedingte Freigabe über Prompt. 02B gemergt, 02C in Arbeit (18839aa zum Planungsabruf). Dieses Paket unterbricht 02C nicht. Nach vollständigem 02C-Gate bedingter Merge und neuer scoped Auftrag. 48h gemeinsame Forschungsobergrenze, Pflichtvalidierung reserviert. A behält Produktentscheidungen; B/Codex technische Umsetzung und echte Forschung, unabhängige Reviews. Zukunftsideen kreative Seed-Welten inkl echte gleichrangige Kreuzungen und Über-/Unterführungen geschützt in Roadmap, nicht aktuelle Pflicht.

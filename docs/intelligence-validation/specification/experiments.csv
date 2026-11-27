@@ -1,0 +1,123 @@
+﻿ExperimentID,Phase,ConfigID,Seed,Population,EpisodeBudget,FullGenerations,Group,DeltaJSON,Status
+B-evolution-42,Baseline,evolution,42,128,12800,100,fest,"{""randomSearch"":false}",Nicht gestartet
+B-evolution-43,Baseline,evolution,43,128,12800,100,fest,"{""randomSearch"":false}",Nicht gestartet
+B-evolution-44,Baseline,evolution,44,128,12800,100,fest,"{""randomSearch"":false}",Nicht gestartet
+B-random-42,Baseline,random,42,128,12800,100,fest,"{""randomSearch"":true}",Nicht gestartet
+B-random-43,Baseline,random,43,128,12800,100,fest,"{""randomSearch"":true}",Nicht gestartet
+B-random-44,Baseline,random,44,128,12800,100,fest,"{""randomSearch"":true}",Nicht gestartet
+S01-42,Evolution-Screen,S01,42,32,8192,256,Population,"{""population"":32}",Nicht gestartet
+S01-43,Evolution-Screen,S01,43,32,8192,256,Population,"{""population"":32}",Nicht gestartet
+S02-42,Evolution-Screen,S02,42,64,8192,128,Population,"{""population"":64}",Nicht gestartet
+S02-43,Evolution-Screen,S02,43,64,8192,128,Population,"{""population"":64}",Nicht gestartet
+S03-42,Evolution-Screen,S03,42,256,8192,32,Population,"{""population"":256}",Nicht gestartet
+S03-43,Evolution-Screen,S03,43,256,8192,32,Population,"{""population"":256}",Nicht gestartet
+S04-42,Evolution-Screen,S04,42,512,8192,16,Population,"{""population"":512}",Nicht gestartet
+S04-43,Evolution-Screen,S04,43,512,8192,16,Population,"{""population"":512}",Nicht gestartet
+S05-42,Evolution-Screen,S05,42,128,8192,64,Turnier,"{""tournament"":2}",Nicht gestartet
+S05-43,Evolution-Screen,S05,43,128,8192,64,Turnier,"{""tournament"":2}",Nicht gestartet
+S06-42,Evolution-Screen,S06,42,128,8192,64,Turnier,"{""tournament"":5}",Nicht gestartet
+S06-43,Evolution-Screen,S06,43,128,8192,64,Turnier,"{""tournament"":5}",Nicht gestartet
+S07-42,Evolution-Screen,S07,42,128,8192,64,Turnier,"{""tournament"":8}",Nicht gestartet
+S07-43,Evolution-Screen,S07,43,128,8192,64,Turnier,"{""tournament"":8}",Nicht gestartet
+S08-42,Evolution-Screen,S08,42,128,8192,64,Eliten,"{""eliteRate"":0.01}",Nicht gestartet
+S08-43,Evolution-Screen,S08,43,128,8192,64,Eliten,"{""eliteRate"":0.01}",Nicht gestartet
+S09-42,Evolution-Screen,S09,42,128,8192,64,Eliten,"{""eliteRate"":0.02}",Nicht gestartet
+S09-43,Evolution-Screen,S09,43,128,8192,64,Eliten,"{""eliteRate"":0.02}",Nicht gestartet
+S10-42,Evolution-Screen,S10,42,128,8192,64,Eliten,"{""eliteRate"":0.1}",Nicht gestartet
+S10-43,Evolution-Screen,S10,43,128,8192,64,Eliten,"{""eliteRate"":0.1}",Nicht gestartet
+S11-42,Evolution-Screen,S11,42,128,8192,64,Eliten,"{""eliteRate"":0.2}",Nicht gestartet
+S11-43,Evolution-Screen,S11,43,128,8192,64,Eliten,"{""eliteRate"":0.2}",Nicht gestartet
+S12-42,Evolution-Screen,S12,42,128,8192,64,Elternpool,"{""parentPool"":0.25}",Nicht gestartet
+S12-43,Evolution-Screen,S12,43,128,8192,64,Elternpool,"{""parentPool"":0.25}",Nicht gestartet
+S13-42,Evolution-Screen,S13,42,128,8192,64,Elternpool,"{""parentPool"":0.5}",Nicht gestartet
+S13-43,Evolution-Screen,S13,43,128,8192,64,Elternpool,"{""parentPool"":0.5}",Nicht gestartet
+S14-42,Evolution-Screen,S14,42,128,8192,64,Mutation p,"{""mutationProbability"":0.01}",Nicht gestartet
+S14-43,Evolution-Screen,S14,43,128,8192,64,Mutation p,"{""mutationProbability"":0.01}",Nicht gestartet
+S15-42,Evolution-Screen,S15,42,128,8192,64,Mutation p,"{""mutationProbability"":0.02}",Nicht gestartet
+S15-43,Evolution-Screen,S15,43,128,8192,64,Mutation p,"{""mutationProbability"":0.02}",Nicht gestartet
+S16-42,Evolution-Screen,S16,42,128,8192,64,Mutation p,"{""mutationProbability"":0.1}",Nicht gestartet
+S16-43,Evolution-Screen,S16,43,128,8192,64,Mutation p,"{""mutationProbability"":0.1}",Nicht gestartet
+S17-42,Evolution-Screen,S17,42,128,8192,64,Mutation p,"{""mutationProbability"":0.2}",Nicht gestartet
+S17-43,Evolution-Screen,S17,43,128,8192,64,Mutation p,"{""mutationProbability"":0.2}",Nicht gestartet
+S18-42,Evolution-Screen,S18,42,128,8192,64,Mutation alpha,"{""mutationAlpha"":0.05}",Nicht gestartet
+S18-43,Evolution-Screen,S18,43,128,8192,64,Mutation alpha,"{""mutationAlpha"":0.05}",Nicht gestartet
+S19-42,Evolution-Screen,S19,42,128,8192,64,Mutation alpha,"{""mutationAlpha"":0.1}",Nicht gestartet
+S19-43,Evolution-Screen,S19,43,128,8192,64,Mutation alpha,"{""mutationAlpha"":0.1}",Nicht gestartet
+S20-42,Evolution-Screen,S20,42,128,8192,64,Mutation alpha,"{""mutationAlpha"":0.4}",Nicht gestartet
+S20-43,Evolution-Screen,S20,43,128,8192,64,Mutation alpha,"{""mutationAlpha"":0.4}",Nicht gestartet
+S21-42,Evolution-Screen,S21,42,128,8192,64,Mutation alpha,"{""mutationAlpha"":0.8}",Nicht gestartet
+S21-43,Evolution-Screen,S21,43,128,8192,64,Mutation alpha,"{""mutationAlpha"":0.8}",Nicht gestartet
+S22-42,Evolution-Screen,S22,42,128,8192,64,Crossover,"{""crossoverProbability"":0.1,""crossoverOperator"":""uniform""}",Nicht gestartet
+S22-43,Evolution-Screen,S22,43,128,8192,64,Crossover,"{""crossoverProbability"":0.1,""crossoverOperator"":""uniform""}",Nicht gestartet
+S23-42,Evolution-Screen,S23,42,128,8192,64,Crossover,"{""crossoverProbability"":0.1,""crossoverOperator"":""neuron-wise""}",Nicht gestartet
+S23-43,Evolution-Screen,S23,43,128,8192,64,Crossover,"{""crossoverProbability"":0.1,""crossoverOperator"":""neuron-wise""}",Nicht gestartet
+S24-42,Evolution-Screen,S24,42,128,8192,64,Adaption,"{""adaptProbability"":true,""adaptStrength"":false}",Nicht gestartet
+S24-43,Evolution-Screen,S24,43,128,8192,64,Adaption,"{""adaptProbability"":true,""adaptStrength"":false}",Nicht gestartet
+S25-42,Evolution-Screen,S25,42,128,8192,64,Adaption,"{""adaptProbability"":false,""adaptStrength"":true}",Nicht gestartet
+S25-43,Evolution-Screen,S25,43,128,8192,64,Adaption,"{""adaptProbability"":false,""adaptStrength"":true}",Nicht gestartet
+S26-42,Evolution-Screen,S26,42,128,8192,64,Adaption,"{""adaptProbability"":true,""adaptStrength"":true}",Nicht gestartet
+S26-43,Evolution-Screen,S26,43,128,8192,64,Adaption,"{""adaptProbability"":true,""adaptStrength"":true}",Nicht gestartet
+S27-42,Evolution-Screen,S27,42,128,8192,64,Immigrants,"{""immigrantRate"":0.05}",Nicht gestartet
+S27-43,Evolution-Screen,S27,43,128,8192,64,Immigrants,"{""immigrantRate"":0.05}",Nicht gestartet
+S28-42,Evolution-Screen,S28,42,128,8192,64,Immigrants,"{""immigrantRate"":0.1}",Nicht gestartet
+S28-43,Evolution-Screen,S28,43,128,8192,64,Immigrants,"{""immigrantRate"":0.1}",Nicht gestartet
+S29-42,Evolution-Screen,S29,42,128,8192,64,Rescue,"{""rescueEnabled"":true}",Nicht gestartet
+S29-43,Evolution-Screen,S29,43,128,8192,64,Rescue,"{""rescueEnabled"":true}",Nicht gestartet
+S30-42,Evolution-Screen,S30,42,128,8192,64,Large mutation,"{""largeProbability"":0}",Nicht gestartet
+S30-43,Evolution-Screen,S30,43,128,8192,64,Large mutation,"{""largeProbability"":0}",Nicht gestartet
+S31-42,Evolution-Screen,S31,42,128,8192,64,Large mutation,"{""largeProbability"":0.1}",Nicht gestartet
+S31-43,Evolution-Screen,S31,43,128,8192,64,Large mutation,"{""largeProbability"":0.1}",Nicht gestartet
+S32-42,Evolution-Screen,S32,42,128,8192,64,Large mutation,"{""largeProbability"":0.2}",Nicht gestartet
+S32-43,Evolution-Screen,S32,43,128,8192,64,Large mutation,"{""largeProbability"":0.2}",Nicht gestartet
+S33-42,Architektur/Fitness,S33,42,128,8192,64,Größe,"{""hidden"":[16,8]}",Nicht gestartet
+S33-43,Architektur/Fitness,S33,43,128,8192,64,Größe,"{""hidden"":[16,8]}",Nicht gestartet
+S34-42,Architektur/Fitness,S34,42,128,8192,64,Größe,"{""hidden"":[32,32]}",Nicht gestartet
+S34-43,Architektur/Fitness,S34,43,128,8192,64,Größe,"{""hidden"":[32,32]}",Nicht gestartet
+S35-42,Architektur/Fitness,S35,42,128,8192,64,Größe,"{""hidden"":[64,32]}",Nicht gestartet
+S35-43,Architektur/Fitness,S35,43,128,8192,64,Größe,"{""hidden"":[64,32]}",Nicht gestartet
+S36-42,Architektur/Fitness,S36,42,128,8192,64,Größe,"{""hidden"":[128,128,128,128]}",Nicht gestartet
+S36-43,Architektur/Fitness,S36,43,128,8192,64,Größe,"{""hidden"":[128,128,128,128]}",Nicht gestartet
+S37-42,Architektur/Fitness,S37,42,128,8192,64,Tiefe,"{""hidden"":[34]}",Nicht gestartet
+S37-43,Architektur/Fitness,S37,43,128,8192,64,Tiefe,"{""hidden"":[34]}",Nicht gestartet
+S38-42,Architektur/Fitness,S38,42,128,8192,64,Tiefe,"{""hidden"":[32,8,8]}",Nicht gestartet
+S38-43,Architektur/Fitness,S38,43,128,8192,64,Tiefe,"{""hidden"":[32,8,8]}",Nicht gestartet
+S39-42,Architektur/Fitness,S39,42,128,8192,64,Tiefe,"{""hidden"":[32,8,8,8]}",Nicht gestartet
+S39-43,Architektur/Fitness,S39,43,128,8192,64,Tiefe,"{""hidden"":[32,8,8,8]}",Nicht gestartet
+S40-42,Architektur/Fitness,S40,42,128,8192,64,Aktivierung,"{""activation"":""relu""}",Nicht gestartet
+S40-43,Architektur/Fitness,S40,43,128,8192,64,Aktivierung,"{""activation"":""relu""}",Nicht gestartet
+S41-42,Architektur/Fitness,S41,42,128,8192,64,Aktivierung,"{""activation"":""leaky-relu""}",Nicht gestartet
+S41-43,Architektur/Fitness,S41,43,128,8192,64,Aktivierung,"{""activation"":""leaky-relu""}",Nicht gestartet
+S42-42,Architektur/Fitness,S42,42,128,8192,64,Frequenz,"{""hz"":10}",Nicht gestartet
+S42-43,Architektur/Fitness,S42,43,128,8192,64,Frequenz,"{""hz"":10}",Nicht gestartet
+S43-42,Architektur/Fitness,S43,42,128,8192,64,Frequenz,"{""hz"":15}",Nicht gestartet
+S43-43,Architektur/Fitness,S43,43,128,8192,64,Frequenz,"{""hz"":15}",Nicht gestartet
+S44-42,Architektur/Fitness,S44,42,128,8192,64,Frequenz,"{""hz"":20}",Nicht gestartet
+S44-43,Architektur/Fitness,S44,43,128,8192,64,Frequenz,"{""hz"":20}",Nicht gestartet
+S45-42,Architektur/Fitness,S45,42,128,8192,64,Frequenz,"{""hz"":60}",Nicht gestartet
+S45-43,Architektur/Fitness,S45,43,128,8192,64,Frequenz,"{""hz"":60}",Nicht gestartet
+S46-42,Architektur/Fitness,S46,42,128,8192,64,Fitness,"{""profile"":""Speed""}",Nicht gestartet
+S46-43,Architektur/Fitness,S46,43,128,8192,64,Fitness,"{""profile"":""Speed""}",Nicht gestartet
+S47-42,Architektur/Fitness,S47,42,128,8192,64,Fitness,"{""profile"":""Safety""}",Nicht gestartet
+S47-43,Architektur/Fitness,S47,43,128,8192,64,Fitness,"{""profile"":""Safety""}",Nicht gestartet
+C01-101,Bestätigung,Baseline,101,128,25600,200,Auswahl vor Phase fixieren,{},Nicht gestartet
+C01-102,Bestätigung,Baseline,102,128,25600,200,Auswahl vor Phase fixieren,{},Nicht gestartet
+C01-103,Bestätigung,Baseline,103,128,25600,200,Auswahl vor Phase fixieren,{},Nicht gestartet
+C02-101,Bestätigung,Finalist 1,101,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C02-102,Bestätigung,Finalist 1,102,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C02-103,Bestätigung,Finalist 1,103,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C03-101,Bestätigung,Finalist 2,101,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C03-102,Bestätigung,Finalist 2,102,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C03-103,Bestätigung,Finalist 2,103,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C04-101,Bestätigung,Finalist 3,101,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C04-102,Bestätigung,Finalist 3,102,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C04-103,Bestätigung,Finalist 3,103,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C05-101,Bestätigung,Finalist 4,101,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C05-102,Bestätigung,Finalist 4,102,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C05-103,Bestätigung,Finalist 4,103,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C06-101,Bestätigung,Finalist 5,101,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C06-102,Bestätigung,Finalist 5,102,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+C06-103,Bestätigung,Finalist 5,103,,25600,,Auswahl vor Phase fixieren,{},Nicht gestartet
+L01-201,Langzeit,Finalist 1,201,,51200,,Auswahl vor Phase fixieren,{},Nicht gestartet
+L01-202,Langzeit,Finalist 1,202,,51200,,Auswahl vor Phase fixieren,{},Nicht gestartet
+L02-201,Langzeit,Finalist 2,201,,51200,,Auswahl vor Phase fixieren,{},Nicht gestartet
+L02-202,Langzeit,Finalist 2,202,,51200,,Auswahl vor Phase fixieren,{},Nicht gestartet

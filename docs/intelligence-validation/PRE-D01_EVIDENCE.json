@@ -1,0 +1,193 @@
+{
+  "phase": "PRE-D01 abgeschlossen",
+  "gate": {
+    "reviewSource": "Auftragschat, Rolle A",
+    "approval": "1. ist freigegeben, 2. passt schon so, ist erledigt",
+    "SYS03": "administrative Ausnahme für PRE-D01",
+    "mergeCommit": "e6a95a92b6241a750ba7fff599ff2dac123c3149",
+    "mainCI": "https://github.com/Andreas-Hartweger/ARENA/actions/runs/46073023305",
+    "localTestsPassed": 233,
+    "calibrationMatches": true
+  },
+  "reviewed02CCommit": "9d6baff2e9d5fa4b4861f387107e2412fec84de1",
+  "zipSHA256": "eafec301dde4883d2075eb30e80ade20ff62d973ab1ae35ec6cd858015cb58cf",
+  "zipFiles": 25,
+  "manifestEntriesValidated": 24,
+  "masterplanSHA256": "03ca599f472d76f916dee55c9f47e35f9b481f3e066b05edce665b6a09ac9329",
+  "workbook": {
+    "sheets": 52,
+    "priorConfirmedRowsPreserved": 507,
+    "newConfirmedDecisionIDs": 70,
+    "allConfirmed": 577,
+    "csvTablesMatched": [
+      "43 Batch 02D",
+      "44 02D Verträge",
+      "45 02D Tests",
+      "46 02D Matrix",
+      "47 Experimente"
+    ]
+  },
+  "d14": {
+    "tasks": 14,
+    "decisions": 70,
+    "testsPlanned": 158,
+    "variants": 47,
+    "nominalSlots": 122,
+    "nominalEpisodes": 1512448,
+    "byPhase": {
+      "Baseline": {
+        "runs": 6,
+        "episodes": 76800
+      },
+      "Evolution-Screen": {
+        "runs": 64,
+        "episodes": 524288
+      },
+      "Architektur/Fitness": {
+        "runs": 30,
+        "episodes": 245760
+      },
+      "Bestätigung": {
+        "runs": 18,
+        "episodes": 460800
+      },
+      "Langzeit": {
+        "runs": 4,
+        "episodes": 204800
+      }
+    },
+    "caps": {
+      "machineHours": 48,
+      "regularTrainingEpisodes": 1600000,
+      "allPhysicsTicks": 5000000000,
+      "validationReserveHours": 7.2,
+      "validationReserveTicks": 750000000,
+      "reportHours": [12, 24, 48]
+    }
+  },
+  "priorCoverage": {
+    "points02C": 210,
+    "decisions02C": 96,
+    "inheritedPoints02B": 128,
+    "fullBrowserEvidenceRechecked": 100,
+    "records": 12800
+  },
+  "historicalNodeRoles": {
+    "G0-Best": {
+      "generation": 0,
+      "slot": 92,
+      "id": "[\"reference\",0,92]",
+      "fingerprint": "7362430fee3b90d5606f875101f90e407c42ccebc81a560a32d76ef1cd452548",
+      "score": 167.18011493946813,
+      "lapTimes": []
+    },
+    "G31-Ersterfolg": {
+      "generation": 31,
+      "slot": 49,
+      "id": "[\"reference\",31,49]",
+      "fingerprint": "0b903d9a2cf49ba92970501b0869608c43f2e45a33feb5b538122393c6bc11d4",
+      "score": 4269.33366254004,
+      "lapTimes": [94.67548946895151]
+    },
+    "Finaler Champion": {
+      "generation": 99,
+      "slot": 65,
+      "id": "[\"reference\",99,65]",
+      "fingerprint": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+      "score": 4280.189069348133,
+      "lapTimes": [59.663774729747736]
+    },
+    "Schnellste gültige Runde": {
+      "generation": 99,
+      "slot": 65,
+      "id": "[\"reference\",99,65]",
+      "fingerprint": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+      "score": 4280.189069348133,
+      "lapTimes": [59.663774729747736]
+    }
+  },
+  "historicalRoleStatus": "Nur Originalrecords lokalisiert. Rekonstruktion, echte Nachfahrt und Rollennachweis stehen aus.",
+  "referenceArchiveSHA256": "f11abab76aadded0d4595ced107b3c40f254ab996e5468cc159d18dae18bedf7",
+  "campaignStarted": false,
+  "historicalMarkdownInventory": {
+    "AGENTS.md": "5827e38401abd9bc485c6b2031c3ed919a8d5afca38fc7bdeb6a57142df908b0",
+    "docs/ARCHITECTURE.md": "342cb4719f6ebe8932dde1039106ba0da26a4ccd6ee281cfc0f3bc9a91d93cb8",
+    "docs/DECISIONS.md": "a4d6271654175d99b363405b719827875dee419ff45ada0a52fca11baf01e0db",
+    "docs/DEVELOPMENT_LOG.md": "5b62748cb277b2dfb2ceb44268349ca01bcbe6ee4d119ba003df4380fa421423",
+    "docs/PROJECT_OVERVIEW.md": "f28587d08cb154f340d76a4ee89a24114f1dd7072f58176f7832a7098ff60699",
+    "docs/ROADMAP.md": "5126e9b4ed957f89d969ccc6f1b84c53cf0f875a38c2369f8b0f42f1523c00d9",
+    "docs/TASKS.md": "f12bd715e214b7a529879c81cf31132d22e833943ac6d5b885be7441f70357ef",
+    "docs/first-drive/BATCH-01_CODEX_PROMPT.md": "51388326dca0062c168dea98250027f4bfcff40efbe8154fc0a6e9b3a42708b1",
+    "docs/first-drive/BATCH-01_COMPLETION_REPORT.md": "8dbacc1fe69e23d19a1fde6aad3e454a72c53fb462c5925f673b54f41aca52e0",
+    "docs/first-drive/BATCH-01_PROGRESS.md": "cc29e21ede5d227a065637765e673e315ee68b03ebadc8cececa2c05c3df3dc4",
+    "docs/first-drive/FD-001_CODEX_PROMPT.md": "15e80f96652262da61ac849ab1f1c232f7c7765a698c023258e7b3d3819bed06",
+    "docs/first-drive/FD-002_CODEX_PROMPT.md": "36dc102301998a48e0999e8757098ee7f8fbe511a0ed81402012ea8394d8a32d",
+    "docs/first-drive/FD-003_CODEX_PROMPT.md": "07d2ff8244cf456b334d95c29efe560f875b4f16e989fc9b84a70e1d273459a9",
+    "docs/first-drive/FIRST_DRIVE_SPEC.md": "a8106e1cbb389501c67c6d67a14e4a5b34a13f98cea3fb51129351dd792de089",
+    "docs/first-drive/FIRST_DRIVE_TASKS.md": "3a55e10c3841c33e659c27d141d1375249becb5b62945191496dc612f0be7e61",
+    "docs/first-drive/FIRST_DRIVE_TESTS.md": "5b034dc2fa732552300c98c4162508a7c4211719dcf25015f8c6879b8d32fe6e",
+    "docs/first-evolution/ACCEPTANCE_RESULTS.md": "55c0f927bad1f85300feb414d7f39db484dbc82fb35344f39b4195a89eaaa8ca",
+    "docs/first-evolution/BATCH-02B_COMPLETION_REPORT.md": "63b714803a00918e10031f965faf416cc0ecf5e0386607a3c0413fbe5738c775",
+    "docs/first-evolution/README.md": "95011555fbc151cdfad6ec66c34aa37d273fa2c3e296e7adad73a17c982d8133",
+    "docs/first-intelligence/AI_CONTROLLER_SPEC.md": "1e007d3ee73967586eedc8e866784345272bd1016435abe0efc5129ebd8acbbe",
+    "docs/first-intelligence/AI_INSPECTOR_SPEC.md": "798dae72eabeccc30ffc709b2c11e5792b6d0f5685a0a5852366186092a6225f",
+    "docs/first-intelligence/ARENA_HANDOVER_002.md": "f781843ebeda2f0d9ad68159689c646ee9a5a89c1c7152cc14bdcf1b9bf0162a",
+    "docs/first-intelligence/BATCH-02A_CODEX_PROMPT.md": "ab8949ff9c383a8769f349cc65194caf3dc0783599705ef5f095349b1376c73c",
+    "docs/first-intelligence/BATCH-02A_COMPLETION_REPORT.md": "1dc5f32db7a1775ddf4a1c592c52fbde375314b8a1c921734792b9dd4db857eb",
+    "docs/first-intelligence/BATCH-02A_SPECIFICATION.md": "b1300b65acad97ce57f7e82f0c576ec1b841f418fc1a08daa7ee12a995036f63",
+    "docs/first-intelligence/BATCH-02A_TASKS.md": "39b82100a25564d84d59107bf11deee44ff2e442aeb99df806392e47085efb99",
+    "docs/first-intelligence/BATCH-02A_TESTS.md": "799d81c8b105ffa35657200f9c9c04c2849c6cdeb1cce8b62287f09e7b31c760",
+    "docs/first-intelligence/DECISIONS_D08_D09.md": "a4ae3ec735ba991a533e5a636c14214415266f9915ae517324ee37c1dc23352e",
+    "docs/first-intelligence/FIRST_DRIVE_ABNAHMEBERICHT_B.md": "ca4ecd053cbe237219f927f693d9c5868b7b177b4177e4f831c34c55bcf2fc3c",
+    "docs/first-intelligence/NEURAL_NETWORK_SPEC.md": "4c8c8fd3dfdd75b0581b9448395389689b5980bb5bf16ae85db54c90b3fe89e6",
+    "docs/first-intelligence/OBSERVATION_SCHEMA.md": "646949b0bbdad351f6cc72d7698302cc1b8eb4dcc0a5624ef7c2e2ba1d01f503",
+    "docs/first-intelligence/README.md": "6388851a76dc6ddcc3cb60924c72e7df33c925d34f7121b4bc91dde6fa2acacb",
+    "docs/first-intelligence/SENSOR_SYSTEM_SPEC.md": "725e11d2683da4d6f8c99aeff6627d714cfa2dbd4e8102f191387b9f9092e950",
+    "docs/team/DECISION_REQUESTS.md": "bd4796dd346c2a50532b9fee3e6b8eb755941ad650a5a4afde8b5dc7114ab217",
+    "docs/team/DEVELOPMENT_CONTINUITY_CONTRACT.md": "24d2e5214f1feb5ca948797011e924fd1e3be21feba5c58d9b83741225e14f11",
+    "docs/team/DEVELOPMENT_PROGRESS.md": "7340fed04f9e624514bf50dd5aa2bfefec3fe166dcdfd4ca34e3d495e8e9ef23",
+    "docs/team/DEVELOPMENT_QUEUE.md": "056d8ea334f8fba4d374e6aea3687b0ccaef6695807eeb59cae58dc5b1bd86ae",
+    "docs/team/HANDOVER_CURRENT.md": "44ce0689e2b4daa1ba541597ec736e8c3cc632600f13bb0b7bfc251e957fbc5e",
+    "docs/team/HANDOVER_LOG.md": "7e074d41188bc2fbda6fde069333550eaba3272d81383356522d15da33cc8df9",
+    "docs/training-management/ACCEPTANCE_RESULTS.md": "b6b5ec837726c24c2897a318eaf515be9a12f9a8433e08920cd6cc6a603efe22",
+    "docs/training-management/BATCH-02C_COMPLETION_REPORT.md": "d5bb2ca97fcdac1c6d6002b5d0c11bfffd797b7a0b72cd40211e5053f54e9dc3",
+    "docs/first-evolution/specification/ADAPTIVE_EVOLUTION_SPEC.md": "62754f50053a1cd2ade455e558dc0c271cbe1241ead467902317434e56f6b431",
+    "docs/first-evolution/specification/ARENA_HANDOVER_003.md": "2c1ff13991a1997283fbb127d88ecd1f0bd1411f66782d8fd14896e4e7996f27",
+    "docs/first-evolution/specification/BATCH-02B_BENCHMARKS.md": "a38bd3f97636dfa4a799762ca63c0a1d6bdc19a11be30e77f3625169a2d2630d",
+    "docs/first-evolution/specification/BATCH-02B_CODEX_PROMPT.md": "8c761c86e7dcd5b0245275fa574ec542eadd2bca870719b4a05c3badcb75c0b9",
+    "docs/first-evolution/specification/BATCH-02B_SPECIFICATION.md": "84c52033357ef574d85cb5cd1cbc3bb928d37e087f7c509e1d32cd57e36c8a22",
+    "docs/first-evolution/specification/BATCH-02B_TASKS.md": "cf91945875c796feead9aa3badb9deb9339d95032ef3246b43f5b8ac7d02a2cc",
+    "docs/first-evolution/specification/BATCH-02B_TESTS.md": "69545e2dc04706b513278ad2859ccae4f3f0736b2eb45abfb26095882f7e5578",
+    "docs/first-evolution/specification/DECISIONS_D10_D11.md": "434bdd24f4e174b3d52cabe68c1a5e39c3b8468b0def928620e59b677dd7fbc1",
+    "docs/first-evolution/specification/DETERMINISM_SPEC.md": "0175d71b48bd5d63579726fe00db9195804ba7cd5e1281d61e28d81ae95a1d71",
+    "docs/first-evolution/specification/EPISODE_EVALUATOR_SPEC.md": "b60e9a0b4be04dcbad132b5bf2a59a6162e3ed196c03de4bac104422212d6e44",
+    "docs/first-evolution/specification/EVOLUTION_DIAGNOSTICS_SPEC.md": "7f7634f62eb41b556b166fbcce70df947f015679b057fee98d90d78dc7da6422",
+    "docs/first-evolution/specification/FITNESS_ENGINE_SPEC.md": "682124b76cc29b979d88ab1c2d71c1d7f305cb4ffddc2dcb25aa357758c67854",
+    "docs/first-evolution/specification/FUTURE_ROADMAP.md": "089e016e5213057f4aad035e5037c92ed5b6b0742e0b3f83dc236eff322b6373",
+    "docs/first-evolution/specification/GENOME_POPULATION_SPEC.md": "f8841f8f957387f86e83b4dc8ba5312f24daee49027ad599157deb705063f033",
+    "docs/first-evolution/specification/GITHUB_INTERFACE_REVIEW.md": "945f742236a56cdc94ddb9b3fe75107311fa2077e79a5592ed9b4373a35c9c31",
+    "docs/first-evolution/specification/MUTATION_ENGINE_SPEC.md": "4b089b8193e0d50d57531f12452521837cc5497ee4c6d988c7d986247ae84190",
+    "docs/first-evolution/specification/README.md": "c617dbdc1a9c57d5af0ca44c191cb26f6ab0d64478ce5026d94393c777531fb6",
+    "docs/first-evolution/specification/SELECTION_CROSSOVER_SPEC.md": "61e5dd124f47169126d756ea4de7e2a84ad2abf3fe77e23529cdce8e43558b69",
+    "docs/first-evolution/specification/TRACEABILITY_MATRIX.md": "95ec13e88f9cbf399d997ccb0fd81fa580b63c5b209cea580c4860a80f0f4b01",
+    "docs/training-management/specification/ARENA_HANDOVER_004.md": "dcc09be1528439462c1b86dcb9cdfec2dd7cd3d280471f85c8fcb9e9591f82b5",
+    "docs/training-management/specification/BATCH-02C_CODEX_PROMPT.md": "5fe915d272348a2ca7b6a6594b395dd20d8892fd56c812ad7c668134aa989e98",
+    "docs/training-management/specification/BATCH-02C_SPECIFICATION.md": "67002e2af5db2133c514dcad80d9b212bce29f14bd29834529258ffcf05082ac",
+    "docs/training-management/specification/BATCH-02C_TASKS.md": "d0819fe2c55b110c3b140f8cf7d2eb03b87306fb53cff1a5f4e405adee9b94d5",
+    "docs/training-management/specification/BATCH-02C_TESTS.md": "2f0ee2729996a6f37ae48310896a799ba0c9891107ce0755468e469affecdcb9",
+    "docs/training-management/specification/CONSISTENCY_REVIEW.md": "8d7b642ee6b53116ff6705ec27f5e871ee399df3aa617452b491f43ae9d80360",
+    "docs/training-management/specification/CONTROL_AUTOMATION_SPEC.md": "6e718a291d7076815ae5f23b7c73293ca7fa66620987f98d91acfca0035ca54c",
+    "docs/training-management/specification/DECISIONS_D12_D13.md": "e1f31da8baa4fcdea4774722260ba388414549f64a723c52a8b2d3e6283eac89",
+    "docs/training-management/specification/DEVELOPMENT_CONTINUITY_CONTRACT.md": "8647874b874e7ee14c0b9f1ba9a37717c32c677b09bec7caba875b739ea910cf",
+    "docs/training-management/specification/FUTURE_ROADMAP.md": "6f7cba3faab220c9e1cdb04187014d0bf95eb94057897dd725dd99234fd0d8b0",
+    "docs/training-management/specification/GITHUB_INTERFACE_REVIEW.md": "44358a84a69cae0fea069d76b77aecfee5307d531eee18a611a414d734a3b7eb",
+    "docs/training-management/specification/MODEL_MANAGEMENT_SPEC.md": "a2237881d4fbc6c33adb2ee76b0ba44b7f5a0b1fc80784c70c0afe6407f163e3",
+    "docs/training-management/specification/PACKAGE_COMPATIBILITY_SPEC.md": "587210a24fad2e5f5cbb3f173da91a1645481461bda0dd0646f33ce01171749e",
+    "docs/training-management/specification/PERFORMANCE_ACCEPTANCE.md": "d12975a5c0fa556e74cf4340ccf35964d2c5322523542e1039214f1ecd2dbcce",
+    "docs/training-management/specification/README.md": "5a8cedb1db7eadb1dad5fc7c3a1d22cf80cabd27e3f1decd0de1c2383e91d26a",
+    "docs/training-management/specification/STORAGE_CHECKPOINT_SPEC.md": "5ec9451c9b16b74007d0b1ca69a9e3faf442138b6daf727b52d780802ed8399d",
+    "docs/training-management/specification/TRACEABILITY_MATRIX.md": "ca2817911d6858af13d1bf862d79e3c14698668229f6a431b788337b195199c7",
+    "docs/training-management/specification/TRAINING_RUNTIME_SPEC.md": "5d852947afe2c76256815e67266bac2e71b0984526fe31c8e7c5219bfd166629",
+    "docs/training-management/specification/TRAINING_UI_INSPECTORS_SPEC.md": "b2a8a5b3344d014206edc1bb0367b7d52e1871f6571b6e371657d02cc01b7a21"
+  }
+}

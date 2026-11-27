@@ -1,0 +1,15 @@
+﻿ID,Task,Depends,Deliverable,Decisions,Owner,Status
+PRE-D01,02C Abnahme und Merge,—,"02C vollständig prüfen; unabhängiges Review, bedingte Freigabe, merge/CI und lokale Baseline, aktuelle API-Diff, Archiv",D14.7.9,B / A Review,Offen
+RS-001,Research Verträge,PRE-D01,"IDs, immutable Manifest, Budgetledger, Evidence schemas, TR/AGENTS",D14.1.8,B / A Review,Offen
+RS-002,Historische Genome,RS-001,"Rekonstruktion, SHA, Wiederfahrten, Archive/Restore",D14.1.1 D14.7.4,B / A Review,Offen
+RS-003,Szenarien und Tasks,RS-001,"Standard unverändert, gültige Startvarianten, Recovery/Multi-Lap, Holdout-Isolation",D14.1.6 D14.4.2 D14.4.6 D14.6.2 D14.6.6 D14.6.7,B / A Review,Offen
+RS-004,Research Runtime,RS-001 RS-003,"Gemeinsame Worker/Coordinator/CP, Node/Browser Adapter, Queue/Stop, budgetierte Resume",D14.5.3 D14.5.6 D14.5.7 D14.5.9 D14.7.7,B / A Review,Offen
+RS-005,Messung und Diagnose,RS-004,"Benchmark, gemeinsame Metriken, Rohdaten, Statistik, Trace/Audit",D14.1.4 D14.2.9 D14.3.6 D14.3.8 D14.4.3 D14.4.5 D14.5.10 D14.5.11 D14.6.8,B / A Review,Offen
+RS-006,Matrix und Baselines,RS-004 RS-005,"122 nominale Slots; sechs Baselines, Prefix, Random Search, gepaarte Seeds",D14.1.2 D14.1.5 D14.5.1 D14.5.2,B / A Review,Offen
+RS-007,Evolution Screening,RS-006,"32 Varianten, Vertiefung und Auswahl",D14.2.1 D14.2.2 D14.2.3 D14.2.4 D14.2.5 D14.2.6 D14.2.7 D14.2.8 D14.2.10,B / A Review,Offen
+RS-008,Architektur/Fitness Screening,RS-006,"15 Varianten, Ressourcen, Frequenz, Profile",D14.3.1 D14.3.2 D14.3.3 D14.3.4 D14.3.5 D14.3.7 D14.3.9 D14.4.1,B / A Review,Offen
+RS-009,Vertiefung/Curriculum,RS-007 RS-008,"Bestätigung, Kombinationen, Langzeit, optional Curriculum/Recovery je Budget",D14.4.4 D14.4.7 D14.5.4 D14.5.5 D14.5.8,B / A Review,Offen
+RS-010,Validierung und Holdout,RS-003 RS-005 RS-009,"40 Dev, Kandidatenfreeze, 60 Holdout, 12 Multi-Lap, 18 Recovery; Audit",D14.1.3 D14.1.7 D14.4.8 D14.6.1 D14.6.3 D14.6.4 D14.6.5 D14.6.9,B / A Review,Offen
+RS-011,Promotion und Registry,RS-002 RS-010,"Modelle importieren/klonen, Rolle, immutable Manifest, Rollback; nur bestandene",D14.6.11 D14.7.1 D14.7.2 D14.7.3 D14.7.5,B / A Review,Offen
+QA-D01,Systemprüfung,RS-004 RS-005 RS-011,"Regression, Budget/fault/restore, echte Benchmarks, Nachweismatrix",D14.6.10,B / A Review,Offen
+REL-D01,Bericht und Übergabe,QA-D01,"Getrennte Gates, Research Evidence, PR/CI, unabhängiges Review, kein 03-Code",D14.3.10 D14.4.9 D14.4.10 D14.7.6 D14.7.8 D14.7.10,B / A Review,Offen

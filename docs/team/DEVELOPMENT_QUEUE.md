@@ -39,3 +39,7 @@ PRE-B01 und EV-001–013 sind abgeschlossen. A delegierte die ausstehenden techn
 [Abschlussbericht](../first-evolution/BATCH-02B_COMPLETION_REPORT.md) · [Abnahmematrix](../first-evolution/ACCEPTANCE_RESULTS.md)
 
 Der anschließend freigegebene Auftrag ist Batch 02C gemäß v0.10.
+
+## Batch 02D · Vorbereitung
+
+PRE-D01 ist abgeschlossen. Der Hauptauftrag beginnt mit RS-001, Experimentverträgen und Budgetabrechnung. [Gate](../intelligence-validation/PRE-D01.md)

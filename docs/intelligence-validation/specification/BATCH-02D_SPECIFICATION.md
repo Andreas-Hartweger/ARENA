@@ -1,0 +1,6 @@
+# Batch 02D · Integration, Training & Validation
+Scope: 70 D14 Entscheidungen, 14 Arbeitspakete, 158 geplante Prüfpunkte. D00–D13, DR-02B-001, TR01–08 unverändert soweit nicht explizite scoped Erweiterung; technische Präzisierungen CONSISTENCY_REVIEW. PRE-D01 vor Code: vollständige 02C Abnahme, unabhängiges Review, bedingte A-Freigabe durch Übergabe, Merge/CI, lokale Baseline. Reuse 02C, kein paralleles konkurrierendes Training-System. Research Runtime + Scenario/Task + Matrix + Budgets + Validation/Promotion + Evidence, keine neuen Post-Launch-Features.
+
+Normative Reihenfolge: bestätigte Entscheidungen und frühere Verträge; konkrete Modulverträge; research_config/experiments als Ausführungsplan; Tests/Matrix; Prompt regelt Scope und Gate. Konflikt: TR08, nicht durch Raten überschreiben. Historische Snapshot-Daten nicht als aktueller Status ausgeben.
+
+Pflichtmodule: RESEARCH_RUNTIME_SPEC, BUDGET_COMPUTE_SPEC, EXPERIMENT_MATRIX, VALIDATION_PROMOTION_SPEC, REFERENCE_02B, DEVELOPMENT_CONTINUITY_CONTRACT. FUTURE_ROADMAP nur Zukunft. Forschungsdaten, CP, Registry und technische Tests müssen real sein. 48h Forschung optional vorzeitig beendet mit nachvollziehbarer Evidenz; keine erfundene Modellfreigabe. Technisches Gate und Model Readiness getrennt.
