@@ -2,12 +2,13 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { DatabaseSync } from 'node:sqlite';
 import process from 'node:process';
-import { sha, hashJSON } from './manifest.mjs';
+import { sha, hashJSON, matrixHash } from './manifest.mjs';
 import { digest } from '../evolution-runtime.mjs';
 import { nodeComputePort } from '../node-compute-port.mjs';
 const { readGenome } = await import('../../src/storage/checkpoint.ts');
-const { object } = await import('../../src/storage/objects.ts');
+const { object, decode } = await import('../../src/storage/objects.ts');
 const { preflight } = await import('../../src/runtime/runConfig.ts');
 const { scenario } = await import('../../src/training/episode.ts');
 const { sameAssignment } = await import('../../src/runtime/compute.ts');
@@ -41,15 +42,80 @@ export function loadCandidate(directory, experimentId, role = 'champion') {
   if (!/^[\w-]+$/.test(experimentId)) throw Error('Invalid experiment ID');
   const folder = join(directory, 'experiments', experimentId),
     report = JSON.parse(readFileSync(join(folder, 'experiment.json'), 'utf8'));
+  if (
+    report.schema !== 'arena.experiment.v1' ||
+    report.entry?.definition?.experimentId !== experimentId ||
+    report.entry.definition.matrixHash !== matrixHash ||
+    hashJSON(report.entry.definition) !== report.entry.hash ||
+    !/^[\da-f]{40}$/.test(report.runtime?.sha ?? '')
+  )
+    throw Error('Missing or changed experiment provenance');
   const ref = report.models[role];
   if (!ref || !/^[a-f0-9]{64}\.f64le$/.test(ref.file))
     throw Error('Model unavailable');
+  const snapshot = new DatabaseSync(join(directory, 'research.sqlite'), {
+    readOnly: true,
+  });
+  try {
+    snapshot.exec('BEGIN');
+    const recorded = snapshot.prepare(
+      'SELECT hash,data FROM manifests WHERE id=?',
+    );
+    const entry = recorded.get('experiment:' + experimentId);
+    if (
+      !entry ||
+      hashJSON(JSON.parse(entry.data)) !== entry.hash ||
+      entry.hash !== hashJSON(report.entry)
+    )
+      throw Error('Experiment does not match its committed definition');
+    if (report.state === 'reused-historical') {
+      const origin = recorded.get('historical-reference');
+      if (
+        !origin ||
+        origin.hash !== hashJSON(report) ||
+        report.provenance?.original !== report.runtime.sha
+      )
+        throw Error('Historical archive has no matching provenance');
+    } else {
+      const query = snapshot.prepare(
+        'SELECT meta,bytes FROM objects WHERE space=? AND id=?',
+      );
+      const get = (id) => {
+        const o = query.get(experimentId, id);
+        if (!o) throw Error('Missing model checkpoint');
+        return decode({ meta: JSON.parse(o.meta), bytes: o.bytes });
+      };
+      const index = get('run:' + experimentId);
+      if (!index.terminal || index.latest !== report.checkpoint)
+        throw Error('Model has no committed terminal checkpoint');
+      const cp = get(index.latest);
+      const prefix = recorded.get('prefix:' + experimentId);
+      if (prefix && hashJSON(JSON.parse(prefix.data)) !== prefix.hash)
+        throw Error('Damaged prefix evidence');
+      const roles = {
+        champion: cp.champion?.genome,
+        generationBest: cp.generationBest,
+        fastest: cp.lapRecords?.[0]?.genome,
+        prefixChampion: prefix ? JSON.parse(prefix.data).champion : null,
+      };
+      if (
+        roles[role] !== ref.id ||
+        cp.counters.logicalEpisodes !== report.regularEpisodes ||
+        cp.counters.globalGeneration !== report.completed
+      )
+        throw Error('Model does not belong to the published checkpoint role');
+    }
+  } finally {
+    snapshot.close();
+  }
   const bytes = readFileSync(join(folder, ref.file));
   if (sha(bytes) !== ref.sha256 || bytes.length !== ref.size)
     throw Error('Model artifact damaged');
   const draft = report.entry.definition.draft,
     { m } = preflight(draft, digest, 64);
   const genome = readGenome(object('genome', ref.id, bytes), m);
+  if (ref.file !== genome.hash + '.f64le')
+    throw Error('Model filename differs from fingerprint');
   return { genome, draft, report, experimentId, role };
 }
 export function loadPanel(directory, name) {

@@ -59,9 +59,33 @@ try {
     assert.equal(state.phase, 'Completed');
     await exportExperiment(ledger, src, entry, state, {
       node: process.version,
+      sha: spec.sha,
       testFixture: true,
     });
     const candidate = loadCandidate(src, def.experimentId);
+    const expFile = join(
+      src,
+      'experiments',
+      def.experimentId,
+      'experiment.json',
+    );
+    const original = readFileSync(expFile);
+    const altered = JSON.parse(original);
+    delete altered.runtime.sha;
+    writeFileSync(expFile, JSON.stringify(altered));
+    assert.throws(() => loadCandidate(src, def.experimentId), /provenance/);
+    writeFileSync(expFile, original);
+    const paramFile = join(
+      src,
+      'experiments',
+      def.experimentId,
+      candidate.report.models.champion.file,
+    );
+    const parameters = readFileSync(paramFile);
+    const modified = parameters.slice(1);
+    writeFileSync(paramFile, modified);
+    assert.throws(() => loadCandidate(src, def.experimentId), /damaged/);
+    writeFileSync(paramFile, parameters);
     const panel = {
       name: 'development',
       cases: [

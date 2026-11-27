@@ -33,11 +33,15 @@ try {
   });
   const page = await browser.newPage(),
     errors = [],
-    assets = new Map();
+    assets = new Set();
   page.on('response', (response) => {
     const path = new URL(response.url()).pathname;
-    if (path.startsWith('/assets/') && /\.(?:css|js)$/.test(path))
-      assets.set(path, response);
+    if (
+      response.status() === 200 &&
+      path.startsWith('/assets/') &&
+      /\.(?:css|js)$/.test(path)
+    )
+      assets.add(path);
   });
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto(url + '#/models');
@@ -69,10 +73,8 @@ try {
   assert(owned >= 1);
   assert.deepEqual(errors, []);
   const bundle = {};
-  for (const [path, response] of [...assets].sort(([a], [b]) =>
-    a.localeCompare(b),
-  ))
-    bundle[path] = sha(await response.body());
+  for (const path of [...assets].sort())
+    bundle[path] = sha(readFileSync(resolve('dist', '.' + path)));
   assert(Object.keys(bundle).length > 0);
   publishJSON(destination, {
     schema: 1,

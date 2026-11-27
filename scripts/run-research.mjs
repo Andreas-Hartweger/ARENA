@@ -26,6 +26,7 @@ import {
 import { runExperiment } from './research/coordinator.mjs';
 import { auditExperiment } from './research/audit-data.mjs';
 import { reuseReference } from './research/reference.mjs';
+import { baselineDevelopment } from './research/baseline-development.mjs';
 
 const [directory, request, manifestFile] = process.argv.slice(2),
   runtime = environment();
@@ -71,6 +72,8 @@ try {
   );
   const workers = scale.workers,
     hardware = availableParallelism();
+  if (phase === 'screen' && ledger.definition.machines.length === 1)
+    await baselineDevelopment(directory, ledger, clock, workers);
   const prefixes = {
     baseline: 'B-',
     screen: 'S',
