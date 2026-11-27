@@ -4,8 +4,9 @@ import { gzipSync } from 'node:zlib';
 import { publish, publishJSON } from './campaign.mjs';
 import { evaluatePanel } from './evaluate-panel.mjs';
 import { hashJSON, sha } from './manifest.mjs';
-const { traceDiagnostics } =
+const { traceDiagnostics, drivingDiagnostics } =
   await import('../../src/research/traceDiagnostics.ts');
+const { createTrack } = await import('../../src/tracks/track.ts');
 
 // At the same 8,192-episode boundary, compare one predeclared development case per activation.
 export async function inspectDevelopment(
@@ -48,6 +49,10 @@ export async function inspectDevelopment(
     sampleCount: trace.samples.length,
     samples: { file: name, size: samples.length, sha256: sha(samples) },
     diagnostics: traceDiagnostics(trace.samples, model.genome.model),
+    driving: drivingDiagnostics(
+      trace.samples,
+      createTrack(model.draft.scenarios[0].track),
+    ),
   };
   ledger.transaction(() => {
     ledger.assertLease();

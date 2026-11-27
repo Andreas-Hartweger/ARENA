@@ -6,6 +6,7 @@ import { canonical, signature } from '../ai/schema';
 import { dot } from '../core/math';
 import { DriveWorld } from '../game/world';
 import { freezeTree } from '../physics/vehicleTick';
+import type { PhysicsDiagnostics } from '../physics/vehicleDynamics';
 import { startGrid } from '../tracks/grid';
 import { createTrack, type TrackDefinition } from '../tracks/track';
 import { createVehicle } from '../vehicles/vehicle';
@@ -189,6 +190,7 @@ export function scenarioSet(
 export interface TraceOptions {
   maxSamples: number;
   everyTicks: number;
+  dynamics?: boolean;
 }
 export interface TraceSample {
   tick: number;
@@ -206,6 +208,12 @@ export interface TraceSample {
   travel: readonly TravelFact[];
   contacts: readonly ContactInterval[];
   terminalTime: number;
+  dynamics?: {
+    stationM: number;
+    lateralM: number;
+    curvaturePerM: number;
+    physics: PhysicsDiagnostics;
+  };
 }
 export interface EpisodeFailure {
   ok: false;
@@ -342,6 +350,16 @@ export function* stepEpisode(
             travel: facts.travel,
             contacts: facts.contacts,
             terminalTime: end,
+            ...(trace?.dynamics
+              ? {
+                  dynamics: {
+                    stationM: local.s,
+                    lateralM: local.lateral,
+                    curvaturePerM: local.curvature,
+                    physics: p,
+                  },
+                }
+              : {}),
           });
         else truncated = true;
       }

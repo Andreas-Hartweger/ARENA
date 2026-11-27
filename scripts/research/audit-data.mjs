@@ -18,6 +18,34 @@ function near(a, b) {
     'Raw metric mismatch',
   );
 }
+// Independently recompute quartiles from the physical records at (n - 1) * q.
+function measuredDistribution(values) {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const quantile = (q) => {
+    const index = q * (sorted.length - 1),
+      fraction = index % 1;
+    return (
+      sorted[Math.floor(index)] * (1 - fraction) +
+      sorted[Math.ceil(index)] * fraction
+    );
+  };
+  return {
+    min: sorted[0],
+    max: sorted.at(-1),
+    mean: values.reduce((a, b) => a + b, 0) / values.length,
+    q1: quantile(0.25),
+    median: quantile(0.5),
+    q3: quantile(0.75),
+  };
+}
+function checkDistribution(measured, published) {
+  if (!measured) return assert.equal(published, null);
+  near(measured.min, published.worst);
+  near(measured.max, published.best);
+  for (const key of ['mean', 'q1', 'median', 'q3'])
+    near(measured[key], published[key]);
+}
 export function auditEpisode(e, contract, lapCount = 1, deadline = 120) {
   assert(e.ok);
   const r = e.raw,
@@ -61,7 +89,7 @@ export function auditEpisode(e, contract, lapCount = 1, deadline = 120) {
 export async function auditExperiment(
   directory,
   id,
-  { prefix = false, pulse = () => {} } = {},
+  { prefix = false, pulse = () => {}, timeStatistics = false } = {},
 ) {
   const folder = join(directory, 'experiments', id),
     report = JSON.parse(readFileSync(join(folder, 'experiment.json'), 'utf8'));
@@ -88,6 +116,8 @@ export async function auditExperiment(
     fastest = null,
     champion = null;
   const group = [],
+    times = [],
+    boundaries = [],
     scoreAt = [],
     saturated = [0, 0, 0, 0, 0, 0],
     g0 = [];
@@ -116,6 +146,7 @@ export async function auditExperiment(
       successes++;
       firstSuccess ??= g;
       const t = e.lapTimes[0];
+      if (timeStatistics) times.push(t);
       if (!fastest || t < fastest.time)
         fastest = {
           generation: g,
@@ -134,6 +165,21 @@ export async function auditExperiment(
         group.filter((r) => r.episodes[0].reason === 'completed').length,
         s.successes,
       );
+      near(s.successRate, s.successes / n);
+      const episodes = group.map((r) => r.episodes[0]);
+      const laps = episodes.flatMap((e) => e.lapTimes);
+      assert.equal(s.laps, laps.length);
+      checkDistribution(measuredDistribution(laps), s.lapTimes);
+      checkDistribution(
+        measuredDistribution(episodes.map((e) => e.raw.progress)),
+        s.progress,
+      );
+      if (timeStatistics && (samples === 8192 || samples === limit))
+        boundaries.push({
+          episodes: samples,
+          validLaps: times.length,
+          seconds: measuredDistribution(times),
+        });
       const unique = new Set(group.map((r) => r.hash)).size;
       assert.equal(unique, s.diversity.unique);
       assert.equal(n - unique, s.diversity.duplicates);
@@ -162,5 +208,6 @@ export async function auditExperiment(
     g0,
     saturated,
     scoreAt,
+    ...(timeStatistics ? { lapTimeBoundaries: boundaries } : {}),
   };
 }

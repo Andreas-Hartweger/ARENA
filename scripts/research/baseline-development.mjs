@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { loadPanel, loadCandidate, evaluatePanel } from './evaluate-panel.mjs';
 import { publishJSON } from './campaign.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
+import { auditExperiment } from './audit-data.mjs';
 import { hashJSON, sha } from './manifest.mjs';
 const { caseStatistics, comparePaired } =
   await import('../../src/research/validation.ts');
@@ -22,7 +23,8 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
     return saved;
   }
   const seeds = [42, 43, 44],
-    methods = ['evolution', 'random'];
+    methods = ['evolution', 'random'],
+    trainingTimes = [];
   for (const seed of seeds) {
     for (const method of methods) {
       const id = 'B-' + method + '-' + seed,
@@ -33,6 +35,33 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
         if (!existsSync(source) || sha(readFileSync(source)) !== sealed?.[name])
           throw Error('Audited baseline required before screening: ' + id);
       }
+      const statisticsKey = 'baseline-times:' + id;
+      let receipt = ledger.readManifest(statisticsKey);
+      if (!receipt) {
+        const { lapTimeBoundaries, ...audit } = await auditExperiment(
+          directory,
+          id,
+          {
+            pulse: () => clock.pulse(),
+            timeStatistics: true,
+          },
+        );
+        if (
+          hashJSON(audit) !==
+          hashJSON(JSON.parse(readFileSync(join(folder, 'audit.json'), 'utf8')))
+        )
+          throw Error('Published baseline audit differs from the raw records');
+        receipt = {
+          id,
+          auditSHA256: sealed['audit.json'],
+          boundaries: lapTimeBoundaries,
+        };
+        ledger.transaction(() => {
+          ledger.assertLease();
+          ledger.manifest(statisticsKey, receipt);
+        });
+      }
+      trainingTimes.push(receipt);
     }
   }
   const panel = loadPanel(directory, 'development'),
@@ -92,6 +121,7 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
     caseCount: 40,
     runs,
     pairs,
+    trainingTimes,
     selectionInput: 'development-only',
     evidenceDigest: hashJSON(runs.map((r) => [r.id, r.role, r.sha256])),
   };

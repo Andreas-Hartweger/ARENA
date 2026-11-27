@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { Brain } from '../../src/ai/network';
+import { DriveWorld } from '../../src/game/world';
 import {
   evaluate,
   scenario,
@@ -14,7 +15,10 @@ import {
   type EvaluationRow,
 } from '../../src/training/evolution';
 import { Genome, model } from '../../src/training/genome';
-import { traceDiagnostics } from '../../src/research/traceDiagnostics';
+import {
+  traceDiagnostics,
+  drivingDiagnostics,
+} from '../../src/research/traceDiagnostics';
 import { permutation, stream } from '../../src/training/random';
 const path = '../../scripts/evolution-runtime.mjs';
 const { digest }: { digest: Digest } = await import(path);
@@ -356,9 +360,43 @@ it('D-024 counts measured sensor frames and decisions, including masked inputs',
   for (const activation of ['tanh', 'relu', 'leaky'] as const) {
     const contract = model(short.modelSignature, [4], activation);
     const brain = new Brain(short.modelSignature, 31, [4], activation);
-    const result = evaluate(short, brain, { everyTicks: 1, maxSamples: 3 });
+    const result = evaluate(short, brain, {
+      everyTicks: 1,
+      maxSamples: 3,
+      dynamics: true,
+    });
     if (!result.ok || !result.trace) throw Error('Missing physical trace');
     const samples = result.trace.samples;
+    const world = new DriveWorld(
+      short.track,
+      [short.vehicle],
+      false,
+      new Map([
+        [
+          short.vehicle.id,
+          { brain, profile: short.sensor, decisionHz: short.decisionHz },
+        ],
+      ]),
+      true,
+    );
+    const input = new Map();
+    for (const sample of samples) {
+      const car = world.step(input).cars[0];
+      expect(sample.dynamics?.physics).toEqual(car.physics);
+      expect(sample.position).toEqual(car.state.positionM);
+      expect(sample.input).toEqual(car.input);
+    }
+    const dynamics = drivingDiagnostics(samples, short.track);
+    expect(dynamics.measured).toBe(3);
+    expect(dynamics.phases.reduce((total, row) => total + row.samples, 0)).toBe(
+      3,
+    );
+    expect(
+      drivingDiagnostics(
+        samples.map((sample) => ({ ...sample, dynamics: undefined })),
+        short.track,
+      ).measured,
+    ).toBe(0);
     const audit = traceDiagnostics(samples, contract);
     expect(audit.observations).toBe(2);
     expect(audit.measuredDecisions).toBe(2);

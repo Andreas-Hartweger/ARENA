@@ -2,6 +2,78 @@ import { activate } from '../ai/network';
 import { registry } from '../ai/schema';
 import type { TraceSample } from '../training/episode';
 import type { Model } from '../training/genome';
+import { wrap, type Track } from '../tracks/track';
+
+/** Groups sampled controls and physical measurements by position within the actual track piece. */
+export function drivingDiagnostics(
+  samples: readonly TraceSample[],
+  track: Track,
+) {
+  const phases = new Map<
+    string,
+    { count: number; totals: Record<string, number> }
+  >();
+  let measured = 0;
+  for (const sample of samples) {
+    if (!sample.dynamics) continue;
+    const { stationM, lateralM, curvaturePerM, physics: p } = sample.dynamics;
+    const projection = track.project(sample.position, stationM);
+    if (
+      Math.abs(projection.s - stationM) > 1e-6 ||
+      Math.abs(projection.lateral - lateralM) > 1e-6 ||
+      Math.abs(projection.curvature - curvaturePerM) > 1e-9
+    )
+      throw Error('Trace position and physical projection differ');
+    const routeM = wrap(stationM + track.def.startDistance, track.length);
+    const piece =
+      track.segments.find((s) => routeM < s.offset + s.length) ??
+      track.segments.at(-1)!;
+    const fraction = (routeM - piece.offset) / piece.length;
+    let phase = 'straight';
+    if (projection.distance > track.def.width / 2 + track.def.runoff)
+      phase = 'outsideRunoff';
+    else if (piece.curvature !== curvaturePerM) phase = 'pieceBoundary';
+    else if (curvaturePerM !== 0)
+      phase =
+        fraction < 1 / 3
+          ? 'curveFirstThird'
+          : fraction < 2 / 3
+            ? 'curveMiddleThird'
+            : 'curveLastThird';
+    const row = phases.get(phase) ?? {
+      count: 0,
+      totals: {} as Record<string, number>,
+    };
+    row.count++;
+    measured++;
+    const values = {
+      speedMps: Math.hypot(p.velocityMps.x, p.velocityMps.y),
+      throttle: sample.input.throttle,
+      brake: sample.input.brake,
+      absSteering: Math.abs(sample.input.steering),
+      absFrontSlipRad: Math.abs(p.front.slipRad),
+      absRearSlipRad: Math.abs(p.rear.slipRad),
+      frontTireForceN: Math.hypot(p.front.tireForceN.x, p.front.tireForceN.y),
+      rearTireForceN: Math.hypot(p.rear.tireForceN.x, p.rear.tireForceN.y),
+    };
+    for (const [key, value] of Object.entries(values)) {
+      if (!Number.isFinite(value)) throw Error('Invalid measured dynamics');
+      row.totals[key] = (row.totals[key] ?? 0) + value;
+    }
+    phases.set(phase, row);
+  }
+  return {
+    sampled: samples.length,
+    measured,
+    phases: Array.from(phases, ([phase, row]) => ({
+      phase,
+      samples: row.count,
+      means: Object.fromEntries(
+        Object.entries(row.totals).map(([k, v]) => [k, v / row.count]),
+      ),
+    })),
+  };
+}
 
 /** Summarizes sampled observations and decisions without calling the driver. */
 export function traceDiagnostics(

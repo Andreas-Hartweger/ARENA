@@ -81,6 +81,9 @@ function summarize(id) {
       champion: audit.champion,
       rawTicks: audit.ticks,
       saturated: audit.saturated,
+      ...(audit.lapTimeBoundaries
+        ? { lapTimeBoundaries: audit.lapTimeBoundaries }
+        : {}),
       firstGeneration: snapshot(included[0]),
       lastGeneration: snapshot(included.at(-1)),
       origins: total('origins'),

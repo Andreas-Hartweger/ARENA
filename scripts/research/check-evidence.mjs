@@ -22,6 +22,7 @@ import { ActiveTime, publishJSON } from './campaign.mjs';
 import { nodeComputePort } from '../node-compute-port.mjs';
 import { exportExperiment } from './evidence.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
+import { auditExperiment } from './audit-data.mjs';
 import { runExperiment } from './coordinator.mjs';
 import {
   evaluatePanel,
@@ -64,6 +65,12 @@ try {
       testFixture: true,
     });
     const candidate = loadCandidate(src, def.experimentId);
+    const audited = await auditExperiment(src, def.experimentId, {
+      timeStatistics: true,
+    });
+    assert.deepEqual(audited.lapTimeBoundaries, [
+      { episodes: 8, validLaps: 0, seconds: null },
+    ]);
     const expFile = join(
       src,
       'experiments',
@@ -152,6 +159,7 @@ try {
     assert.equal(diagnostics.sampleCount, 6);
     assert.equal(diagnostics.diagnostics.observations, 6);
     assert.equal(diagnostics.diagnostics.measuredDecisions, 6);
+    assert.equal(diagnostics.driving.measured, 6);
     assert.equal(ledger.usage().charged.ticks - before.ticks, 260);
     await inspectDevelopment(src, ledger, clock, panel, candidate, first);
     assert.equal(ledger.usage().charged.ticks - before.ticks, 260);

@@ -219,7 +219,9 @@ export async function evaluatePanel(
         throw Error('Cached assignment differs');
       rows[slot] = existing;
     } else {
-      const trace = tracing ? { everyTicks: 12, maxSamples: 1801 } : undefined;
+      const trace = tracing
+        ? { everyTicks: 12, maxSamples: 1801, dynamics: true }
+        : undefined;
       pending.push({ slot, c, options, s, cache, trace });
     }
   }

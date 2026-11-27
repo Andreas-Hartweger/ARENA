@@ -146,7 +146,7 @@ try {
           throw Error('Research audit changed');
       return;
     }
-    const options = { pulse: () => clock.pulse() };
+    const options = { pulse: () => clock.pulse(), timeStatistics: !baseline };
     const audit = await auditExperiment(directory, id, options);
     const reports = { 'audit.json': audit };
     if (baseline) {
