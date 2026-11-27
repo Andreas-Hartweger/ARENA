@@ -81,7 +81,13 @@ export type WorkerCommand =
   | { type: 'shutdown' };
 export type WorkerEvent =
   | { type: 'ready'; protocolVersion: 1 }
-  | { type: 'result'; key: JobKey; result: EpisodeResult; elapsedMs: number }
+  | {
+      type: 'result';
+      key: JobKey;
+      result: EpisodeResult;
+      elapsedMs: number;
+      yieldWaitMs: number;
+    }
   | {
       type: 'paused' | 'cancelled' | 'running' | 'heartbeat';
       key: JobKey;
@@ -90,6 +96,11 @@ export type WorkerEvent =
   | {
       type: 'progress';
       key: JobKey;
+      sequence: number;
+      capturedAtMs: number;
+      observationTick: number | null;
+      decisionTick: number | null;
+      terminalTime: null;
       tick: number;
       x: number;
       y: number;

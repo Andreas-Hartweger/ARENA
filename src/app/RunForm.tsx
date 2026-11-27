@@ -71,6 +71,7 @@ export function RunForm({
     <div className="run-form">
       <fieldset>
         <legend>Training</legend>
+        <p>GT-01 · {s.track?.name ?? 'Academy Training Circuit'}</p>
         <label>
           Ausgangsmodell
           <select

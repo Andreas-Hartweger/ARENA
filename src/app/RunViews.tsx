@@ -12,6 +12,7 @@ import { NumberField, type Act } from './RunForm';
 import { profiles, scoreFitness } from '../training/fitness';
 
 type Pose = Extract<WorkerEvent, { type: 'progress' }>;
+type DisplayPose = Pose & { latencyMs: number };
 type History = ReturnType<TrainingController['history']>;
 type Rows = ReturnType<TrainingController['population']>;
 type BrainData = ReturnType<TrainingController['selectedBrain']>;
@@ -31,7 +32,7 @@ export function RunMap({
     [detail, setDetail] = useState(false),
     [mode, setMode] = useState<CameraMode>('Übersicht');
   const [free, setFree] = useState({ x: 0, y: 0, width: 120 }),
-    [poses, setPoses] = useState<Pose[]>([]),
+    [poses, setPoses] = useState<DisplayPose[]>([]),
     [path, setPath] = useState<Pick<Pose, 'key' | 'x' | 'y'>[]>([]);
   const scenarioIndex =
     poses.find(
@@ -95,7 +96,14 @@ export function RunMap({
     refresh();
     document.addEventListener('visibilitychange', refresh);
     let timer: ReturnType<typeof setTimeout>;
-    const receive = (p: Pose) => {
+    const receive = (sample: Pose) => {
+      const p = {
+        ...sample,
+        latencyMs: Math.max(
+          0,
+          performance.timeOrigin + performance.now() - sample.capturedAtMs,
+        ),
+      };
       if (!visible || p.key.sessionId !== session || document.hidden) return;
       setPoses((values) => {
         const latest = values.at(-1);
@@ -117,7 +125,8 @@ export function RunMap({
         if (
           prior &&
           (prior.key.scenarioIndex > p.key.scenarioIndex ||
-            (prior.key.jobId === p.key.jobId && prior.tick >= p.tick))
+            (prior.key.workerLease === p.key.workerLease &&
+              prior.sequence >= p.sequence))
         )
           return values;
         const next = [...group.filter((q) => q.key.slot !== p.key.slot), p];
@@ -164,7 +173,7 @@ export function RunMap({
       p.key.scenarioIndex === scenarioIndex,
   );
   const pinned = current.find((p) => p.key.slot === slot),
-    leader = current.reduce<Pose | undefined>(
+    leader = current.reduce<DisplayPose | undefined>(
       (best, p) =>
         !best ||
         p.validLaps > best.validLaps ||
@@ -304,7 +313,8 @@ export function RunMap({
                 }
               >
                 <title>
-                  Slot {p.key.slot} · Tick {p.tick}
+                  Slot {p.key.slot} · Tick {p.tick} · {number(p.tick / 60, 2)} s
+                  simuliert
                 </title>
                 <rect
                   x="-2.2"
@@ -317,6 +327,27 @@ export function RunMap({
               </g>
             ))}
           </svg>
+          {mode !== 'Übersicht' && focus && (
+            <svg
+              aria-label="Minikarte mit ausgewählter Fahrzeugposition"
+              width="180"
+              height="88"
+              viewBox={[
+                geometry.cx - geometry.bounds.width / 2,
+                -geometry.cy - geometry.bounds.height / 2,
+                geometry.bounds.width,
+                geometry.bounds.height,
+              ].join(' ')}
+            >
+              <path
+                d={geometry.route}
+                fill="none"
+                stroke="#839793"
+                strokeWidth={track.def.width}
+              />
+              <circle cx={focus.x} cy={-focus.y} r="7" fill="#ff794a" />
+            </svg>
+          )}
           <div className="toolbar">
             {(['Übersicht', 'Follow', 'Frei'] as const).map((v) => (
               <button
@@ -387,9 +418,15 @@ export function RunMap({
           )}
           {focus && (
             <p>
-              Slot {focus.key.slot} · Tick {focus.tick} ·{' '}
+              <span data-sample-latency={focus.latencyMs}>
+                Übertragung zur Ansicht {number(focus.latencyMs, 0)} ms
+              </span>{' '}
+              · Slot {focus.key.slot} · Versuch {focus.key.attempt + 1} ·
+              Snapshot {focus.sequence} · Tick {focus.tick} ·{' '}
               {number(focus.tick / 60, 2)} s simuliert ·{' '}
-              {number(focus.speed * 3.6, 1)} km/h
+              {number(focus.speed * 3.6, 1)} km/h · Sensortick{' '}
+              {focus.observationTick ?? '–'} · Entscheidungstick{' '}
+              {focus.decisionTick ?? '–'}
             </p>
           )}
           {detail &&
@@ -402,7 +439,7 @@ export function RunMap({
                   applied: pinned.applied,
                 }}
                 brain={brain}
-                seriesId={pinned.key.jobId}
+                seriesId={pinned.key.workerLease}
                 onPause={() =>
                   act(() =>
                     trainingLab().call({
@@ -554,6 +591,7 @@ export function Population({
 }) {
   const [page, setPage] = useState(0),
     [which, setWhich] = useState<number | null>(null),
+    [scenario, setScenario] = useState(0),
     [filter, setFilter] = useState(''),
     [sort, setSort] = useState<'slot' | 'fitness' | 'progress' | 'lineage'>(
       'slot',
@@ -571,8 +609,11 @@ export function Population({
     state?.sessionId + ':' + state?.segment,
   );
   const selected = data?.find((x) => x.slot === which),
-    ep = selected?.episodes[0];
-  const task = draft.scenarios[0]?.task;
+    ep =
+      selected?.episodes.find((e) => e.scenario === scenario) ??
+      selected?.episodes[0];
+  const scenarioOptions = ep ? draft.scenarios[ep.scenario] : undefined,
+    task = scenarioOptions?.task;
   const score = ep
     ? scoreFitness(
         task?.laps ?? 1,
@@ -660,6 +701,25 @@ export function Population({
       {selected && ep && (
         <details open>
           <summary>Fitness und Abstammung · Slot {selected.slot}</summary>
+          {selected.episodes.length > 1 && (
+            <label>
+              Ausgewertetes Szenario
+              <select
+                value={ep.scenario}
+                onChange={(e) => setScenario(Number(e.target.value))}
+              >
+                {selected.episodes.map((v) => (
+                  <option key={v.scenario} value={v.scenario}>
+                    {v.scenario + 1} · {v.reason}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          <p>
+            Seed {ep.seed} · Abschlusstick {ep.tick} · {number(ep.duration, 3)}{' '}
+            s · {ep.reason}
+          </p>
           <dl>
             {Object.entries(ep.fitness).map(([k, v]) => (
               <div key={k}>
@@ -693,6 +753,16 @@ export function Population({
             <pre>
               {JSON.stringify(
                 {
+                  contract: ep.contract,
+                  weights: Array.isArray(scenarioOptions?.fitness)
+                    ? scenarioOptions.fitness
+                    : profiles[
+                        (scenarioOptions?.fitness ??
+                          'Balanced') as keyof typeof profiles
+                      ],
+                  trace:
+                    ep.trace ??
+                    'Für diese Episode wurde kein Detailtrace aufgezeichnet.',
                   errors: ep.errors,
                   raw: ep.raw,
                   duration: ep.duration,

@@ -8,8 +8,13 @@ import { createHash } from 'node:crypto';
 import process from 'node:process';
 import { digest, environment } from './evolution-runtime.mjs';
 import { nodeComputePort } from './node-compute-port.mjs';
-const [destination, baselinePath] = process.argv.slice(2);
-if (!destination || !baselinePath || existsSync(destination))
+const [destination, baselinePath, investigation] = process.argv.slice(2);
+if (
+  !destination ||
+  !baselinePath ||
+  existsSync(destination) ||
+  (investigation && investigation !== 'serial-review')
+)
   throw Error('New output directory and merged 02B checkout required');
 const base = resolve(baselinePath),
   baselineSha = execFileSync('git', ['-C', base, 'rev-parse', 'HEAD'], {
@@ -52,7 +57,8 @@ const workloads = [
   config('window-30', 32, 30, 600),
   config('window-30-trace', 32, 30, 600, true),
   ...[10, 15, 20, 60].map((hz) => config('window-' + hz, 8, hz, 600)),
-];
+].filter((w) => !investigation || ['window-10', 'window-30'].includes(w.name));
+const repeats = investigation ? 7 : 3;
 const methods = [
   { id: '02B', rt: old },
   { id: '02C', rt: current },
@@ -87,8 +93,9 @@ const header = {
   backgroundLoad:
     'Isolated browser reference, UI stability and headless endurance may run concurrently',
   workloads,
+  repeats,
   method:
-    'Fixed identical populations, warm-up per runtime and workload, three alternately ordered windows; times include evaluation, canonical commit and complete population setup is outside the timer.',
+    'Fixed identical populations, warm-up per runtime and workload, alternately ordered windows; times include evaluation, canonical commit and complete population setup is outside the timer.',
 };
 writeFileSync(
   join(destination, 'start.json'),
@@ -174,14 +181,15 @@ async function sample(method, work) {
 }
 try {
   for (const work of workloads) {
-    const selected =
-      work.name === 'window-30'
+    const selected = investigation
+      ? methods.filter((m) => !m.n)
+      : work.name === 'window-30'
         ? methods
         : methods.filter((m) =>
             ['02B', '02C', 'workers-1', 'workers-4'].includes(m.id),
           );
     for (const m of selected) await sample(m, work);
-    for (let repeat = 0; repeat < 3; repeat++)
+    for (let repeat = 0; repeat < repeats; repeat++)
       for (const method of repeat % 2 ? [...selected].reverse() : selected) {
         const row = { repeat, ...(await sample(method, work)) };
         rows.push(row);

@@ -87,8 +87,36 @@ it('prepares without publication, restores at G0/G1 and terminal, and matches ev
       recovered.evolution.population.map((x) => x.genome.hash),
     );
   }
+  const saved = await restore(
+    db,
+    b.index.automatic[1],
+    'test',
+    8,
+    'fork-identity',
+  );
+  expect(saved.evolution.nextGeneration).toBe(2);
+  expect(
+    saved.evolution.history.every((h) =>
+      h.records.every((r) => JSON.parse(r.id)[0] === 'fork-identity'),
+    ),
+  ).toBe(true);
+  expect(saved.evolution.commit(saved.evolution.collect()).fitness).toEqual(
+    e.history.at(-1)!.fitness,
+  );
   expect(b.index.automatic).toHaveLength(3);
   expect(b.checkpoint.nextGeneration).toBeNull();
+  const original = db.values.get(b.checkpoint.id)!;
+  await expect(
+    restore(db, b.checkpoint.id, 'other-runtime', 8),
+  ).rejects.toThrow();
+  db.values.set(b.checkpoint.id, {
+    ...original,
+    meta: { ...original.meta, refs: [] },
+  });
+  await expect(restore(db, b.checkpoint.id, 'test', 8)).rejects.toThrow(
+    /Referenzgraph/,
+  );
+  db.values.set(b.checkpoint.id, original);
   const terminal = await restore(db, b.checkpoint.id, 'test', 8);
   expect(terminal.evolution.population.length).toBe(0);
   expect(() => terminal.evolution.collect()).toThrow();
@@ -105,7 +133,7 @@ it('prepares without publication, restores at G0/G1 and terminal, and matches ev
   expect(deletionPreview(await db.list(), []).remove.length).toBeGreaterThan(0);
   const metadata = await db.list();
   expect(() => deletionPreview(metadata, [b.checkpoint.id])).toThrow();
-});
+}, 25000);
 it('checks unopened goals, resource preflight, series cardinality and immutable clone bytes', async () => {
   const draft = defaultDraft();
   draft.options.n = 1024;

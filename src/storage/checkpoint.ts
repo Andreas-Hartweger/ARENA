@@ -250,6 +250,36 @@ export async function restore(
     new Set(cp.history).size !== cp.history.length
   )
     throw Error('Invalid checkpoint counters or graph');
+  const expected = new Set([
+    ...cp.population.map((p) => p.genome),
+    ...cp.history,
+    ...(cp.lapRecords ?? []).map((r) => r.genome),
+    ...cp.counters.previousSegments,
+    ...[
+      cp.counters.parentCheckpoint,
+      cp.draft.sourceVersion,
+      cp.generationBest,
+      cp.champion?.genome,
+    ].filter((v): v is string => !!v),
+  ]);
+  if (
+    expected.size !== stored.meta.refs.length ||
+    stored.meta.refs.some((ref) => !expected.has(ref))
+  )
+    throw Error('Checkpoint enthält einen unvollständigen Referenzgraphen.');
+  if (
+    cp.counters.globalGeneration > c.generations ||
+    cp.counters.logicalEpisodes > c.budget ||
+    cp.counters.logicalEpisodes < cp.history.length * c.n * scenarios.length
+  )
+    throw Error('Ungültiges Checkpointbudget.');
+  for (const parent of [
+    ...cp.counters.previousSegments,
+    ...(cp.counters.parentCheckpoint ? [cp.counters.parentCheckpoint] : []),
+  ]) {
+    if (parent === cp.id || (await get(parent)).meta.kind !== 'checkpoint')
+      throw Error('Ungültiger Eltern-Checkpoint.');
+  }
   const loaded = new Map<string, Genome>();
   async function genome(key: string) {
     let g = loaded.get(key);

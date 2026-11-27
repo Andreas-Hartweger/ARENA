@@ -26,9 +26,11 @@ export function simulationWorker(
   let phase: 'idle' | 'running' | 'paused' | 'result' = 'idle';
   let tick = 0,
     computeMs = 0,
+    yieldWaitMs = 0,
     rate: Rate = 'max',
     lastReport = 0,
     lastHeartbeat = 0,
+    sequence = 0,
     token = 0;
   let lastFrame: import('../game/world').WorldFrame | undefined,
     awaitingSample = false;
@@ -40,6 +42,11 @@ export function simulationWorker(
     send({
       type: 'progress',
       key: active.key,
+      sequence: ++sequence,
+      capturedAtMs: performance.timeOrigin + now(),
+      observationTick: car.ai?.observation.index ?? null,
+      decisionTick: car.ai?.decisionTick ?? null,
+      terminalTime: null,
       tick: lastFrame.index,
       certifiedM: car.lap.certified,
       validLaps: car.lap.laps,
@@ -77,9 +84,13 @@ export function simulationWorker(
     send(lastResult);
   }
   function queue(delay = 0) {
-    const ticket = ++token;
+    const ticket = ++token,
+      queuedAt = now();
     schedule(() => {
-      if (ticket === token && phase === 'running') run();
+      if (ticket === token && phase === 'running') {
+        yieldWaitMs += now() - queuedAt;
+        run();
+      }
     }, delay);
   }
   function run() {
@@ -98,6 +109,7 @@ export function simulationWorker(
             key: active.key,
             result: next.value,
             elapsedMs: computeMs,
+            yieldWaitMs,
           };
           send(lastResult);
           steps = undefined;
@@ -189,7 +201,9 @@ export function simulationWorker(
         );
         rate = command.rate;
         tick = 0;
+        sequence = 0;
         computeMs = 0;
+        yieldWaitMs = 0;
         lastReport = now();
         lastHeartbeat = lastReport;
         phase = 'running';

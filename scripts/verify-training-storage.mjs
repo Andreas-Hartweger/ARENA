@@ -57,6 +57,21 @@ try {
       (arg) => window.storageCases.consume(arg),
       fixture,
     );
+  const transferWindows = [transfer.seen];
+  for (let i = 1; i < 3; i++) {
+    const extraSource = await fresh();
+    const next = await extraSource.page.evaluate(() =>
+      window.storageCases.produce(),
+    );
+    await extraSource.ctx.close();
+    const extraTarget = await fresh();
+    const result = await extraTarget.page.evaluate(
+      (arg) => window.storageCases.consume(arg),
+      next,
+    );
+    transferWindows.push(result.seen);
+    await extraTarget.ctx.close();
+  }
   const port = server.httpServer.address().port;
   let conflict = false;
   try {
@@ -115,6 +130,7 @@ try {
         control,
         faults,
         transfer,
+        transferWindows,
         update,
         conflict,
         fallback,

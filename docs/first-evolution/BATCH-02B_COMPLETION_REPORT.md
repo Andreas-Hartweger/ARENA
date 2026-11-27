@@ -1,5 +1,7 @@
 # Abschlussbericht · First Evolution · Batch 02B
 
+**Abnahme vom 27.11.2026.** A hat die ausstehenden Prüfschritte delegiert und den Merge nach erfolgreicher Prüfung ausdrücklich freigegeben. Das Review des von B übergebenen Stands ist abgeschlossen. PR #6 wurde als `c74ab27daf3159329d9049076ab3c30c5a4759ea` in `main` übernommen. Die CI auf diesem Commit ist grün. Die folgende Übergabe dokumentiert den Stand vor der Freigabe. [Review und Merge](https://github.com/Andreas-Hartweger/ARENA/pull/6) · [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010)
+
 B übergibt den Implementierungsstand von PRE-B01 und EV-001–013 an A und B. Die technische Prüfreihe für den Referenzlauf ist abgeschlossen. 12.800 von 12.800 regulären Auswertungen lieferten einen gültigen Score. Die erste gültige Runde wurde in G31 abgeschlossen. Die schnellste gültige Runde dauerte 59,664 simulierte Sekunden. Das unabhängige 02B-Review und die ausdrückliche Freigabe zum Merge stehen aus. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) · [Aktuelle CI](https://github.com/Andreas-Hartweger/ARENA/pull/6/checks) · [Abnahmematrix](ACCEPTANCE_RESULTS.md)
 
 ## Grundlage und Prüfumgebung

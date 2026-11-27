@@ -160,3 +160,109 @@ it('publishes a changed scenario and evaluated old population atomically with se
   expect(branch.snapshot.runId).not.toBe(run);
   await branch.cancel();
 }, 25000);
+it('holds the wall-time clock while paused and aborts incomplete work only under the hard policy', async () => {
+  const d = small();
+  d.mode = 'live';
+  d.time = { seconds: 0.5, hard: true };
+  const control = new TrainingController(
+    new TestStore(),
+    nodeComputePort,
+    'time-fixture',
+    8,
+  );
+  await control.start(d);
+  control.pause();
+  await until(() => control.snapshot.phase === 'Paused');
+  const before = control.snapshot;
+  await new Promise((r) => setTimeout(r, 550));
+  expect(control.snapshot.activeMs).toBe(before.activeMs);
+  await control.markSave();
+  expect(control.snapshot.phase).toBe('Paused');
+  await control.resume();
+  await until(() => control.snapshot.phase === 'Cancelled');
+  expect(control.snapshot).toMatchObject({
+    reason: 'hardTime',
+    generation: 0,
+    evaluations: 0,
+  });
+  await expect(control.resume()).rejects.toThrow();
+  const soft = new TrainingController(
+    new TestStore(),
+    nodeComputePort,
+    'soft-fixture',
+    8,
+  );
+  d.mode = 'headless';
+  d.time = { seconds: 0.001, hard: false };
+  await soft.start(d);
+  await until(() => soft.snapshot.phase === 'Completed');
+  expect(soft.snapshot).toMatchObject({
+    reason: 'wallTime',
+    generation: 1,
+    evaluations: 8,
+  });
+}, 25000);
+it('evaluates flat goals after full results and stops exactly at the consecutive generation or logical budget', async () => {
+  for (const goal of [true, false]) {
+    const d = small();
+    d.options.generations = 7;
+    d.options.budget = 17;
+    if (goal)
+      d.goal = {
+        logic: 'or',
+        leaves: [
+          { metric: 'successes', threshold: 0 },
+          { metric: 'lapTime', threshold: 1 },
+        ],
+        consecutive: 2,
+      };
+    const db = new TestStore(),
+      control = new TrainingController(
+        db,
+        nodeComputePort,
+        'budget-fixture',
+        8,
+      );
+    await control.start(d);
+    await until(() => control.snapshot.phase === 'Completed');
+    expect(control.snapshot).toMatchObject({
+      reason: goal ? 'goal' : 'budget',
+      generation: 2,
+      evaluations: 16,
+    });
+    const index = decode<RunIndex>(
+      (await db.get('run:' + control.snapshot.runId))!,
+    );
+    const { cp, evolution } = await restore(
+      db,
+      index.latest,
+      'budget-fixture',
+      8,
+    );
+    expect(cp.nextGeneration).toBeNull();
+    expect(evolution.population).toHaveLength(0);
+  }
+}, 25000);
+it('preserves a recoverable terminal write if an in-flight worker is deliberately cancelled', async () => {
+  const db = new TestStore(),
+    control = new TrainingController(db, nodeComputePort, 'cancel-fixture', 8),
+    d = small();
+  d.mode = 'live';
+  await control.start(d);
+  const id = 'run:' + control.snapshot.runId,
+    prior = decode<RunIndex>((await db.get(id))!);
+  db.rejectGeneration = 0;
+  await control.serialize(() => control.cancel());
+  await new Promise((r) => setTimeout(r, 50));
+  await control.serialize(() => {});
+  expect(control.snapshot).toMatchObject({
+    phase: 'Recoverable',
+    generation: 0,
+    evaluations: 0,
+  });
+  expect(decode<RunIndex>((await db.get(id))!).latest).toBe(prior.latest);
+  db.rejectGeneration = null;
+  await control.retry();
+  expect(control.snapshot.phase).toBe('Cancelled');
+  expect(decode<RunIndex>((await db.get(id))!).terminal).toBe(true);
+}, 15000);

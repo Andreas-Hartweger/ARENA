@@ -435,6 +435,7 @@ export class TrainingController {
         this.serialize(async () => {
           if (
             session !== this.#session ||
+            pool.closed ||
             ['Cancelled', 'Faulted'].includes(this.#phase)
           )
             return;
@@ -449,6 +450,7 @@ export class TrainingController {
         void this.serialize(() => {
           if (
             session === this.#session &&
+            !pool.closed &&
             !['Cancelled', 'Completed'].includes(this.#phase)
           )
             this.#fault(e);

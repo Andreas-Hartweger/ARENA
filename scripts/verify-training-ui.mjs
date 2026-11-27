@@ -73,9 +73,35 @@ const checkErrors = async () => {
     throw Error(JSON.stringify({ alerts, errors }));
 };
 try {
-  await page.goto(url + '/#/training');
+  if (mode === 'short') {
+    for (const [label, source] of [
+      ['Streckentraining konfigurieren', 'academy'],
+      ['GT-01 trainieren', 'gt01'],
+    ]) {
+      await page.goto(url + '/#/');
+      await page.getByRole('link', { name: label }).click();
+      await phase('Bereit');
+      await page.getByRole('heading', { name: 'Laufentwurf' }).waitFor();
+      if (!page.url().endsWith('source=' + source) || (await gen()) !== 0)
+        throw Error('Entry point changed run state');
+    }
+    await page.goto(url + '/#/training?source=unbekannt');
+    await page.getByRole('alert').filter({ hasText: 'Vorauswahl' }).waitFor();
+    if (await button('Training starten').isEnabled())
+      throw Error('Invalid entry enabled start');
+    await page.goto(url + '/#/');
+    await page
+      .getByRole('link', { name: 'Trainingslabor', exact: true })
+      .click();
+  } else await page.goto(url + '/#/training');
   await phase('Bereit');
   await button('Lauf konfigurieren').click();
+  if (mode === 'short') {
+    await field('Population').fill('7');
+    await page.getByRole('alert').waitFor();
+    if (await button('Training starten').isEnabled())
+      throw Error('Invalid population enabled start');
+  }
   await field('Population').fill('8');
   await field('Generationen').fill('100000');
   await field('Rechenprofil').selectOption('Custom');
@@ -120,7 +146,18 @@ try {
     prevGen = g;
     appendFileSync(
       join(destination, 'samples.ndjson'),
-      JSON.stringify({ cycle, g, activeMs, dt, gaps }) + '\n',
+      JSON.stringify({
+        cycle,
+        g,
+        activeMs,
+        dt,
+        gaps,
+        snapshotLatencyMs: await page
+          .locator('[data-sample-latency]')
+          .evaluateAll((nodes) =>
+            nodes.length ? Number(nodes[0].dataset.sampleLatency) : null,
+          ),
+      }) + '\n',
     );
     if (cycle % 5 === 0) {
       await button('Meilenstein speichern').click();

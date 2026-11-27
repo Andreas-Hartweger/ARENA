@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { trainingLab } from './labClient';
 import { bytes, number, useLabQuery } from './labData';
 import { defaultDraft, preflight, type Draft } from '../runtime/runConfig';
@@ -47,13 +47,28 @@ function initialDraft() {
   }
   return defaultDraft();
 }
-export default function TrainingLab({ route }: { route: string }) {
-  const [draft, setDraft] = useState<Draft>(initialDraft),
+export default function TrainingLab({
+  route,
+  source,
+}: {
+  route: string;
+  source: string | null;
+}) {
+  const [draft, setDraft] = useState<Draft>(() => {
+      const d = initialDraft();
+      if (source === 'academy') {
+        const [first, ...rest] = d.scenarios;
+        const selected = { ...first };
+        delete selected.track;
+        d.scenarios = [selected, ...rest];
+      }
+      return d;
+    }),
     [state, setState] = useState<RunState | undefined>(
       () => trainingLab().state,
     ),
     [advanced, setAdvanced] = useState(false),
-    [configure, setConfigure] = useState(false),
+    [configure, setConfigure] = useState(!!source),
     [revision, setRevision] = useState(0),
     [error, setError] = useState(''),
     [notice, setNotice] = useState(''),
@@ -121,6 +136,22 @@ export default function TrainingLab({ route }: { route: string }) {
       )
       .finally(() => setPending(false));
   };
+  const draftError = useMemo(() => {
+    try {
+      preflight(draft, fingerprint, navigator.hardwareConcurrency);
+    } catch (e) {
+      return String(e);
+    }
+    if (
+      draft.sourceVersion &&
+      models.data &&
+      !models.data.some((p) => p.versions.includes(draft.sourceVersion!))
+    )
+      return 'Die gewählte Ausgangsversion fehlt. Im Laufentwurf eine verfügbare Version auswählen.';
+    if (source && !['academy', 'gt01'].includes(source))
+      return 'Die angeforderte Vorauswahl ist unbekannt. Das Trainingslabor über die Navigation öffnen.';
+    return '';
+  }, [draft, models.data, source]);
   const lab = trainingLab(),
     phase = state?.phase ?? 'Draft',
     running = phase === 'Running',
@@ -184,10 +215,20 @@ export default function TrainingLab({ route }: { route: string }) {
         {notice && <p role="status">{notice}</p>}
         {route === 'training' ? (
           <>
+            {draftError && (
+              <p role="alert" className="lab-alert">
+                {draftError}
+              </p>
+            )}
             <div className="run-actions">
               <button
                 className="primary"
-                disabled={pending || active}
+                disabled={
+                  pending ||
+                  active ||
+                  !!draftError ||
+                  !!(draft.sourceVersion && !models.data)
+                }
                 onClick={() => act(() => lab.call({ type: 'start', draft }))}
               >
                 Training starten
@@ -463,6 +504,10 @@ export default function TrainingLab({ route }: { route: string }) {
                     {metric(
                       'Genomtransfer',
                       bytes(monitor?.transferredBytes ?? 0),
+                    )}
+                    {metric(
+                      'Wartezeit der Worker zwischen Tickabschnitten (inkl. Zieltempo)',
+                      number((monitor?.yieldWaitMs ?? 0) / 1000, 2) + ' s',
                     )}
                     {metric(
                       'Worker-Nachrichten',

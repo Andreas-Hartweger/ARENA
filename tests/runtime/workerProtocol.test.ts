@@ -178,6 +178,38 @@ describe('Pool receipts, pause and monitoring', { timeout: 25000 }, () => {
       }
     }
   });
+  it('reports loss during a pending pause and never acknowledges an unavailable state', async () => {
+    let started!: () => void;
+    const begin = new Promise<void>((r) => {
+      started = r;
+    });
+    let pauseCount = 0;
+    const pool = new WorkerPool(
+      factory((m, emit, fail) => {
+        if (m.type === 'paused') fail(Error('Pause transport lost'));
+        else {
+          emit(m);
+          if (m.type === 'running') started();
+        }
+      }),
+      1,
+      'lost-pause',
+    );
+    try {
+      pool.setRate(1);
+      pool.onPause = () => {
+        pauseCount++;
+      };
+      const job = pool.evaluate(run(), options);
+      await begin;
+      pool.pause();
+      await expect(job).rejects.toThrow(/Pause/);
+      expect(pauseCount).toBe(0);
+      expect(pool.paused).toBe(false);
+    } finally {
+      pool.close();
+    }
+  });
   it('acknowledges pause only after the worker stops, preserves the tick state and changes rate without catch-up', async () => {
     const e = run(),
       oracle = run(),

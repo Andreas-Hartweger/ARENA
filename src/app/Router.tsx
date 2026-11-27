@@ -10,7 +10,7 @@ export function Router() {
     window.addEventListener('hashchange', update);
     return () => window.removeEventListener('hashchange', update);
   }, []);
-  return /^#\/(training|models|storage|queue)/.test(hash) ? (
+  return /^#\/(training|models|storage|queue)(?:\?|$)/.test(hash) ? (
     <Suspense
       fallback={
         <main className="lab-loading" role="status">
@@ -18,7 +18,11 @@ export function Router() {
         </main>
       }
     >
-      <TrainingLab route={hash.slice(2).split('?')[0]} key="lab" />
+      <TrainingLab
+        route={hash.slice(2).split('?')[0]}
+        source={new URLSearchParams(hash.split('?')[1]).get('source')}
+        key="lab"
+      />
     </Suspense>
   ) : (
     <Suspense fallback={<main role="status">First Drive wird geladen …</main>}>

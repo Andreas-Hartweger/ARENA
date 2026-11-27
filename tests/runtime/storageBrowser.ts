@@ -32,7 +32,12 @@ import { LabClient } from '../../src/app/labClient';
 import type { RunState } from '../../src/runtime/controller';
 import vectors from '../../docs/training-management/specification/reference_vectors.json';
 const runtime = 'arena.02c.cpu.v1|' + navigator.userAgent;
-type Package = { kind: PackageType; data: number[]; roots: string[] };
+type Package = {
+  kind: PackageType;
+  data: number[];
+  roots: string[];
+  exportMs: number;
+};
 function check(test: unknown, message: string): asserts test {
   if (!test) throw Error(message);
 }
@@ -108,11 +113,13 @@ async function produce() {
       ['checkpoint', [after.checkpoint.id]],
       ['backup', ['run:source', p.id, 'queue:main']],
     ] as const) {
+      const begin = performance.now();
       const blob = await exportPackage(db, kind, [...roots], runtime);
       packets.push({
         kind,
         roots: [...roots],
         data: Array.from(new Uint8Array(await blob.arrayBuffer())),
+        exportMs: performance.now() - begin,
       });
     }
     return {
@@ -135,19 +142,32 @@ async function consume(source: Awaited<ReturnType<typeof produce>>) {
   const seen = [];
   try {
     for (const packet of source.packets) {
+      const before = performance.now();
       const blob = new Blob([Uint8Array.from(packet.data)]),
         p = await previewPackage(db, blob);
+      const previewMs = performance.now() - before,
+        beginImport = performance.now();
       check(!p.conflicts.length, 'Fresh compatible package conflicted');
       await importPackage(db, p);
+      const importMs = performance.now() - beginImport,
+        revision = (await db.status()).revision;
       const again = await previewPackage(db, blob);
       check(!again.conflicts.length, 'Second import conflicts');
       const initial = (await db.list()).length;
       await importPackage(db, again);
       check(
-        (await db.list()).length === initial,
+        (await db.list()).length === initial &&
+          (await db.status()).revision === revision,
         'Repeated import duplicated objects',
       );
-      seen.push({ kind: packet.kind, bytes: blob.size, objects: initial });
+      seen.push({
+        kind: packet.kind,
+        bytes: blob.size,
+        objects: initial,
+        exportMs: packet.exportMs,
+        previewMs,
+        importMs,
+      });
     }
     const q = await queue(db);
     check(
@@ -267,6 +287,35 @@ async function faults() {
   const ok =
     !!(await reopened.get(a.meta.id)) && !!(await reopened.get(b.meta.id));
   check(ok, 'Incomplete dataset after reopen');
+  const writer = await reopened.status();
+  const raw = await new Promise<IDBDatabase>((resolve, reject) => {
+    const req = indexedDB.open('fault-boundaries');
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  try {
+    const tx = raw.transaction('state', 'readwrite');
+    tx.objectStore('state').put(
+      { ...writer, epoch: writer.epoch + 1, owner: 'takeover-fixture' },
+      'writer',
+    );
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onabort = () => reject(tx.error);
+    });
+    await rejects(
+      () => reopened.commit([jsonObject('settings', 'settings:lost', {})]),
+      /Stale writer/,
+    );
+    await rejects(() => reopened.stage('stale', b), /Stale writer/);
+    check(
+      !(await reopened.get('settings:lost')) &&
+        (await reopened.status()).revision === writer.revision,
+      'A stale writer published data',
+    );
+  } finally {
+    raw.close();
+  }
   await reopened.release();
   reopened.close();
   const bytes = parameterBytes(new Float64Array(vectors.parameters));
@@ -279,6 +328,7 @@ async function faults() {
   return {
     cases: [
       'stale-before-write',
+      'old-epoch-after-takeover',
       'rollback-mid-transaction',
       'discard-before-publication',
       'abandoned-staging',

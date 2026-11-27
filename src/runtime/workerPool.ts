@@ -35,6 +35,7 @@ export interface PoolMonitor {
   evaluated: number;
   ticks: number;
   computeMs: number;
+  yieldWaitMs: number;
   attempts: number;
   busy: number;
   workers: number;
@@ -77,6 +78,7 @@ export class WorkerPool {
     evaluated: 0,
     ticks: 0,
     computeMs: 0,
+    yieldWaitMs: 0,
     attempts: 0,
     transferredBytes: 0,
     receivedMessages: 0,
@@ -106,6 +108,9 @@ export class WorkerPool {
       busy: [...this.#lanes].filter((x) => x.job).length,
       workers: this.#lanes.size,
     };
+  }
+  get closed() {
+    return this.#mode === 'closed';
   }
   get paused() {
     return this.#mode === 'paused';
@@ -395,6 +400,7 @@ export class WorkerPool {
         this.#monitor.ticks += msg.result.tick;
         this.#monitor.evaluated++;
         this.#monitor.computeMs += msg.elapsedMs;
+        this.#monitor.yieldWaitMs += msg.yieldWaitMs;
         l.port.send({ type: 'ack', key });
         l.job = undefined;
         l.paused = false;

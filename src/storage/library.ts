@@ -200,6 +200,13 @@ function versionObjects(
 }
 function profileObject(p: Profile) {
   validateProfile(p);
+  if (
+    typeof p.archived !== 'boolean' ||
+    typeof p.favorite !== 'boolean' ||
+    (p.trashedAt !== null &&
+      (!Number.isSafeInteger(p.trashedAt) || p.trashedAt <= 0))
+  )
+    throw Error('Ungültiger Profilstatus.');
   if (!p.versions.includes(p.active) || !p.versions.includes(p.preferred))
     throw Error('Unknown profile version');
   return jsonObject(
@@ -224,7 +231,12 @@ export async function createModel(
 ) {
   const { m } = preflight(draft, fingerprint, hardware),
     id = 'model:' + crypto.randomUUID();
-  if (source && m.key !== source.genome.model.key)
+  if (
+    source &&
+    (m.key !== source.genome.model.key ||
+      m.weightLimit !== source.genome.model.weightLimit ||
+      m.biasLimit !== source.genome.model.biasLimit)
+  )
     throw Error('Inkompatibles Ausgangsmodell.');
   const genome = source
     ? new Genome(m, source.genome.parameters(), fingerprint)

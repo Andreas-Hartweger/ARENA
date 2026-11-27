@@ -62,6 +62,16 @@ const strictKeys = (o: object, keys: string[]) => {
   )
     throw Error('Ungültige Paketfelder.');
 };
+function allowedFields(o: object, required: string[], optional: string[] = []) {
+  if (
+    !o ||
+    Array.isArray(o) ||
+    typeof o !== 'object' ||
+    required.some((k) => !Object.hasOwn(o, k)) ||
+    Object.keys(o).some((k) => !required.includes(k) && !optional.includes(k))
+  )
+    throw Error('Unbekannte oder fehlende Objektfelder.');
+}
 const allowedId = (s: unknown) =>
   typeof s === 'string' && /^[a-zA-Z0-9_.:-]{1,180}$/.test(s);
 export async function exportPackage(
@@ -247,6 +257,23 @@ export async function previewPackage(db: TrainingDatabase, file: Blob) {
       conflicts.push(e.id);
     if (e.role === 'profile') {
       const p = decode<Profile>(value);
+      allowedFields(
+        p,
+        [
+          'id',
+          'name',
+          'description',
+          'tags',
+          'favorite',
+          'collection',
+          'archived',
+          'trashedAt',
+          'active',
+          'preferred',
+          'versions',
+        ],
+        ['color', 'icon', 'records'],
+      );
       validateProfile(p);
       if (
         !Array.isArray(p.versions) ||
@@ -270,17 +297,78 @@ export async function previewPackage(db: TrainingDatabase, file: Blob) {
         throw Error('Ungültige Modellversion.');
     } else if (e.role === 'version') {
       const { version } = await readVersion(sandbox, e.id);
+      allowedFields(version, [
+        'id',
+        'modelId',
+        'parent',
+        'genome',
+        'manifest',
+        'origin',
+        'role',
+        'source',
+        'created',
+      ]);
       if (
         version.id !== e.id ||
         !e.refs.includes(version.manifest) ||
         !e.refs.includes(version.genome)
       )
         throw Error('Ungültiger Versionsgraph.');
+    } else if (e.role === 'manifest') {
+      const m = decode<{ model: object }>(value);
+      allowedFields(m, [
+        'version',
+        'model',
+        'modelKey',
+        'layout',
+        'dtype',
+        'vehicle',
+        'physics',
+        'initializer',
+        'draft',
+      ]);
+      allowedFields(m.model, [
+        'signature',
+        'hidden',
+        'activation',
+        'weightLimit',
+        'biasLimit',
+      ]);
     } else if (e.role === 'checkpoint') {
       const cp = decode<Checkpoint>(value);
+      allowedFields(
+        cp,
+        [
+          'version',
+          'runtime',
+          'contracts',
+          'runId',
+          'id',
+          'phase',
+          'reason',
+          'nextGeneration',
+          'draft',
+          'original',
+          'counters',
+          'population',
+          'history',
+          'adaptive',
+          'champion',
+          'generationBest',
+        ],
+        ['lapRecords'],
+      );
       await restore(sandbox, e.id, cp.runtime, 32, undefined, () => {});
     } else if (e.role === 'run') {
       const idx = decode<RunIndex>(value);
+      allowedFields(idx, [
+        'id',
+        'latest',
+        'automatic',
+        'milestones',
+        'terminal',
+        'globalGeneration',
+      ]);
       if (
         e.id !== 'run:' + idx.id ||
         !Array.isArray(idx.automatic) ||
@@ -303,10 +391,33 @@ export async function previewPackage(db: TrainingDatabase, file: Blob) {
         throw Error('Fehlende Modellversion der Warteschlange.');
     } else if (e.role === 'record') {
       const r = decode<PerformanceRecord>(value);
+      allowedFields(
+        r,
+        [
+          'purpose',
+          'contract',
+          'track',
+          'vehicle',
+          'seed',
+          'runtime',
+          'sampleCount',
+          'value',
+          'version',
+          'genome',
+          'verified',
+        ],
+        ['metric'],
+      );
       if (
         !e.refs.includes(r.version) ||
         metadata.get(r.version)?.kind !== 'version' ||
+        typeof r.contract !== 'string' ||
         !r.contract ||
+        !['fitness', 'lapTime'].includes(r.metric ?? 'fitness') ||
+        !Number.isSafeInteger(r.seed) ||
+        typeof r.track !== 'string' ||
+        typeof r.vehicle !== 'string' ||
+        typeof r.runtime !== 'string' ||
         !Number.isSafeInteger(r.sampleCount) ||
         r.sampleCount < 1 ||
         !Number.isFinite(r.value) ||
@@ -444,11 +555,14 @@ export async function importPackage(
       await db.stage(id, row);
       staged.push(key);
     }
-    await db.commit(
-      [],
-      { expectedRevision: preview.revision },
-      { id, keys: staged },
-    );
+    if (staged.length)
+      await db.commit(
+        [],
+        { expectedRevision: preview.revision },
+        { id, keys: staged },
+      );
+    else if ((await db.status()).revision !== preview.revision)
+      throw Error('Stale import preview');
     return m.roots.map((k) => mapping.get(k) ?? k);
   } finally {
     await db.discardStage(id);
