@@ -22,6 +22,10 @@ Vor der Auswahl wurden 40 Entwicklungsfälle, 60 finale Einzelfahrten, 12 Drei-R
 
 ## Stand der Abnahme
 
+Das Abnahmeregister enthält alle 158 vorgeschriebenen Prüfpunkte und ihre 70 Entscheidungs-IDs. Der Stand „belegt“ bezieht sich auf das jeweilige Prüfziel. Physische Fahrten eines fest programmierten Prüfcontrollers sind als technische Prüfung ausgewiesen. Der tägliche Kampagnenstand unterscheidet historische Wiederverwendung, begonnene, abgeschlossene und zurückgestellte Versuche. [Abnahmeregister](ACCEPTANCE_RESULTS.csv) · [Laufregister](../../scripts/research/status.mjs)
+
+Für den neu gerechneten Baseline-Seed 43 bestätigen die komprimierten Einzelrecords 100 Generationen, 12.800 reguläre Episoden und 30.155.325 Fahrzeugticks. Es gab 834 gültige Runden. Der erste Erfolg lag in G19, die schnellste gültige Zeit bei 52,2668953056494 s. Audit, Rohdaten und der Vergleich nach 8.192 Episoden liegen im lokalen Kampagnenarchiv unter `experiments/B-evolution-43/`. Diese Ergebnisse beschreiben die trainierte Population auf dem Standardszenario.
+
 Chromium 158 importierte das historische G99-Paket in eine leere IndexedDB, klonte die Version und lud die Bibliothek neu. Das Original und der Klon waren anschließend sichtbar. Der Starter-Eintrag blieb bei fehlender Rollenfreigabe deaktiviert. [Browserprüfung](evidence/browser-model-restore.json)
 
 Der Nachweis für PRE-D01 liegt vor. Die Abnahme von Batch 02D, das unabhängige Review und die Modellfreigabe sind offen. Der gemeinsame Entwurf wird in [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8) geführt.

@@ -42,7 +42,7 @@ it('EPS-004 EPS-005 PRG-004 PRG-012 PEN-010 stops a real fixed test Brain on its
   const startLine = s.track.gates[0].position,
     crossings: number[] = [],
     commands = new Map();
-  for (let tick = 1; tick <= 7200 && crossings.length < 2; tick++) {
+  for (let tick = 1; tick <= 21600 && crossings.length < 4; tick++) {
     const from = world.frame.cars[0].state.positionM,
       to = world.step(commands).cars[0].state.positionM;
     if (
@@ -54,7 +54,7 @@ it('EPS-004 EPS-005 PRG-004 PRG-012 PEN-010 stops a real fixed test Brain on its
       crossings.push((tick - 1 + fraction) / 60);
     }
   }
-  expect(crossings).toHaveLength(2);
+  expect(crossings).toHaveLength(4);
   const requiredTick = Math.ceil(crossings[1] * 60);
   const limited = scenario(digest, { track, task: { maxTicks: requiredTick } });
   const result = evaluate(limited, brain);
@@ -74,4 +74,18 @@ it('EPS-004 EPS-005 PRG-004 PRG-012 PEN-010 stops a real fixed test Brain on its
     brain,
   );
   expect(early).toMatchObject({ ok: true, reason: 'timeout', lapTimes: [] });
+  const multi = evaluate(
+    scenario(digest, { track, task: { laps: 3, maxTicks: 21600 } }),
+    brain,
+  );
+  expect(multi).toMatchObject({
+    ok: true,
+    reason: 'completed',
+    tick: Math.ceil(crossings[3] * 60),
+  });
+  if (!multi.ok) throw Error(multi.message);
+  expect(multi.lapTimes).toHaveLength(3);
+  for (const [i, t] of multi.lapTimes.entries())
+    expect(t).toBeCloseTo(crossings[i + 1] - crossings[i], 10);
+  expect(multi.duration).toBeCloseTo(crossings[3], 10);
 }, 20000);

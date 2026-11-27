@@ -44,4 +44,4 @@ Der anschließend freigegebene Auftrag ist Batch 02C gemäß v0.10.
 
 PRE-D01 ist abgeschlossen. Der Hauptauftrag beginnt mit RS-001, Experimentverträgen und Budgetabrechnung. [Gate](../intelligence-validation/PRE-D01.md)
 
-Die 122 Experimentdefinitionen, der Schutz der Rechenbudgets, die drei historischen Modellarchive für vier Rollen und der Test des Wiederanlaufs aus einem realen Checkpoint sind geprüft. Die Szenarien sind vor der Auswahl eingefroren. Der Worker-Vergleich läuft auf einem eigenen Checkout. [Forschungsstand](../intelligence-validation/RESEARCH_EXECUTION.md)
+Die 122 Experimentdefinitionen, das Budgetledger, vier historische Modellrollen und der reale Wiederanlauf sind geprüft. 14 Worker erzielten im gepaarten Vergleich den höchsten Median von 19.638 Fahrzeugticks/s. Seed 42 wurde aus den verifizierten Originaldaten übernommen. Seed 43 ist nach 100 Generationen vollständig auditiert. Die weitere Forschung läuft mit eingefrorenen Szenarien. [Forschungsstand](../intelligence-validation/RESEARCH_EXECUTION.md) · [158 Abnahmepunkte](../intelligence-validation/ACCEPTANCE_RESULTS.csv)

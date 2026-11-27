@@ -17,9 +17,18 @@ describe('D14 research contracts', () => {
         import assert from 'node:assert/strict';
         import {slots,experiment,interaction,matrixHash} from './scripts/research/manifest.mjs';
         import {ResearchLedger,campaign} from './scripts/research/ledger.mjs';
+        import {digest} from './scripts/evolution-runtime.mjs';
+        const {preflight}=await import('./src/runtime/runConfig.ts');
+        const {Genome}=await import('./src/training/genome.ts');
         const compiled=slots.map(s=>experiment(s.ExperimentID,'test',1,8,s.ConfigID.startsWith('Finalist ')?'S03':undefined));
         assert.equal(compiled.length,122);
         assert.equal(compiled.reduce((sum,x)=>sum+x.definition.episodeBudget,0),1512448);
+        for(const [config,count] of Object.entries({'B-evolution':8547,S33:4147,S34:9123,S35:18115,S36:81795,S37:8571,S38:8331,S39:8403})){
+          const def=compiled.find(e=>e.definition.experimentId===config+'-42').definition;
+          const {m}=preflight(def.draft,digest,8), genome=Genome.initialize(m,42,digest);
+          assert.equal(m.count,count);assert.equal(genome.parameters().byteLength,count*8);
+          assert.equal(genome.hash,Genome.initialize(m,42,digest).hash);
+        }
         assert.throws(()=>compiled[0].definition.draft.hidden.push(100));
         assert.throws(()=>experiment('C02-101','test',1,8));
         const proposal={variants:['S01','S15'],hypothesis:'Small population with sparse mutation',seed:42,episodeBudget:8192};

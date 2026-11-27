@@ -27,7 +27,11 @@ function world(sensorHz = 30, decisionHz = 30) {
 }
 it('INT-001/005/006, INS-001–003 real measurement and decision ticks', () => {
   for (const [sh, dh] of [
+    [10, 10],
+    [15, 15],
+    [20, 20],
     [30, 30],
+    [60, 60],
     [20, 60],
     [60, 10],
   ]) {

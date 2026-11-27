@@ -2,7 +2,7 @@
 
 A bestätigte im Auftragschat den geprüften Stand von PR #7 und die Übernahme des administrativen SYS-03-Abschlusses. PR #7 wurde als `e6a95a92b6241a750ba7fff599ff2dac123c3149` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46073023305) sowie lokal `npm ci`, `npm run check` (233 Tests) und `npm run calibrate` bestanden. Die Kalibrierwerte stimmen mit der 02B-Referenz überein. [PRE-D01](../intelligence-validation/PRE-D01.md)
 
-Der Hauptcursor liegt bei RS-005 und RS-006. Die rekonstruierten Fahrer, der Wiederanlauftest und die eingefrorenen Panels sind im Forschungsbericht verlinkt. [Forschungsstand](../intelligence-validation/RESEARCH_EXECUTION.md)
+Der Hauptcursor liegt bei den Baselines in RS-006. Das lokale Kampagnenarchiv hält den dauerhaften Checkpoint und das Budgetledger. Der Benchmark hat 14 Worker für diesen Rechner ergeben. Prüfergebnisse, laufende Versuche und offene Gates sind im Forschungsbericht und im Abnahmeregister verknüpft. [Forschung](../intelligence-validation/RESEARCH_EXECUTION.md) · [Prüfstatus](../intelligence-validation/ACCEPTANCE_RESULTS.csv)
 
 ## Abschlussübergabe Batch 02C
 

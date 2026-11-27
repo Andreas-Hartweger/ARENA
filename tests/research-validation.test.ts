@@ -74,6 +74,7 @@ describe('D14 capability contract (synthetic boundary cases)', () => {
     expect(validateCapability('Starter', data).status).toBe('passed');
     expect(validateCapability('Performance', data).status).toBe('failed');
     for (const scores of [
+      [14, 20, 20],
       [15, 19, 20],
       [16, 18, 19],
     ]) {

@@ -18,7 +18,7 @@ function near(a, b) {
     'Raw metric mismatch',
   );
 }
-function auditEpisode(e, contract, lapCount = 1, deadline = 120) {
+export function auditEpisode(e, contract, lapCount = 1, deadline = 120) {
   assert(e.ok);
   const r = e.raw,
     p = e.fitness;
