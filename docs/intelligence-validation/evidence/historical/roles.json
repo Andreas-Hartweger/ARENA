@@ -1,0 +1,232 @@
+{
+  "schema": "arena.historical-roles.v1",
+  "sourceArchiveSHA256": "f11abab76aadded0d4595ced107b3c40f254ab996e5468cc159d18dae18bedf7",
+  "runtime": {
+    "sha": "2b8eb4df876d2181b5259faf49be947ee4c467b2",
+    "sourceDiff": "",
+    "node": "v24.22.3",
+    "os": "Windows 11 Pro",
+    "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+    "logicalCpus": 16,
+    "totalRam": 33820106752,
+    "power": "uncontrolled",
+    "backgroundLoad": "uncontrolled",
+    "renderer": null
+  },
+  "originalSHA": "44c100c22854793b200a104dbc358e49ea9190fa",
+  "replayed": 12800,
+  "measured": [
+    {
+      "generation": 0,
+      "slot": 92,
+      "id": "[\"reference\",0,92]",
+      "fingerprint": "7362430fee3b90d5606f875101f90e407c42ccebc81a560a32d76ef1cd452548",
+      "score": 167.18011493946813,
+      "lapTimes": [],
+      "roles": [
+        "G0-Best"
+      ],
+      "package": "7362430fee3b90d5606f875101f90e407c42ccebc81a560a32d76ef1cd452548.arena-model",
+      "packageSHA256": "277a4da83da016dbb7d2ef48b1fbd4535a44700bf0cbeb808513e314982347fb",
+      "packageBytes": 153997,
+      "version": "version:e65eb0e0-9ec0-45aa-8837-4d672e7599ab",
+      "source": "verified-reconstruction",
+      "redrive": {
+        "ok": true,
+        "reason": "noProgress",
+        "tick": 2091,
+        "duration": 34.85,
+        "stalled": true,
+        "fitness": {
+          "P": 0.1679482530687899,
+          "A": 1,
+          "K": 0.14285714285714285,
+          "T": 0.1679482530687899,
+          "Q": 0.3083354516432952,
+          "R": 167.18011493946813,
+          "F": 167.18011493946813
+        },
+        "errors": [
+          0.7825546995643992,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "raw": {
+          "contactSeconds": 28.255469956439917,
+          "clusters": 1,
+          "impactSum": 0.5,
+          "peakApproach": 24.954310860090573,
+          "grassSeconds": 28.59166666666559,
+          "idleSeconds": 0,
+          "wrongWaySeconds": 0,
+          "unstableSeconds": 0,
+          "steeringWindows": 0,
+          "steeringChange": 0.11602259733199674,
+          "reverseSeconds": 0,
+          "unknownTangentSeconds": 0,
+          "maxSpeed": 35.6301849852682,
+          "speedIntegral": 125.80570930156004,
+          "tangentialIntegral": 121.63527569902458,
+          "fallbackTicks": 2,
+          "recoveries": 0,
+          "distance": 126.99722108602785,
+          "approach": 8,
+          "progress": 118.83098121195803,
+          "partial": 110.83098121195803,
+          "meanSpeed": 3.609919922569872,
+          "productiveMps": 3.409784252853889
+        },
+        "lapTimes": []
+      }
+    },
+    {
+      "generation": 31,
+      "slot": 49,
+      "id": "[\"reference\",31,49]",
+      "fingerprint": "0b903d9a2cf49ba92970501b0869608c43f2e45a33feb5b538122393c6bc11d4",
+      "score": 4269.33366254004,
+      "lapTimes": [
+        94.67548946895151
+      ],
+      "roles": [
+        "G31-Ersterfolg"
+      ],
+      "package": "0b903d9a2cf49ba92970501b0869608c43f2e45a33feb5b538122393c6bc11d4.arena-model",
+      "packageSHA256": "ff9e59fc2172ddb3a3821be920ba0b0576fca421fce2274c3d1827372d4353e9",
+      "packageBytes": 154006,
+      "version": "version:c010d7d8-4310-4832-92fc-f018d808b088",
+      "source": "verified-reconstruction",
+      "redrive": {
+        "ok": true,
+        "reason": "completed",
+        "tick": 5888,
+        "duration": 98.13227987187322,
+        "stalled": false,
+        "fitness": {
+          "P": 1,
+          "A": 1,
+          "K": 1,
+          "T": 0.18223100106772316,
+          "Q": 0.5911155005338615,
+          "R": 969.3336625400397,
+          "F": 4269.33366254004
+        },
+        "errors": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "raw": {
+          "contactSeconds": 0,
+          "clusters": 0,
+          "impactSum": 0,
+          "peakApproach": 0,
+          "grassSeconds": 0,
+          "idleSeconds": 0,
+          "wrongWaySeconds": 0,
+          "unstableSeconds": 0,
+          "steeringWindows": 0,
+          "steeringChange": 0.02409723444927582,
+          "reverseSeconds": 0,
+          "unknownTangentSeconds": 0,
+          "maxSpeed": 12.577255745068845,
+          "speedIntegral": 684.4011901434118,
+          "tangentialIntegral": 679.1511672478888,
+          "fallbackTicks": 0,
+          "recoveries": 0,
+          "distance": 684.4011901434451,
+          "approach": 8,
+          "progress": 667.9114857512855,
+          "partial": 0,
+          "meanSpeed": 6.974271779245349,
+          "productiveMps": 6.80623630291018
+        },
+        "lapTimes": [
+          94.67548946895151
+        ]
+      }
+    },
+    {
+      "generation": 99,
+      "slot": 65,
+      "id": "[\"reference\",99,65]",
+      "fingerprint": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+      "score": 4280.189069348133,
+      "lapTimes": [
+        59.663774729747736
+      ],
+      "roles": [
+        "Finaler Champion",
+        "Schnellste gültige Runde"
+      ],
+      "package": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95.arena-model",
+      "packageSHA256": "9b683bafff417a24e4eeef8899041a7d05b96bfef7898c58002974a36ad0a8df",
+      "packageBytes": 154036,
+      "version": "version:0ea0ca2d-2897-4e29-992b-3482b5524be8",
+      "source": "verified-reconstruction",
+      "redrive": {
+        "ok": true,
+        "reason": "completed",
+        "tick": 3797,
+        "duration": 63.28309330133394,
+        "stalled": false,
+        "fitness": {
+          "P": 1,
+          "A": 1,
+          "K": 1,
+          "T": 0.47264088915555047,
+          "Q": 0.7358542579751075,
+          "R": 980.1890693481331,
+          "F": 4280.189069348133
+        },
+        "errors": [
+          0,
+          0.005827332533348309,
+          0,
+          0,
+          0,
+          0
+        ],
+        "raw": {
+          "contactSeconds": 0,
+          "clusters": 0,
+          "impactSum": 0,
+          "peakApproach": 0,
+          "grassSeconds": 0.11654665066696618,
+          "idleSeconds": 0,
+          "wrongWaySeconds": 0,
+          "unstableSeconds": 0,
+          "steeringWindows": 0,
+          "steeringChange": 0.6165669846920736,
+          "reverseSeconds": 0,
+          "unknownTangentSeconds": 0,
+          "maxSpeed": 18.105386439368463,
+          "speedIntegral": 696.4695568958736,
+          "tangentialIntegral": 692.5737753524968,
+          "fallbackTicks": 0,
+          "recoveries": 0,
+          "distance": 696.4695568959039,
+          "approach": 8,
+          "progress": 667.9114857512855,
+          "partial": 0,
+          "meanSpeed": 11.005618097388307,
+          "productiveMps": 10.554343204604484
+        },
+        "lapTimes": [
+          59.663774729747736
+        ]
+      }
+    }
+  ],
+  "usage": {
+    "ms": 7169,
+    "ticks": 11776,
+    "episodes": 0
+  }
+}
