@@ -43,3 +43,5 @@ Der anschließend freigegebene Auftrag ist Batch 02C gemäß v0.10.
 ## Batch 02D · Vorbereitung
 
 PRE-D01 ist abgeschlossen. Der Hauptauftrag beginnt mit RS-001, Experimentverträgen und Budgetabrechnung. [Gate](../intelligence-validation/PRE-D01.md)
+
+Die 122 Experimentdefinitionen, der Schutz der Rechenbudgets, die drei historischen Modellarchive für vier Rollen und der Test des Wiederanlaufs aus einem realen Checkpoint sind geprüft. Die Szenarien sind vor der Auswahl eingefroren. Der Worker-Vergleich läuft auf einem eigenen Checkout. [Forschungsstand](../intelligence-validation/RESEARCH_EXECUTION.md)

@@ -1,0 +1,23 @@
+# Durchführung von Batch 02D
+
+## Referenz und Versuchsdefinition
+
+Die 47 Konfigurationen und 122 vorgesehenen Läufe stammen aus den bytegeprüften Originaldateien. Jede ausführbare Definition bindet Versuch, Seed, Szenario, Architektur, Lernregel, Budget und Ausgabeformat an einen Inhalts-Hash. Die CLI rechnet vollständige Generationen und prüft die gemeldete Populationsgröße gegen den Plan. Gültige Läufe benutzen den 02C-TrainingController, den gleichen WorkerPool, die vorhandene Physik und die D13-Checkpoints. Die geschützte 02B-Referenz bleibt über den bisherigen CLI-Aufruf erreichbar. [Experimentdefinition](../../scripts/research/manifest.mjs) · [Coordinator-Anschluss](../../scripts/research/coordinator.mjs)
+
+Die vier historischen Rollen ergeben drei verschiedene Genome. Alle 12.800 Kandidatenrecords wurden über die ursprüngliche Folge G0 bis G99 nachvollzogen. Jedes der drei gespeicherten Modellpakete wurde erneut importiert. Alle Felder der anschließenden echten Fahrt stimmten mit dem Originalrecord überein. Dafür wurden insgesamt 11.776 Fahrzeugticks berechnet. Der Serienvergleich G31 und G99 enthält die interpolierten Rundenzeiten 94,67548946895151 s und 59,663774729747736 s. [Rollen, SHA-256 und Messdaten](evidence/historical/roles.json)
+
+## Budget, Wiederanlauf und Daten
+
+Die lokale Kampagne liegt auf diesem Rechner unter `C:\Users\finde\Documents\ARENA-Research\Batch-02D`. Das Kampagnenmanifest nennt die freigegebenen Quoten pro Rechner. Die Datenbank verwendet das SQLite-Modul von Node 24. Die laufende Sitzung reserviert Zeit, Tickobergrenzen für beide möglichen Versuche sowie das reguläre Episodenbudget einer ganzen Generation vor der Ausführung. Der bestätigte Checkpoint, die komprimierten Einzelrecords und die gebuchten regulären Episoden werden gemeinsam in einer Transaktion veröffentlicht. Bei einem Prozessabbruch bleibt die vorige vollständige Grenze wiederherstellbar. Verwaiste Reservierungen für Ticks und Zeit werden bei der Übernahme konservativ belastet. Das Ereignisprotokoll hält den Grund fest. Die Generationsausgaben unterscheiden gemessene Versuche und ungewisse Beträge. [Ledger](../../scripts/research/ledger.mjs) · [D13-Speicheradapter](../../scripts/research/store.mjs)
+
+`npm run research -- <Kampagnenverzeichnis> baseline` führt die genehmigten Baselines nach dem Worker-Vergleich aus. Weitere Phasen sind `screen`, `confirmation` und `long`. Eine bereits eingefrorene Experimentdatei kann mit `--manifest <Datei>` anstelle des Phasennamens ausgeführt werden. Bei der Wiederaufnahme prüft die CLI die publizierten Daten, lädt den letzten dauerhaften Checkpoint und beginnt eine neue Session. Ein gesetztes `--recover` übernimmt eine verwaiste Rechnersitzung. Aktive Läufe behalten ihren Rechner und ihren Cursor. Der reale Abbruch-/Wiederanlauftest umfasst einen verworfenen Worker-Versuch und den Vergleich mit dem seriellen Resultat. [Wiederanlauftest](../../tests/research-resume.test.ts)
+
+## Szenarien und Modellauswahl
+
+Der alternative Startvertrag verwendet die Streckenstation vor der ersten Linie, einen positiven seitlichen Versatz entlang der Streckennormalen, eine relative Ausrichtung in Radiant und eine Anfangsgeschwindigkeit in m/s entlang der Fahrzeugrichtung. Die Prüfung umfasst die Projektion der Fahrzeugmitte, die vier Ecken des Fahrzeugrechtecks, die Startlinie und die Barrieren. Die Standardfahrt verwendet weiterhin das 02B-Startgitter. Für Recovery zeichnet ein eigener Prüfer die legale Rückkehr und den anschließenden gerichteten Fortschritt auf. [Startzustand](../../src/training/scenarioStart.ts) · [Fortschrittsprüfung](../../src/training/recovery.ts)
+
+Vor der Auswahl wurden 40 Entwicklungsfälle, 60 finale Einzelfahrten, 12 Drei-Runden-Fälle und 18 Recovery-Fälle erzeugt. Die effektiven Fahrzeugzustände sind paarweise verschieden. Die exakten Listen befinden sich getrennt im lokalen Kampagnenarchiv. Im Repository stehen die Inhaltszusagen. Die Auswahl liest ausschließlich die Entwicklungsliste. Die finale Auswertung fordert einen vorher eingefrorenen Kandidaten. Standard-Einzel- und Standard-Dreirundenfahrt kommen jeweils getrennt hinzu. [Eingefrorene Panels](evidence/panel-commitments.json)
+
+## Stand der Abnahme
+
+Der Nachweis für PRE-D01 liegt vor. Die Abnahme von Batch 02D, das unabhängige Review und die Modellfreigabe sind offen. Der gemeinsame Entwurf wird in [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8) geführt.

@@ -735,6 +735,18 @@ export class TrainingController {
     }
     await after();
   }
+  // The owning CLI process can end a session while retaining the previous durable boundary.
+  detach(reason: string) {
+    if (this.#draft?.volatile)
+      throw Error('Volatile sessions have no recovery boundary');
+    this.#pool?.close();
+    this.#freezeClock();
+    this.#waitingRows = undefined;
+    this.#pendingSave = undefined;
+    this.#phase = 'Faulted';
+    this.#error = reason;
+    this.#emit();
+  }
   async retry() {
     if (!this.#pendingSave) throw Error('Keine ausstehende Speicherung.');
     await this.#pendingSave();

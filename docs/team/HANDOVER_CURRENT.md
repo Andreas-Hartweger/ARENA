@@ -2,6 +2,8 @@
 
 A bestätigte im Auftragschat den geprüften Stand von PR #7 und die Übernahme des administrativen SYS-03-Abschlusses. PR #7 wurde als `e6a95a92b6241a750ba7fff599ff2dac123c3149` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46073023305) sowie lokal `npm ci`, `npm run check` (233 Tests) und `npm run calibrate` bestanden. Die Kalibrierwerte stimmen mit der 02B-Referenz überein. [PRE-D01](../intelligence-validation/PRE-D01.md)
 
+Der Hauptcursor liegt bei RS-005 und RS-006. Die rekonstruierten Fahrer, der Wiederanlauftest und die eingefrorenen Panels sind im Forschungsbericht verlinkt. [Forschungsstand](../intelligence-validation/RESEARCH_EXECUTION.md)
+
 ## Abschlussübergabe Batch 02C
 
 Am 27.11.2026 erteilte A die bedingte Merge-Freigabe und delegierte die verbleibenden Review- und Abnahmeschritte. Codex prüfte den Stand von B `6818084` gegen `61cd54a`, insbesondere physische Kontaktkorrekturen, interpolierte Ziellinie, Fehlerisolation und deterministische Reproduktion. Der Datenabgleich aus der Übergabe umfasst 12.800 Ergebnisse und 594 Elite-Neubewertungen. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) wurde als `c74ab27daf3159329d9049076ab3c30c5a4759ea` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010) bestand.

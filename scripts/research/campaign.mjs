@@ -130,26 +130,51 @@ export class ActiveTime {
     this.arm();
   }
   finish() {
+    if (!this.id) return;
     const elapsed = this.elapsed(),
-      ms = Math.min(this.limit, elapsed);
-    this.ledger.settle(
-      this.id,
-      { ms, ticks: 0, episodes: 0 },
-      elapsed > this.limit ? 'clock-uncertain' : 'elapsed',
-    );
-    if (elapsed > this.limit) {
-      this.ledger.event(
+      ms = Math.min(this.limit, elapsed),
+      reservation = this.id;
+    this.ledger.transaction(() => {
+      this.ledger.assertLease();
+      this.ledger.closeReservation(
         this.ledger.token,
-        'clock-discontinuity',
-        this.scope,
-        { ...this.context, observedElapsedMs: elapsed, accountedMs: ms },
-        { ms: 0, ticks: 0, episodes: 0 },
-        { ms: 0, ticks: 0, episodes: 0 },
+        reservation,
+        { ms, ticks: 0, episodes: 0 },
+        elapsed > this.limit ? 'clock-uncertain' : 'elapsed',
       );
+      if (elapsed > this.limit) {
+        this.ledger.manifest('clock-hold', {
+          reservation,
+          observedElapsedMs: elapsed,
+          reservedMs: ms,
+          context: this.context,
+        });
+      }
+      const usage = this.ledger.usage();
+      for (const hours of [12, 24, 48]) {
+        const id = 'report-hour-' + hours;
+        if (
+          usage.charged.ms >= hours * 3600000 &&
+          !this.ledger.db.prepare('SELECT 1 FROM manifests WHERE id=?').get(id)
+        ) {
+          const experiments = this.ledger.db
+            .prepare("SELECT id FROM manifests WHERE id LIKE 'experiment:%'")
+            .all();
+          this.ledger.manifest(id, {
+            hours,
+            stamp: new Date().toISOString(),
+            context: this.context,
+            usage,
+            experiments: experiments.map((e) => e.id),
+          });
+        }
+      }
+    });
+    this.id = undefined;
+    if (elapsed > this.limit)
       throw Error(
-        'Clock discontinuity; reconcile the campaign before continuing',
+        'Clock discontinuity; campaign dispatch suspended for reconciliation',
       );
-    }
   }
 }
 export const parseFlags = () => ({

@@ -168,6 +168,10 @@ export class ResearchLedger {
       throw Error('Invalid reservation');
     this.transaction(() => {
       this.assertLease();
+      if (
+        this.db.prepare("SELECT 1 FROM manifests WHERE id='clock-hold'").get()
+      )
+        throw Error('Unreconciled campaign clock');
       for (const [filter, cap] of [
         [undefined, this.machine.total],
         ...(scope === 'research' ? [['research', this.machine.training]] : []),

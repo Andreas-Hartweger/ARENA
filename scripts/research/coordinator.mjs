@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
 import { performance } from 'node:perf_hooks';
 import { Buffer } from 'node:buffer';
@@ -45,6 +46,37 @@ export async function runExperiment(
   ledger.transaction(() => {
     ledger.assertLease();
     ledger.manifest('experiment:' + exp, entry);
+    const files = execFileSync(
+      'git',
+      [
+        'ls-tree',
+        '-r',
+        'HEAD',
+        '--',
+        'src/ai',
+        'src/core',
+        'src/vehicles',
+        'src/tracks',
+        'src/collision',
+        'src/input',
+        'src/game',
+        'src/physics',
+        'src/training',
+        'src/runtime/controller.ts',
+        'src/runtime/workerPool.ts',
+        'src/runtime/simulationWorker.ts',
+        'src/runtime/compute.ts',
+        'src/runtime/runConfig.ts',
+        'src/storage/checkpoint.ts',
+        'scripts/episode-worker.mjs',
+        'scripts/research/coordinator.mjs',
+      ],
+      { encoding: 'utf8' },
+    );
+    ledger.manifest('engine:' + exp, {
+      node: process.version,
+      sources: hashJSON(files),
+    });
   });
   const runId =
     def.masterSeed === 42 && exp === 'B-evolution-42' ? 'reference' : exp;
@@ -85,6 +117,25 @@ export async function runExperiment(
         elapsedMs: performance.now() - active.start,
       });
       active = undefined;
+      if (state !== 'result' || key.attempt > 0)
+        ledger.transaction(() => {
+          ledger.assertLease();
+          ledger.event(
+            ledger.token,
+            'attempt-' + state,
+            scope,
+            {
+              experimentId: exp,
+              runId: key.runId,
+              sessionId: key.sessionId,
+              segment: key.segmentId,
+              generation: key.generation,
+              ...item.receipts.at(-1),
+            },
+            units(),
+            units(),
+          );
+        });
       if (state === 'lost' && key.attempt === 0) return;
       ledger.settle(item.id, units(item.spent), state);
       attempts.delete(idOf(key));
@@ -284,7 +335,7 @@ export async function runExperiment(
       (state.phase === 'Faulted' && controller.snapshot.phase === 'Running')
     )
       await controller.serialize(() =>
-        controller.cancel('budget or storage fault'),
+        controller.detach(state.error ?? 'budget or storage fault'),
       );
     return state;
   } finally {

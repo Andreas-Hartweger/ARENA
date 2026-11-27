@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.headless.json",
     "calibrate": "node scripts/calibrate.mjs",
+    "research": "node scripts/run-research.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
