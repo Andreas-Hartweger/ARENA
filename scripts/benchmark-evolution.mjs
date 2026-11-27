@@ -19,7 +19,7 @@ const { ProgressLedger, scoreFitness, profiles } =
 const { Penalties } = await import('../src/training/penalties.ts');
 const [suite, output, baselineDirectory] = process.argv.slice(2);
 if (
-  !['components', 'world', 'scale', 'endurance'].includes(suite) ||
+  !['components', 'world', 'parity', 'scale', 'endurance'].includes(suite) ||
   !output ||
   existsSync(output)
 )
@@ -211,7 +211,7 @@ if (suite === 'components') {
   if (!Number.isFinite(checksum)) throw Error('Invalid measurement checksum');
   log.resultChecksum = checksum;
 }
-if (suite === 'world') {
+if (suite === 'world' || suite === 'parity') {
   if (!baselineDirectory) throw Error('Missing 02A checkout');
   const base = resolve(baselineDirectory),
     work = resolve('.');
@@ -263,25 +263,41 @@ if (suite === 'world') {
           ai = new Map([[v.id, { brain, profile: sensor, decisionHz: hz }]]),
           cmd = new Map();
         let world;
-        const block = () => {
+        const block = (hashes) => {
           world = new DriveWorld(track, [options], false, ai, measure);
           world.trace = trace;
-          for (let i = 0; i < 600; i++) world.step(cmd);
+          for (let i = 0; i < 600; i++) {
+            const f = world.step(cmd);
+            if (hashes)
+              hashes.push(
+                digest(JSON.stringify([f.index, f.cars, f.events, f.fallback])),
+              );
+          }
         };
-        block();
+        const hashes = suite === 'parity' ? [] : undefined;
+        block(hashes);
         const { index, cars, events, fallback } = world.frame,
           key = hz + '/' + trace,
-          hash = digest(JSON.stringify({ index, cars, events, fallback }));
+          hash = hashes
+            ? digest(hashes.join(''))
+            : digest(JSON.stringify({ index, cars, events, fallback }));
         if (snapshots.has(key) && snapshots.get(key) !== hash)
           throw Error('02A replay drift ' + key);
         snapshots.set(key, hash);
-        log.paired.push({ label, hz, trace, hash });
-        bench(
-          'paired-world',
-          { label, hz, trace, measure, blockTicks: 600 },
-          block,
-          { warmup: 1, units: 600 },
-        );
+        log.paired.push({
+          label,
+          hz,
+          trace,
+          hash,
+          ...(hashes ? { frames: hashes.length } : {}),
+        });
+        if (suite === 'world')
+          bench(
+            'paired-world',
+            { label, hz, trace, measure, blockTicks: 600 },
+            () => block(),
+            { warmup: 1, units: 600 },
+          );
       }
     // Human regression includes contact, recovery, control smoothing and previous HUD state.
     const human = new DriveWorld(track, [options], false, new Map(), measure);
@@ -316,45 +332,46 @@ if (suite === 'world') {
     snapshots.set('human', hash);
     log.paired.push({ label, humanTicks: 1200, hash });
   }
-  for (const hz of [30, 60]) {
-    const s = scenario(digest, { seed, sensorHz: hz, decisionHz: hz }),
-      m = model(s.modelSignature),
-      g = Genome.initialize(m, derivedSeed(42, 'init'), digest);
-    let baseline;
-    for (const trace of [false, true]) {
-      const run = () => {
-        const result = evaluate(
-          s,
-          g.brain(),
-          trace ? { maxSamples: 32, everyTicks: 5 } : undefined,
+  if (suite === 'world')
+    for (const hz of [30, 60]) {
+      const s = scenario(digest, { seed, sensorHz: hz, decisionHz: hz }),
+        m = model(s.modelSignature),
+        g = Genome.initialize(m, derivedSeed(42, 'init'), digest);
+      let baseline;
+      for (const trace of [false, true]) {
+        const run = () => {
+          const result = evaluate(
+            s,
+            g.brain(),
+            trace ? { maxSamples: 32, everyTicks: 5 } : undefined,
+          );
+          if (!result.ok) throw Error(result.message);
+          return result;
+        };
+        const { fitness, tick, duration, reason } = run();
+        if (baseline !== undefined && fitness.F !== baseline)
+          throw Error('Trace fitness drift');
+        baseline = fitness.F;
+        bench(
+          'real-episode',
+          {
+            hz,
+            trace,
+            ticks: tick,
+            simulatedSeconds: duration,
+            fitness: fitness.F,
+            reason,
+          },
+          run,
+          { warmup: Math.ceil(600 / tick) },
         );
-        if (!result.ok) throw Error(result.message);
-        return result;
-      };
-      const { fitness, tick, duration, reason } = run();
-      if (baseline !== undefined && fitness.F !== baseline)
-        throw Error('Trace fitness drift');
-      baseline = fitness.F;
-      bench(
-        'real-episode',
-        {
-          hz,
-          trace,
-          ticks: tick,
-          simulatedSeconds: duration,
-          fitness: fitness.F,
-          reason,
-        },
-        run,
-        { warmup: Math.ceil(600 / tick) },
-      );
-      const row = log.rows.at(-1);
-      row.vehicleTicksPerSecond = row.operationsPerSecond.median * tick;
-      row.simulatedSecondsPerWallSecond =
-        row.operationsPerSecond.median * duration;
-      save();
+        const row = log.rows.at(-1);
+        row.vehicleTicksPerSecond = row.operationsPerSecond.median * tick;
+        row.simulatedSecondsPerWallSecond =
+          row.operationsPerSecond.median * duration;
+        save();
+      }
     }
-  }
 }
 if (suite === 'scale') {
   // Full populations above 128 exercise the full world, genetics and coordinator using a short task.
