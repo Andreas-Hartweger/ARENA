@@ -1,5 +1,7 @@
 # First Evolution · Arbeiten mit Batch 02B
 
+Der [Abschlussbericht](BATCH-02B_COMPLETION_REPORT.md) enthält die Ergebnisse des vollständigen Referenzlaufs und der Benchmarks. Die [Abnahmematrix](ACCEPTANCE_RESULTS.md) verknüpft die 128 Prüfpunkte und 103 Entscheidungen mit ihren Belegen.
+
 Der Headless-Runner wertet jeden Kandidaten in einer eigenen GT-01-Fahrt auf dem Academy Training Circuit aus. Ein kompletter Standardlauf umfasst 12.800 Episoden. Die [Originalspezifikationen](specification/README.md) definieren Produktregeln und Abnahmepunkte. Die [Teamentscheidungen](../team/DECISION_REQUESTS.md) enthalten die nachgelagerte Präzisierung der maximalen Rundenzahl.
 
 ## In WebStorm oder im Terminal ausführen

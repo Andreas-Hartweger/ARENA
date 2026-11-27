@@ -1,5 +1,5 @@
 {
-  "sha": "bb9d721a82e65e6212b9435be65c65381dc3ad58",
+  "sha": "8f0d57eda7ffca3e855cd50825a890424056c753",
   "node": "v24.22.3",
   "suites": 29,
   "passed": 213,
@@ -11,47 +11,47 @@
         {
           "title": "getViewport preserves proportions on a wide display",
           "status": "passed",
-          "ms": 1.7312000000000012
+          "ms": 1.392499999999984
         },
         {
           "title": "getViewport preserves the visible width in portrait and caps pixel density",
           "status": "passed",
-          "ms": 0.5534999999999854
+          "ms": 0.45150000000001
         },
         {
           "title": "getViewport skips invalid dimensions 0 × 500",
           "status": "passed",
-          "ms": 0.2335999999999956
+          "ms": 0.12989999999999213
         },
         {
           "title": "getViewport skips invalid dimensions 500 × -1",
           "status": "passed",
-          "ms": 0.10909999999998377
+          "ms": 0.08950000000001523
         },
         {
           "title": "getViewport skips invalid dimensions Infinity × 500",
           "status": "passed",
-          "ms": 0.12630000000001473
+          "ms": 0.07489999999998531
         },
         {
           "title": "getViewport skips invalid dimensions 500 × NaN",
           "status": "passed",
-          "ms": 0.09090000000000487
+          "ms": 0.07050000000000978
         },
         {
           "title": "getViewport uses a safe pixel ratio for NaN",
           "status": "passed",
-          "ms": 0.18449999999998568
+          "ms": 0.14670000000000982
         },
         {
           "title": "getViewport uses a safe pixel ratio for Infinity",
           "status": "passed",
-          "ms": 0.11719999999999686
+          "ms": 0.07479999999998199
         },
         {
           "title": "getViewport uses a safe pixel ratio for 0.5",
           "status": "passed",
-          "ms": 0.10849999999999227
+          "ms": 0.11139999999997485
         }
       ]
     },
@@ -61,22 +61,22 @@
         {
           "title": "INT-004/005 reverse, steer, brake and blocked recovery",
           "status": "passed",
-          "ms": 388.0985999999999
+          "ms": 188.87010000000004
         },
         {
           "title": "SEN-022 raw grip follows the next free tick after changing surfaces",
           "status": "passed",
-          "ms": 15.89530000000002
+          "ms": 10.134300000000053
         },
         {
           "title": "OBS-005 rejects changed geometry, order, frequency, setup and controller signature",
           "status": "passed",
-          "ms": 24.227800000000002
+          "ms": 25.088300000000004
         },
         {
           "title": "SEN-011 independent cars do not contribute any ray/slot or occlusion",
           "status": "passed",
-          "ms": 26.77290000000005
+          "ms": 27.043000000000006
         }
       ]
     },
@@ -86,27 +86,27 @@
         {
           "title": "NN-001–004 sizes, dense layout, activation and ownership",
           "status": "passed",
-          "ms": 8.386199999999974
+          "ms": 6.137100000000032
         },
         {
           "title": "NN-005–007 exact seed stream, overflow, independent trace",
           "status": "passed",
-          "ms": 151.24999999999994
+          "ms": 103.4393
         },
         {
           "title": "CTL-001–005 same effective controls and reversal gate",
           "status": "passed",
-          "ms": 2.0224999999999227
+          "ms": 2.5061999999999784
         },
         {
           "title": "NN-001 rejects an uninitialized hidden width",
           "status": "passed",
-          "ms": 0.23659999999995307
+          "ms": 0.38470000000000937
         },
         {
           "title": "CTL-001 rejects an incomplete output even when the array has length three",
           "status": "passed",
-          "ms": 0.2562999999998965
+          "ms": 0.2746999999999957
         }
       ]
     },
@@ -116,47 +116,47 @@
         {
           "title": "Perception SEN-001–003 validates owned sensors and transforms",
           "status": "passed",
-          "ms": 3.3876000000000204
+          "ms": 3.3442999999999756
         },
         {
           "title": "Perception SEN-004–011 independent channels, boundaries and blocker ties",
           "status": "passed",
-          "ms": 3.268700000000024
+          "ms": 2.4372999999999934
         },
         {
           "title": "Perception SEN-012 compares 1002 seeded rays to exhaustive polygon search",
           "status": "passed",
-          "ms": 552.0130999999999
+          "ms": 466.42719999999997
         },
         {
           "title": "Perception SEN-013–019 visible straight, curve, hidden continuation, ambiguity and range",
           "status": "passed",
-          "ms": 18.174999999999955
+          "ms": 5.935499999999934
         },
         {
           "title": "Perception OBS-001–005 and SEN-022 full register, strict masks and grip",
           "status": "passed",
-          "ms": 11.433699999999817
+          "ms": 9.170600000000036
         },
         {
           "title": "SEN-009 detects shallow crossings on the straight in both directions",
           "status": "passed",
-          "ms": 0.40170000000011896
+          "ms": 0.4519000000000233
         },
         {
           "title": "OBS-004 rejects a missing numeric channel",
           "status": "passed",
-          "ms": 2.609000000000151
+          "ms": 2.640899999999988
         },
         {
           "title": "OBS-004 rejects material without an edge and simultaneous opaque returns",
           "status": "passed",
-          "ms": 3.788000000000011
+          "ms": 2.310899999999947
         },
         {
           "title": "SEN-009 distinguishes touching the inner arc from traversing a narrow grass chord",
           "status": "passed",
-          "ms": 0.7400000000000091
+          "ms": 1.2384999999999309
         }
       ]
     },
@@ -166,22 +166,22 @@
         {
           "title": "SEN-014/016 curve sign in both directions and separate neighborhood masks",
           "status": "passed",
-          "ms": 9.929499999999962
+          "ms": 11.469499999999982
         },
         {
           "title": "SEN-005/017 hidden vehicle, track ID and distant geometry do not affect brain",
           "status": "passed",
-          "ms": 112.83080000000001
+          "ms": 98.11290000000002
         },
         {
           "title": "SEN-020/021 four nearest detected slots; rotating frame relative speed",
           "status": "passed",
-          "ms": 9.455799999999954
+          "ms": 5.61850000000004
         },
         {
           "title": "SEN-013/018/019 all seven visible stations on a long straight, ambiguous and out of range cases",
           "status": "passed",
-          "ms": 44.60379999999998
+          "ms": 53.210500000000025
         }
       ]
     },
@@ -191,102 +191,22 @@
         {
           "title": "INT-001/005/006, INS-001–003 real measurement and decision ticks",
           "status": "passed",
-          "ms": 174.21440000000007
+          "ms": 140.84550000000002
         },
         {
           "title": "INT-002 retains both driver states and world on second-driver overflow",
           "status": "passed",
-          "ms": 29.85979999999995
+          "ms": 9.346099999999979
         },
         {
           "title": "INT-003 240 ticks headless vs 30/60/144 Hz, and diagnostics isolation",
           "status": "passed",
-          "ms": 1009.0251999999999
+          "ms": 1046.8111
         },
         {
           "title": "INT-004 reset clears caches, first post-reset tick always fresh",
           "status": "passed",
-          "ms": 8.11889999999994
-        }
-      ]
-    },
-    {
-      "file": "tests/collision/contacts.test.ts",
-      "cases": [
-        {
-          "title": "handles separated, touching and rotated boxes and bounds their rotation",
-          "status": "passed",
-          "ms": 1.8260000000000218
-        },
-        {
-          "title": "hits a 2 cm wall at 250 km/h, loses energy and rebounds at the centered contact",
-          "status": "passed",
-          "ms": 1.99939999999998
-        },
-        {
-          "title": "slides along a wall and rotates under an off-center impulse",
-          "status": "passed",
-          "ms": 0.2225999999999999
-        },
-        {
-          "title": "resolves two oncoming vehicles and filters independent candidates",
-          "status": "passed",
-          "ms": 0.9037999999999897
-        },
-        {
-          "title": "bounds multi-contact iterations and corrects resting overlap without adding energy",
-          "status": "passed",
-          "ms": 31.99920000000003
-        },
-        {
-          "title": "falls back before exhausting safe motion at extreme speed or spin",
-          "status": "passed",
-          "ms": 0.45830000000000837
-        },
-        {
-          "title": "keeps the complete multi-vehicle frame on failure in the second vehicle",
-          "status": "passed",
-          "ms": 21.108599999999967
-        },
-        {
-          "title": "preserves free motion across the asphalt edge and safely recovers without lap credit",
-          "status": "passed",
-          "ms": 13.673199999999952
-        },
-        {
-          "title": "separates coincident GT-01 start positions without velocity or lap travel",
-          "status": "passed",
-          "ms": 0.7925999999999931
-        }
-      ]
-    },
-    {
-      "file": "tests/game/world.test.ts",
-      "cases": [
-        {
-          "title": "replays tick-indexed input for two cars identically at 30, 60 and 144 FPS and headless",
-          "status": "passed",
-          "ms": 294.0934
-        },
-        {
-          "title": "recovers without crossing a gate or retaining old motion, or rejects with no safe history",
-          "status": "passed",
-          "ms": 3.898300000000063
-        },
-        {
-          "title": "isolates an independent candidate from another car exhausting the wall budget",
-          "status": "passed",
-          "ms": 6.796499999999924
-        },
-        {
-          "title": "locates a vehicle spawned on the opposite straight without a start-line projection hint",
-          "status": "passed",
-          "ms": 1.7615999999999303
-        },
-        {
-          "title": "drives two timed Academy laps from rest with a fixed keyboard recording",
-          "status": "passed",
-          "ms": 564.491
+          "ms": 6.589499999999816
         }
       ]
     },
@@ -296,52 +216,52 @@
         {
           "title": "FixedStepClock accumulates variable frame lengths and emits fixed ticks",
           "status": "passed",
-          "ms": 1.723099999999988
+          "ms": 2.3892000000000166
         },
         {
           "title": "FixedStepClock caps catch-up and carries only the fractional remainder",
           "status": "passed",
-          "ms": 0.7105999999999995
+          "ms": 0.9975999999999772
         },
         {
           "title": "FixedStepClock preserves the fraction of an overloaded frame without any frame-gap clamp",
           "status": "passed",
-          "ms": 0.2027999999999679
+          "ms": 0.36510000000004084
         },
         {
           "title": "FixedStepClock clears pending time on pause and reinitializes the timestamp on resume",
           "status": "passed",
-          "ms": 0.8604000000000269
+          "ms": 1.2036999999999694
         },
         {
           "title": "FixedStepClock scales accumulated time while maintaining the same tick duration",
           "status": "passed",
-          "ms": 0.20769999999998845
+          "ms": 0.3088999999999942
         },
         {
           "title": "FixedStepClock rejects invalid timestamp or speed without advancing the clock",
           "status": "passed",
-          "ms": 0.40440000000000964
+          "ms": 0.5559999999999832
         },
         {
           "title": "FixedStepClock keeps the failed tick pending and preserves completed ticks",
           "status": "passed",
-          "ms": 0.3102999999999838
+          "ms": 0.44990000000001373
         },
         {
           "title": "runHeadlessTicks repeats a seeded run and matches realtime at 30, 60 and 144 FPS",
           "status": "passed",
-          "ms": 0.9243000000000166
+          "ms": 1.294399999999996
         },
         {
           "title": "runHeadlessTicks continues from a completed index and handles zero ticks",
           "status": "passed",
-          "ms": 0.30750000000000455
+          "ms": 0.5155000000000314
         },
         {
           "title": "runHeadlessTicks validates the whole range before calling the simulation",
           "status": "passed",
-          "ms": 0.330600000000004
+          "ms": 0.35880000000003065
         }
       ]
     },
@@ -351,47 +271,47 @@
         {
           "title": "world coordinates maps heading 0 rad to forward and left axes",
           "status": "passed",
-          "ms": 1.0604999999999905
+          "ms": 1.5136999999999716
         },
         {
           "title": "world coordinates maps heading 1.5707963267948966 rad to forward and left axes",
           "status": "passed",
-          "ms": 0.1507000000000005
+          "ms": 0.20990000000000464
         },
         {
           "title": "world coordinates maps heading 3.141592653589793 rad to forward and left axes",
           "status": "passed",
-          "ms": 0.12469999999999004
+          "ms": 0.13519999999999754
         },
         {
           "title": "world coordinates maps heading -1.5707963267948966 rad to forward and left axes",
           "status": "passed",
-          "ms": 0.11199999999999477
+          "ms": 0.12360000000001037
         },
         {
           "title": "world coordinates projects velocity onto the world axes and converts speed for display",
           "status": "passed",
-          "ms": 0.21979999999999222
+          "ms": 0.2793999999999528
         },
         {
           "title": "world coordinates normalizes both ends of the interval and wraps whole turns",
           "status": "passed",
-          "ms": 0.15630000000001587
+          "ms": 0.377900000000011
         },
         {
           "title": "world coordinates interpolates by the shortest angle through the wrap boundary",
           "status": "passed",
-          "ms": 0.1536000000000115
+          "ms": 0.22820000000001528
         },
         {
           "title": "world coordinates interpolates a position without changing its source values",
           "status": "passed",
-          "ms": 0.56280000000001
+          "ms": 0.6708999999999605
         },
         {
           "title": "world coordinates rejects non-finite inputs and overflow",
           "status": "passed",
-          "ms": 0.34780000000000655
+          "ms": 0.6879999999999882
         }
       ]
     },
@@ -401,232 +321,37 @@
         {
           "title": "SeededRandom produces the Mulberry32 sequence for a known seed",
           "status": "passed",
-          "ms": 1.3190000000000168
+          "ms": 1.873599999999982
         },
         {
           "title": "SeededRandom restores the exact next samples, including in a separate generator",
           "status": "passed",
-          "ms": 0.39570000000000505
+          "ms": 0.5868000000000109
         },
         {
           "title": "SeededRandom rejects invalid uint32 state -1",
           "status": "passed",
-          "ms": 0.2546999999999855
+          "ms": 0.356899999999996
         },
         {
           "title": "SeededRandom rejects invalid uint32 state 0.5",
           "status": "passed",
-          "ms": 0.11319999999997776
+          "ms": 0.1787000000000205
         },
         {
           "title": "SeededRandom rejects invalid uint32 state 4294967296",
           "status": "passed",
-          "ms": 0.11419999999998254
+          "ms": 0.14449999999999363
         },
         {
           "title": "SeededRandom rejects invalid uint32 state NaN",
           "status": "passed",
-          "ms": 0.0946999999999889
+          "ms": 0.14179999999998927
         },
         {
           "title": "SeededRandom rejects invalid uint32 state Infinity",
           "status": "passed",
-          "ms": 0.11329999999998108
-        }
-      ]
-    },
-    {
-      "file": "tests/physics/energy.test.ts",
-      "cases": [
-        {
-          "title": "damps lateral and angular momentum without increasing energy or removing forward speed",
-          "status": "passed",
-          "ms": 1.6265999999999963
-        },
-        {
-          "title": "shares the friction budget across braking, acceleration and lateral slip at all model weights",
-          "status": "passed",
-          "ms": 3.9571000000000254
-        },
-        {
-          "title": "repeats the complete measurements and dissipates energy throughout the 120-tick braking turn",
-          "status": "passed",
-          "ms": 320.6111000000001
-        }
-      ]
-    },
-    {
-      "file": "tests/physics/handling.test.ts",
-      "cases": [
-        {
-          "title": "blends side force smoothly at both speed boundaries and through the midpoint",
-          "status": "passed",
-          "ms": 3.2416000000000054
-        },
-        {
-          "title": "steers to the mechanical limit at rest with a two-degree step and no motion",
-          "status": "passed",
-          "ms": 1.3894000000000233
-        },
-        {
-          "title": "moves toward a suddenly smaller target envelope at the physical steering rate",
-          "status": "passed",
-          "ms": 0.23390000000000555
-        },
-        {
-          "title": "turns in opposite directions with left and right steering and reverses yaw when backing up",
-          "status": "passed",
-          "ms": 1.983600000000024
-        }
-      ]
-    },
-    {
-      "file": "tests/physics/integration.test.ts",
-      "cases": [
-        {
-          "title": "publishes keyboard and analog reversals after exactly 18 consecutive stationary ticks",
-          "status": "passed",
-          "ms": 5.732100000000003
-        },
-        {
-          "title": "resets a pending reversal during sideways sliding and retains lateral momentum",
-          "status": "passed",
-          "ms": 0.7284000000000219
-        },
-        {
-          "title": "uses the same forces for equivalent keyboard and analog tick commands",
-          "status": "passed",
-          "ms": 7.609300000000019
-        },
-        {
-          "title": "neutralizes invalid raw fields and applies brake priority before computing forces",
-          "status": "passed",
-          "ms": 0.9664999999999964
-        },
-        {
-          "title": "delivers an unpublished free-motion candidate with semi-implicit translation and rotation",
-          "status": "passed",
-          "ms": 4.3922000000000025
-        },
-        {
-          "title": "preserves the whole confirmed frame on a rear query exception and locks the session",
-          "status": "passed",
-          "ms": 1.1738000000000284
-        },
-        {
-          "title": "rejects invalid parameters, unknown surfaces and numeric overflow before publication",
-          "status": "passed",
-          "ms": 0.7849999999999682
-        },
-        {
-          "title": "isolates frozen published frames and produces the same motion with diagnostics disabled",
-          "status": "passed",
-          "ms": 1.1875
-        },
-        {
-          "title": "matches complete seeded headless frames at 30, 60 and 144 FPS without dropped ticks",
-          "status": "passed",
-          "ms": 39.07639999999998
-        },
-        {
-          "title": "keeps the clock on the last successful index when a vehicle tick fails",
-          "status": "passed",
-          "ms": 0.4577000000000453
-        }
-      ]
-    },
-    {
-      "file": "tests/physics/longitudinal.test.ts",
-      "cases": [
-        {
-          "title": "reaches the acceleration and stationary top-speed targets on dry asphalt",
-          "status": "passed",
-          "ms": 88.39999999999998
-        },
-        {
-          "title": "brakes from exactly 100 km/h to rest inside the distance corridor",
-          "status": "passed",
-          "ms": 2.3573000000000093
-        },
-        {
-          "title": "limits propulsion by force, power and direction-specific linear tapers",
-          "status": "passed",
-          "ms": 0.8459000000000287
-        },
-        {
-          "title": "approaches the reverse limit under power and retains external overspeed",
-          "status": "passed",
-          "ms": 37.372100000000046
-        },
-        {
-          "title": "settles residual motion after a turning stop while preserving meaningful sideways speed",
-          "status": "passed",
-          "ms": 4.15300000000002
-        },
-        {
-          "title": "coasts monotonically to rest in either direction without crossing zero",
-          "status": "passed",
-          "ms": 6.68220000000008
-        }
-      ]
-    },
-    {
-      "file": "tests/physics/surface.test.ts",
-      "cases": [
-        {
-          "title": "samples both world axle centers before motion and assigns their individual budgets",
-          "status": "passed",
-          "ms": 3.8179000000000087
-        },
-        {
-          "title": "immediately enforces grass grip and interpolates rolling resistance over six ticks",
-          "status": "passed",
-          "ms": 5.870699999999999
-        },
-        {
-          "title": "restarts interrupted transitions at the effective coefficients on that axle",
-          "status": "passed",
-          "ms": 8.293499999999995
-        }
-      ]
-    },
-    {
-      "file": "tests/physics/tires.test.ts",
-      "cases": [
-        {
-          "title": "resolves steered and yawing contact velocities in the wheel axes",
-          "status": "passed",
-          "ms": 2.0503999999999962
-        },
-        {
-          "title": "scales combined forces proportionally at each grip budget",
-          "status": "passed",
-          "ms": 1.0730000000000075
-        },
-        {
-          "title": "retains lateral slip and produces different yaw with front versus rear grip loss",
-          "status": "passed",
-          "ms": 1.9140000000000157
-        }
-      ]
-    },
-    {
-      "file": "tests/rendering/drive.test.ts",
-      "cases": [
-        {
-          "title": "maps all four forward headings onto the Three.js XZ plane",
-          "status": "passed",
-          "ms": 1.9324999999999477
-        },
-        {
-          "title": "fits the course, limits free zoom and smooths capped lookahead",
-          "status": "passed",
-          "ms": 1.0678999999999519
-        },
-        {
-          "title": "builds track geometry and inspection lines from the compiled track offline",
-          "status": "passed",
-          "ms": 29.532500000000027
+          "ms": 0.154200000000003
         }
       ]
     },
@@ -636,57 +361,57 @@
         {
           "title": "browser keyboard adapter supports all four keys and releases them (KeyW, KeyS, KeyA, KeyD) (CTRL-001)",
           "status": "passed",
-          "ms": 2.3759999999999764
+          "ms": 3.175700000000006
         },
         {
           "title": "browser keyboard adapter supports all four keys and releases them (ArrowUp, ArrowDown, ArrowLeft, ArrowRight) (CTRL-001)",
           "status": "passed",
-          "ms": 0.39859999999998763
+          "ms": 0.5733000000000175
         },
         {
           "title": "browser keyboard adapter retains a held alias but records a release and re-press between ticks",
           "status": "passed",
-          "ms": 0.9613000000000511
+          "ms": 1.2617999999999938
         },
         {
           "title": "browser keyboard adapter pauses on blur and requires a fresh key after explicit resume (CTRL-010)",
           "status": "passed",
-          "ms": 0.788599999999974
+          "ms": 1.1538999999999646
         },
         {
           "title": "browser keyboard adapter pauses on hidden and requires a fresh key after explicit resume (CTRL-010)",
           "status": "passed",
-          "ms": 0.230700000000013
+          "ms": 0.3412000000000148
         },
         {
           "title": "browser keyboard adapter clears on Escape and can pause the existing clock through a host callback",
           "status": "passed",
-          "ms": 0.5425999999999931
+          "ms": 0.7811999999999557
         },
         {
           "title": "browser keyboard adapter does not capture text editing (input)",
           "status": "passed",
-          "ms": 0.524599999999964
+          "ms": 0.7527999999999793
         },
         {
           "title": "browser keyboard adapter does not capture text editing (textarea)",
           "status": "passed",
-          "ms": 0.22870000000000346
+          "ms": 0.3125999999999749
         },
         {
           "title": "browser keyboard adapter does not capture text editing (contenteditable)",
           "status": "passed",
-          "ms": 0.18590000000000373
+          "ms": 0.2441000000000031
         },
         {
           "title": "browser keyboard adapter does not capture text editing (textbox)",
           "status": "passed",
-          "ms": 0.20920000000000982
+          "ms": 0.27410000000003265
         },
         {
           "title": "browser keyboard adapter allows a menu to suppress bindings and removes every listener on dispose",
           "status": "passed",
-          "ms": 0.7407999999999788
+          "ms": 1.557299999999998
         }
       ]
     },
@@ -696,37 +421,37 @@
         {
           "title": "source-independent controls (CTRL-004, CTRL-006, CTRL-011) clamps finite controls, keeps the steering sign and prioritizes braking",
           "status": "passed",
-          "ms": 1.5815999999999804
+          "ms": 1.4576000000000136
         },
         {
           "title": "source-independent controls (CTRL-004, CTRL-006, CTRL-011) neutralizes and diagnoses each non-finite field and rejects malformed direction",
           "status": "passed",
-          "ms": 0.388499999999965
+          "ms": 0.37189999999998236
         },
         {
           "title": "source-independent controls (CTRL-004, CTRL-006, CTRL-011) requires 18 consecutive standstill ticks with opposite intent for an external source",
           "status": "passed",
-          "ms": 0.7444000000000415
+          "ms": 0.7107000000000312
         },
         {
           "title": "source-independent controls (CTRL-004, CTRL-006, CTRL-011) resets the delay for movement in any direction { x: 1, y: +0 }",
           "status": "passed",
-          "ms": 0.14779999999996107
+          "ms": 0.14780000000001792
         },
         {
           "title": "source-independent controls (CTRL-004, CTRL-006, CTRL-011) resets the delay for movement in any direction { x: +0, y: 0.051 }",
           "status": "passed",
-          "ms": 0.08639999999996917
+          "ms": 0.09859999999997626
         },
         {
           "title": "source-independent controls (CTRL-004, CTRL-006, CTRL-011) resets the delay for movement in any direction { x: 0.04, y: 0.04 }",
           "status": "passed",
-          "ms": 0.07490000000001373
+          "ms": 0.07279999999997244
         },
         {
           "title": "source-independent controls (CTRL-004, CTRL-006, CTRL-011) clears the timer on release, brake, renewed forward command or a between-tick interruption",
           "status": "passed",
-          "ms": 0.1449000000000069
+          "ms": 0.14990000000000236
         }
       ]
     },
@@ -736,337 +461,287 @@
         {
           "title": "fixed-tick keyboard controls rejects invalid stored pedal state before it can produce an invalid command",
           "status": "passed",
-          "ms": 1.2265999999999622
+          "ms": 1.2072999999999752
         },
         {
           "title": "fixed-tick keyboard controls ramps throttle linearly to full in 15 ticks and reaches zero on the eighth release tick (CTRL-002, CTRL-007)",
           "status": "passed",
-          "ms": 1.3607000000000085
+          "ms": 1.3654999999999973
         },
         {
           "title": "fixed-tick keyboard controls ramps steering up in 15 ticks, returns in 12 and reverses continuously through zero (CTRL-003)",
           "status": "passed",
-          "ms": 0.8799999999999955
+          "ms": 0.8405999999999949
         },
         {
           "title": "fixed-tick keyboard controls treats both steering keys as target zero and both directions as immediate braking (CTRL-006)",
           "status": "passed",
-          "ms": 0.5323999999999955
+          "ms": 0.5461999999999989
         },
         {
           "title": "fixed-tick keyboard controls bounds sensitivity to 0.5–1.5 and changes steering ramp only (CTRL-009)",
           "status": "passed",
-          "ms": 0.244199999999978
+          "ms": 0.2488999999999919
         },
         {
           "title": "fixed-tick keyboard controls brakes while moving and ramps from zero on an accepted change from forward to reverse (CTRL-004)",
           "status": "passed",
-          "ms": 0.5721999999999525
+          "ms": 0.5889999999999986
         },
         {
           "title": "fixed-tick keyboard controls brakes while moving and ramps from zero on an accepted change from reverse to forward (CTRL-004)",
           "status": "passed",
-          "ms": 0.34449999999998226
+          "ms": 0.32929999999998927
         },
         {
           "title": "fixed-tick keyboard controls clears hold and pedal state on pause and uses fresh commands after suspension (CTRL-010)",
           "status": "passed",
-          "ms": 0.2655000000000314
+          "ms": 0.2865000000000464
         }
       ]
     },
     {
-      "file": "tests/training/config.test.ts",
+      "file": "tests/physics/energy.test.ts",
       "cases": [
         {
-          "title": "REG-001 verifies the complete operational default against the separately supplied plan",
+          "title": "damps lateral and angular momentum without increasing energy or removing forward speed",
           "status": "passed",
-          "ms": 21.61070000000001
+          "ms": 1.6194999999999595
         },
         {
-          "title": "SEL-003 CRX-003 CRX-005 DIA-006 uses the restricted pool and records real, bounded crossover ancestry",
+          "title": "shares the friction budget across braking, acceleration and lateral slip at all model weights",
           "status": "passed",
-          "ms": 9.393799999999999
+          "ms": 3.8874000000000137
+        },
+        {
+          "title": "repeats the complete measurements and dissipates energy throughout the 120-tick braking turn",
+          "status": "passed",
+          "ms": 274.9386
         }
       ]
     },
     {
-      "file": "tests/training/evolution.test.ts",
+      "file": "tests/physics/handling.test.ts",
       "cases": [
         {
-          "title": "DIA-003 EVO-003 publishes the whole immutable snapshot and owns shallow-frozen input records",
+          "title": "blends side force smoothly at both speed boundaries and through the midpoint",
           "status": "passed",
-          "ms": 9.304700000000025
+          "ms": 3.3519999999999754
         },
         {
-          "title": "RNG-005 EPS-010 ADP-009 uses scenario seeds keyed by master, segment and canonical scenario position",
+          "title": "steers to the mechanical limit at rest with a two-degree step and no motion",
           "status": "passed",
-          "ms": 16.659999999999968
+          "ms": 1.4014000000000237
         },
         {
-          "title": "FIT-001 DR-02B-001 accepts the delegated maximum and rejects schedules above it",
+          "title": "moves toward a suddenly smaller target envelope at the physical steering rate",
           "status": "passed",
-          "ms": 5.087600000000066
+          "ms": 0.22769999999997026
         },
         {
-          "title": "EPS-001 EPS-002 EPS-006 EPS-007 EPS-008 REG-006 replays independent real AI worlds, external reset and model failure",
+          "title": "turns in opposite directions with left and right steering and reverses yaw when backing up",
           "status": "passed",
-          "ms": 2234.4647999999997
-        },
-        {
-          "title": "EPS-010 FIT-008 ADP-009 rejects incompatible training structures and holds out validation",
-          "status": "passed",
-          "ms": 27.795399999999972
-        },
-        {
-          "title": "EVO-001 EVO-004 EVO-006 RNG-006 RNG-007 POP-006 selects identically from permuted results and retains elite/champion",
-          "status": "passed",
-          "ms": 18.483700000000226
-        },
-        {
-          "title": "EVO-002 EVO-003 EPS-008 RNG-007 rejects missing, duplicate, stale and wrong-genome results and rolls back late reproduction errors",
-          "status": "passed",
-          "ms": 95.97699999999986
-        },
-        {
-          "title": "EPS-009 EVO-005 isolates candidates and restricts retries to temporary infrastructure",
-          "status": "passed",
-          "ms": 2.7485999999998967
-        },
-        {
-          "title": "POP-004 POP-005 POP-007 EVO-008 DIA-002 budgets whole generations, stores compact records and supports matched random search",
-          "status": "passed",
-          "ms": 2.4144000000001142
-        },
-        {
-          "title": "ADP-003 ADP-006 ADP-007 GEN-005 CRX-004 DIA-006 composes the optional operators through a full rescue window",
-          "status": "passed",
-          "ms": 188.9984999999997
-        },
-        {
-          "title": "DIA-001 DIA-003 DIA-004 DIA-005 DIA-006 DIA-007 EVO-009 REG-003 verifies real selected traces and identical reproduction",
-          "status": "passed",
-          "ms": 216.3161
-        },
-        {
-          "title": "EPS-008 EVO-002 rejects nonfinite scores without publishing a generation",
-          "status": "passed",
-          "ms": 0.7968999999998232
-        },
-        {
-          "title": "EVO-002 EPS-007 rejects conflicting result metadata and reports the current staging failure after cancellation",
-          "status": "passed",
-          "ms": 1.7360999999996238
+          "ms": 2.0781000000000063
         }
       ]
     },
     {
-      "file": "tests/training/fitness.test.ts",
+      "file": "tests/physics/integration.test.ts",
       "cases": [
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'stationary' / 'Balanced'",
+          "title": "publishes keyboard and analog reversals after exactly 18 consecutive stationary ticks",
           "status": "passed",
-          "ms": 1.3500000000000227
+          "ms": 6.467499999999973
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'stationary' / 'Speed'",
+          "title": "resets a pending reversal during sideways sliding and retains lateral momentum",
           "status": "passed",
-          "ms": 0.1612999999999829
+          "ms": 0.7407000000000039
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'stationary' / 'Safety'",
+          "title": "uses the same forces for equivalent keyboard and analog tick commands",
           "status": "passed",
-          "ms": 0.11830000000003338
+          "ms": 13.033900000000017
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'partial' / 'Balanced'",
+          "title": "neutralizes invalid raw fields and applies brake priority before computing forces",
           "status": "passed",
-          "ms": 0.10070000000001755
+          "ms": 1.0394999999999754
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'partial' / 'Speed'",
+          "title": "delivers an unpublished free-motion candidate with semi-implicit translation and rotation",
           "status": "passed",
-          "ms": 0.1158999999999537
+          "ms": 0.387299999999982
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'partial' / 'Safety'",
+          "title": "preserves the whole confirmed frame on a rear query exception and locks the session",
           "status": "passed",
-          "ms": 0.11290000000002465
+          "ms": 0.9816999999999894
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'success40s' / 'Balanced'",
+          "title": "rejects invalid parameters, unknown surfaces and numeric overflow before publication",
           "status": "passed",
-          "ms": 0.10520000000002483
+          "ms": 0.4918999999999869
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'success40s' / 'Speed'",
+          "title": "isolates frozen published frames and produces the same motion with diagnostics disabled",
           "status": "passed",
-          "ms": 0.10140000000001237
+          "ms": 1.5914999999999964
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'success40s' / 'Safety'",
+          "title": "matches complete seeded headless frames at 30, 60 and 144 FPS without dropped ticks",
           "status": "passed",
-          "ms": 0.12049999999999272
+          "ms": 24.004399999999976
         },
         {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'successWorst' / 'Balanced'",
+          "title": "keeps the clock on the last successful index when a vehicle tick fails",
           "status": "passed",
-          "ms": 0.14500000000003865
-        },
-        {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'successWorst' / 'Speed'",
-          "status": "passed",
-          "ms": 0.09710000000001173
-        },
-        {
-          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'successWorst' / 'Safety'",
-          "status": "passed",
-          "ms": 0.06400000000002137
-        },
-        {
-          "title": "FIT-001 FIT-004 FIT-006 FIT-007 checks hierarchy, protected completion and custom weights",
-          "status": "passed",
-          "ms": 1.8614000000000033
-        },
-        {
-          "title": "PRG-007 PRG-009 repeated contact corrections never farm travel over the same road",
-          "status": "passed",
-          "ms": 0.34489999999999554
-        },
-        {
-          "title": "PRG-001 PRG-002 PRG-005 PRG-006 retains only high water and distinct ordinal gates",
-          "status": "passed",
-          "ms": 0.3543000000000234
-        },
-        {
-          "title": "PRG-003 PRG-004 PRG-007 PRG-008 PRG-012 EPS-005 uses authoritative Academy gates, seam and actual travel starts",
-          "status": "passed",
-          "ms": 27.562899999999956
-        },
-        {
-          "title": "PEN-001 PEN-002 PEN-003 PEN-010 groups accepted contact time including resting and clips the terminal interval",
-          "status": "passed",
-          "ms": 0.9091999999999985
-        },
-        {
-          "title": "FIT-009 PEN-005 PEN-006 PEN-007 PEN-008 PEN-011 PEN-012 PRG-010 PRG-011 integrates tolerated exposure and leaves raw totals available",
-          "status": "passed",
-          "ms": 1.5376999999999725
-        },
-        {
-          "title": "PEN-009 PEN-010 charges consecutive complete high-variation windows once",
-          "status": "passed",
-          "ms": 0.33559999999999945
-        },
-        {
-          "title": "EPS-002 EPS-003 EPS-004 EPS-005 fixes exact deadline precedence and renews only on threshold",
-          "status": "passed",
-          "ms": 0.23289999999997235
+          "ms": 0.4559000000000424
         }
       ]
     },
     {
-      "file": "tests/training/genetics.test.ts",
+      "file": "tests/physics/longitudinal.test.ts",
       "cases": [
         {
-          "title": "MUT-005 MUT-006 isolates the all-large kernel and rejects malformed source values even with mutation disabled",
+          "title": "reaches the acceleration and stationary top-speed targets on dry asphalt",
           "status": "passed",
-          "ms": 2.7269000000000005
+          "ms": 107.34609999999998
         },
         {
-          "title": "RNG-001 RNG-003 golden PRNG and Gaussian seed +0",
+          "title": "brakes from exactly 100 km/h to rest inside the distance corridor",
           "status": "passed",
-          "ms": 1.011299999999892
+          "ms": 3.329300000000103
         },
         {
-          "title": "RNG-001 RNG-003 golden PRNG and Gaussian seed 1",
+          "title": "limits propulsion by force, power and direction-specific linear tapers",
           "status": "passed",
-          "ms": 0.268100000000004
+          "ms": 1.0982000000000198
         },
         {
-          "title": "RNG-001 RNG-003 golden PRNG and Gaussian seed 42",
+          "title": "approaches the reverse limit under power and retains external overspeed",
           "status": "passed",
-          "ms": 0.2864999999999327
+          "ms": 25.188499999999976
         },
         {
-          "title": "RNG-001 RNG-003 golden PRNG and Gaussian seed 4294967295",
+          "title": "settles residual motion after a turning stop while preserving meaningful sideways speed",
           "status": "passed",
-          "ms": 0.282799999999952
+          "ms": 8.88110000000006
         },
         {
-          "title": "RNG-002 RNG-004 RNG-005 validates all seed positions and isolates streams/rejections",
+          "title": "coasts monotonically to rest in either direction without crossing zero",
           "status": "passed",
-          "ms": 1.623199999999997
-        },
-        {
-          "title": "GEN-001 GEN-002 GEN-003 GEN-004 GEN-006 validates model, byte order, collision and copy boundaries",
-          "status": "passed",
-          "ms": 8.584499999999935
-        },
-        {
-          "title": "SEL-001 SEL-002 SEL-003 SEL-004 SEL-005 SEL-006 uses distinct elites and analytical tournament frequencies",
-          "status": "passed",
-          "ms": 32.2894
-        },
-        {
-          "title": "CRX-001 CRX-002 CRX-004 CRX-005 selects from immutable parents, with noninterleaved bias and protected layers",
-          "status": "passed",
-          "ms": 2.100500000000011
-        },
-        {
-          "title": "MUT-001 MUT-002 MUT-003 MUT-004 MUT-005 MUT-006 MUT-007 MUT-010 follows draw order, clamp and forced choice",
-          "status": "passed",
-          "ms": 9.556900000000041
-        },
-        {
-          "title": "MUT-008 MUT-009 matches fixed Gaussian and Bernoulli samples",
-          "status": "passed",
-          "ms": 43.078899999999976
-        },
-        {
-          "title": "DIV-001 DIV-002 DIV-003 compares Welford with explicit normalized pair distances",
-          "status": "passed",
-          "ms": 2.4330999999999676
-        },
-        {
-          "title": "ADP-001 ADP-002 ADP-003 ADP-004 ADP-005 ADP-006 ADP-007 ADP-008 preserves reset, alternating triggers and rescue boundaries",
-          "status": "passed",
-          "ms": 2.033999999999992
-        },
-        {
-          "title": "POP-001 POP-002 POP-003 GEN-005 CRX-003 CRX-004 CRX-005 checks seeded composition, origins and duplicate fallback",
-          "status": "passed",
-          "ms": 44.18640000000005
+          "ms": 21.87900000000002
         }
       ]
     },
     {
-      "file": "tests/training/terminal.test.ts",
+      "file": "tests/physics/surface.test.ts",
       "cases": [
         {
-          "title": "EPS-004 EPS-005 PRG-004 PRG-012 PEN-010 stops a real fixed test Brain on its interpolated goal, including at the limit tick",
+          "title": "samples both world axle centers before motion and assigns their individual budgets",
           "status": "passed",
-          "ms": 4653.1488
+          "ms": 2.979499999999973
+        },
+        {
+          "title": "immediately enforces grass grip and interpolates rolling resistance over six ticks",
+          "status": "passed",
+          "ms": 1.203200000000038
+        },
+        {
+          "title": "restarts interrupted transitions at the effective coefficients on that axle",
+          "status": "passed",
+          "ms": 5.568899999999985
         }
       ]
     },
     {
-      "file": "tests/training/worldFeed.test.ts",
+      "file": "tests/physics/tires.test.ts",
       "cases": [
         {
-          "title": "PEN-003 PEN-004 PRG-009 collects resting and gentle contacts, discards ambiguous contact candidates",
+          "title": "resolves steered and yawing contact velocities in the wheel axes",
           "status": "passed",
-          "ms": 20.103700000000003
+          "ms": 1.343500000000006
         },
         {
-          "title": "REG-002 REG-004 PRG-007 publishes one immutable feed with all cars or preserves the entire old frame",
+          "title": "scales combined forces proportionally at each grip budget",
           "status": "passed",
-          "ms": 131.74809999999997
+          "ms": 0.5646999999999593
         },
         {
-          "title": "PRG-003 PRG-006 PRG-008 protects against wrong-order gates, infield cutting and repeated start-line crossings",
+          "title": "retains lateral slip and produces different yaw with front versus rear grip loss",
           "status": "passed",
-          "ms": 54.57060000000001
+          "ms": 1.6988000000000056
+        }
+      ]
+    },
+    {
+      "file": "tests/rendering/drive.test.ts",
+      "cases": [
+        {
+          "title": "maps all four forward headings onto the Three.js XZ plane",
+          "status": "passed",
+          "ms": 1.263499999999965
+        },
+        {
+          "title": "fits the course, limits free zoom and smooths capped lookahead",
+          "status": "passed",
+          "ms": 0.6977000000000544
+        },
+        {
+          "title": "builds track geometry and inspection lines from the compiled track offline",
+          "status": "passed",
+          "ms": 18.101699999999994
+        }
+      ]
+    },
+    {
+      "file": "tests/collision/contacts.test.ts",
+      "cases": [
+        {
+          "title": "handles separated, touching and rotated boxes and bounds their rotation",
+          "status": "passed",
+          "ms": 1.7043999999999642
+        },
+        {
+          "title": "hits a 2 cm wall at 250 km/h, loses energy and rebounds at the centered contact",
+          "status": "passed",
+          "ms": 1.9709000000000287
+        },
+        {
+          "title": "slides along a wall and rotates under an off-center impulse",
+          "status": "passed",
+          "ms": 0.22160000000002356
+        },
+        {
+          "title": "resolves two oncoming vehicles and filters independent candidates",
+          "status": "passed",
+          "ms": 0.8641000000000076
+        },
+        {
+          "title": "bounds multi-contact iterations and corrects resting overlap without adding energy",
+          "status": "passed",
+          "ms": 55.331500000000005
+        },
+        {
+          "title": "falls back before exhausting safe motion at extreme speed or spin",
+          "status": "passed",
+          "ms": 0.6707000000000107
+        },
+        {
+          "title": "keeps the complete multi-vehicle frame on failure in the second vehicle",
+          "status": "passed",
+          "ms": 45.742399999999975
+        },
+        {
+          "title": "preserves free motion across the asphalt edge and safely recovers without lap credit",
+          "status": "passed",
+          "ms": 10.496499999999969
+        },
+        {
+          "title": "separates coincident GT-01 start positions without velocity or lap travel",
+          "status": "passed",
+          "ms": 3.9700000000000273
         }
       ]
     },
@@ -1076,47 +751,372 @@
         {
           "title": "closes analytic lines and arcs at the specified seam and offset bounds",
           "status": "passed",
-          "ms": 25.4144
+          "ms": 13.050200000000018
         },
         {
           "title": "projects continuously on both sides of the start seam and on corner offsets",
           "status": "passed",
-          "ms": 15.826000000000022
+          "ms": 8.944299999999998
         },
         {
           "title": "delivers distinct materials to actual physics axles and leaves grass drivable",
           "status": "passed",
-          "ms": 2.8479999999999563
+          "ms": 2.484300000000019
         },
         {
           "title": "rejects malformed or self-overlapping circuits and unsafe starts",
           "status": "passed",
-          "ms": 23.869700000000023
+          "ms": 9.401399999999967
         },
         {
           "title": "builds a centered solo grid and staggered double grid, recovers only to free past poses",
           "status": "passed",
-          "ms": 0.6215000000000828
+          "ms": 0.8731000000000222
         },
         {
           "title": "opens and finishes two ordered laps using swept simulation timestamps",
           "status": "passed",
-          "ms": 11.166799999999967
+          "ms": 10.402000000000044
         },
         {
           "title": "rejects reverse crossings, missed gates and shortcuts through the infield",
           "status": "passed",
-          "ms": 0.4250999999999294
+          "ms": 0.5119000000000256
         },
         {
           "title": "orders multiple gates crossed in one straight movement",
           "status": "passed",
-          "ms": 19.85579999999993
+          "ms": 10.183699999999988
         },
         {
           "title": "invalidates forward shortcuts inside a corner while leaving the runoff drivable",
           "status": "passed",
-          "ms": 0.5309000000000879
+          "ms": 0.5507999999999811
+        }
+      ]
+    },
+    {
+      "file": "tests/training/config.test.ts",
+      "cases": [
+        {
+          "title": "REG-001 verifies the complete operational default against the separately supplied plan",
+          "status": "passed",
+          "ms": 24.431500000000028
+        },
+        {
+          "title": "SEL-003 CRX-003 CRX-005 DIA-006 uses the restricted pool and records real, bounded crossover ancestry",
+          "status": "passed",
+          "ms": 11.607200000000034
+        }
+      ]
+    },
+    {
+      "file": "tests/training/evolution.test.ts",
+      "cases": [
+        {
+          "title": "DIA-003 EVO-003 publishes the whole immutable snapshot and owns shallow-frozen input records",
+          "status": "passed",
+          "ms": 13.584499999999935
+        },
+        {
+          "title": "RNG-005 EPS-010 ADP-009 uses scenario seeds keyed by master, segment and canonical scenario position",
+          "status": "passed",
+          "ms": 21.754300000000057
+        },
+        {
+          "title": "FIT-001 DR-02B-001 accepts the delegated maximum and rejects schedules above it",
+          "status": "passed",
+          "ms": 10.182300000000168
+        },
+        {
+          "title": "EPS-001 EPS-002 EPS-006 EPS-007 EPS-008 REG-006 replays independent real AI worlds, external reset and model failure",
+          "status": "passed",
+          "ms": 2853.5067
+        },
+        {
+          "title": "EPS-010 FIT-008 ADP-009 rejects incompatible training structures and holds out validation",
+          "status": "passed",
+          "ms": 41.56190000000015
+        },
+        {
+          "title": "EVO-001 EVO-004 EVO-006 RNG-006 RNG-007 POP-006 selects identically from permuted results and retains elite/champion",
+          "status": "passed",
+          "ms": 15.353200000000015
+        },
+        {
+          "title": "EVO-002 EVO-003 EPS-008 RNG-007 rejects missing, duplicate, stale and wrong-genome results and rolls back late reproduction errors",
+          "status": "passed",
+          "ms": 92.19630000000006
+        },
+        {
+          "title": "EPS-009 EVO-005 isolates candidates and restricts retries to temporary infrastructure",
+          "status": "passed",
+          "ms": 2.5604000000002998
+        },
+        {
+          "title": "POP-004 POP-005 POP-007 EVO-008 DIA-002 budgets whole generations, stores compact records and supports matched random search",
+          "status": "passed",
+          "ms": 2.1907999999998538
+        },
+        {
+          "title": "ADP-003 ADP-006 ADP-007 GEN-005 CRX-004 DIA-006 composes the optional operators through a full rescue window",
+          "status": "passed",
+          "ms": 177.48929999999973
+        },
+        {
+          "title": "DIA-001 DIA-003 DIA-004 DIA-005 DIA-006 DIA-007 EVO-009 REG-003 verifies real selected traces and identical reproduction",
+          "status": "passed",
+          "ms": 210.20619999999963
+        },
+        {
+          "title": "EPS-008 EVO-002 rejects nonfinite scores without publishing a generation",
+          "status": "passed",
+          "ms": 0.8356999999996333
+        },
+        {
+          "title": "EVO-002 EPS-007 rejects conflicting result metadata and reports the current staging failure after cancellation",
+          "status": "passed",
+          "ms": 1.5820999999996275
+        }
+      ]
+    },
+    {
+      "file": "tests/training/fitness.test.ts",
+      "cases": [
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'stationary' / 'Balanced'",
+          "status": "passed",
+          "ms": 1.7440999999999462
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'stationary' / 'Speed'",
+          "status": "passed",
+          "ms": 0.2758000000000038
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'stationary' / 'Safety'",
+          "status": "passed",
+          "ms": 0.17099999999999227
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'partial' / 'Balanced'",
+          "status": "passed",
+          "ms": 0.14299999999997226
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'partial' / 'Speed'",
+          "status": "passed",
+          "ms": 0.15559999999999263
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'partial' / 'Safety'",
+          "status": "passed",
+          "ms": 0.19580000000001974
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'success40s' / 'Balanced'",
+          "status": "passed",
+          "ms": 0.1523000000000252
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'success40s' / 'Speed'",
+          "status": "passed",
+          "ms": 0.1652000000000271
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'success40s' / 'Safety'",
+          "status": "passed",
+          "ms": 0.1967000000000212
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'successWorst' / 'Balanced'",
+          "status": "passed",
+          "ms": 0.1745000000000232
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'successWorst' / 'Speed'",
+          "status": "passed",
+          "ms": 0.1079000000000292
+        },
+        {
+          "title": "FIT-002 FIT-003 FIT-004 FIT-005 'successWorst' / 'Safety'",
+          "status": "passed",
+          "ms": 0.080600000000004
+        },
+        {
+          "title": "FIT-001 FIT-004 FIT-006 FIT-007 checks hierarchy, protected completion and custom weights",
+          "status": "passed",
+          "ms": 2.2959000000000174
+        },
+        {
+          "title": "PRG-007 PRG-009 repeated contact corrections never farm travel over the same road",
+          "status": "passed",
+          "ms": 0.4470999999999776
+        },
+        {
+          "title": "PRG-001 PRG-002 PRG-005 PRG-006 retains only high water and distinct ordinal gates",
+          "status": "passed",
+          "ms": 0.43029999999998836
+        },
+        {
+          "title": "PRG-003 PRG-004 PRG-007 PRG-008 PRG-012 EPS-005 uses authoritative Academy gates, seam and actual travel starts",
+          "status": "passed",
+          "ms": 31.565300000000036
+        },
+        {
+          "title": "PEN-001 PEN-002 PEN-003 PEN-010 groups accepted contact time including resting and clips the terminal interval",
+          "status": "passed",
+          "ms": 0.6838999999999942
+        },
+        {
+          "title": "FIT-009 PEN-005 PEN-006 PEN-007 PEN-008 PEN-011 PEN-012 PRG-010 PRG-011 integrates tolerated exposure and leaves raw totals available",
+          "status": "passed",
+          "ms": 1.267499999999984
+        },
+        {
+          "title": "PEN-009 PEN-010 charges consecutive complete high-variation windows once",
+          "status": "passed",
+          "ms": 0.3482000000000198
+        },
+        {
+          "title": "EPS-002 EPS-003 EPS-004 EPS-005 fixes exact deadline precedence and renews only on threshold",
+          "status": "passed",
+          "ms": 1.3607999999999834
+        }
+      ]
+    },
+    {
+      "file": "tests/training/genetics.test.ts",
+      "cases": [
+        {
+          "title": "MUT-005 MUT-006 isolates the all-large kernel and rejects malformed source values even with mutation disabled",
+          "status": "passed",
+          "ms": 1.925100000000043
+        },
+        {
+          "title": "RNG-001 RNG-003 golden PRNG and Gaussian seed +0",
+          "status": "passed",
+          "ms": 0.67349999999999
+        },
+        {
+          "title": "RNG-001 RNG-003 golden PRNG and Gaussian seed 1",
+          "status": "passed",
+          "ms": 0.19319999999993342
+        },
+        {
+          "title": "RNG-001 RNG-003 golden PRNG and Gaussian seed 42",
+          "status": "passed",
+          "ms": 0.18819999999993797
+        },
+        {
+          "title": "RNG-001 RNG-003 golden PRNG and Gaussian seed 4294967295",
+          "status": "passed",
+          "ms": 0.18280000000004293
+        },
+        {
+          "title": "RNG-002 RNG-004 RNG-005 validates all seed positions and isolates streams/rejections",
+          "status": "passed",
+          "ms": 1.2650000000001
+        },
+        {
+          "title": "GEN-001 GEN-002 GEN-003 GEN-004 GEN-006 validates model, byte order, collision and copy boundaries",
+          "status": "passed",
+          "ms": 6.543700000000058
+        },
+        {
+          "title": "SEL-001 SEL-002 SEL-003 SEL-004 SEL-005 SEL-006 uses distinct elites and analytical tournament frequencies",
+          "status": "passed",
+          "ms": 26.45679999999993
+        },
+        {
+          "title": "CRX-001 CRX-002 CRX-004 CRX-005 selects from immutable parents, with noninterleaved bias and protected layers",
+          "status": "passed",
+          "ms": 1.8174000000000206
+        },
+        {
+          "title": "MUT-001 MUT-002 MUT-003 MUT-004 MUT-005 MUT-006 MUT-007 MUT-010 follows draw order, clamp and forced choice",
+          "status": "passed",
+          "ms": 6.838799999999992
+        },
+        {
+          "title": "MUT-008 MUT-009 matches fixed Gaussian and Bernoulli samples",
+          "status": "passed",
+          "ms": 14.752900000000068
+        },
+        {
+          "title": "DIV-001 DIV-002 DIV-003 compares Welford with explicit normalized pair distances",
+          "status": "passed",
+          "ms": 3.202299999999923
+        },
+        {
+          "title": "ADP-001 ADP-002 ADP-003 ADP-004 ADP-005 ADP-006 ADP-007 ADP-008 preserves reset, alternating triggers and rescue boundaries",
+          "status": "passed",
+          "ms": 2.097099999999955
+        },
+        {
+          "title": "POP-001 POP-002 POP-003 GEN-005 CRX-003 CRX-004 CRX-005 checks seeded composition, origins and duplicate fallback",
+          "status": "passed",
+          "ms": 88.93200000000002
+        }
+      ]
+    },
+    {
+      "file": "tests/training/terminal.test.ts",
+      "cases": [
+        {
+          "title": "EPS-004 EPS-005 PRG-004 PRG-012 PEN-010 stops a real fixed test Brain on its interpolated goal, including at the limit tick",
+          "status": "passed",
+          "ms": 4337.8804
+        }
+      ]
+    },
+    {
+      "file": "tests/training/worldFeed.test.ts",
+      "cases": [
+        {
+          "title": "PEN-003 PEN-004 PRG-009 collects resting and gentle contacts, discards ambiguous contact candidates",
+          "status": "passed",
+          "ms": 13.232700000000023
+        },
+        {
+          "title": "REG-002 REG-004 PRG-007 publishes one immutable feed with all cars or preserves the entire old frame",
+          "status": "passed",
+          "ms": 117.53229999999996
+        },
+        {
+          "title": "PRG-003 PRG-006 PRG-008 protects against wrong-order gates, infield cutting and repeated start-line crossings",
+          "status": "passed",
+          "ms": 20.884500000000003
+        }
+      ]
+    },
+    {
+      "file": "tests/game/world.test.ts",
+      "cases": [
+        {
+          "title": "replays tick-indexed input for two cars identically at 30, 60 and 144 FPS and headless",
+          "status": "passed",
+          "ms": 268.96270000000004
+        },
+        {
+          "title": "recovers without crossing a gate or retaining old motion, or rejects with no safe history",
+          "status": "passed",
+          "ms": 3.054499999999962
+        },
+        {
+          "title": "isolates an independent candidate from another car exhausting the wall budget",
+          "status": "passed",
+          "ms": 8.432999999999993
+        },
+        {
+          "title": "locates a vehicle spawned on the opposite straight without a start-line projection hint",
+          "status": "passed",
+          "ms": 1.0791000000000395
+        },
+        {
+          "title": "drives two timed Academy laps from rest with a fixed keyboard recording",
+          "status": "passed",
+          "ms": 589.9693000000001
         }
       ]
     },
@@ -1126,57 +1126,57 @@
         {
           "title": "GT-01 vehicle data stores immutable GT-01 nominal data in SI units (VEH-001–003, VEH-009)",
           "status": "passed",
-          "ms": 3.08929999999998
+          "ms": 2.9640999999999735
         },
         {
           "title": "GT-01 vehicle data stores G-03 calibration defaults separately from named vehicle data",
           "status": "passed",
-          "ms": 0.3275000000000432
+          "ms": 0.2901000000000522
         },
         {
           "title": "GT-01 vehicle data shares only the frozen definition and copies mutable inputs (VEH-004, VEH-008)",
           "status": "passed",
-          "ms": 0.8100000000000023
+          "ms": 0.7520000000000095
         },
         {
           "title": "GT-01 vehicle data rejects invalid nominal data { lengthM: +0 }",
           "status": "passed",
-          "ms": 0.33499999999997954
+          "ms": 0.30750000000000455
         },
         {
           "title": "GT-01 vehicle data rejects invalid nominal data { widthM: Infinity }",
           "status": "passed",
-          "ms": 0.11979999999999791
+          "ms": 0.12559999999996307
         },
         {
           "title": "GT-01 vehicle data rejects invalid nominal data { massKg: -5 }",
           "status": "passed",
-          "ms": 0.0816000000000372
+          "ms": 0.09530000000000882
         },
         {
           "title": "GT-01 vehicle data rejects invalid nominal data { yawInertiaKgM2: NaN }",
           "status": "passed",
-          "ms": 0.08150000000000546
+          "ms": 0.08819999999997208
         },
         {
           "title": "GT-01 vehicle data rejects invalid nominal data { wheelbaseM: 4.5 }",
           "status": "passed",
-          "ms": 0.11110000000002174
+          "ms": 0.10079999999999245
         },
         {
           "title": "GT-01 vehicle data rejects invalid nominal data { frontAxleDistanceM: 1.5 }",
           "status": "passed",
-          "ms": 0.10840000000001737
+          "ms": 0.11140000000000327
         },
         {
           "title": "GT-01 vehicle data rejects invalid nominal data { maxSteeringRad: 3.141592653589793 }",
           "status": "passed",
-          "ms": 0.12000000000000455
+          "ms": 0.11549999999999727
         },
         {
           "title": "GT-01 vehicle data rejects invalid calibration { reverseDriveFactor: 1.1 }",
           "status": "passed",
-          "ms": 0.13549999999997908
+          "ms": 0.12409999999999854
         },
         {
           "title": "GT-01 vehicle data rejects invalid calibration { dragAreaM2: NaN }",
@@ -1186,32 +1186,32 @@
         {
           "title": "GT-01 vehicle data rejects invalid calibration { frontStaticLoadFraction: 1 }",
           "status": "passed",
-          "ms": 0.057900000000017826
+          "ms": 0.053999999999973625
         },
         {
           "title": "GT-01 vehicle data rejects invalid calibration { handlingBlendStartMps: 9 }",
           "status": "passed",
-          "ms": 0.07509999999996353
+          "ms": 0.07429999999999382
         },
         {
           "title": "GT-01 vehicle data rejects invalid calibration { reverseTaperStartMps: 8.333333333333334 }",
           "status": "passed",
-          "ms": 0.05920000000003256
+          "ms": 0.05689999999998463
         },
         {
           "title": "GT-01 vehicle data rejects invalid calibration { maxSteeringRateRadPerSecond: Infinity }",
           "status": "passed",
-          "ms": 0.06340000000000146
+          "ms": 0.05869999999998754
         },
         {
           "title": "GT-01 vehicle data rejects invalid surface properties, ID, appearance and duplicate vehicle IDs",
           "status": "passed",
-          "ms": 0.8763999999999896
+          "ms": 0.9267000000000394
         },
         {
           "title": "GT-01 vehicle data validates pose, motion, steering and transition state at the state boundary",
           "status": "passed",
-          "ms": 0.9017000000000053
+          "ms": 0.4456000000000131
         }
       ]
     }
