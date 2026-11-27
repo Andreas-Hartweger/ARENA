@@ -1,3 +1,4 @@
+import { currentOfficial, cloneOfficial } from '../storage/capabilities';
 import { TrainingController } from './controller';
 import { TrainingDatabase } from '../storage/database';
 import { browserPort } from './browserPort';
@@ -364,6 +365,13 @@ async function handle(c: LabCommand) {
           failures.map((f) => f.id + ' ' + f.reason).join(', '),
       );
     }
+    case 'officialStarter': {
+      const official = await currentOfficial(db, 'Starter');
+      return official?.freeze.version ?? null;
+    }
+    case 'cloneStarter':
+      await acquire();
+      return cloneOfficial(db, 'Starter', c.name, hardware);
     case 'library':
       return profiles(db);
     case 'create': {

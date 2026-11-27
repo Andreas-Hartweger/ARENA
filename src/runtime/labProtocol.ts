@@ -18,6 +18,7 @@ export type LabCommand =
         | 'save'
         | 'status'
         | 'library'
+        | 'officialStarter'
         | 'storage'
         | 'queue';
     }
@@ -29,6 +30,7 @@ export type LabCommand =
     }
   | { type: 'revise'; learning: Learning; scenarios?: Draft['scenarios'] }
   | { type: 'currentDraft' | 'dispatchQueue' | 'samples' }
+  | { type: 'cloneStarter'; name: string }
   | { type: 'version'; id: string }
   | { type: 'compatibility'; version: string; other?: string; draft: Draft }
   | {

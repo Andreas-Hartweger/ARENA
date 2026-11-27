@@ -603,6 +603,10 @@ export function ModelLibrary(props: Props) {
     [name, setName] = useState(''),
     [method, setMethod] = useState('fresh'),
     [seedVersion, setSeedVersion] = useState('');
+  const starter = useLabQuery<string | null>(
+    { type: 'officialStarter' },
+    props.revision,
+  );
   const shown = models
       .filter(
         (p) =>
@@ -630,8 +634,10 @@ export function ModelLibrary(props: Props) {
             <option value="fresh">Neu initialisieren</option>
             <option value="clone">Vorhandene Version klonen</option>
             <option value="file">Modelldatei importieren</option>
-            <option value="starter" disabled>
-              Freigegebener Starter · nicht verfügbar
+            <option value="starter" disabled={!starter.data}>
+              {starter.data
+                ? 'Freigegebenen Starter klonen'
+                : 'Freigegebener Starter · nicht verfügbar'}
             </option>
           </select>
         </label>
@@ -665,7 +671,11 @@ export function ModelLibrary(props: Props) {
             </label>
             <button
               className="primary"
-              disabled={!name.trim() || (method === 'clone' && !seedVersion)}
+              disabled={
+                !name.trim() ||
+                (method === 'clone' && !seedVersion) ||
+                (method === 'starter' && !starter.data)
+              }
               onClick={() =>
                 act(async () => {
                   const lab = trainingLab(),
@@ -674,26 +684,36 @@ export function ModelLibrary(props: Props) {
                     ? (await lab.call<Details>({ type: 'version', id: source }))
                         .manifest.draft
                     : draft;
-                  const p = await lab.call<Profile>({
-                    type: 'create',
-                    name,
-                    draft: contract,
-                    source,
-                  });
+                  const p = await lab.call<Profile>(
+                    method === 'starter'
+                      ? { type: 'cloneStarter', name }
+                      : {
+                          type: 'create',
+                          name,
+                          draft: contract,
+                          source,
+                        },
+                  );
                   setSelected(p.id);
                   setName('');
                 })
               }
             >
-              {method === 'clone'
-                ? 'Gewählte Version klonen'
-                : 'Neu initialisieren'}
+              {method === 'starter'
+                ? 'Starter klonen'
+                : method === 'clone'
+                  ? 'Gewählte Version klonen'
+                  : 'Neu initialisieren'}
             </button>
           </div>
         )}
         <p>
-          Architektur und Seed stammen aus dem Laufentwurf. Ein freigegebenes
-          Startermodell liegt noch nicht vor.
+          {starter.error ||
+            (method === 'fresh'
+              ? 'Architektur und Seed stammen aus dem Laufentwurf.'
+              : method === 'starter'
+                ? 'Der Klon erhält eine eigene Modell-ID.'
+                : '')}
         </p>
       </section>
       <div className="library-columns">
