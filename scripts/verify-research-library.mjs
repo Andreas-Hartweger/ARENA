@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, URL } from 'node:url';
 import process from 'node:process';
 import { preview } from 'vite';
 import { environment } from './evolution-runtime.mjs';
@@ -13,6 +13,9 @@ const { chromium } = await import(
     : 'playwright'
 );
 const root = 'docs/intelligence-validation/evidence/historical';
+const destination =
+  process.argv[2] ??
+  'docs/intelligence-validation/evidence/browser-model-restore.json';
 const original = JSON.parse(
   readFileSync(root + '/roles.json', 'utf8'),
 ).measured.find((row) => row.roles.includes('Finaler Champion'));
@@ -29,7 +32,13 @@ try {
     executablePath: process.env.ARENA_CHROMIUM,
   });
   const page = await browser.newPage(),
-    errors = [];
+    errors = [],
+    assets = new Map();
+  page.on('response', (response) => {
+    const path = new URL(response.url()).pathname;
+    if (path.startsWith('/assets/') && /\.(?:css|js)$/.test(path))
+      assets.set(path, response);
+  });
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto(url + '#/models');
   const source = page.getByLabel('Modellquelle'),
@@ -59,21 +68,26 @@ try {
     .count();
   assert(owned >= 1);
   assert.deepEqual(errors, []);
-  publishJSON(
-    'docs/intelligence-validation/evidence/browser-model-restore.json',
-    {
-      schema: 1,
-      runtime: environment(),
-      browser: browser.version(),
-      artifact: original.packageSHA256,
-      fingerprint: original.fingerprint,
-      version: original.version,
-      imported: true,
-      cloneSurvivedReload: true,
-      officialStarterAvailable: false,
-      pageErrors: errors,
-    },
-  );
+  const bundle = {};
+  for (const [path, response] of [...assets].sort(([a], [b]) =>
+    a.localeCompare(b),
+  ))
+    bundle[path] = sha(await response.body());
+  assert(Object.keys(bundle).length > 0);
+  publishJSON(destination, {
+    schema: 1,
+    runtime: environment(),
+    browser: browser.version(),
+    headless: true,
+    bundle,
+    artifact: original.packageSHA256,
+    fingerprint: original.fingerprint,
+    version: original.version,
+    imported: true,
+    cloneSurvivedReload: true,
+    officialStarterAvailable: false,
+    pageErrors: errors,
+  });
 } finally {
   await browser?.close();
   await new Promise((resolve) => server.httpServer.close(resolve));

@@ -167,7 +167,7 @@ async function select() {
       devFile: 'dev-' + file,
     });
   }
-  if (!available.length)
+  if (!available.length && phase !== 'long')
     throw Error('No eligible measured development candidates');
   const groups = new Map();
   for (const r of available) {
@@ -213,7 +213,7 @@ async function select() {
     }
     const candidates = [];
     const registry = new NodeStore(ledger, 'research-finalists');
-    for (const [i, r] of shortlist.entries()) {
+    for (const r of shortlist) {
       clock.pulse();
       const source = loadCandidate(directory, r.experimentId, r.role);
       const name =
@@ -266,7 +266,7 @@ async function select() {
         genome: r.genome,
         experimentId: r.experimentId,
         modelRole: r.role,
-        roles: i === 0 ? ['Starter', 'Performance'] : ['Starter'],
+        roles: ['Starter', 'Performance'],
         modelKey: r.modelKey,
         devHash: r.devHash,
         sourceGenomeObject: r.versionSource,
@@ -324,7 +324,16 @@ async function select() {
       ranked: grouped,
       data: available,
       excluded,
-      reasons: { tie: 'ConfigID lexikografisch', alternative: reserveReason },
+      reasons: {
+        tie: 'ConfigID lexikografisch',
+        alternative: reserveReason,
+        ...(phase === 'long' && !best.length
+          ? {
+              deferred:
+                'Keine vollständig gemessene Bestätigung über drei Seeds.',
+            }
+          : {}),
+      },
       runtime,
       usage: ledger.usage().charged,
     };

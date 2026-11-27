@@ -310,14 +310,19 @@ try {
         (extra ? 1 : seeds.length - seeds.indexOf(Number(row.Seed)));
       const futureDevelopmentCases =
         40 * (phase === 'screen' ? 100 : phase === 'confirmation' ? 18 : 4);
+      const devTicks = futureDevelopmentCases * 7200;
+      const measuredMin = scale.stats.find(
+        (stat) => stat.workers === workers,
+      )?.min;
+      if (!(measuredMin > 0)) throw Error('Measured worker throughput missing');
       const needed = {
         ms: Math.ceil(
           proposed * perMs +
-            (reserveEpisodes + futureDevelopmentCases) * base.ms,
+            reserveEpisodes * base.ms +
+            devTicks * Math.max(base.ms / base.ticks, 1000 / measuredMin),
         ),
         ticks: Math.ceil(
-          proposed * perTick +
-            (reserveEpisodes + futureDevelopmentCases) * base.ticks,
+          proposed * perTick + reserveEpisodes * base.ticks + devTicks,
         ),
         episodes: proposed + reserveEpisodes,
       };
