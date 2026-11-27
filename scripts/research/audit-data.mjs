@@ -134,6 +134,10 @@ export async function auditExperiment(
         group.filter((r) => r.episodes[0].reason === 'completed').length,
         s.successes,
       );
+      const unique = new Set(group.map((r) => r.hash)).size;
+      assert.equal(unique, s.diversity.unique);
+      assert.equal(n - unique, s.diversity.duplicates);
+      near(unique / n, s.diversity.uniqueFraction);
       scoreAt.push({
         generation: g,
         success: s.successes,

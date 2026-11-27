@@ -129,44 +129,45 @@ try {
       );
     });
   }
-  async function auditBaseline(id) {
-    if (phase !== 'baseline') return;
+  async function auditCompleted(id) {
     const root = join(directory, 'experiments', id),
-      key = 'baseline-audit:' + id,
-      cached = ledger.db
-        .prepare('SELECT data FROM manifests WHERE id=?')
-        .get(key);
+      baseline = phase === 'baseline';
+    const key = (baseline ? 'baseline-audit:' : 'experiment-audit:') + id;
+    const cached = ledger.readManifest(key);
     if (cached) {
-      const files = JSON.parse(cached.data);
-      for (const [name, hash] of Object.entries(files))
-        if ((await fileHash(join(root, name))).sha256 !== hash)
-          throw Error('Baseline audit changed');
+      for (const [name, hash] of Object.entries(cached))
+        if (
+          (await fileHash(join(root, name), () => clock.pulse())).sha256 !==
+          hash
+        )
+          throw Error('Research audit changed');
       return;
     }
     const options = { pulse: () => clock.pulse() };
-    const audit = await auditExperiment(directory, id, options),
-      prefix = await auditExperiment(directory, id, {
+    const audit = await auditExperiment(directory, id, options);
+    const reports = { 'audit.json': audit };
+    if (baseline) {
+      reports['prefix-8192.json'] = await auditExperiment(directory, id, {
         ...options,
         prefix: true,
       });
-    const peer = id.replace('random', 'evolution');
-    if (peer !== id) {
-      const prior = JSON.parse(
-        readFileSync(
-          join(directory, 'experiments', peer, 'audit.json'),
-          'utf8',
-        ),
-      );
-      if (hashJSON(prior.g0) !== hashJSON(audit.g0))
-        throw Error('Random search starts from different G0');
+      const peer = id.replace('random', 'evolution');
+      if (peer !== id) {
+        const prior = JSON.parse(
+          readFileSync(
+            join(directory, 'experiments', peer, 'audit.json'),
+            'utf8',
+          ),
+        );
+        if (hashJSON(prior.g0) !== hashJSON(audit.g0))
+          throw Error('Random search starts from different G0');
+      }
     }
-    publishJSON(join(directory, 'experiments', id, 'audit.json'), audit);
-    publishJSON(join(directory, 'experiments', id, 'prefix-8192.json'), prefix);
-    const files = {
-      'audit.json': (await fileHash(join(root, 'audit.json'))).sha256,
-      'prefix-8192.json': (await fileHash(join(root, 'prefix-8192.json')))
-        .sha256,
-    };
+    const files = {};
+    for (const [name, data] of Object.entries(reports)) {
+      publishJSON(join(root, name), data);
+      files[name] = (await fileHash(join(root, name))).sha256;
+    }
     ledger.transaction(() => {
       ledger.assertLease();
       ledger.manifest(key, files);
@@ -240,7 +241,7 @@ try {
         )
           throw Error('Missing or changed evidence');
       }
-      await auditBaseline(id);
+      await auditCompleted(id);
       progress.completed.push(id);
       clock.pulse();
       continue;
@@ -249,7 +250,7 @@ try {
     spaceCheck(directory, 2 * 1024 ** 3);
     if (id === 'B-evolution-42') {
       await reuseReference(ledger, directory, entry);
-      await auditBaseline(id);
+      await auditCompleted(id);
       progress.completed.push(id);
       continue;
     }
@@ -363,7 +364,7 @@ try {
       break;
     }
     await exportExperiment(ledger, directory, entry, state, runtime);
-    await auditBaseline(id);
+    await auditCompleted(id);
     progress.completed.push(id);
     process.stdout.write(
       JSON.stringify({
