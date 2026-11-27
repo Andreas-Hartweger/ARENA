@@ -205,14 +205,10 @@ export async function rollbackOfficial(db: StorePort, role: Capability) {
   const entry = await db.get(current.previous);
   if (!entry || entry.meta.imported || !entry.meta.protected)
     throw Error('Rollback-Nachweis fehlt.');
-  const previous = decode<OfficialModel>(entry),
-    v = await readVersion(db, previous.freeze.version);
+  const previous = await verifyOfficialManifest(db, entry);
   if (
-    current.previous !== 'manifest:official-' + evidenceHash(previous) ||
     previous.role !== role ||
-    previous.freeze.modelKey !== current.freeze.modelKey ||
-    v.genome.hash !== previous.freeze.genome ||
-    v.manifest.modelKey !== previous.freeze.modelKey
+    previous.freeze.modelKey !== current.freeze.modelKey
   )
     throw Error('Incompatible rollback');
   const pointer = 'settings:official-' + role;

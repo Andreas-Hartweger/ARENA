@@ -89,6 +89,59 @@ describe('D14 capability contract (synthetic boundary cases)', () => {
     expect(validateCapability('Starter', data).status).toBe('pending');
     expect(caseStatistics([]).times).toBeNull();
   });
+  it('includes the time, contact-free and grass boundaries for both roles', () => {
+    for (const [role, standard, median] of [
+      ['Starter', 75, 75],
+      ['Performance', 50, 60],
+    ] as const) {
+      const data = passing('a'.repeat(64));
+      const single = data.standard.actual[0].result as ScoredEpisode;
+      single.lapTimes = [standard];
+      single.duration = standard + 4;
+      single.tick = single.duration * 60;
+      const wins = data.holdout.actual
+        .map((c) => c.result as ScoredEpisode)
+        .filter((r) => r.reason === 'completed');
+      for (const [index, r] of wins.entries()) {
+        r.lapTimes = [median];
+        r.duration = median + 4;
+        r.tick = r.duration * 60;
+        r.raw.grassSeconds = index === 0 ? 10 : 2;
+        r.raw.clusters = index < 5 ? 1 : 0;
+      }
+      expect(validateCapability(role, data).status).toBe('passed');
+      single.lapTimes = [standard + 0.001];
+      expect(validateCapability(role, data).checks.standard).toBe(false);
+      for (const r of wins) r.lapTimes = [median + 0.001];
+      expect(validateCapability(role, data).checks.pace).toBe(false);
+      wins[5].raw.clusters = 1;
+      expect(validateCapability(role, data).checks.contacts).toBe(false);
+      wins[0].raw.grassSeconds = 10.001;
+      expect(validateCapability(role, data).checks.grass).toBe(false);
+    }
+  });
+  it('audits recovery distance and both deadlines independently of the success flag', () => {
+    const data = passing('a'.repeat(64));
+    data.recovery = panel(data.genome, [6, 6, 6], [6, 6, 6]);
+    const results = data.recovery.actual.map((c) => c.result as ScoredEpisode);
+    for (const r of results)
+      r.recovery = {
+        success: true,
+        returnedAtTick: 1200,
+        verifiedAtTick: 1500,
+        progressM: 20,
+      };
+    expect(validateCapability('Spezialist', data).status).toBe('passed');
+    for (const invalid of [
+      { returnedAtTick: 1201, verifiedAtTick: 1500, progressM: 20 },
+      { returnedAtTick: 1199, verifiedAtTick: 1500, progressM: 20 },
+      { returnedAtTick: 1200, verifiedAtTick: 1500, progressM: 19.99 },
+    ]) {
+      for (const r of results.slice(0, 4))
+        r.recovery = { ...invalid, success: true };
+      expect(validateCapability('Spezialist', data).status).toBe('failed');
+    }
+  });
   it('protects official versions, checks independent approval, clones by identity and rolls back compatible versions', async () => {
     const objects = new Map<string, StoredObject>(),
       db: StorePort = {

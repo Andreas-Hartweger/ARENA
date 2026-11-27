@@ -29,7 +29,21 @@ const clock = new ActiveTime(
   120000,
   start,
 );
-try {
+async function validate() {
+  const folder = join(directory, 'validation');
+  mkdirSync(folder, { recursive: true });
+  const previous = ledger.readManifest('final-validation');
+  if (previous) {
+    for (const row of previous.results) {
+      if (
+        sha(readFileSync(join(folder, row.file))) !== row.sha256 ||
+        sha(readFileSync(join(folder, row.traces))) !== row.traceSHA256
+      )
+        throw Error('Published validation evidence differs');
+    }
+    publishJSON(join(folder, 'results.json'), previous);
+    return;
+  }
   const row = ledger.db
     .prepare("SELECT data,hash FROM manifests WHERE id='final-candidates'")
     .get();
@@ -43,8 +57,6 @@ try {
     unique.size > 3
   )
     throw Error('Invalid frozen candidates');
-  const folder = join(directory, 'validation');
-  mkdirSync(folder, { recursive: true });
   const workers = JSON.parse(
     readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
   ).workers;
@@ -59,7 +71,11 @@ try {
     const candidate = loadCandidate(directory, f.experimentId, f.modelRole);
     if (
       candidate.genome.hash !== f.genome ||
-      candidate.genome.model.key !== f.modelKey
+      candidate.genome.model.key !== f.modelKey ||
+      !f.version?.startsWith('version:') ||
+      f.file !== f.genome + '.arena-model' ||
+      sha(readFileSync(join(directory, 'selection', f.file))) !==
+        f.packageSHA256
     )
       throw Error('Frozen model mismatch');
     const evidence = { genome: f.genome };
@@ -126,6 +142,21 @@ try {
     publishJSON(join(folder, traceName), traces);
     output.push({
       candidate: f,
+      freeze: {
+        schema: 1,
+        genome: f.genome,
+        version: f.version,
+        modelKey: f.modelKey,
+        roles: f.roles,
+        selection: row.hash,
+        panelHashes: {
+          holdout: evidenceHash(evidence.holdout.expected),
+          endurance: evidenceHash(evidence.endurance.expected),
+          ...(evidence.recovery
+            ? { recovery: evidenceHash(evidence.recovery.expected) }
+            : {}),
+        },
+      },
       gates,
       validationHash: evidenceHash(evidence),
       file: evidenceName,
@@ -148,6 +179,9 @@ try {
     ledger.manifest('final-validation', report);
   });
   publishJSON(join(folder, 'results.json'), report);
+}
+try {
+  await validate();
 } finally {
   try {
     clock.finish();

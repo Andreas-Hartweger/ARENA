@@ -10,11 +10,18 @@ import {
   publishJSON,
   parseFlags,
 } from './research/campaign.mjs';
-import { experiment, slots, sha, hashJSON } from './research/manifest.mjs';
+import {
+  experiment,
+  interaction,
+  slots,
+  sha,
+  hashJSON,
+} from './research/manifest.mjs';
 import {
   exportExperiment,
   fileHash,
   spaceCheck,
+  storageProjection,
 } from './research/evidence.mjs';
 import { runExperiment } from './research/coordinator.mjs';
 import { auditExperiment } from './research/audit-data.mjs';
@@ -28,16 +35,26 @@ const supplied =
     ? JSON.parse(readFileSync(manifestFile, 'utf8'))
     : null;
 const id = supplied?.definition?.experimentId;
+const proposedInteraction = supplied?.definition?.interaction;
 if (
   supplied &&
   (supplied.hash !== hashJSON(supplied.definition) ||
-    !slots.some((row) => row.ExperimentID === id))
+    (!proposedInteraction && !slots.some((row) => row.ExperimentID === id)))
 )
   throw Error('Invalid or unknown manifest');
 const phase = supplied
-  ? { B: 'baseline', S: 'screen', C: 'confirmation', L: 'long' }[id[0]]
+  ? {
+      B: 'baseline',
+      S: 'screen',
+      C: 'confirmation',
+      L: 'long',
+      X: 'interaction',
+    }[id[0]]
   : request;
-if (!['baseline', 'screen', 'confirmation', 'long'].includes(phase))
+if (
+  !['baseline', 'screen', 'confirmation', 'long'].includes(phase) &&
+  !(phase === 'interaction' && proposedInteraction)
+)
   throw Error('Expected baseline, screen, confirmation or long');
 const start = performance.now(),
   ledger = openCampaign(directory, parseFlags()),
@@ -60,11 +77,27 @@ try {
     confirmation: 'C',
     long: 'L',
   };
-  const rows = slots.filter(
-    (s) =>
-      s.ExperimentID.startsWith(prefixes[phase]) &&
-      (!supplied || s.ExperimentID === id),
-  );
+  const extra = proposedInteraction
+    ? interaction(ledger.definition.id, proposedInteraction, workers, hardware)
+    : undefined;
+  if (
+    extra &&
+    (extra.hash !== supplied.hash || extra.definition.experimentId !== id)
+  )
+    throw Error('Interaction differs from approved parameters');
+  const rows = extra
+    ? [
+        {
+          ExperimentID: id,
+          ConfigID: extra.definition.configId,
+          Seed: extra.definition.masterSeed,
+        },
+      ]
+    : slots.filter(
+        (s) =>
+          s.ExperimentID.startsWith(prefixes[phase]) &&
+          (!supplied || s.ExperimentID === id),
+      );
   if (phase === 'screen') {
     // Bring each family into the paired comparison before deeper exploration.
     const priority = [
@@ -160,6 +193,13 @@ try {
       config = finalist
         ? selected?.configs[Number(row.ConfigID.split(' ')[1]) - 1]
         : undefined;
+    if (
+      ledger.machine.experiments &&
+      !ledger.machine.experiments.includes(id)
+    ) {
+      if (supplied) throw Error('Experiment assigned to a different machine');
+      continue;
+    }
     if (finalist && !config) {
       progress.deferred.push({ id, reason: 'outside frozen selection' });
       continue;
@@ -178,13 +218,9 @@ try {
       });
       continue;
     }
-    const entry = experiment(
-        id,
-        ledger.definition.id,
-        workers,
-        hardware,
-        config,
-      ),
+    const entry =
+        extra ??
+        experiment(id, ledger.definition.id, workers, hardware, config),
       published = join(directory, 'experiments', id, 'experiment.json');
     if (supplied && supplied.hash !== entry.hash)
       throw Error(
@@ -215,6 +251,27 @@ try {
       await reuseReference(ledger, directory, entry);
       await auditBaseline(id);
       progress.completed.push(id);
+      continue;
+    }
+    const storage = storageProjection(ledger, entry, hardware);
+    if (!storage.fits) {
+      const reason = {
+        id,
+        reason: 'D13 storage projection exceeds quota',
+        storage,
+      };
+      progress.deferred.push(reason);
+      ledger.transaction(() => {
+        ledger.assertLease();
+        ledger.event(
+          ledger.token,
+          'deferred',
+          'research',
+          { experimentId: id, ...reason },
+          { ms: 0, ticks: 0, episodes: 0 },
+          { ms: 0, ticks: 0, episodes: 0 },
+        );
+      });
       continue;
     }
     if (phase !== 'baseline') {
@@ -249,7 +306,7 @@ try {
             : [201, 202];
       const proposed =
         entry.definition.episodeBudget *
-        (seeds.length - seeds.indexOf(Number(row.Seed)));
+        (extra ? 1 : seeds.length - seeds.indexOf(Number(row.Seed)));
       const futureDevelopmentCases =
         40 * (phase === 'screen' ? 100 : phase === 'confirmation' ? 18 : 4);
       const needed = {

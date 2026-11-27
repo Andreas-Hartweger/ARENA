@@ -22,12 +22,26 @@ export function campaign(id, matrixHash, sha, machines) {
     new Set(machines.map((m) => m.id)).size !== machines.length
   )
     throw Error('Invalid campaign identity');
+  const assigned = new Set();
   for (const m of machines) {
     if (!/^[\w.-]{1,100}$/.test(m.id)) throw Error('Invalid machine ID');
     amounts(m.total);
     amounts(m.training);
     if (units.some((k) => m.training[k] > m.total[k]))
       throw Error('Machine training cap exceeds total');
+    if (machines.length > 1 || m.experiments !== undefined) {
+      if (!Array.isArray(m.experiments))
+        throw Error('Missing static experiment assignment');
+      for (const id of m.experiments) {
+        if (
+          typeof id !== 'string' ||
+          !/^[\w-]{1,100}$/.test(id) ||
+          assigned.has(id)
+        )
+          throw Error('Invalid or duplicate experiment assignment');
+        assigned.add(id);
+      }
+    }
   }
   for (const [name, limit] of [
     ['total', caps],
@@ -85,6 +99,15 @@ export class ResearchLedger {
       this.db.exec('ROLLBACK');
       throw e;
     }
+  }
+  readManifest(id) {
+    const row = this.db
+      .prepare('SELECT hash,data FROM manifests WHERE id=?')
+      .get(id);
+    if (!row) return undefined;
+    const value = JSON.parse(row.data);
+    if (hashJSON(value) !== row.hash) throw Error('Damaged manifest: ' + id);
+    return value;
   }
   manifest(id, data) {
     const hash = hashJSON(data);

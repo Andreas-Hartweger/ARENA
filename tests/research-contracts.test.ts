@@ -15,19 +15,37 @@ describe('D14 research contracts', () => {
           '-e',
           `
         import assert from 'node:assert/strict';
-        import {slots,experiment,matrixHash} from './scripts/research/manifest.mjs';
+        import {slots,experiment,interaction,matrixHash} from './scripts/research/manifest.mjs';
         import {ResearchLedger,campaign} from './scripts/research/ledger.mjs';
         const compiled=slots.map(s=>experiment(s.ExperimentID,'test',1,8,s.ConfigID.startsWith('Finalist ')?'S03':undefined));
         assert.equal(compiled.length,122);
         assert.equal(compiled.reduce((sum,x)=>sum+x.definition.episodeBudget,0),1512448);
         assert.throws(()=>compiled[0].definition.draft.hidden.push(100));
         assert.throws(()=>experiment('C02-101','test',1,8));
+        const proposal={variants:['S01','S15'],hypothesis:'Small population with sparse mutation',seed:42,episodeBudget:8192};
+        const combo=interaction('test',proposal,1,8);
+        assert.equal(combo.definition.draft.options.n,32);
+        assert.equal(combo.definition.draft.options.mutation.p,0.02);
+        assert.equal(combo.hash,interaction('test',{...proposal,variants:['S15','S01']},1,8).hash);
+        assert.throws(()=>interaction('test',{...proposal,variants:['S01','S02']},1,8));
+        assert.throws(()=>interaction('test',{...proposal,variants:['S01','S99']},1,8));
+        assert.throws(()=>interaction('test',{...proposal,episodeBudget:1e9},1,8));
         const total={ms:100,ticks:1000,episodes:100},training={ms:85,ticks:850,episodes:100};
         const spec=campaign('test',matrixHash,'a'.repeat(40),[{id:'local',total,training}]);
+        const machines=[{id:'west',total,training,experiments:['S01-42']},{id:'east',total,training,experiments:['S01-43']}];
+        const split=campaign('test',matrixHash,'a'.repeat(40),machines);
+        assert.throws(()=>campaign('test',matrixHash,'a'.repeat(40),[machines[0],{...machines[1],experiments:['S01-42']}]));
+        assert.throws(()=>campaign('test',matrixHash,'a'.repeat(40),machines.map(m=>({...m,total:{...total,ticks:3e9}}))));
+        for(const [i,m] of machines.entries()){
+          const local=new ResearchLedger(process.argv[1]+i,split,m.id);
+          local.claim();local.reserve('job','research',{},training);
+          assert.throws(()=>local.reserve('more','research',{},{ms:1,ticks:0,episodes:0}));
+          local.settle('job',training);local.release();local.close();
+        }
         assert.throws(()=>campaign('test',matrixHash,'a'.repeat(40),[{id:'local',total:{...total,ticks:6e9},training}]));
         const db=new ResearchLedger(process.argv[1],spec,'local'),other=new ResearchLedger(process.argv[1],spec,'local');
         db.claim(); assert.throws(()=>other.claim());
-        db.manifest('B',compiled[0]); assert.throws(()=>db.manifest('B',compiled[1]));
+        db.manifest('B',compiled[0]); assert.deepEqual(db.readManifest('B'),compiled[0]); assert.throws(()=>db.manifest('B',compiled[1]));
         db.reserve('g','research',{generation:0},{ms:0,ticks:840,episodes:32});
         assert.throws(()=>db.reserve('overflow','research',{},{ms:0,ticks:11,episodes:0}));
         other.claim({recover:true}); assert.throws(()=>db.settle('g',{ms:0,ticks:1,episodes:1}));

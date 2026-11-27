@@ -14,10 +14,14 @@ Die lokale Kampagne liegt auf diesem Rechner unter `C:\Users\finde\Documents\ARE
 
 ## Szenarien und Modellauswahl
 
+Der Headless-Vergleich hat bei 1, 2, 4, 6, 8, 12 und 14 Workern je eine Aufwärmrunde und drei Messwiederholungen abgeschlossen. Jede Wiederholung umfasste dieselben 384 vollständigen Episoden. Die Mediane betrugen 4.528, 8.431, 14.283, 16.414, 17.831, 18.564 und 19.638 Fahrzeugticks/s. Die Prüfsummen der Fahrten und Genome stimmten überein. Für diesen Rechner verwendet die Forschung 14 Worker. [Rohwerte und Laufzeitumgebung](evidence/worker-scaling.json)
+
 Der alternative Startvertrag verwendet die Streckenstation vor der ersten Linie, einen positiven seitlichen Versatz entlang der Streckennormalen, eine relative Ausrichtung in Radiant und eine Anfangsgeschwindigkeit in m/s entlang der Fahrzeugrichtung. Die Prüfung umfasst die Projektion der Fahrzeugmitte, die vier Ecken des Fahrzeugrechtecks, die Startlinie und die Barrieren. Die Standardfahrt verwendet weiterhin das 02B-Startgitter. Für Recovery zeichnet ein eigener Prüfer die legale Rückkehr und den anschließenden gerichteten Fortschritt auf. [Startzustand](../../src/training/scenarioStart.ts) · [Fortschrittsprüfung](../../src/training/recovery.ts)
 
 Vor der Auswahl wurden 40 Entwicklungsfälle, 60 finale Einzelfahrten, 12 Drei-Runden-Fälle und 18 Recovery-Fälle erzeugt. Die effektiven Fahrzeugzustände sind paarweise verschieden. Die exakten Listen befinden sich getrennt im lokalen Kampagnenarchiv. Im Repository stehen die Inhaltszusagen. Die Auswahl liest ausschließlich die Entwicklungsliste. Die finale Auswertung fordert einen vorher eingefrorenen Kandidaten. Standard-Einzel- und Standard-Dreirundenfahrt kommen jeweils getrennt hinzu. [Eingefrorene Panels](evidence/panel-commitments.json)
 
 ## Stand der Abnahme
+
+Chromium 158 importierte das historische G99-Paket in eine leere IndexedDB, klonte die Version und lud die Bibliothek neu. Das Original und der Klon waren anschließend sichtbar. Der Starter-Eintrag blieb bei fehlender Rollenfreigabe deaktiviert. [Browserprüfung](evidence/browser-model-restore.json)
 
 Der Nachweis für PRE-D01 liegt vor. Die Abnahme von Batch 02D, das unabhängige Review und die Modellfreigabe sind offen. Der gemeinsame Entwurf wird in [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8) geführt.

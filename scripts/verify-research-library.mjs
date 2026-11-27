@@ -34,7 +34,7 @@ try {
   await page.goto(url + '#/models');
   const source = page.getByLabel('Modellquelle'),
     starter = source.locator('option[value="starter"]');
-  assert(await starter.isDisabled());
+  assert(await starter.evaluate((option) => option.matches(':disabled')));
   await source.selectOption('file');
   await page
     .getByRole('link', { name: 'Modellpaket im Speicher öffnen' })
@@ -53,7 +53,7 @@ try {
   await page.getByRole('button', { name: new RegExp(name) }).waitFor();
   await page.reload();
   await page.getByRole('button', { name: new RegExp(name) }).waitFor();
-  assert(await starter.isDisabled());
+  assert(await starter.evaluate((option) => option.matches(':disabled')));
   const owned = await page
     .getByRole('button', { name: /Finaler Champion/ })
     .count();

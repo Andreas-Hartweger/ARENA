@@ -9,11 +9,38 @@ import { randomUUID } from 'node:crypto';
 import { linkSync, rmSync } from 'node:fs';
 import { publish, publishJSON } from './campaign.mjs';
 import { sha } from './manifest.mjs';
+import { digest } from '../evolution-runtime.mjs';
+const { preflight } = await import('../../src/runtime/runConfig.ts');
+const { defaultDiskBudget } = await import('../../src/storage/objects.ts');
 
 export function spaceCheck(directory, minimumBytes) {
   const info = statfsSync(directory, { bigint: true });
   if (info.bavail * info.bsize < BigInt(Math.ceil(minimumBytes)))
     throw Error('Insufficient evidence storage');
+}
+export function storageProjection(ledger, entry, hardware) {
+  const { estimated, c, scenarios } = preflight(
+    entry.definition.draft,
+    digest,
+    hardware,
+  );
+  const row = ledger.db
+    .prepare(
+      "SELECT max(length(bytes) * 1.0 / json_array_length(CAST(bytes AS TEXT),'$.records')) maximum FROM objects WHERE json_extract(meta,'$.kind')='history' AND space IN ('B-evolution-43','B-random-43')",
+    )
+    .get();
+  // Three retained checkpoints plus the incoming boundary. A baseline also keeps its G63 prefix.
+  const populations = entry.definition.phase === 'Baseline' ? 5 : 4;
+  const projected = Math.ceil(
+    populations * estimated.population +
+      (entry.definition.episodeBudget + c.n * scenarios.length) *
+        (row.maximum || 4096),
+  );
+  return {
+    projected,
+    budget: defaultDiskBudget,
+    fits: projected <= defaultDiskBudget,
+  };
 }
 export async function fileHash(path) {
   const h = createHash('sha256');
@@ -120,11 +147,23 @@ export async function exportExperiment(
       sha256: sha(bytes),
     };
   }
+  const completedKey = 'finish:' + id;
+  const completed = ledger.transaction(() => {
+    ledger.assertLease();
+    const receipt = ledger.readManifest(completedKey) ?? {
+      utc: new Date().toISOString(),
+      checkpoint: index.latest,
+    };
+    ledger.manifest(completedKey, receipt);
+    return receipt;
+  });
   const result = {
     schema: 'arena.experiment.v1',
     entry,
     runtime,
-    state: state.phase,
+    state: state.phase.toLowerCase(),
+    started: ledger.readManifest('start:' + id) ?? null,
+    finished: completed,
     outcome: cp.lapRecords?.length ? 'success' : 'no-success',
     completed: cp.counters.globalGeneration,
     regularEpisodes: cp.counters.logicalEpisodes,

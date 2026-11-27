@@ -81,6 +81,79 @@ export function experiment(id, campaignId, workers, hardware, selectedConfig) {
     ...plan.baseline,
     randomSearch: configId === 'random',
   };
+  return compile(
+    slot,
+    campaignId,
+    workers,
+    hardware,
+    configId,
+    c,
+    variant?.group ?? slot.ConfigID,
+  );
+}
+
+// Optional interactions are combinations of catalogued deltas. They do not change the nominal matrix.
+export function interaction(campaignId, proposal, workers, hardware) {
+  const { variants, hypothesis, seed, episodeBudget } = proposal;
+  if (
+    !/^[A-Za-z0-9_-]{1,80}$/.test(campaignId) ||
+    typeof hypothesis !== 'string' ||
+    !hypothesis.trim() ||
+    !Array.isArray(variants) ||
+    variants.length < 2 ||
+    new Set(variants).size !== variants.length ||
+    ![42, 43, 101, 102, 103, 201, 202].includes(seed) ||
+    ![8192, 25600, 51200].includes(episodeBudget)
+  )
+    throw Error('Invalid interaction proposal or budget');
+  const chosen = [...variants].sort();
+  const delta = {};
+  for (const id of chosen) {
+    const variant = plan.variants.find((r) => r.id === id);
+    if (!variant) throw Error('Unknown research delta');
+    for (const [key, value] of Object.entries(variant.delta)) {
+      if (Object.hasOwn(delta, key) && hashJSON(delta[key]) !== hashJSON(value))
+        throw Error('Conflicting research deltas');
+      delta[key] = value;
+    }
+  }
+  const c = { ...plan.baseline, ...delta };
+  const registered = {
+    variants: chosen,
+    hypothesis: hypothesis.trim(),
+    seed,
+    episodeBudget,
+  };
+  const configId = chosen.join('-'),
+    id = 'X-' + hashJSON(registered).slice(0, 32);
+  return compile(
+    {
+      ExperimentID: id,
+      Phase: 'Interaction',
+      Seed: seed,
+      EpisodeBudget: episodeBudget,
+    },
+    campaignId,
+    workers,
+    hardware,
+    configId,
+    c,
+    registered.hypothesis,
+    registered,
+  );
+}
+
+function compile(
+  slot,
+  campaignId,
+  workers,
+  hardware,
+  configId,
+  c,
+  hypothesis,
+  interaction,
+) {
+  const id = slot.ExperimentID;
   if (
     c.physicsHz !== 60 ||
     c.scenarioCount !== 1 ||
@@ -138,7 +211,8 @@ export function experiment(id, campaignId, workers, hardware, selectedConfig) {
     campaignId,
     experimentId: id,
     phase: slot.Phase,
-    hypothesis: variant?.group ?? slot.ConfigID,
+    hypothesis,
+    ...(interaction ? { interaction } : {}),
     configId,
     configHash: hashJSON(c),
     matrixHash,

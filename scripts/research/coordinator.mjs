@@ -40,12 +40,25 @@ export async function runExperiment(
     scope = 'research';
   const db = ledger.db,
     store = new NodeStore(ledger, exp);
+  if (
+    regular &&
+    ledger.machine.experiments &&
+    !ledger.machine.experiments.includes(exp)
+  )
+    throw Error('Experiment outside static machine assignment');
   db.exec(
     `CREATE TABLE IF NOT EXISTS chunks (experiment TEXT NOT NULL,segment INTEGER NOT NULL,generation INTEGER NOT NULL,checksum TEXT NOT NULL,bytes BLOB NOT NULL,summary TEXT NOT NULL,checkpoint TEXT NOT NULL,PRIMARY KEY(experiment,segment,generation));`,
   );
   ledger.transaction(() => {
     ledger.assertLease();
     ledger.manifest('experiment:' + exp, entry);
+    const started = 'start:' + exp;
+    if (!ledger.readManifest(started))
+      ledger.manifest(started, {
+        utc: new Date().toISOString(),
+        machine: ledger.machine.id,
+        runtime: process.version,
+      });
     const files = execFileSync(
       'git',
       [

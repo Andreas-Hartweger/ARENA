@@ -41,7 +41,7 @@ export function publishJSON(path, data) {
 }
 export function openCampaign(
   directory,
-  { init = false, recover = false } = {},
+  { init = false, recover = false, allocationFile } = {},
 ) {
   if (!directory) throw Error('Expected evidence directory');
   const json = join(directory, 'campaign.json'),
@@ -54,11 +54,20 @@ export function openCampaign(
     const runtime = environment();
     if (runtime.sourceDiff)
       throw Error('Commit research implementation before dispatch');
+    const allocation = allocationFile
+      ? JSON.parse(readFileSync(allocationFile, 'utf8'))
+      : [{ id: machine, total: caps, training: trainingCaps }];
+    const definition = campaign(
+      'ARENA-02D',
+      matrixHash,
+      runtime.sha,
+      allocation,
+    );
+    if (!definition.machines.some((m) => m.id === machine))
+      throw Error('This host has no static quota');
     publishJSON(json, {
       version: 1,
-      definition: campaign('ARENA-02D', matrixHash, runtime.sha, [
-        { id: machine, total: caps, training: trainingCaps },
-      ]),
+      definition,
       runtime,
       started: new Date().toISOString(),
     });
@@ -177,7 +186,16 @@ export class ActiveTime {
       );
   }
 }
-export const parseFlags = () => ({
-  init: process.argv.includes('--init'),
-  recover: process.argv.includes('--recover'),
-});
+export function parseFlags() {
+  const place = process.argv.indexOf('--allocation');
+  if (
+    place >= 0 &&
+    (!process.argv[place + 1] || !process.argv.includes('--init'))
+  )
+    throw Error('Expected a static allocation file at campaign initialization');
+  return {
+    init: process.argv.includes('--init'),
+    recover: process.argv.includes('--recover'),
+    allocationFile: place >= 0 ? process.argv[place + 1] : undefined,
+  };
+}

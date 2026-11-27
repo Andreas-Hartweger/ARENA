@@ -125,8 +125,23 @@ export function validateCapability(role: Capability, data: ValidationEvidence) {
       (g) => recovery.expected.filter((c) => c.group === g).length === 6,
     );
   const recovered =
-    recovery?.actual.filter((c) => c.result.ok && c.result.recovery?.success) ??
-    [];
+    recovery?.actual.filter(({ result }) => {
+      if (!result.ok || !result.recovery?.success) return false;
+      const { returnedAtTick, verifiedAtTick, progressM } = result.recovery;
+      return (
+        returnedAtTick !== null &&
+        Number.isSafeInteger(returnedAtTick) &&
+        returnedAtTick > 0 &&
+        returnedAtTick <= 1200 &&
+        verifiedAtTick !== null &&
+        Number.isSafeInteger(verifiedAtTick) &&
+        verifiedAtTick > returnedAtTick &&
+        verifiedAtTick <= returnedAtTick + 300 &&
+        verifiedAtTick <= result.tick &&
+        Number.isFinite(progressM) &&
+        progressM >= 20
+      );
+    }) ?? [];
   const recoveryPass =
     recoveryComplete &&
     recovered.length >= 12 &&

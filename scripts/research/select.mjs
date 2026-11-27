@@ -3,15 +3,23 @@ import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import process from 'node:process';
 import { availableParallelism } from 'node:os';
+import { Buffer, Blob } from 'node:buffer';
 import { environment } from '../evolution-runtime.mjs';
 import { slots, hashJSON } from './manifest.mjs';
 import {
   openCampaign,
   ActiveTime,
   publishJSON,
+  publish,
   parseFlags,
 } from './campaign.mjs';
 import { loadCandidate, loadPanel, evaluatePanel } from './evaluate-panel.mjs';
+import { NodeStore } from './store.mjs';
+import { sha } from './manifest.mjs';
+const { createModel, profiles, readVersion } =
+  await import('../../src/storage/library.ts');
+const { exportPackage, importPackage, previewPackage } =
+  await import('../../src/storage/transfer.ts');
 const { caseStatistics, comparePaired } =
   await import('../../src/research/validation.ts');
 const { distribution } = await import('../../src/training/evolution.ts');
@@ -52,7 +60,13 @@ function rank(a, b) {
   }
   return 0;
 }
-try {
+async function select() {
+  const key = phase === 'freeze' ? 'final-candidates' : 'selection:' + phase;
+  const previous = ledger.readManifest(key);
+  if (previous) {
+    publishJSON(join(folder, phase + '.json'), previous);
+    return;
+  }
   const scale = JSON.parse(
     readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
   );
@@ -190,19 +204,80 @@ try {
       shortlist.push(r);
       if (shortlist.length === 3) break;
     }
-    const candidates = shortlist.map((r, i) => ({
-      genome: r.genome,
-      experimentId: r.experimentId,
-      modelRole: r.role,
-      roles: i === 0 ? ['Starter', 'Performance'] : ['Starter'],
-      modelKey: r.modelKey,
-      devHash: r.devHash,
-      sourceVersion: r.versionSource,
-    }));
+    const candidates = [];
+    const registry = new NodeStore(ledger, 'research-finalists');
+    for (const [i, r] of shortlist.entries()) {
+      clock.pulse();
+      const source = loadCandidate(directory, r.experimentId, r.role);
+      const name =
+        'Forschung · ' + r.experimentId + ' · ' + r.genome.slice(0, 12);
+      const profile =
+        (await profiles(registry)).find((p) => p.name === name) ??
+        (await createModel(
+          registry,
+          name,
+          source.draft,
+          {
+            genome: source.genome,
+            id: r.versionSource,
+            role: 'experiment',
+          },
+          availableParallelism(),
+        ));
+      const file = r.genome + '.arena-model',
+        path = join(folder, file);
+      const bytes = existsSync(path)
+        ? readFileSync(path)
+        : Buffer.from(
+            await (
+              await exportPackage(
+                registry,
+                'model',
+                [profile.id],
+                process.version,
+              )
+            ).arrayBuffer(),
+          );
+      const restore = new NodeStore(ledger, 'finalist-restore-' + r.genome);
+      const preview = await previewPackage(restore, new Blob([bytes]));
+      if (
+        preview.conflicts.length ||
+        preview.manifest.roots.length !== 1 ||
+        preview.manifest.roots[0] !== profile.id ||
+        !preview.manifest.entries.some((e) => e.id === profile.active)
+      )
+        throw Error('Finalist package version or contents differ');
+      if (!restore.get(profile.active)) await importPackage(restore, preview);
+      const restored = await readVersion(restore, profile.active);
+      if (
+        restored.genome.hash !== r.genome ||
+        restored.genome.model.key !== r.modelKey
+      )
+        throw Error('Finalist package roundtrip differs');
+      publish(path, bytes);
+      candidates.push({
+        genome: r.genome,
+        experimentId: r.experimentId,
+        modelRole: r.role,
+        roles: i === 0 ? ['Starter', 'Performance'] : ['Starter'],
+        modelKey: r.modelKey,
+        devHash: r.devHash,
+        sourceGenomeObject: r.versionSource,
+        version: profile.active,
+        file,
+        packageSHA256: sha(bytes),
+      });
+    }
     const output = {
       schema: 'arena.selection.v1',
       phase,
       dev: development.hash,
+      panels: JSON.parse(
+        readFileSync(
+          'docs/intelligence-validation/evidence/panel-commitments.json',
+          'utf8',
+        ),
+      ),
       candidates,
       data: available,
       rules:
@@ -250,6 +325,9 @@ try {
     });
     publishJSON(join(folder, phase + '.json'), output);
   }
+}
+try {
+  await select();
 } finally {
   try {
     clock.finish();
