@@ -13,6 +13,7 @@
     "src/physics/**/*.ts",
     "src/tracks/**/*.ts",
     "src/game/**/*.ts",
+    "src/training/**/*.ts",
     "src/collision/**/*.ts"
   ]
 }

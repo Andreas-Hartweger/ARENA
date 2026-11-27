@@ -24,6 +24,7 @@ import {
   compileWalls,
   solveContacts,
   type CollisionEvent,
+  type ContactInterval,
 } from '../collision/solver';
 import type { Body } from '../collision/contact';
 import {
@@ -31,6 +32,7 @@ import {
   invalidateLap,
   recordTravel,
   type LapState,
+  type TravelFact,
 } from '../tracks/progress';
 import { recoveryCandidate, safePose, type SafePosition } from '../tracks/grid';
 import type { Track } from '../tracks/track';
@@ -50,6 +52,7 @@ export interface WorldFrame {
   cars: readonly Racer[];
   events: readonly CollisionEvent[];
   fallback: boolean;
+  evaluation?: readonly { travel: TravelFact[]; contacts: ContactInterval[] }[];
 }
 export interface DriverCommand {
   command: TickCommand;
@@ -62,6 +65,7 @@ export class DriveWorld {
   trace = false;
   readonly #track: Track;
   readonly #shared: boolean;
+  readonly #measure: boolean;
   #frame: WorldFrame;
   #failed = false;
   #busy = false;
@@ -70,10 +74,12 @@ export class DriveWorld {
     options: readonly VehicleOptions[],
     shared = true,
     ai: ReadonlyMap<string, DriverOptions> = new Map(),
+    measure = false,
   ) {
     this.#track = track;
     this.#walls = compileWalls(track.barriers);
     this.#shared = shared;
+    this.#measure = measure;
     this.#vehicles = options
       .map(createVehicle)
       .sort((a, b) => (a.id < b.id ? -1 : 1));
@@ -181,17 +187,23 @@ export class DriveWorld {
           invInertia: 1 / d.yawInertiaKgM2,
         };
       });
-      const { events, paths, fallback } = solveContacts(
+      const { events, paths, fallback, contacts } = solveContacts(
         bodies,
         this.#walls,
         index,
         this.#shared,
+        this.#measure,
       );
+      const evaluation = contacts?.map((intervals) => ({
+        travel: [] as TravelFact[],
+        contacts: intervals,
+      }));
       cars.forEach((car, i) => {
         const body = bodies[i],
           others = this.#shared ? bodies.filter((b) => b !== body) : [];
         let lap = car.lap;
-        for (const path of paths[i]) lap = recordTravel(this.#track, lap, path);
+        for (const path of paths[i])
+          lap = recordTravel(this.#track, lap, path, evaluation?.[i].travel);
         lap = { ...lap, s: this.#track.project(body.position, lap.s).s };
         car.state = {
           ...car.state,
@@ -252,7 +264,13 @@ export class DriveWorld {
         car.lap = lap;
         validateVehicleState(car.state, this.#vehicles[i].definition);
       });
-      this.#frame = freezeTree({ index, events, fallback, cars });
+      this.#frame = freezeTree({
+        index,
+        events,
+        fallback,
+        cars,
+        ...(evaluation ? { evaluation } : {}),
+      });
       return this.#frame;
     } catch (cause) {
       this.#failed = true;

@@ -1,0 +1,8 @@
+{
+  "generations": 100,
+  "evaluations": 12800,
+  "elapsedMs": 4854215.5429,
+  "timingDefinition": "Summe der gemessenen Generations-Walltimes. Unterbrechung, Rekonstruktion und Datei-I/O zwischen Generationen sind ausgenommen.",
+  "calendarElapsedMs": 6645313,
+  "champion": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95"
+}

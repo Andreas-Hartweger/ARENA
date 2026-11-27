@@ -1,0 +1,85 @@
+{
+  "complete": true,
+  "paired": [
+    {
+      "hz": 30,
+      "trace": false,
+      "base": 5672.078249470607,
+      "off": 6290.83877019403,
+      "on": 6226.283745958996,
+      "feedVs02APercent": 9.770766059867286,
+      "feedVsOffPercent": -1.026175150774733,
+      "medianRss": [
+        259330048,
+        294391808,
+        297447424
+      ]
+    },
+    {
+      "hz": 30,
+      "trace": true,
+      "base": 5894.881529386926,
+      "off": 6187.303969552116,
+      "on": 6089.437842202525,
+      "feedVs02APercent": 3.300427868578959,
+      "feedVsOffPercent": -1.5817248971634945,
+      "medianRss": [
+        294961152,
+        295899136,
+        297803776
+      ]
+    },
+    {
+      "hz": 60,
+      "trace": false,
+      "base": 2564.9828195701893,
+      "off": 3152.2055281590438,
+      "on": 3126.8259119214126,
+      "feedVs02APercent": 21.904360842673043,
+      "feedVsOffPercent": -0.8051383709251181,
+      "medianRss": [
+        292630528,
+        296284160,
+        298156032
+      ]
+    },
+    {
+      "hz": 60,
+      "trace": true,
+      "base": 3130.6140291665406,
+      "off": 3099.91848009248,
+      "on": 3088.016547968054,
+      "feedVs02APercent": -1.360674960299313,
+      "feedVsOffPercent": -0.3839433907975143,
+      "medianRss": [
+        293048320,
+        296706048,
+        295919616
+      ]
+    }
+  ],
+  "machine": {
+    "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+    "node": "v24.22.3",
+    "os": "Windows 11 Pro",
+    "ramBytes": 33820106752
+  },
+  "rawWindowCount": 207,
+  "componentRows": 34,
+  "scaleRows": 19,
+  "worldRows": 16,
+  "shortGenerationsPerEnduranceRepetition": 200,
+  "repetitions": 3,
+  "traceRateChangePercent": -1.0416367484212485,
+  "minimumVehicleWarmupTicks": 600,
+  "minimumComponentWarmupOperations": 1000,
+  "p95Definition": "Nächster empirischer Rang ceil(0,95*n), bei drei Messfenstern zugleich das Maximum.",
+  "sourceShas": {
+    "world": "76df2d1c89a95a2ad5d288d48537b68878a40b8c",
+    "baseline": "61cd54a2be454915647b9089bc6da5c5d1bc16d8",
+    "scale": "44c100c22854793b200a104dbc358e49ea9190fa",
+    "components": "b6c93ac28128ecb203125ccbb988d4771e70431c",
+    "endurance": "44c100c22854793b200a104dbc358e49ea9190fa",
+    "retention": "176865113ddb002c24d5dd88ca5b5e29c1454bdf"
+  }
+}

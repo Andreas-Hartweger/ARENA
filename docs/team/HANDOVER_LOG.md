@@ -9,3 +9,13 @@ B übergibt die Implementierung, den Testkatalog und die gemessenen Nachweise in
 ## 25.11.2026 · Nachprüfung vor dem Merge
 
 Nach positiver Rückmeldung zur sichtbaren Fassung folgten die Nachprüfung von PR #5, gezielte Korrekturen und zusätzliche Geometrie-, Dauerlauf- und Browserprüfungen. Die Nutzeransicht unterscheidet Zielbefehl und angewandten Befehl. Der [Abschlussbericht](../first-intelligence/BATCH-02A_COMPLETION_REPORT.md) enthält die Nachweise und die zugehörigen Implementierungsstände. Die formale Merge-Entscheidung ist offen.
+
+## 27.11.2026 · PRE-B01
+
+Auf die ausdrückliche Frage nach dem offenen Review in Masterplan v0.9 bestätigte der Auftraggeber im Auftragschat: „A und B haben Batch 02A gemeinsam geprüft und abgenommen“. PR #5 ist gemergt und enthält keine GitHub-Reviews. Die Bestätigung im Chat dokumentiert die gemeinsame Abnahme. Der Auftrag umfasst EV-001–013. Das unabhängige Review von 02B und die Merge-Entscheidung bleiben offen.
+
+## 27.11.2026 · Batch 02B zum unabhängigen Review
+
+PRE-B01 und EV-001–012 sind technisch abgeschlossen. EV-013 ist von B übergeben. Das unabhängige A/B-Review von 02B (REL-003) und die ausdrückliche Merge-Freigabe durch A stehen aus. Der echte Referenzlauf wertete G0–G99 mit jeweils 128 Modellen aus. 12.800 gültige Kandidatenergebnisse, 664 gültige Runden, 594 erneut geprüfte Eliten. Der lokale Check bestand 213 Tests in 29 Dateien. Die Kalibrierung entsprach PRE-B01. Die Fehlerprüfung auf `bb9d721` ergänzt die Identität von Fehlresultaten und den Status nach Abbruch. Der aktuelle Koordinator reproduzierte alle 100 Generationen aus den Rohdaten. Die Fortsetzung umfasste ausschließlich die fehlenden 2.944 realen Fahrten nach G76. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) · [Abschlussbericht](../first-evolution/BATCH-02B_COMPLETION_REPORT.md) · [Abnahmematrix](../first-evolution/ACCEPTANCE_RESULTS.md)
+
+**NÄCHSTER PLANUNGSAUFTRAG ERFORDERLICH.**

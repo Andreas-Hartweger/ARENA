@@ -1,0 +1,50 @@
+{
+  "sha": "176865113ddb002c24d5dd88ca5b5e29c1454bdf",
+  "sourceDiff": "",
+  "node": "v24.22.3",
+  "os": "Windows 11 Pro",
+  "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+  "logicalCpus": 16,
+  "totalRam": 33820106752,
+  "power": "uncontrolled",
+  "backgroundLoad": "uncontrolled",
+  "renderer": null,
+  "mode": "random",
+  "scenario": "0486f367bb2db35edfd8fe8f441cc9eb1abfe135fdeda1dd1765580db0da55e4",
+  "scenarioSeed": 3273945512,
+  "model": "c6d9c4b33d03b0d6f3dd07bea8b7549e6a211e8eb7a4ccb5ae5b17a99fe46ba9",
+  "config": {
+    "runId": "random",
+    "master": 42,
+    "n": 8,
+    "generations": 4,
+    "budget": 9007199254740991,
+    "segment": 0,
+    "tournament": 3,
+    "eliteRate": 0.05,
+    "poolFraction": 1,
+    "crossProbability": 0,
+    "operator": "neuron-wise",
+    "mutation": {
+      "p": 0.05,
+      "alpha": 0.2,
+      "largeProbability": 0.05,
+      "largeMultiplier": 5,
+      "biasProbabilityFactor": 1,
+      "biasStrengthFactor": 1
+    },
+    "adaptation": {
+      "window": 15,
+      "epsilon": 1,
+      "probabilityEnabled": false,
+      "strengthEnabled": false,
+      "immigrantRate": 0,
+      "rescueEnabled": false
+    },
+    "randomFraction": 0.25,
+    "protectedLayers": [],
+    "globalProtection": false,
+    "randomSearch": true
+  },
+  "started": "2026-11-27T09:33:15.135Z"
+}

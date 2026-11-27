@@ -1,0 +1,78 @@
+{
+  "ui": {
+    "sha": "fbce904131ed41a57abe2d7b9d39587620f8adeb",
+    "mode": "Vite development / in-app browser",
+    "humanSpeedKmh": 24,
+    "cameraFrom": "Follow",
+    "cameraChanged": "Übersicht",
+    "ai": "Seed 42 · untrainiert",
+    "inspector": "248 → 32 → 16 → 3 · tanh",
+    "observedDecisionTick": 310,
+    "observedAppliedTick": 311,
+    "pausedTick": 798,
+    "singleStepTick": 799,
+    "freeCameraClicked": true,
+    "returnedToHuman": true,
+    "consoleWarningsAndErrors": []
+  },
+  "runtime": {
+    "passed": true,
+    "results": {
+      "contract": {
+        "node": "93106067cf785d360010f17d95472bebf2689e28ec47a1865ccd5301c1308e5b",
+        "browser": "93106067cf785d360010f17d95472bebf2689e28ec47a1865ccd5301c1308e5b"
+      },
+      "reason": {
+        "node": "timeout",
+        "browser": "timeout"
+      },
+      "ticks": {
+        "node": 600,
+        "browser": 600
+      },
+      "uniform": {
+        "length": 32,
+        "maxAbs": 0,
+        "tolerance": 0
+      },
+      "gaussian": {
+        "length": 32,
+        "maxAbs": 1.1102230246251565e-16,
+        "tolerance": 1e-9
+      },
+      "genes": {
+        "length": 8547,
+        "maxAbs": 6.938893903907228e-18,
+        "tolerance": 1e-9
+      },
+      "fitness": {
+        "length": 7,
+        "maxAbs": 1.6342482922482304e-13,
+        "tolerance": 1e-9
+      },
+      "errors": {
+        "length": 6,
+        "maxAbs": 5.551115123125783e-17,
+        "tolerance": 1e-9
+      },
+      "positions": {
+        "length": 6,
+        "maxAbs": 7.105427357601002e-15,
+        "tolerance": 1e-9
+      },
+      "observation": {
+        "length": 744,
+        "maxAbs": 1.1102230246251565e-16,
+        "tolerance": 1e-9
+      },
+      "activations": {
+        "length": 153,
+        "maxAbs": 3.3306690738754696e-16,
+        "tolerance": 1e-9
+      }
+    },
+    "sha": "76df2d1c89a95a2ad5d288d48537b68878a40b8c",
+    "node": "v24.22.3",
+    "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Safari/537.36"
+  }
+}

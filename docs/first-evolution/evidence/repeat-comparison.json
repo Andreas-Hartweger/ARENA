@@ -1,0 +1,64 @@
+{
+  "sha": "5297f65a0f60ab75d9947d0d4833872131f33022",
+  "evidenceChecksPassed": true,
+  "referenceComplete": false,
+  "completedGenerations": 35,
+  "evaluated": 4480,
+  "eliteRechecks": 204,
+  "prefixMatches": 35,
+  "reasons": {
+    "noProgress": 4464,
+    "timeout": 10,
+    "completed": 6
+  },
+  "successes": 6,
+  "allLaps": 6,
+  "firstSuccess": 31,
+  "fastestLapSeconds": 94.67548946895151,
+  "totalTicks": 8559559,
+  "totalSimulatedSeconds": 142659.30312565083,
+  "elapsedSeconds": null,
+  "championGenome": null,
+  "timeline": [
+    {
+      "generation": 0,
+      "best": 167.18011493946813,
+      "worst": 0,
+      "mean": 14.985159472396074,
+      "median": 0,
+      "q1": 0,
+      "q3": 10,
+      "successes": 0,
+      "laps": 0,
+      "progressBest": 118.83098121195803,
+      "unique": 128
+    },
+    {
+      "generation": 24,
+      "best": 776.7783917326103,
+      "worst": 0,
+      "mean": 204.34314639028656,
+      "median": 176.217743547795,
+      "q1": 125.69686718633172,
+      "q3": 231.14375709920222,
+      "successes": 0,
+      "laps": 0,
+      "progressBest": 530.3096439875512,
+      "unique": 128
+    },
+    {
+      "generation": 31,
+      "best": 4269.33366254004,
+      "worst": 5.5003522937836635,
+      "mean": 246.21821799155023,
+      "median": 165.58784689461203,
+      "q1": 137.1456384438252,
+      "q3": 241.97477340578843,
+      "successes": 1,
+      "laps": 1,
+      "progressBest": 667.9114857512855,
+      "unique": 128
+    }
+  ],
+  "candidateDataDigest": "24dd6a36fdf58c916ed5e31adb8da10d2c51764f225ccdaeee99fbba6639000a"
+}

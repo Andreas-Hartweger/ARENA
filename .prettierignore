@@ -4,3 +4,5 @@ dist/
 coverage/
 .idea/
 .npm-cache/
+docs/first-evolution/specification/
+docs/first-evolution/evidence/

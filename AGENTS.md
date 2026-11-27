@@ -25,3 +25,7 @@ Der Auftraggeber gibt FD-004 bis FD-007 trotz offener gemeinsamer G-07-Abnahme z
 ## Development Batch 02A
 
 Nach der gemeinsamen D00/G07-Abnahme sind PRE-01–03 und FI-001–012 freigegeben. B dokumentiert Tests, offene Entscheidungen und Übergaben unter docs/team. Geprüfte eigene Änderungen dürfen ausschließlich auf feature/batch-02a-ai-perception-brain mit git push -u origin HEAD gesichert werden. Ein gemeinsamer PR nach main und CI-Prüfung sind erlaubt. Review und Merge-Freigabe erfolgen separat. Neue Abhängigkeiten, Force-Push, Tags und Batch 02B sind ausgeschlossen.
+
+## Development Batch 02B
+
+Für PRE-B01 und EV-001–013 gilt der Auftrag vom 27.11.2026. A und B haben die gemeinsame Abnahme von 02A bestätigt. B arbeitet auf `feature/batch-02b-ai-evolution`. Geprüfte eigene Änderungen dürfen mit `git push -u origin HEAD` auf diesem Branch gesichert werden. Ein gemeinsamer PR nach main und CI-Prüfung sind erlaubt. A/B prüfen die Ergebnisse unabhängig. Ein Merge braucht die gesonderte Freigabe von A. Neue Abhängigkeiten, Force-Push, Tags und Folgepakete bleiben ausgeschlossen.

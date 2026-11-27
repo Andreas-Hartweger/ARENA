@@ -1,0 +1,120 @@
+{
+  "sha": "ca8545de6664f6c9e1b7fd8a7dd0a8bc61e162ca",
+  "sourceDiff": "",
+  "node": "v24.22.3",
+  "os": "Windows 11 Pro",
+  "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+  "logicalCpus": 16,
+  "totalRam": 33820106752,
+  "power": "uncontrolled",
+  "backgroundLoad": "uncontrolled",
+  "renderer": null,
+  "suite": "parity",
+  "seed": 42,
+  "started": "2026-11-27T09:49:08.875Z",
+  "rows": [],
+  "notes": "Serial per benchmark process; other machine load uncontrolled. Elapsed wall time includes allocations. Peak RSS is the process lifetime high-water mark in KiB.",
+  "baseline": "61cd54a2be454915647b9089bc6da5c5d1bc16d8",
+  "paired": [
+    {
+      "label": "02A",
+      "hz": 30,
+      "trace": false,
+      "hash": "9fb322ec472790814a91391def910b28f8f43bca4adf1ed7786db895931b23c1",
+      "frames": 600
+    },
+    {
+      "label": "02A",
+      "hz": 30,
+      "trace": true,
+      "hash": "428456626884ce7dd00f3efe0e35450530d97d5eaacc139975cf5ef8751e5371",
+      "frames": 600
+    },
+    {
+      "label": "02A",
+      "hz": 60,
+      "trace": false,
+      "hash": "7466e43ef5607d3f31c296159d8ae3b7681789f01f44146cf1a557e21724f44b",
+      "frames": 600
+    },
+    {
+      "label": "02A",
+      "hz": 60,
+      "trace": true,
+      "hash": "3e37c424c173bb8b4b2eee828579b9c3af7c8a380c243b91aea1784cc1ebe189",
+      "frames": 600
+    },
+    {
+      "label": "02A",
+      "humanTicks": 1200,
+      "hash": "767d7865b5e656d3311971ed83479c6288f90a35800bb2ade9c045df71985e49"
+    },
+    {
+      "label": "02B-off",
+      "hz": 30,
+      "trace": false,
+      "hash": "9fb322ec472790814a91391def910b28f8f43bca4adf1ed7786db895931b23c1",
+      "frames": 600
+    },
+    {
+      "label": "02B-off",
+      "hz": 30,
+      "trace": true,
+      "hash": "428456626884ce7dd00f3efe0e35450530d97d5eaacc139975cf5ef8751e5371",
+      "frames": 600
+    },
+    {
+      "label": "02B-off",
+      "hz": 60,
+      "trace": false,
+      "hash": "7466e43ef5607d3f31c296159d8ae3b7681789f01f44146cf1a557e21724f44b",
+      "frames": 600
+    },
+    {
+      "label": "02B-off",
+      "hz": 60,
+      "trace": true,
+      "hash": "3e37c424c173bb8b4b2eee828579b9c3af7c8a380c243b91aea1784cc1ebe189",
+      "frames": 600
+    },
+    {
+      "label": "02B-off",
+      "humanTicks": 1200,
+      "hash": "767d7865b5e656d3311971ed83479c6288f90a35800bb2ade9c045df71985e49"
+    },
+    {
+      "label": "02B-feed",
+      "hz": 30,
+      "trace": false,
+      "hash": "9fb322ec472790814a91391def910b28f8f43bca4adf1ed7786db895931b23c1",
+      "frames": 600
+    },
+    {
+      "label": "02B-feed",
+      "hz": 30,
+      "trace": true,
+      "hash": "428456626884ce7dd00f3efe0e35450530d97d5eaacc139975cf5ef8751e5371",
+      "frames": 600
+    },
+    {
+      "label": "02B-feed",
+      "hz": 60,
+      "trace": false,
+      "hash": "7466e43ef5607d3f31c296159d8ae3b7681789f01f44146cf1a557e21724f44b",
+      "frames": 600
+    },
+    {
+      "label": "02B-feed",
+      "hz": 60,
+      "trace": true,
+      "hash": "3e37c424c173bb8b4b2eee828579b9c3af7c8a380c243b91aea1784cc1ebe189",
+      "frames": 600
+    },
+    {
+      "label": "02B-feed",
+      "humanTicks": 1200,
+      "hash": "767d7865b5e656d3311971ed83479c6288f90a35800bb2ade9c045df71985e49"
+    }
+  ],
+  "finished": "2026-11-27T09:49:12.900Z"
+}
