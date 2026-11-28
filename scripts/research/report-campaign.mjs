@@ -16,12 +16,17 @@ import {
 } from './review-cases.mjs';
 
 const [directory, stage, output] = process.argv.slice(2);
+const tablePhase = new Map([
+  ['evolution-table', 'Evolution-Screen'],
+  ['architecture-table', 'Architektur/Fitness'],
+]).get(stage);
 const screenConfig =
   /^S\d{2}$/.test(stage) && slots.some((s) => s.ConfigID === stage);
 if (
   !directory ||
   !output ||
   (!screenConfig &&
+    !tablePhase &&
     ![
       'baseline',
       'baseline-cases',
@@ -34,7 +39,7 @@ if (
     ].includes(stage))
 )
   throw Error(
-    'Expected campaign, baseline/baseline-cases/immigration/performance/screen configuration/12/24/48/final and output file',
+    'Expected campaign, baseline/baseline-cases/immigration/performance/screen configuration/evolution-table/architecture-table/12/24/48/final and output file',
   );
 const db = new DatabaseSync(join(directory, 'research.sqlite'), {
   readOnly: true,
@@ -290,6 +295,67 @@ function screenComparisons(experiments) {
   }
   return comparisons;
 }
+function trainingTable(phase) {
+  const planned = slots.filter((s) => s.Phase === phase);
+  assert.equal(planned.length, phase === 'Evolution-Screen' ? 64 : 30);
+  const status = peers
+    ? combinedStatus(peers.roots)
+    : campaignStatus(directory);
+  const states = new Map(status.slots.map((r) => [r.id, r]));
+  const experiments = ['B-evolution-42', 'B-evolution-43'].map(summarize);
+  for (const slot of planned) {
+    const id = slot.ExperimentID,
+      state = states.get(id);
+    if (state.state !== 'completed') continue;
+    const key = 'experiment-audit:' + id;
+    const audit = peers
+      ? peers.manifest(peers.source(id), key)
+      : manifest(key, false);
+    if (audit) experiments.push(summarize(id));
+    else states.set(id, { ...state, state: 'pending-audit' });
+  }
+  const paired = new Map(
+    screenComparisons(experiments).map((p) => [p.variant.id, p]),
+  );
+  const rows = planned.map((s) => {
+    const state = states.get(s.ExperimentID),
+      p = paired.get(s.ExperimentID);
+    const baseline = p?.reference,
+      test = p?.variant;
+    return {
+      experiment: s.ExperimentID,
+      group: s.Group,
+      deltaJSON: s.DeltaJSON,
+      seed: s.Seed,
+      state: state.state,
+      plannedEpisodes: s.EpisodeBudget,
+      committedGenerations: state.generations,
+      episodesPerComparedArm: p?.episodesPerArm ?? null,
+      baselineSuccesses: baseline?.successes ?? null,
+      variantSuccesses: test?.successes ?? null,
+      differencePercentagePoints: p
+        ? (100 * (test.successes - baseline.successes)) / p.episodesPerArm
+        : null,
+      baselineFirstSuccessGeneration:
+        baseline?.firstCommittedSuccess?.generation ?? null,
+      variantFirstSuccessGeneration:
+        test?.firstCommittedSuccess?.generation ?? null,
+      variantCensored: test?.censored ?? null,
+      baselineMedianSuccessfulLapS: baseline?.validLapSeconds?.median ?? null,
+      variantMedianSuccessfulLapS: test?.validLapSeconds?.median ?? null,
+      baselineFinalMedianProgressM: baseline?.finalMedianProgressM ?? null,
+      variantFinalMedianProgressM: test?.finalMedianProgressM ?? null,
+      baselinePhysicalTicks: baseline?.ticks ?? null,
+      variantPhysicalTicks: test?.ticks ?? null,
+      baselineGenerationWallMs: baseline?.generationWallMs ?? null,
+      variantGenerationWallMs: test?.generationWallMs ?? null,
+      baselinePrefixAuditSHA256: baseline?.audit ?? null,
+      variantAuditSHA256: test?.audit ?? null,
+      variantExperimentSHA256: test?.manifestSHA256 ?? null,
+    };
+  });
+  return casesCSV(rows);
+}
 function performanceVariation() {
   const bytes = readFileSync(join(directory, 'worker-scaling.json'));
   const scaling = JSON.parse(bytes);
@@ -444,7 +510,9 @@ try {
     parseFlags().peers,
   );
   let report;
-  if (stage === 'performance') {
+  if (tablePhase) {
+    report = trainingTable(tablePhase);
+  } else if (stage === 'performance') {
     report = { ...base, ...performanceVariation() };
   } else if (stage === 'baseline-cases') {
     report = { ...base, ...baselineCaseComparisons() };
@@ -694,7 +762,9 @@ try {
       });
     }
   }
-  if (existsSync(output)) {
+  if (tablePhase) {
+    publish(output, Buffer.from(report));
+  } else if (existsSync(output)) {
     const before = read(output);
     if (
       before.stage !== stage ||
