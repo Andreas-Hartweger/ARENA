@@ -28,6 +28,17 @@ Vor der Auswahl wurden 40 Entwicklungsfälle, 60 finale Einzelfahrten, 12 Drei-R
 
 ## Screening
 
+Die ersten 20 auditierten Läufe umfassen zehn Varianten mit je zwei Seeds. In den folgenden vier Konfigurationen bewertete jeder Arm 8.192 Kandidaten bei 128 Kandidaten pro Generation. Die Zahlen zählen erfolgreich beendete Trainingsepisoden. Für die Prüfung eines einzelnen Genoms dienen die getrennten Entwicklungs- und Finalfälle.
+
+| Konfiguration                                                               | Seed 42 | Seed 43 |
+| --------------------------------------------------------------------------- | ------: | ------: |
+| Referenz, verborgene Schichten 32/16, Sensorik und Entscheidungen bei 30 Hz |     215 |     411 |
+| S33, verborgene Schichten 16/8                                              |     266 |       0 |
+| S35, verborgene Schichten 64/32                                             |     681 |     159 |
+| S42, Sensorik und Entscheidungen bei 10 Hz                                  |      82 |     103 |
+
+S33 und S35 zeigen jeweils bei einem Seed mehr gültige Runden als die Referenz und beim anderen weniger. Bei S42 blieb die Physik bei 60 Hz. Der Vergleichsschritt endete nach 227.840 neu abgerechneten regulären Episoden und 462.800.268 Fahrzeugticks in der gesamten Kampagne. Die summierte aktive Maschinenzeit betrug 15.502.024 ms. [S33 mit beiden Referenzen](evidence/paired-hidden-16-8.json) · [S35 mit beiden Referenzen](evidence/paired-hidden-64-32.json) · [S42 mit beiden Referenzen](evidence/paired-frequency-10.json)
+
 S01 schließt mit 32 Modellen pro Generation 256 Generationen ab. Die Referenz mit 128 Modellen erreicht bei demselben Budget von 8.192 Episoden 64 Generationen. Für Seed 42 lieferte S01 185 gültige Runden gegenüber 215 in der Referenz. Für Seed 43 waren es 20 gegenüber 411. Auf Seed 43 betrug der Median der 20 gültigen S01-Runden 57,20 s, der Median der 411 Referenzrunden 82,20 s. Die Referenz erreichte den ersten erfolgreichen Generationsabschluss in beiden Paaren früher. Die Entwicklungsvalidierung beurteilt die ausgewählten Genome auf gemeinsamen Startzuständen. [Nachgerechneter Populationsvergleich](evidence/paired-population-32.json)
 
 ## Stand der Abnahme
