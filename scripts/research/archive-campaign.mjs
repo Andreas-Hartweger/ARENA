@@ -147,8 +147,10 @@ async function archive() {
     dbFile = join(source, dbName),
     snapshot = join(target, dbName);
   const prior = join(target, 'archive-manifest.json');
-  if (existsSync(prior)) {
+  if (old && existsSync(prior)) {
     const index = JSON.parse(readFileSync(prior, 'utf8'));
+    if (old.manifest !== hashJSON(index))
+      throw Error('Published archive index changed');
     for (const [name, v] of Object.entries(index.files)) {
       if (!contains(target, resolve(target, name)))
         throw Error('Invalid archive path');
@@ -157,19 +159,12 @@ async function archive() {
       if (check.sha256 !== v.sha256 || check.size !== v.size)
         throw Error('Damaged archive: ' + name);
     }
-    if (old && old.manifest !== hashJSON(index))
-      throw Error('Published archive index changed');
-    if (!old)
-      ledger.transaction(() => {
-        ledger.assertLease();
-        ledger.manifest('verified-archive', {
-          destination: target,
-          manifest: hashJSON(index),
-        });
-      });
     return;
   }
-  spaceCheck(target, statSync(dbFile).size + 2 * 1024 ** 3);
+  // A crash may publish the index before the ledger receipt. Rebuild its proof
+  // from the source, the copied bytes and the checkpoint restore on retry.
+  const snapshotBytesToCopy = existsSync(snapshot) ? 0 : statSync(dbFile).size;
+  spaceCheck(target, snapshotBytesToCopy + 2 * 1024 ** 3);
   for (const name of readdirSync(source, { withFileTypes: true }).sort((a, b) =>
     a.name.localeCompare(b.name),
   )) {

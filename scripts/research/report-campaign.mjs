@@ -12,6 +12,7 @@ import { physicalPrefix } from './audit-data.mjs';
 import { replicationRows } from './replication-table.mjs';
 import {
   reviewCases,
+  reviewedCandidate,
   casesCSV,
   investigateRegression,
 } from './review-cases.mjs';
@@ -811,15 +812,9 @@ try {
               }),
             }
           : {}),
-        candidates: final.results.map((r) => ({
-          genome: r.candidate.genome,
-          version: r.candidate.version,
-          roles: r.gates.map((g) => ({
-            role: g.role,
-            status: g.status,
-            checks: g.checks,
-          })),
-        })),
+        candidates: final.results.map((r) =>
+          reviewedCandidate(r, raw.result.checked),
+        ),
         technicalReview: 'pending',
         modelReadiness: final.results.some((r) =>
           r.gates.some((g) => g.role === 'Starter' && g.status === 'passed'),

@@ -142,3 +142,56 @@ export function investigateRegression(pair, rows, panel = 'holdout') {
     ),
   };
 }
+
+export function reviewedCandidate(r, rawChecks) {
+  const candidate = r.candidate;
+  const audited = rawChecks.find((item) => item.genome === candidate.genome);
+  assert.equal(
+    audited?.source,
+    r.sha256,
+    'Missing matching raw candidate audit',
+  );
+  assert.deepEqual(
+    audited.traces.map((t) => t.id).sort(),
+    [...r.auditCases].sort(),
+  );
+  const single = r.gates[0].single;
+  const holdout = audited.panels.holdout;
+  assert.equal(single.success, holdout.complete);
+  assert.equal(single.severe, holdout.severeIncludingFailures);
+  for (const group of holdout.byGroup) {
+    assert.equal(single.byGroup[group.group], group.completed);
+  }
+  return {
+    genome: candidate.genome,
+    version: candidate.version,
+    experiment: candidate.experimentId,
+    modelRole: candidate.modelRole,
+    packageSHA256: candidate.packageSHA256,
+    caseFile: 'validation/' + r.file,
+    caseSHA256: r.sha256,
+    traceFile: 'validation/' + r.traces,
+    traceSHA256: r.traceSHA256,
+    auditedTraces: audited.traces.map(
+      ({ id, sampledTicks, travelIntervals, contactIntervals }) => ({
+        id,
+        sampledTicks,
+        travelIntervals,
+        contactIntervals,
+      }),
+    ),
+    panels: audited.panels,
+    singleLapQuality: {
+      successful: single.success,
+      collisionFreeSuccessful: single.clean,
+      severeContactCases: single.severe,
+      medianSuccessfulGrassS: single.grass?.median ?? null,
+      maximumSuccessfulGrassS: single.grass?.best ?? null,
+    },
+    roles: r.gates.map((g) => ({
+      role: g.role,
+      status: g.status,
+      checks: g.checks,
+    })),
+  };
+}

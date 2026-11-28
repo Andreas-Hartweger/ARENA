@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { DatabaseSync } from 'node:sqlite';
 import {
   mkdtempSync,
   mkdirSync,
@@ -403,19 +404,52 @@ try {
     ledger.close();
   }
   const command = ['scripts/research/archive-campaign.mjs', src, out];
-  execFileSync(process.execPath, command);
-  const index = JSON.parse(
-    readFileSync(join(out, 'archive-manifest.json'), 'utf8'),
-  );
-  assert.equal(index.checkpoints[0].regularEpisodes, 8);
-  execFileSync(process.execPath, command);
-  const damaged = join(
+  // Interrupt the isolated archive after its atomic index write but before its
+  // ledger receipt. Recovery must rebuild and verify the same archive.
+  const path = join(src, 'research.sqlite');
+  const setup = new DatabaseSync(path);
+  try {
+    setup.exec(`CREATE TRIGGER interrupt_receipt BEFORE INSERT ON manifests
+      WHEN NEW.id='verified-archive' BEGIN SELECT RAISE(ABORT, 'test receipt interruption'); END`);
+  } finally {
+    setup.close();
+  }
+  const interrupted = spawnSync(process.execPath, command, {
+    encoding: 'utf8',
+  });
+  assert.notEqual(interrupted.status, 0);
+  assert.match(interrupted.stderr, /test receipt interruption/);
+  const originalIndex = readFileSync(join(out, 'archive-manifest.json'));
+  const resume = new DatabaseSync(path);
+  try {
+    assert.equal(
+      resume
+        .prepare("SELECT 1 FROM manifests WHERE id='verified-archive'")
+        .get(),
+      undefined,
+    );
+    resume.exec('DROP TRIGGER interrupt_receipt');
+  } finally {
+    resume.close();
+  }
+  const generationFile = join(
     out,
     'experiments',
     'qa-technical',
     'generations.ndjson',
   );
-  writeFileSync(damaged, 'corrupt test copy');
+  rmSync(generationFile);
+  execFileSync(process.execPath, command);
+  assert.deepEqual(
+    readFileSync(join(out, 'archive-manifest.json')),
+    originalIndex,
+  );
+  const index = JSON.parse(
+    readFileSync(join(out, 'archive-manifest.json'), 'utf8'),
+  );
+  assert.equal(index.checkpoints[0].regularEpisodes, 8);
+  execFileSync(process.execPath, command);
+  writeFileSync(generationFile, 'corrupt test copy');
   const result = spawnSync(process.execPath, command, { encoding: 'utf8' });
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /Damaged archive/);
