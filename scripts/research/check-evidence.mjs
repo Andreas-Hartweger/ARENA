@@ -23,7 +23,11 @@ import { nodeComputePort } from '../node-compute-port.mjs';
 import { exportExperiment } from './evidence.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
 import { auditExperiment } from './audit-data.mjs';
-import { requireSelectionPredecessors, interactionReserve } from './status.mjs';
+import {
+  combinedStatus,
+  requireSelectionPredecessors,
+  interactionReserve,
+} from './status.mjs';
 import { reviewCases, casesCSV } from './review-cases.mjs';
 import { runExperiment } from './coordinator.mjs';
 import {
@@ -35,7 +39,87 @@ import {
 const base = mkdtempSync(join(tmpdir(), 'arena-technical-evidence-')),
   src = join(base, 'source'),
   out = join(base, 'copy');
+async function checkMachineQuotas() {
+  const machines = [42, 43].map((seed) => ({
+    id: 'technical-' + seed,
+    experiments: ['S01-' + seed],
+    total: { ms: 240000, ticks: 3000, episodes: 8 },
+    training: { ms: 180000, ticks: 2000, episodes: 8 },
+  }));
+  const spec = campaign(
+    'technical-split',
+    matrixHash,
+    'b'.repeat(40),
+    machines,
+  );
+  const roots = machines.map((m) => join(base, m.id));
+  const runs = await Promise.allSettled(
+    machines.map(async (machine, index) => {
+      const dir = roots[index];
+      mkdirSync(dir);
+      publishJSON(join(dir, 'campaign.json'), {
+        definition: spec,
+        testFixture: true,
+      });
+      const db = new ResearchLedger(
+        join(dir, 'research.sqlite'),
+        spec,
+        machine.id,
+      );
+      db.claim();
+      const clock = new ActiveTime(db, { experimentId: 'technical-split' });
+      try {
+        const foreign = experiment(
+          machines[1 - index].experiments[0],
+          spec.id,
+          1,
+          8,
+        );
+        await assert.rejects(
+          runExperiment(db, foreign, clock, { hardware: 8 }),
+          /outside static/,
+        );
+        assert.equal(
+          db.readManifest('experiment:' + foreign.definition.experimentId),
+          undefined,
+        );
+        const def = globalThis.structuredClone(
+          experiment(machine.experiments[0], spec.id, 1, 8).definition,
+        );
+        Object.assign(def.draft.options, { n: 8, generations: 1, budget: 8 });
+        def.draft.scenarios = [{ task: { maxTicks: 65, graceTicks: 0 } }];
+        def.episodeBudget = 8;
+        const entry = { definition: def, hash: hashJSON(def) };
+        const result = await runExperiment(db, entry, clock, { hardware: 8 });
+        assert.equal(result.phase, 'Completed', result.error);
+        await exportExperiment(db, dir, entry, result, {
+          sha: spec.sha,
+          node: process.version,
+          testFixture: true,
+        });
+      } finally {
+        clock.finish();
+        db.release();
+        db.close();
+      }
+    }),
+  );
+  for (const run of runs) if (run.status === 'rejected') throw run.reason;
+  const report = combinedStatus(roots);
+  assert.equal(report.state.completed, 2);
+  assert.equal(report.state.unassigned, 120);
+  assert.equal(report.charge.find((c) => c.scope === 'research').episodes, 16);
+  assert.equal(
+    report.charge.find((c) => c.scope === 'research').ticks,
+    16 * 65,
+  );
+  assert.throws(
+    () => combinedStatus([roots[0], roots[0]]),
+    /one matching ledger/,
+  );
+}
 try {
+  await checkMachineQuotas();
   mkdirSync(src);
   const spec = campaign('qa', matrixHash, 'a'.repeat(40), [
     { id: hostname(), total: caps, training: trainingCaps },
