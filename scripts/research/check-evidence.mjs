@@ -24,6 +24,7 @@ import { exportExperiment } from './evidence.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
 import { auditExperiment } from './audit-data.mjs';
 import { requireSelectionPredecessors } from './status.mjs';
+import { reviewCases, casesCSV } from './review-cases.mjs';
 import { runExperiment } from './coordinator.mjs';
 import {
   evaluatePanel,
@@ -119,6 +120,25 @@ try {
     const before = ledger.usage().charged;
     const first = await evaluatePanel(ledger, clock, panel, candidate, 1);
     assert(first.actual[0].result.ok);
+    const qc = {
+      genome: candidate.genome.hash,
+      version: 'qa',
+      roles: ['Starter'],
+    };
+    const raw = { genome: qc.genome, development: first };
+    const [caseRow] = reviewCases(qc, raw, hashJSON(raw));
+    assert.equal(caseRow.physicalTicks, 65);
+    assert.equal(caseRow.grassSeconds, first.actual[0].result.raw.grassSeconds);
+    assert.equal(caseRow.recordDigest, hashJSON(first.actual[0].result));
+    const [absent] = reviewCases(
+      qc,
+      { ...raw, development: { ...first, actual: [] } },
+      'qa',
+    );
+    assert.equal(absent.outcome, 'missing');
+    assert.equal(absent.lapSeconds, null);
+    assert.equal(absent.grassSeconds, null);
+    assert.equal(casesCSV([caseRow, absent]).trim().split('\n').length, 3);
     assert.equal(ledger.usage().charged.ticks - before.ticks, 65);
     assert.deepEqual(
       await evaluatePanel(ledger, clock, panel, candidate, 1, {

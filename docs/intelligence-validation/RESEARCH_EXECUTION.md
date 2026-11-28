@@ -22,7 +22,7 @@ Vor der Auswahl wurden 40 Entwicklungsfälle, 60 finale Einzelfahrten, 12 Drei-R
 
 ## Screening
 
-S01 schließt mit 32 Fahrzeugen 256 Generationen ab. Die Referenz mit 128 Fahrzeugen erreicht bei demselben Budget von 8.192 Episoden 64 Generationen. Für Seed 42 lieferte S01 185 gültige Runden gegenüber 215 in der Referenz. Für Seed 43 waren es 20 gegenüber 411. Auf Seed 43 betrug der Median der 20 gültigen S01-Runden 57,20 s, der Median der 411 Referenzrunden 82,20 s. Die Referenz erreichte den ersten erfolgreichen Generationsabschluss in beiden Paaren früher. Die Entwicklungsvalidierung beurteilt die ausgewählten Genome auf gemeinsamen Startzuständen. [Nachgerechneter Populationsvergleich](evidence/paired-population-32.json)
+S01 schließt mit 32 Modellen pro Generation 256 Generationen ab. Die Referenz mit 128 Modellen erreicht bei demselben Budget von 8.192 Episoden 64 Generationen. Für Seed 42 lieferte S01 185 gültige Runden gegenüber 215 in der Referenz. Für Seed 43 waren es 20 gegenüber 411. Auf Seed 43 betrug der Median der 20 gültigen S01-Runden 57,20 s, der Median der 411 Referenzrunden 82,20 s. Die Referenz erreichte den ersten erfolgreichen Generationsabschluss in beiden Paaren früher. Die Entwicklungsvalidierung beurteilt die ausgewählten Genome auf gemeinsamen Startzuständen. [Nachgerechneter Populationsvergleich](evidence/paired-population-32.json)
 
 ## Stand der Abnahme
 
@@ -51,6 +51,8 @@ Chromium 158 importierte das historische G99-Paket in eine leere IndexedDB, klon
 Der Nachweis für PRE-D01 liegt vor. Die Abnahme von Batch 02D, das unabhängige Review und die Modellfreigabe sind offen. Der gemeinsame Entwurf wird in [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8) geführt.
 
 ## Auslieferung und Wiederherstellung
+
+Zum Abschlussbericht gehört eine CSV für das unabhängige Review. Für jeden angesetzten Fall enthält sie Modellversion, Gruppe, Ergebnis, Rundenzeiten, Kontaktzahl, maximale normale Annäherungsgeschwindigkeit und Graszeit. Fehlende Messungen erhalten leere Zahlenfelder. Jeder vorhandene Endrecord und seine Quelldatei sind über Prüfsummen zugeordnet. [Felder der Einzelfallprüfung](../../scripts/research/review-cases.mjs)
 
 Der finale Rohdatenaudit prüft die gespeicherten Fahrten, D10-Arithmetik, Linienfortschritt, Sensor- und Entscheidungstakte sowie die ausgewählten Trajektorien. Für verglichene Kandidaten gleicher Rolle weist er gemeinsame erfolgreiche Fälle, Zeitdifferenzen und relevante Regressionen aus. Der Softwaretest des Archivwegs stellt einen echten D13-Checkpoint aus einer separaten SQLite-Onlinekopie wieder her und erkennt eine nachträglich beschädigte Datei. Eine erste Sicherung im separaten Verzeichnis `C:\Users\finde\Documents\ARENA-Research-Backup\Batch-02D` umfasst alle 61 Dateien der sechs abgeschlossenen Baseline-Versuche (29.914.074 Byte). Jede Kopie wurde per SHA-256 gegen die Quelle geprüft. Beide Verzeichnisse liegen auf Laufwerk C. Nach dem finalen Rohdatenaudit ergänzt die Archivierung den vollständigen Kampagnenstand und prüft die Wiederherstellung aus der SQLite-Kopie. [Audit](../../scripts/research/review-validation.mjs) · [Archivierung](../../scripts/research/archive-campaign.mjs)
 

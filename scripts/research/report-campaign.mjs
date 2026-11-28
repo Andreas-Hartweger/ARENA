@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { basename, dirname, extname, join } from 'node:path';
+import { Buffer } from 'node:buffer';
 import process from 'node:process';
 import { slots, hashJSON, sha } from './manifest.mjs';
-import { publishJSON } from './campaign.mjs';
+import { publish, publishJSON } from './campaign.mjs';
 import { campaignStatus } from './status.mjs';
+import { reviewCases, casesCSV } from './review-cases.mjs';
 
 const [directory, stage, output] = process.argv.slice(2);
 const screenConfig =
@@ -286,6 +288,23 @@ try {
         raw = manifest('final-raw-audit'),
         archive = manifest('verified-archive');
       assert.equal(raw.result.validation, hashJSON(final));
+      const caseRecords = final.results.flatMap((item) => {
+        const bytes = readFileSync(join(directory, 'validation', item.file));
+        assert.equal(sha(bytes), item.sha256);
+        return reviewCases(item.candidate, JSON.parse(bytes), item.sha256);
+      });
+      let caseTable = null;
+      if (caseRecords.length) {
+        const file = basename(output, extname(output)) + '-cases.csv';
+        const bytes = Buffer.from(casesCSV(caseRecords));
+        publish(join(dirname(output), file), bytes);
+        caseTable = {
+          file,
+          sha256: sha(bytes),
+          size: bytes.length,
+          rows: caseRecords.length,
+        };
+      }
       const phaseReports = readdirSync(directory)
         .filter((file) => /^progress-[\w]+-[\dTZ.-]+\.json$/.test(file))
         .sort()
@@ -330,6 +349,7 @@ try {
       }
       Object.assign(report, {
         slots: status.slots,
+        caseTable,
         screeningAgainstPairedBaseline: screenComparisons(experiments),
         byPhase,
         phaseReports,
