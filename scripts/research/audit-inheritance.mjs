@@ -134,9 +134,11 @@ function audit(id) {
   const ranks = new Map(order.map((slot, i) => [initial[slot].id, i + 1]));
   const selected = [],
     pool = Math.max(1, Math.round(c.n * c.poolFraction));
-  let twoParents = 0,
-    mutatedCrossovers = 0;
-  for (const member of offspring.filter((a) => a.origin === 'offspring')) {
+  const parentPairs = [],
+    crossedChildren = [];
+  let mutatedCrossovers = 0;
+  for (const [slot, member] of offspring.entries()) {
+    if (member.origin !== 'offspring') continue;
     const parentRanks = member.parents.map((p) => ranks.get(p));
     assert(parentRanks.every((rank) => rank >= 1 && rank <= pool));
     selected.push(...parentRanks);
@@ -146,7 +148,11 @@ function audit(id) {
       initial[order[parentRanks[1] - 1]].genome.hash,
     );
     assert.equal(member.operator, c.operator);
-    twoParents++;
+    parentPairs.push([
+      slot,
+      ...parentRanks.map((rank) => initial[order[rank - 1]].genome.hash),
+    ]);
+    crossedChildren.push(member.genome.hash);
     if (
       member.mutation.layers.some((l) => l.weight.changed + l.bias.changed > 0)
     )
@@ -174,8 +180,14 @@ function audit(id) {
     parentRankOneBased: selected.length ? distribution(selected) : null,
     crossover: c.operator,
     crossoverProbability: c.crossProbability,
-    twoParents,
+    twoParents: parentPairs.length,
     mutatedCrossovers,
+    ...(parentPairs.length
+      ? {
+          orderedParentPairsSHA256: hashJSON(parentPairs),
+          crossedChildrenSHA256: hashJSON(crossedChildren),
+        }
+      : {}),
     verifiedMembers: first.records.length + second.records.length,
     completeTrainingEpisodes: result.regularEpisodes,
     successfulTrainingEpisodes: result.successes,
