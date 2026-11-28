@@ -1,0 +1,437 @@
+{
+  "schema": "arena.campaign-report.v1",
+  "stage": "immigration",
+  "campaign": "ARENA-02D",
+  "matrix": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+  "assignment": [
+    {
+      "id": "Benjamins-Yoga",
+      "total": {
+        "ms": 172800000,
+        "episodes": 1600000,
+        "ticks": 5000000000
+      },
+      "training": {
+        "ms": 146880000,
+        "episodes": 1600000,
+        "ticks": 4250000000
+      }
+    }
+  ],
+  "nominal": {
+    "variants": 47,
+    "slots": 122,
+    "episodes": 1512448
+  },
+  "comparisons": [
+    {
+      "config": "S27",
+      "seed": 42,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-42",
+        "source": "44c100c22854793b200a104dbc358e49ea9190fa",
+        "manifestSHA256": "38fa1d67215250abd48b7ed059bd7480953fd9325385e103aa47a121ed564489",
+        "audit": "92db9c885633186329023cc808005a796a63b3ae4cb02321d9f4077cd92a84d3",
+        "population": 128,
+        "generations": 64,
+        "successes": 215,
+        "validLapSeconds": {
+          "min": 73.74142008660284,
+          "max": 113.08632490974276,
+          "mean": 85.64856233360472,
+          "q1": 77.84378978278913,
+          "median": 82.04329330022213,
+          "q3": 91.72784027844642
+        },
+        "finalMedianProgressM": 135.49283864634532,
+        "firstCommittedSuccess": {
+          "generation": 31,
+          "episodes": 4096,
+          "generationWallMs": 1300580.6288000003
+        },
+        "censored": false,
+        "generationWallMs": 2883343.346,
+        "ticks": 17877521
+      },
+      "variant": {
+        "id": "S27-42",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "80988c0f8014dd61b1b3c4b7af858c865cc8ea6aff940a7a668350557f84ba03",
+        "audit": "52ea9f3c287a7150abf9b628f1ec4032f8f3c6c0b0d59d0a2458769e014e18ce",
+        "population": 128,
+        "generations": 64,
+        "successes": 0,
+        "validLapSeconds": null,
+        "finalMedianProgressM": 128.2669672975527,
+        "firstCommittedSuccess": null,
+        "censored": true,
+        "generationWallMs": 407603.42210002244,
+        "ticks": 13645280,
+        "immigration": {
+          "rate": 0.05,
+          "rescueEnabled": false,
+          "immigrants": 378,
+          "rescues": [],
+          "reproductiveGenerations": 63,
+          "longestStagnation": 21
+        }
+      }
+    },
+    {
+      "config": "S28",
+      "seed": 42,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-42",
+        "source": "44c100c22854793b200a104dbc358e49ea9190fa",
+        "manifestSHA256": "38fa1d67215250abd48b7ed059bd7480953fd9325385e103aa47a121ed564489",
+        "audit": "92db9c885633186329023cc808005a796a63b3ae4cb02321d9f4077cd92a84d3",
+        "population": 128,
+        "generations": 64,
+        "successes": 215,
+        "validLapSeconds": {
+          "min": 73.74142008660284,
+          "max": 113.08632490974276,
+          "mean": 85.64856233360472,
+          "q1": 77.84378978278913,
+          "median": 82.04329330022213,
+          "q3": 91.72784027844642
+        },
+        "finalMedianProgressM": 135.49283864634532,
+        "firstCommittedSuccess": {
+          "generation": 31,
+          "episodes": 4096,
+          "generationWallMs": 1300580.6288000003
+        },
+        "censored": false,
+        "generationWallMs": 2883343.346,
+        "ticks": 17877521
+      },
+      "variant": {
+        "id": "S28-42",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "092862213614605b7e49781ee237bdc644216150741f709c9ac420d8250ed107",
+        "audit": "59771ddf1e0b4afba4f5785465b93b5ba62e4a7e5086ba90c9f1a801604e3138",
+        "population": 128,
+        "generations": 64,
+        "successes": 187,
+        "validLapSeconds": {
+          "min": 53.51905479023762,
+          "max": 104.7564367704982,
+          "mean": 59.08181709233718,
+          "q1": 58.71938788445786,
+          "median": 58.864030246916265,
+          "q3": 59.111472418659886
+        },
+        "finalMedianProgressM": 116.8652800490031,
+        "firstCommittedSuccess": {
+          "generation": 16,
+          "episodes": 2176,
+          "generationWallMs": 109527.78380000032
+        },
+        "censored": false,
+        "generationWallMs": 447936.15079999715,
+        "ticks": 15181235,
+        "immigration": {
+          "rate": 0.1,
+          "rescueEnabled": false,
+          "immigrants": 819,
+          "rescues": [],
+          "reproductiveGenerations": 63,
+          "longestStagnation": 27
+        }
+      }
+    },
+    {
+      "config": "S29",
+      "seed": 42,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-42",
+        "source": "44c100c22854793b200a104dbc358e49ea9190fa",
+        "manifestSHA256": "38fa1d67215250abd48b7ed059bd7480953fd9325385e103aa47a121ed564489",
+        "audit": "92db9c885633186329023cc808005a796a63b3ae4cb02321d9f4077cd92a84d3",
+        "population": 128,
+        "generations": 64,
+        "successes": 215,
+        "validLapSeconds": {
+          "min": 73.74142008660284,
+          "max": 113.08632490974276,
+          "mean": 85.64856233360472,
+          "q1": 77.84378978278913,
+          "median": 82.04329330022213,
+          "q3": 91.72784027844642
+        },
+        "finalMedianProgressM": 135.49283864634532,
+        "firstCommittedSuccess": {
+          "generation": 31,
+          "episodes": 4096,
+          "generationWallMs": 1300580.6288000003
+        },
+        "censored": false,
+        "generationWallMs": 2883343.346,
+        "ticks": 17877521
+      },
+      "variant": {
+        "id": "S29-42",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "1c80e693a1e6da5ab39868a147b9186ff70b42f271518d091e5207e6622db66a",
+        "audit": "ce187de95dee7ea2e90de7fcd85d1ce8c5d0acea6dffdf7ec91504cf9ce888d3",
+        "population": 128,
+        "generations": 64,
+        "successes": 215,
+        "validLapSeconds": {
+          "min": 73.74142008660284,
+          "max": 113.08632490974276,
+          "mean": 85.64856233360472,
+          "q1": 77.84378978278913,
+          "median": 82.04329330022213,
+          "q3": 91.72784027844642
+        },
+        "finalMedianProgressM": 135.49283864634532,
+        "firstCommittedSuccess": {
+          "generation": 31,
+          "episodes": 4096,
+          "generationWallMs": 243378.29250003397
+        },
+        "censored": false,
+        "generationWallMs": 545019.5242000222,
+        "ticks": 17877521,
+        "immigration": {
+          "rate": 0,
+          "rescueEnabled": true,
+          "immigrants": 0,
+          "rescues": [],
+          "reproductiveGenerations": 63,
+          "longestStagnation": 19
+        }
+      }
+    },
+    {
+      "config": "S27",
+      "seed": 43,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-43",
+        "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+        "manifestSHA256": "6798b9391854f3cbd61595c42da48de2c293d14a3d0d7125ecdab93a4d8ec275",
+        "audit": "1cae7989267cd49aa14222aa874f45652761cd5cfb7c364161b2125ddacf46f6",
+        "population": 128,
+        "generations": 64,
+        "successes": 411,
+        "validLapSeconds": {
+          "min": 62.251439577544886,
+          "max": 113.1724772321925,
+          "mean": 83.53193479183173,
+          "q1": 74.35842663321645,
+          "median": 82.20327737683756,
+          "q3": 91.3280791740265
+        },
+        "finalMedianProgressM": 164.60639204309547,
+        "firstCommittedSuccess": {
+          "generation": 19,
+          "episodes": 2560,
+          "generationWallMs": 155788.3128000001
+        },
+        "censored": false,
+        "generationWallMs": 589627.8610999999,
+        "ticks": 18314889
+      },
+      "variant": {
+        "id": "S27-43",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "e3cc3a3228eea8454135cf50f9510b45670a4961eaa9229783b81ee74abfdc56",
+        "audit": "3660ea6f3acbd9e039257504b38dc478fa36c76000466a431e3dc94faa070c5f",
+        "population": 128,
+        "generations": 64,
+        "successes": 456,
+        "validLapSeconds": {
+          "min": 67.96340371986348,
+          "max": 113.4079172441829,
+          "mean": 83.23376958232305,
+          "q1": 73.56244638882353,
+          "median": 79.91084559693803,
+          "q3": 90.91485988822602
+        },
+        "finalMedianProgressM": 145.35958445620616,
+        "firstCommittedSuccess": {
+          "generation": 16,
+          "episodes": 2176,
+          "generationWallMs": 132208.78690000623
+        },
+        "censored": false,
+        "generationWallMs": 630168.7621999905,
+        "ticks": 17782598,
+        "immigration": {
+          "rate": 0.05,
+          "rescueEnabled": false,
+          "immigrants": 378,
+          "rescues": [],
+          "reproductiveGenerations": 63,
+          "longestStagnation": 18
+        }
+      }
+    },
+    {
+      "config": "S28",
+      "seed": 43,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-43",
+        "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+        "manifestSHA256": "6798b9391854f3cbd61595c42da48de2c293d14a3d0d7125ecdab93a4d8ec275",
+        "audit": "1cae7989267cd49aa14222aa874f45652761cd5cfb7c364161b2125ddacf46f6",
+        "population": 128,
+        "generations": 64,
+        "successes": 411,
+        "validLapSeconds": {
+          "min": 62.251439577544886,
+          "max": 113.1724772321925,
+          "mean": 83.53193479183173,
+          "q1": 74.35842663321645,
+          "median": 82.20327737683756,
+          "q3": 91.3280791740265
+        },
+        "finalMedianProgressM": 164.60639204309547,
+        "firstCommittedSuccess": {
+          "generation": 19,
+          "episodes": 2560,
+          "generationWallMs": 155788.3128000001
+        },
+        "censored": false,
+        "generationWallMs": 589627.8610999999,
+        "ticks": 18314889
+      },
+      "variant": {
+        "id": "S28-43",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "c0747eaa15946cd06708870115c9a0c4cf7237d4a142ae44298c9a27897f44fb",
+        "audit": "6ecaeb60cf817faaefbf5398cd05a9687c2381ef11318dae18ac3455888c70cc",
+        "population": 128,
+        "generations": 64,
+        "successes": 29,
+        "validLapSeconds": {
+          "min": 72.34216955337853,
+          "max": 109.48500715223808,
+          "mean": 102.415050783473,
+          "q1": 102.29369706978473,
+          "median": 107.54979906552302,
+          "q3": 107.54979906552302
+        },
+        "finalMedianProgressM": 124.11737540412548,
+        "firstCommittedSuccess": {
+          "generation": 46,
+          "episodes": 6016,
+          "generationWallMs": 310865.2073999997
+        },
+        "censored": false,
+        "generationWallMs": 447355.50999999605,
+        "ticks": 15280301,
+        "immigration": {
+          "rate": 0.1,
+          "rescueEnabled": false,
+          "immigrants": 819,
+          "rescues": [],
+          "reproductiveGenerations": 63,
+          "longestStagnation": 13
+        }
+      }
+    },
+    {
+      "config": "S29",
+      "seed": 43,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-43",
+        "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+        "manifestSHA256": "6798b9391854f3cbd61595c42da48de2c293d14a3d0d7125ecdab93a4d8ec275",
+        "audit": "1cae7989267cd49aa14222aa874f45652761cd5cfb7c364161b2125ddacf46f6",
+        "population": 128,
+        "generations": 64,
+        "successes": 411,
+        "validLapSeconds": {
+          "min": 62.251439577544886,
+          "max": 113.1724772321925,
+          "mean": 83.53193479183173,
+          "q1": 74.35842663321645,
+          "median": 82.20327737683756,
+          "q3": 91.3280791740265
+        },
+        "finalMedianProgressM": 164.60639204309547,
+        "firstCommittedSuccess": {
+          "generation": 19,
+          "episodes": 2560,
+          "generationWallMs": 155788.3128000001
+        },
+        "censored": false,
+        "generationWallMs": 589627.8610999999,
+        "ticks": 18314889
+      },
+      "variant": {
+        "id": "S29-43",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "dbb98a8e1a674ed2eb70079102492595b4462f0261a4fc70bcd4eb9801fc2bc5",
+        "audit": "780c619bc36b4bbbc1e2aa02460e3674a6cb129dabc593e5679626d527354d9f",
+        "population": 128,
+        "generations": 64,
+        "successes": 411,
+        "validLapSeconds": {
+          "min": 62.251439577544886,
+          "max": 113.1724772321925,
+          "mean": 83.53193479183173,
+          "q1": 74.35842663321645,
+          "median": 82.20327737683756,
+          "q3": 91.3280791740265
+        },
+        "finalMedianProgressM": 164.60639204309547,
+        "firstCommittedSuccess": {
+          "generation": 19,
+          "episodes": 2560,
+          "generationWallMs": 148940.36969999224
+        },
+        "censored": false,
+        "generationWallMs": 606906.0922999829,
+        "ticks": 18314889,
+        "immigration": {
+          "rate": 0,
+          "rescueEnabled": true,
+          "immigrants": 0,
+          "rescues": [],
+          "reproductiveGenerations": 63,
+          "longestStagnation": 17
+        }
+      }
+    }
+  ],
+  "beforeRescue": [
+    {
+      "seed": 42,
+      "firstRescueGeneration": null,
+      "baseline": {
+        "compared": 8192,
+        "sha256": "ec88f7367aa8054e175727ef835b4b4e8528aab0c84f57e2c450fe8345bffb6d",
+        "source": "f11abab76aadded0d4595ced107b3c40f254ab996e5468cc159d18dae18bedf7"
+      },
+      "rescue": {
+        "compared": 8192,
+        "sha256": "ec88f7367aa8054e175727ef835b4b4e8528aab0c84f57e2c450fe8345bffb6d",
+        "source": "b7ba6f2c3496b824ff986aaadc3669d29badaeef1b6479ed9184207c83e3da1c"
+      }
+    },
+    {
+      "seed": 43,
+      "firstRescueGeneration": null,
+      "baseline": {
+        "compared": 8192,
+        "sha256": "89627ba0b2bc95a3418a7b48b36162331981996e24f2d022585c17ae2a8dfaa1",
+        "source": "72561bc545cf1520eb11c0a42c10753a39da47a3c0e00224ac6870112a56dfc6"
+      },
+      "rescue": {
+        "compared": 8192,
+        "sha256": "89627ba0b2bc95a3418a7b48b36162331981996e24f2d022585c17ae2a8dfaa1",
+        "source": "d27de22779d178218f08dabdaaed2fb87f99d70f4b565b1b58a379f08dca695d"
+      }
+    }
+  ]
+}

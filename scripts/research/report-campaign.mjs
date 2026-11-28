@@ -8,6 +8,7 @@ import { slots, hashJSON, sha } from './manifest.mjs';
 import { publish, publishJSON, parseFlags } from './campaign.mjs';
 import { campaignStatus, combinedStatus } from './status.mjs';
 import { peerInputs, combinedMilestone } from './peer-inputs.mjs';
+import { physicalPrefix } from './audit-data.mjs';
 import {
   reviewCases,
   casesCSV,
@@ -24,6 +25,7 @@ if (
     ![
       'baseline',
       'baseline-cases',
+      'immigration',
       'performance',
       '12',
       '24',
@@ -32,7 +34,7 @@ if (
     ].includes(stage))
 )
   throw Error(
-    'Expected campaign, baseline/baseline-cases/performance/screen configuration/12/24/48/final and output file',
+    'Expected campaign, baseline/baseline-cases/immigration/performance/screen configuration/12/24/48/final and output file',
   );
 const db = new DatabaseSync(join(directory, 'research.sqlite'), {
   readOnly: true,
@@ -45,6 +47,60 @@ function manifest(id, required = true) {
   if (!r || hashJSON(JSON.parse(r.data)) !== r.hash)
     throw Error('Missing or damaged campaign manifest ' + id);
   return JSON.parse(r.data);
+}
+function immigrationHistory(options, generations) {
+  const policy = options.adaptation;
+  if (
+    options.randomSearch ||
+    (!policy?.immigrantRate && !policy?.rescueEnabled)
+  )
+    return null;
+  let immigrants = 0;
+  const rescues = [];
+  for (let i = 1; i < generations.length; i++) {
+    const previousStagnation = generations[i - 1].adaptive.count;
+    const rescue =
+      policy.rescueEnabled &&
+      previousStagnation > 0 &&
+      previousStagnation % 45 === 0;
+    const rate = rescue
+      ? Math.max(policy.immigrantRate, 0.15)
+      : policy.immigrantRate;
+    const g = generations[i],
+      eliteCount = Math.min(
+        options.n - 1,
+        Math.max(1, Math.round(options.n * options.eliteRate)),
+      );
+    assert.equal(g.origins.elite, eliteCount);
+    const measured = g.origins.immigrant ?? 0;
+    assert.equal(
+      measured,
+      Math.max(
+        0,
+        Math.min(options.n - eliteCount - 1, Math.round(options.n * rate)),
+      ),
+    );
+    assert.equal(
+      Object.values(g.origins).reduce((n, value) => n + value, 0),
+      g.evaluations,
+    );
+    immigrants += measured;
+    if (rescue)
+      rescues.push({
+        generation: g.generation,
+        previousStagnation,
+        eliteCount,
+        immigrants: measured,
+      });
+  }
+  return {
+    rate: policy.immigrantRate,
+    rescueEnabled: policy.rescueEnabled,
+    immigrants,
+    rescues,
+    reproductiveGenerations: generations.length - 1,
+    longestStagnation: Math.max(...generations.map((g) => g.adaptive.count)),
+  };
 }
 function summarize(id) {
   const root = peers ? peers.source(id) : directory;
@@ -80,6 +136,10 @@ function summarize(id) {
     };
     const adaptation = {};
     const settings = report.entry.definition.draft.options.adaptation;
+    const immigration = immigrationHistory(
+      report.entry.definition.draft.options,
+      included,
+    );
     const triggers = [];
     for (const g of included) {
       const reason = g.adaptive.reason;
@@ -125,6 +185,7 @@ function summarize(id) {
       mutation: total('mutation'),
       terminalReasons: total('reasons'),
       adaptation,
+      ...(immigration ? { immigration } : {}),
       ...(settings?.probabilityEnabled || settings?.strengthEnabled
         ? {
             adaptationTriggers: {
@@ -199,6 +260,7 @@ function screenComparisons(experiments) {
       ...(metric.adaptationTriggers
         ? { adaptationTriggers: metric.adaptationTriggers }
         : {}),
+      ...(metric.immigration ? { immigration: metric.immigration } : {}),
     };
   };
   const comparisons = [];
@@ -386,6 +448,33 @@ try {
     report = { ...base, ...performanceVariation() };
   } else if (stage === 'baseline-cases') {
     report = { ...base, ...baselineCaseComparisons() };
+  } else if (stage === 'immigration') {
+    const experiments = [42, 43].flatMap((seed) =>
+      ['B-evolution', 'S27', 'S28', 'S29'].map((config) =>
+        summarize(config + '-' + seed),
+      ),
+    );
+    const comparisons = screenComparisons(experiments),
+      beforeRescue = [];
+    for (const pair of comparisons.filter((p) => p.config === 'S29')) {
+      const arm = pair.variant;
+      const first = arm.immigration.rescues[0];
+      const count = first
+        ? first.generation * arm.population
+        : pair.episodesPerArm;
+      const source = (id) =>
+        join(peers ? peers.source(id) : directory, 'experiments', id);
+      const baseline = await physicalPrefix(source(pair.reference.id), count);
+      const rescue = await physicalPrefix(source(arm.id), count);
+      assert.equal(baseline.sha256, rescue.sha256);
+      beforeRescue.push({
+        seed: pair.seed,
+        firstRescueGeneration: first?.generation ?? null,
+        baseline,
+        rescue,
+      });
+    }
+    report = { ...base, comparisons, beforeRescue };
   } else if (peers && ['12', '24', '48'].includes(stage)) {
     if (peers.hosts.size !== header.definition.machines.length)
       throw Error('Missing machine for combined milestone');

@@ -1,9 +1,53 @@
 import { createReadStream, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { createGunzip } from 'node:zlib';
 import { createInterface } from 'node:readline';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { fileHash } from './evidence.mjs';
+import { hashJSON } from './manifest.mjs';
+
+// A fixed-width hash per slot binds the complete physical result, independently of run and lease IDs.
+export async function physicalPrefix(folder, count) {
+  const report = JSON.parse(
+    readFileSync(join(folder, 'experiment.json'), 'utf8'),
+  );
+  assert(
+    Number.isSafeInteger(count) && count > 0 && count <= report.regularEpisodes,
+  );
+  const path = join(folder, 'episodes.ndjson.gz');
+  assert.deepEqual(
+    await fileHash(path),
+    report.artifacts['episodes.ndjson.gz'],
+  );
+  const stream = createReadStream(path);
+  const input = stream.pipe(createGunzip());
+  const lines = createInterface({ input, crlfDelay: Infinity });
+  const digest = createHash('sha256');
+  const population = report.entry.definition.draft.options.n;
+  let compared = 0;
+  try {
+    for await (const line of lines) {
+      const r = JSON.parse(line);
+      assert.equal(r.generation, Math.floor(compared / population));
+      assert.equal(r.slot, compared % population);
+      digest.update(
+        hashJSON([r.generation, r.slot, r.hash, r.score, r.episodes]),
+      );
+      if (++compared === count) break;
+    }
+  } finally {
+    lines.close();
+    input.destroy();
+    stream.destroy();
+  }
+  assert.equal(compared, count);
+  return {
+    compared,
+    sha256: digest.digest('hex'),
+    source: report.artifacts['episodes.ndjson.gz'].sha256,
+  };
+}
 const weights = {
   Balanced: [0.5, 0.25, 0.08, 0.07, 0.04, 0.06, 0],
   Speed: [0.8, 0.1, 0.02, 0.03, 0.02, 0.03, 0],
