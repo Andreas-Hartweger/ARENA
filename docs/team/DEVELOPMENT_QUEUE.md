@@ -1,8 +1,12 @@
 # Entwicklungswarteschlange
 
+## Batch 02D · Gepaarte Screeningläufe
+
+PRE-D01 und die sechs Baselines sind abgeschlossen. Die zwölf Vergleiche der Baseline-Modelle auf je 40 Entwicklungsfällen sind ausgewertet. RS-007 und RS-008 laufen mit 14 Workern auf `160db2c`. Danach folgen die Auswahl für die Bestätigung, die Langzeitläufe, der Kandidatenfreeze und die getrennten finalen Fälle. Für das unabhängige Review von 02D ist A in PR #8 angefragt. [Fahrdaten](../intelligence-validation/RESEARCH_EXECUTION.md) · [158 Abnahmepunkte](../intelligence-validation/ACCEPTANCE_RESULTS.csv) · [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8)
+
 ## Batch 02C
 
-Die 18 Arbeitspakete und ihre Lieferergebnisse stehen im [02C-Abschlussbericht](../training-management/BATCH-02C_COMPLETION_REPORT.md). Die 210 Abnahmepunkte und 96 Entscheidungen sind in der [Prüfmatrix](../training-management/ACCEPTANCE_RESULTS.md) einzeln zugeordnet. SYS-03 enthält die von A verkürzte Headless-Dauerprüfung. Das unabhängige 02C-Schlussreview und die Mergefreigabe stehen aus. [Arbeitsplan](../training-management/specification/BATCH-02C_TASKS.md) · [Referenzvergleich](../training-management/evidence/node-pool-reference.json)
+02C ist als `e6a95a9` in `main` integriert. A bestätigte den geprüften Stand und den administrativen Abschluss von SYS-03. Der Abschlussbericht dokumentiert die gemessenen Laufzeiten. Die Prüfmatrix ordnet 210 Abnahmepunkte und 96 Entscheidungen den 18 Arbeitspaketen zu. [02C-Abschlussbericht](../training-management/BATCH-02C_COMPLETION_REPORT.md) · [Prüfmatrix](../training-management/ACCEPTANCE_RESULTS.md) · [Merge und CI](../intelligence-validation/PRE-D01.md)
 
 ## Frühere Arbeitspakete
 
@@ -39,9 +43,3 @@ PRE-B01 und EV-001–013 sind abgeschlossen. A delegierte die ausstehenden techn
 [Abschlussbericht](../first-evolution/BATCH-02B_COMPLETION_REPORT.md) · [Abnahmematrix](../first-evolution/ACCEPTANCE_RESULTS.md)
 
 Der anschließend freigegebene Auftrag ist Batch 02C gemäß v0.10.
-
-## Batch 02D · Vorbereitung
-
-PRE-D01 ist abgeschlossen. Der Hauptauftrag beginnt mit RS-001, Experimentverträgen und Budgetabrechnung. [Gate](../intelligence-validation/PRE-D01.md)
-
-Die 122 Experimentdefinitionen, das Budgetledger, vier historische Modellrollen und der reale Wiederanlauf sind geprüft. 14 Worker erzielten im gepaarten Vergleich den höchsten Median von 19.638 Fahrzeugticks/s. Seed 42 wurde aus den verifizierten Originaldaten übernommen. Alle sechs Baselines einschließlich der drei Zufallssuchen sind nach je 100 Generationen auditiert. Nächster Schritt sind die 40 Entwicklungsfälle und das gepaarte Screening. [Forschungsstand](../intelligence-validation/RESEARCH_EXECUTION.md) · [158 Abnahmepunkte](../intelligence-validation/ACCEPTANCE_RESULTS.csv)

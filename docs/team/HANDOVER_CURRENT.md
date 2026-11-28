@@ -2,7 +2,7 @@
 
 A bestätigte im Auftragschat den geprüften Stand von PR #7 und die Übernahme des administrativen SYS-03-Abschlusses. PR #7 wurde als `e6a95a92b6241a750ba7fff599ff2dac123c3149` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46073023305) sowie lokal `npm ci`, `npm run check` (233 Tests) und `npm run calibrate` bestanden. Die Kalibrierwerte stimmen mit der 02B-Referenz überein. [PRE-D01](../intelligence-validation/PRE-D01.md)
 
-Die sechs Baselines in RS-006 sind vollständig auditiert. Die anschließende Entwicklungsauswertung und das gepaarte Screening laufen im lokalen Kampagnenarchiv mit dauerhaftem Checkpoint und Budgetledger. Der Benchmark hat 14 Worker für diesen Rechner ergeben. Prüfergebnisse, laufende Versuche und offene Gates sind im Forschungsbericht und im Abnahmeregister verknüpft. [Forschung](../intelligence-validation/RESEARCH_EXECUTION.md) · [Prüfstatus](../intelligence-validation/ACCEPTANCE_RESULTS.csv)
+Die sechs Baselines und ihre zwölf Vergleiche auf je 40 Entwicklungsfällen sind ausgewertet. Der beste Baseline-Champion erreichte 21/40. Das gepaarte Screening läuft auf `160db2c` mit 14 Workern, dauerhaften Checkpoints und Budgetledger. In PR #8 ist A als unabhängiger Reviewer angefragt. Das Technical Gate und die Model Readiness sind offen. [Forschung](../intelligence-validation/RESEARCH_EXECUTION.md) · [Prüfstatus](../intelligence-validation/ACCEPTANCE_RESULTS.csv) · [Review](https://github.com/Andreas-Hartweger/ARENA/pull/8)
 
 ## Abschlussübergabe Batch 02C
 
