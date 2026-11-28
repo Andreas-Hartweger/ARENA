@@ -1,8 +1,8 @@
 # Entwicklungswarteschlange
 
-## Batch 02D · Gepaarte Screeningläufe
+## Batch 02D · Bestätigungsläufe
 
-PRE-D01 und die sechs Baselines sind abgeschlossen. Die zwölf Vergleiche der Baseline-Modelle auf je 40 Entwicklungsfällen sind ausgewertet. RS-007 und RS-008 laufen mit 14 Workern auf `160db2c`. Danach folgen die Auswahl für die Bestätigung, die Langzeitläufe, der Kandidatenfreeze und die getrennten finalen Fälle. Für das unabhängige Review von 02D ist A in PR #8 angefragt. [Fahrdaten](../intelligence-validation/RESEARCH_EXECUTION.md) · [158 Abnahmepunkte](../intelligence-validation/ACCEPTANCE_RESULTS.csv) · [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8)
+PRE-D01, die sechs Baselines und sämtliche 94 gepaarten Screeningläufe sind abgeschlossen. RS-009 führt die Referenz und die fünf aus 40 Entwicklungsfällen ausgewählten Alternativen auf neuen Seeds aus. Es folgen die Langzeitläufe, der Kandidatenfreeze und die finalen Fälle. Für das unabhängige Review von 02D ist A in PR #8 angefragt. [Auswahlnachweis](../intelligence-validation/evidence/selection-confirmation.json) · [158 Abnahmepunkte](../intelligence-validation/ACCEPTANCE_RESULTS.csv) · [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8)
 
 ## Batch 02C
 

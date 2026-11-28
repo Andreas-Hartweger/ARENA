@@ -1,0 +1,1849 @@
+{
+  "experiment": "S40-42",
+  "genome": "47f047d8143fbf1f536d51f6446ccd6755bf12b344b26cf87ed48a59048b4424",
+  "role": "champion",
+  "caseId": "development-0-0",
+  "panel": "cf5be24eed52c153a89b05b254e0094f0c154861f70b9b947e5c32a1d7f0032e",
+  "effective": "ef6ecaf85dd8ac6c05f6fda7e4189928ab1bb5b19e9e23bcd41fdf4f78dc4a7b",
+  "result": "2da14920c354ddc3c96ceb675bae005e598fcb16c2563ed7ef89c76871670391",
+  "physicsTicks": 5258,
+  "strideTicks": 12,
+  "sampleCount": 439,
+  "samples": {
+    "file": "development-champion-trace.json.gz",
+    "size": 593801,
+    "sha256": "b44a70d6785a4da74e89c11607d0d222ed93ddc47f378460548cf9c28c0a7e7c"
+  },
+  "diagnostics": {
+    "observations": 439,
+    "decisions": 439,
+    "measuredDecisions": 439,
+    "tanhSaturationAt": 0.99,
+    "inputs": [
+      {
+        "id": "ego.speed",
+        "available": 439,
+        "masked": 0,
+        "min": 0.0135561076613764,
+        "max": 0.15533781020065923
+      },
+      {
+        "id": "ego.longitudinal",
+        "available": 439,
+        "masked": 0,
+        "min": 0.0135561076613764,
+        "max": 0.15533483420366234
+      },
+      {
+        "id": "ego.lateral",
+        "available": 439,
+        "masked": 0,
+        "min": -0.013078589932147071,
+        "max": 0.014747008416059778
+      },
+      {
+        "id": "ego.yaw_rate",
+        "available": 439,
+        "masked": 0,
+        "min": -0.20265166362550716,
+        "max": 0.1877232103659036
+      },
+      {
+        "id": "ego.steer_angle",
+        "available": 439,
+        "masked": 0,
+        "min": -0.36379345929902474,
+        "max": 0.5193898364102123
+      },
+      {
+        "id": "ego.drive_direction",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ego.front.asphalt",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ego.front.grass",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ego.front.mu",
+        "available": 439,
+        "masked": 0,
+        "min": 0.625,
+        "max": 0.625
+      },
+      {
+        "id": "ego.rear.asphalt",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ego.rear.grass",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ego.rear.mu",
+        "available": 439,
+        "masked": 0,
+        "min": 0.625,
+        "max": 0.625
+      },
+      {
+        "id": "ray00.edge.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.05914840321655772,
+        "max": 0.13542688463153724
+      },
+      {
+        "id": "ray00.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray00.barrier.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.16598408766269196,
+        "max": 0.24232823828808486
+      },
+      {
+        "id": "ray00.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray00.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray00.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray00.material.asphalt",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray00.material.grass",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray00.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray01.edge.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.04713273539236346,
+        "max": 0.20459266298738712
+      },
+      {
+        "id": "ray01.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray01.barrier.distance",
+        "available": 430,
+        "masked": 9,
+        "min": 0.13045134821695994,
+        "max": 0.9554790762198256
+      },
+      {
+        "id": "ray01.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray01.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray01.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray01.material.asphalt",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray01.material.grass",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray01.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray02.edge.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.04427967020369623,
+        "max": 0.9748341684208032
+      },
+      {
+        "id": "ray02.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray02.barrier.distance",
+        "available": 422,
+        "masked": 17,
+        "min": 0.12014166295684002,
+        "max": 0.9621328352830497
+      },
+      {
+        "id": "ray02.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray02.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray02.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray02.material.asphalt",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray02.material.grass",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray02.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray03.edge.distance",
+        "available": 435,
+        "masked": 4,
+        "min": 0.06302861997191264,
+        "max": 0.9895286954945066
+      },
+      {
+        "id": "ray03.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray03.barrier.distance",
+        "available": 421,
+        "masked": 18,
+        "min": 0.15165494310813427,
+        "max": 0.9842651530511687
+      },
+      {
+        "id": "ray03.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray03.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray03.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray03.material.asphalt",
+        "available": 435,
+        "masked": 4,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray03.material.grass",
+        "available": 435,
+        "masked": 4,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray03.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray04.edge.distance",
+        "available": 437,
+        "masked": 2,
+        "min": 0.0605534661540356,
+        "max": 0.8527138111218036
+      },
+      {
+        "id": "ray04.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray04.barrier.distance",
+        "available": 435,
+        "masked": 4,
+        "min": 0.14569940558246255,
+        "max": 0.994570519431623
+      },
+      {
+        "id": "ray04.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray04.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray04.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray04.material.asphalt",
+        "available": 437,
+        "masked": 2,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray04.material.grass",
+        "available": 437,
+        "masked": 2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray04.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray05.edge.distance",
+        "available": 435,
+        "masked": 4,
+        "min": 0.04805251110083512,
+        "max": 0.8817495339108221
+      },
+      {
+        "id": "ray05.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray05.barrier.distance",
+        "available": 427,
+        "masked": 12,
+        "min": 0.1623807889708992,
+        "max": 0.9588729396685726
+      },
+      {
+        "id": "ray05.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray05.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray05.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray05.material.asphalt",
+        "available": 435,
+        "masked": 4,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray05.material.grass",
+        "available": 435,
+        "masked": 4,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray05.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray06.edge.distance",
+        "available": 420,
+        "masked": 19,
+        "min": 0.025293898146343197,
+        "max": 0.9788486800107083
+      },
+      {
+        "id": "ray06.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray06.barrier.distance",
+        "available": 400,
+        "masked": 39,
+        "min": 0.1316452092615567,
+        "max": 0.9935120894299028
+      },
+      {
+        "id": "ray06.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray06.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray06.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray06.material.asphalt",
+        "available": 420,
+        "masked": 19,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray06.material.grass",
+        "available": 420,
+        "masked": 19,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray06.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray07.edge.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.015597375917872138,
+        "max": 0.7777749683525534
+      },
+      {
+        "id": "ray07.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray07.barrier.distance",
+        "available": 438,
+        "masked": 1,
+        "min": 0.1083951791258597,
+        "max": 0.9746793390138435
+      },
+      {
+        "id": "ray07.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray07.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray07.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray07.material.asphalt",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray07.material.grass",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray07.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray08.edge.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.010799500126383043,
+        "max": 0.6673696210758753
+      },
+      {
+        "id": "ray08.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray08.barrier.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.0921783269730596,
+        "max": 0.7671034466034373
+      },
+      {
+        "id": "ray08.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray08.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray08.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray08.material.asphalt",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray08.material.grass",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray08.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray09.edge.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.01048483122502472,
+        "max": 0.2703477483282297
+      },
+      {
+        "id": "ray09.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray09.barrier.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.10033601535555123,
+        "max": 0.5759102580578811
+      },
+      {
+        "id": "ray09.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray09.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray09.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray09.material.asphalt",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray09.material.grass",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray09.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray10.edge.distance",
+        "available": 437,
+        "masked": 2,
+        "min": 0.0006017382087114776,
+        "max": 0.1011455719622965
+      },
+      {
+        "id": "ray10.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray10.barrier.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.07866416586621315,
+        "max": 0.2520541328616727
+      },
+      {
+        "id": "ray10.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray10.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray10.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray10.material.asphalt",
+        "available": 437,
+        "masked": 2,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray10.material.grass",
+        "available": 437,
+        "masked": 2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray10.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray11.edge.distance",
+        "available": 437,
+        "masked": 2,
+        "min": 0.0005925535966650841,
+        "max": 0.08137612758295046
+      },
+      {
+        "id": "ray11.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray11.barrier.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.0847294315213349,
+        "max": 0.20278880108767655
+      },
+      {
+        "id": "ray11.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray11.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray11.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray11.material.asphalt",
+        "available": 437,
+        "masked": 2,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray11.material.grass",
+        "available": 437,
+        "masked": 2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray11.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray12.edge.distance",
+        "available": 438,
+        "masked": 1,
+        "min": 0.000047682723915064194,
+        "max": 0.07643845678597755
+      },
+      {
+        "id": "ray12.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray12.barrier.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.10664113861553294,
+        "max": 0.18327414123211203
+      },
+      {
+        "id": "ray12.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray12.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray12.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray12.material.asphalt",
+        "available": 438,
+        "masked": 1,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray12.material.grass",
+        "available": 438,
+        "masked": 1,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray12.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray13.edge.distance",
+        "available": 425,
+        "masked": 14,
+        "min": 0.0891564161978407,
+        "max": 0.9731533961504353
+      },
+      {
+        "id": "ray13.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray13.barrier.distance",
+        "available": 350,
+        "masked": 89,
+        "min": 0.2396550306365928,
+        "max": 0.9870914932649216
+      },
+      {
+        "id": "ray13.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray13.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray13.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray13.material.asphalt",
+        "available": 425,
+        "masked": 14,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray13.material.grass",
+        "available": 425,
+        "masked": 14,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray13.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray14.edge.distance",
+        "available": 437,
+        "masked": 2,
+        "min": 0.00024334455524120576,
+        "max": 0.2063245380781025
+      },
+      {
+        "id": "ray14.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray14.barrier.distance",
+        "available": 439,
+        "masked": 0,
+        "min": 0.16107162456782823,
+        "max": 0.516592490444408
+      },
+      {
+        "id": "ray14.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray14.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray14.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray14.material.asphalt",
+        "available": 437,
+        "masked": 2,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray14.material.grass",
+        "available": 437,
+        "masked": 2,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray14.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray15.edge.distance",
+        "available": 307,
+        "masked": 132,
+        "min": 0.07963884685453779,
+        "max": 0.9869698858860374
+      },
+      {
+        "id": "ray15.edge.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray15.barrier.distance",
+        "available": 207,
+        "masked": 232,
+        "min": 0.36368098821645145,
+        "max": 0.9939912536803834
+      },
+      {
+        "id": "ray15.barrier.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "ray15.vehicle.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "ray15.vehicle.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray15.material.asphalt",
+        "available": 307,
+        "masked": 132,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "ray15.material.grass",
+        "available": 307,
+        "masked": 132,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "ray15.material.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "local.offset",
+        "available": 439,
+        "masked": 0,
+        "min": -0.0539459378173639,
+        "max": 0.42312492961908377
+      },
+      {
+        "id": "local.sin_heading",
+        "available": 439,
+        "masked": 0,
+        "min": -0.342460380744472,
+        "max": 0.321988430016331
+      },
+      {
+        "id": "local.cos_heading",
+        "available": 439,
+        "masked": 0,
+        "min": 0.9395322706646916,
+        "max": 0.9999999999701611
+      },
+      {
+        "id": "local.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 1,
+        "max": 1
+      },
+      {
+        "id": "preview005.x",
+        "available": 188,
+        "masked": 251,
+        "min": 0.031665991542099876,
+        "max": 0.03403679336354738
+      },
+      {
+        "id": "preview005.y",
+        "available": 188,
+        "masked": 251,
+        "min": -0.010567249340192713,
+        "max": 0.008874002589251402
+      },
+      {
+        "id": "preview005.position_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview005.sin_heading",
+        "available": 188,
+        "masked": 251,
+        "min": -0.29530738503079695,
+        "max": 0.321988430016331
+      },
+      {
+        "id": "preview005.cos_heading",
+        "available": 188,
+        "masked": 251,
+        "min": 0.9467436035884363,
+        "max": 0.9999999999701611
+      },
+      {
+        "id": "preview005.heading_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview005.curvature",
+        "available": 185,
+        "masked": 254,
+        "min": -0.2857142857142857,
+        "max": 0
+      },
+      {
+        "id": "preview005.curvature_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview010.x",
+        "available": 188,
+        "masked": 251,
+        "min": 0.06341871151877987,
+        "max": 0.06734359823738771
+      },
+      {
+        "id": "preview010.y",
+        "available": 188,
+        "masked": 251,
+        "min": -0.020171759653527833,
+        "max": 0.01895540896706984
+      },
+      {
+        "id": "preview010.position_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview010.sin_heading",
+        "available": 188,
+        "masked": 251,
+        "min": -0.42832144322557075,
+        "max": 0.321988430016331
+      },
+      {
+        "id": "preview010.cos_heading",
+        "available": 188,
+        "masked": 251,
+        "min": 0.9036264390073833,
+        "max": 0.9999999999701611
+      },
+      {
+        "id": "preview010.heading_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview010.curvature",
+        "available": 188,
+        "masked": 251,
+        "min": -0.2857142857142857,
+        "max": 0
+      },
+      {
+        "id": "preview010.curvature_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview020.x",
+        "available": 188,
+        "masked": 251,
+        "min": 0.11886514246654059,
+        "max": 0.13393881049919573
+      },
+      {
+        "id": "preview020.y",
+        "available": 188,
+        "masked": 251,
+        "min": -0.056730596301513773,
+        "max": 0.04042130430149193
+      },
+      {
+        "id": "preview020.position_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview020.sin_heading",
+        "available": 188,
+        "masked": 251,
+        "min": -0.6656381936427775,
+        "max": 0.321988430016331
+      },
+      {
+        "id": "preview020.cos_heading",
+        "available": 188,
+        "masked": 251,
+        "min": 0.746274611094321,
+        "max": 0.9999999999701611
+      },
+      {
+        "id": "preview020.heading_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview020.curvature",
+        "available": 186,
+        "masked": 253,
+        "min": -0.2857142857142857,
+        "max": 0
+      },
+      {
+        "id": "preview020.curvature_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview040.x",
+        "available": 188,
+        "masked": 251,
+        "min": 0.18836589752826824,
+        "max": 0.2671292350228118
+      },
+      {
+        "id": "preview040.y",
+        "available": 188,
+        "masked": 251,
+        "min": -0.16819806267899143,
+        "max": 0.0833530949703361
+      },
+      {
+        "id": "preview040.position_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview040.sin_heading",
+        "available": 188,
+        "masked": 251,
+        "min": -0.9634985724787531,
+        "max": 0.321988430016331
+      },
+      {
+        "id": "preview040.cos_heading",
+        "available": 188,
+        "masked": 251,
+        "min": 0.2677134677811426,
+        "max": 0.9999999999701611
+      },
+      {
+        "id": "preview040.heading_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview040.curvature",
+        "available": 186,
+        "masked": 253,
+        "min": -0.2857142857142857,
+        "max": 0
+      },
+      {
+        "id": "preview040.curvature_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview060.x",
+        "available": 188,
+        "masked": 251,
+        "min": 0.19196262120393942,
+        "max": 0.4003196595464278
+      },
+      {
+        "id": "preview060.y",
+        "available": 188,
+        "masked": 251,
+        "min": -0.30049799037551733,
+        "max": 0.12368379676781185
+      },
+      {
+        "id": "preview060.position_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview060.sin_heading",
+        "available": 188,
+        "masked": 251,
+        "min": -0.9999552367192959,
+        "max": 0.31295118816764644
+      },
+      {
+        "id": "preview060.cos_heading",
+        "available": 188,
+        "masked": 251,
+        "min": -0.09291699502099511,
+        "max": 0.9999999999701611
+      },
+      {
+        "id": "preview060.heading_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview060.curvature",
+        "available": 185,
+        "masked": 254,
+        "min": -0.2857142857142857,
+        "max": 0
+      },
+      {
+        "id": "preview060.curvature_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview100.x",
+        "available": 102,
+        "masked": 337,
+        "min": 0.5122975017707923,
+        "max": 0.6667809062899418
+      },
+      {
+        "id": "preview100.y",
+        "available": 102,
+        "masked": 337,
+        "min": -0.3992139200015567,
+        "max": 0.1884393442177248
+      },
+      {
+        "id": "preview100.position_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview100.sin_heading",
+        "available": 101,
+        "masked": 338,
+        "min": -0.8954275602353796,
+        "max": 0.10473131135507961
+      },
+      {
+        "id": "preview100.cos_heading",
+        "available": 101,
+        "masked": 338,
+        "min": 0.4452072375545075,
+        "max": 0.9999943402169827
+      },
+      {
+        "id": "preview100.heading_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview100.curvature",
+        "available": 101,
+        "masked": 338,
+        "min": -0.2857142857142857,
+        "max": 0
+      },
+      {
+        "id": "preview100.curvature_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview150.x",
+        "available": 51,
+        "masked": 388,
+        "min": 0.7461054186157957,
+        "max": 1
+      },
+      {
+        "id": "preview150.y",
+        "available": 51,
+        "masked": 388,
+        "min": -0.6367954199793773,
+        "max": 0.08781997317452162
+      },
+      {
+        "id": "preview150.position_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview150.sin_heading",
+        "available": 49,
+        "masked": 390,
+        "min": -0.8246272792246402,
+        "max": -0.030023352678354074
+      },
+      {
+        "id": "preview150.cos_heading",
+        "available": 49,
+        "masked": 390,
+        "min": 0.5656764537777468,
+        "max": 0.9995491975355446
+      },
+      {
+        "id": "preview150.heading_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "preview150.curvature",
+        "available": 47,
+        "masked": 392,
+        "min": -0.2857142857142857,
+        "max": 0
+      },
+      {
+        "id": "preview150.curvature_valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 1
+      },
+      {
+        "id": "object00.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "object00.x",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object00.y",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object00.vx",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object00.vy",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object00.sin_heading",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object00.cos_heading",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object00.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object01.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "object01.x",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object01.y",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object01.vx",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object01.vy",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object01.sin_heading",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object01.cos_heading",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object01.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object02.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "object02.x",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object02.y",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object02.vx",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object02.vy",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object02.sin_heading",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object02.cos_heading",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object02.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object03.valid",
+        "available": 439,
+        "masked": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "object03.x",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object03.y",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object03.vx",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object03.vy",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object03.sin_heading",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object03.cos_heading",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      },
+      {
+        "id": "object03.distance",
+        "available": 0,
+        "masked": 439,
+        "min": null,
+        "max": null
+      }
+    ],
+    "layers": [
+      {
+        "width": 32,
+        "activation": "relu",
+        "values": 14048,
+        "zeros": 9068,
+        "negative": 0,
+        "saturated": null
+      },
+      {
+        "width": 16,
+        "activation": "relu",
+        "values": 7024,
+        "zeros": 3016,
+        "negative": 0,
+        "saturated": null
+      },
+      {
+        "width": 3,
+        "activation": "linear",
+        "values": 1317,
+        "zeros": 0,
+        "negative": 431,
+        "saturated": null
+      }
+    ]
+  },
+  "driving": {
+    "sampled": 439,
+    "measured": 439,
+    "phases": [
+      {
+        "phase": "straight",
+        "samples": 314,
+        "means": {
+          "speedMps": 7.273549968874056,
+          "throttle": 0.08772526068909563,
+          "brake": 0.013899479894386668,
+          "absSteering": 0.2738931772467073,
+          "absFrontSlipRad": 0.05524278431812519,
+          "absRearSlipRad": 0.020597611946527015,
+          "frontTireForceN": 2557.761263710512,
+          "rearTireForceN": 1253.4356785069156
+        }
+      },
+      {
+        "phase": "curveFirstThird",
+        "samples": 39,
+        "means": {
+          "speedMps": 10.16049190450756,
+          "throttle": 0.1117841985206848,
+          "brake": 0.0017146588035159172,
+          "absSteering": 0.3271564334979674,
+          "absFrontSlipRad": 0.06240589910512989,
+          "absRearSlipRad": 0.04045709918705457,
+          "frontTireForceN": 2920.4838416880734,
+          "rearTireForceN": 2156.3071081622074
+        }
+      },
+      {
+        "phase": "curveMiddleThird",
+        "samples": 39,
+        "means": {
+          "speedMps": 10.13987494138673,
+          "throttle": 0.06886492763784026,
+          "brake": 0.06287566958234314,
+          "absSteering": 0.23574440991802648,
+          "absFrontSlipRad": 0.047410318859759465,
+          "absRearSlipRad": 0.03666861093946835,
+          "frontTireForceN": 2383.8716288819915,
+          "rearTireForceN": 2121.1816188234548
+        }
+      },
+      {
+        "phase": "curveLastThird",
+        "samples": 47,
+        "means": {
+          "speedMps": 8.107707841530214,
+          "throttle": 0.03396138258693461,
+          "brake": 0.04590025716259063,
+          "absSteering": 0.2665435578752116,
+          "absFrontSlipRad": 0.04852638428725264,
+          "absRearSlipRad": 0.02709614468063036,
+          "frontTireForceN": 2296.3567943616777,
+          "rearTireForceN": 1523.7696006178742
+        }
+      }
+    ]
+  }
+}
