@@ -158,6 +158,46 @@ export function requireSelectionPredecessors(directory, target, ledger) {
       }
     }
   }
+  return status;
+}
+
+// Keep assigned nominal work ahead of a discretionary interaction.
+export function interactionReserve(ledger, status) {
+  const confirmation = ledger.readManifest('selection:confirmation'),
+    long = ledger.readManifest('selection:long');
+  const states = new Map(status.slots.map((r) => [r.id, r.state]));
+  let episodes = 0,
+    devModels = 1;
+  for (const slot of slots) {
+    const id = slot.ExperimentID;
+    if (ledger.machine.experiments && !ledger.machine.experiments.includes(id))
+      continue;
+    const state = states.get(id);
+    if (id.startsWith('S') && !confirmation && state === 'completed')
+      devModels++;
+    if (
+      !['C', 'L'].includes(id[0]) ||
+      ['deferred', 'stopped-budget', 'failed'].includes(state)
+    )
+      continue;
+    const selection = id.startsWith('C') ? confirmation : long;
+    const ordinal = /^Finalist (\d+)$/.exec(slot.ConfigID);
+    if (selection && ordinal && Number(ordinal[1]) > selection.configs.length)
+      continue;
+    if (state !== 'completed') {
+      const committed = ledger.db
+        .prepare(
+          "SELECT COALESCE(SUM(json_extract(summary,'$.regularEpisodes')),0) n FROM chunks WHERE experiment=?",
+        )
+        .get(id).n;
+      episodes += Math.max(0, Number(slot.EpisodeBudget) - committed);
+    }
+    if (id.startsWith('L') || !long) devModels++;
+  }
+  devModels += status.slots.filter(
+    (r) => r.id.startsWith('X-') && r.state === 'completed',
+  ).length;
+  return { episodes, developmentCases: 40 * devModels };
 }
 if (process.argv[1]?.replaceAll('\\', '/').endsWith('/research/status.mjs')) {
   const r = campaignStatus(process.argv[2]);

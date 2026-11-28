@@ -168,16 +168,9 @@ export async function evaluatePanel(
     scope = final ? 'validation' : 'research',
     genome = candidate.genome,
     m = genome.model;
-  if (final) {
-    const frozen = ledger.db
-      .prepare("SELECT data FROM manifests WHERE id='final-candidates'")
-      .get();
-    if (
-      !frozen ||
-      !JSON.parse(frozen.data).candidates.some((c) => c.genome === genome.hash)
-    )
-      throw Error('Model has not been frozen for final validation');
-  }
+  const frozen = ledger.readManifest('final-candidates');
+  if (final && !frozen?.candidates?.some((c) => c.genome === genome.hash))
+    throw Error('Model has not been frozen for final validation');
   const rows = new Array(panel.cases.length),
     spec = {
       signature: m.signature,
@@ -219,6 +212,8 @@ export async function evaluatePanel(
         throw Error('Cached assignment differs');
       rows[slot] = existing;
     } else {
+      if (!final && frozen)
+        throw Error('Development dispatch closed after candidate freeze');
       const trace = tracing
         ? { everyTicks: 12, maxSamples: 1801, dynamics: true }
         : undefined;

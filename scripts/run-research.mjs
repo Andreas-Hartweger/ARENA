@@ -27,6 +27,10 @@ import { runExperiment } from './research/coordinator.mjs';
 import { auditExperiment } from './research/audit-data.mjs';
 import { reuseReference } from './research/reference.mjs';
 import { baselineDevelopment } from './research/baseline-development.mjs';
+import {
+  requireSelectionPredecessors,
+  interactionReserve,
+} from './research/status.mjs';
 
 const [directory, request, manifestFile] = process.argv.slice(2),
   runtime = environment();
@@ -249,6 +253,16 @@ try {
       clock.pulse();
       continue;
     }
+    if (ledger.readManifest('final-candidates'))
+      throw Error(
+        'Campaign candidates are frozen; new training dispatch is closed',
+      );
+    const optionalReserve = extra
+      ? interactionReserve(
+          ledger,
+          requireSelectionPredecessors(directory, 'confirmation', ledger),
+        )
+      : null;
     clock.pulse();
     spaceCheck(directory, 2 * 1024 ** 3);
     if (id === 'B-evolution-42') {
@@ -297,11 +311,12 @@ try {
       const perMs = Math.max(base.ms, existing.ms ?? 0),
         perTick = Math.max(base.ticks, existing.ticks ?? 0);
       const reserveEpisodes =
-        phase === 'screen'
+        optionalReserve?.episodes ??
+        (phase === 'screen'
           ? 3 * 3 * 25600 + 2 * 2 * 51200
           : phase === 'confirmation'
             ? 2 * 2 * 51200
-            : 0;
+            : 0);
       const seeds =
         phase === 'screen'
           ? [42, 43]
@@ -312,6 +327,7 @@ try {
         entry.definition.episodeBudget *
         (extra ? 1 : seeds.length - seeds.indexOf(Number(row.Seed)));
       const futureDevelopmentCases =
+        optionalReserve?.developmentCases ??
         40 * (phase === 'screen' ? 100 : phase === 'confirmation' ? 18 : 4);
       const devTicks = futureDevelopmentCases * 7200;
       const measuredMin = scale.stats.find(

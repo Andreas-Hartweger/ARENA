@@ -69,14 +69,30 @@ async function select() {
     publishJSON(join(folder, phase + '.json'), previous);
     return;
   }
-  requireSelectionPredecessors(directory, phase, ledger);
+  const status = requireSelectionPredecessors(directory, phase, ledger);
   const scale = JSON.parse(
     readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
   );
   const development = loadPanel(directory, 'development'),
     available = [],
     excluded = [];
-  for (const slot of slots) {
+  const eligibleSlots = [...slots];
+  if (phase === 'freeze') {
+    for (const r of status.slots) {
+      if (!r.id.startsWith('X-') || r.state !== 'completed') continue;
+      const entry = ledger.readManifest('experiment:' + r.id);
+      if (
+        entry?.definition.phase !== 'Interaction' ||
+        !ledger.readManifest('experiment-audit:' + r.id)
+      )
+        throw Error('Interaction has no verified definition or audit: ' + r.id);
+      eligibleSlots.push({
+        ExperimentID: r.id,
+        Seed: entry.definition.masterSeed,
+      });
+    }
+  }
+  for (const slot of eligibleSlots) {
     let relevant;
     if (phase === 'confirmation')
       relevant =

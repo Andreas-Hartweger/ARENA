@@ -23,7 +23,7 @@ import { nodeComputePort } from '../node-compute-port.mjs';
 import { exportExperiment } from './evidence.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
 import { auditExperiment } from './audit-data.mjs';
-import { requireSelectionPredecessors } from './status.mjs';
+import { requireSelectionPredecessors, interactionReserve } from './status.mjs';
 import { reviewCases, casesCSV } from './review-cases.mjs';
 import { runExperiment } from './coordinator.mjs';
 import {
@@ -66,6 +66,12 @@ try {
     const entry = { definition: def, hash: hashJSON(def) };
     const state = await runExperiment(ledger, entry, clock, { hardware: 8 });
     assert.equal(state.phase, 'Completed');
+    const outstanding = interactionReserve(ledger, { slots: [] });
+    assert.equal(outstanding.episodes, 18 * 25600 + 4 * 51200);
+    const afterOne = interactionReserve(ledger, {
+      slots: [{ id: 'C01-101', state: 'completed' }],
+    });
+    assert.equal(afterOne.episodes, outstanding.episodes - 25600);
     await exportExperiment(ledger, src, entry, state, {
       node: process.version,
       sha: spec.sha,
@@ -201,6 +207,17 @@ try {
       'final-raw-audit',
     ])
       ledger.manifest(id, { testOnly: id });
+    assert.deepEqual(
+      await evaluatePanel(ledger, clock, panel, candidate, 1),
+      first,
+    );
+    const afterFreeze = globalThis.structuredClone(panel);
+    afterFreeze.cases[0].id = afterFreeze.cases[0].scenario.id = 'qa-late-dev';
+    await assert.rejects(
+      evaluatePanel(ledger, clock, afterFreeze, candidate, 1),
+      /freeze/,
+    );
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 260);
   } finally {
     clock.finish();
     ledger.release();
