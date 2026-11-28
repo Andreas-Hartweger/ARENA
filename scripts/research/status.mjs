@@ -205,29 +205,35 @@ export function combinedStatus(directories) {
     reachedHours: [12, 24, 48].filter((hours) => ms >= hours * 3600000),
   };
 }
-export function requireSelectionPredecessors(directory, target, ledger) {
+export function requireSelectionPredecessors(directory, target, ledger, peers) {
   const prefixes = {
     confirmation: ['B-', 'S'],
     long: ['B-', 'S', 'C'],
     freeze: ['B-', 'S', 'C', 'L'],
   }[target];
   if (!prefixes) throw Error('Unknown selection phase');
-  const status = campaignStatus(directory);
+  const status = peers
+    ? combinedStatus(peers.roots)
+    : campaignStatus(directory);
   for (const prefix of prefixes) {
     const records = status.slots.filter((r) => r.id.startsWith(prefix));
-    const stopped = records.some((r) => r.state === 'stopped-budget');
+    const stopped = new Set(
+      records.filter((r) => r.state === 'stopped-budget').map((r) => r.machine),
+    );
     for (const r of records) {
       if (r.state === 'completed' || r.state === 'reused-historical') {
-        const audit = ledger.readManifest(
-          (prefix === 'B-' ? 'baseline-audit:' : 'experiment-audit:') + r.id,
-        );
+        const key =
+          (prefix === 'B-' ? 'baseline-audit:' : 'experiment-audit:') + r.id;
+        const audit = peers
+          ? peers.manifest(peers.source(r.id), key)
+          : ledger.readManifest(key);
         if (!audit) throw Error('Missing completed experiment audit: ' + r.id);
       } else if (
         prefix === 'B-' ||
         !(
           r.state === 'deferred' ||
           r.state === 'stopped-budget' ||
-          (stopped && r.state === 'not-started')
+          (stopped.has(r.machine) && r.state === 'not-started')
         )
       ) {
         throw Error(

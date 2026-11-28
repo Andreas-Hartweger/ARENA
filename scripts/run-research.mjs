@@ -27,6 +27,7 @@ import { runExperiment } from './research/coordinator.mjs';
 import { auditExperiment } from './research/audit-data.mjs';
 import { reuseReference } from './research/reference.mjs';
 import { baselineDevelopment } from './research/baseline-development.mjs';
+import { peerInputs } from './research/peer-inputs.mjs';
 import {
   requireSelectionPredecessors,
   interactionReserve,
@@ -62,7 +63,8 @@ if (
 )
   throw Error('Expected baseline, screen, confirmation or long');
 const start = performance.now(),
-  ledger = openCampaign(directory, parseFlags()),
+  flags = parseFlags(),
+  ledger = openCampaign(directory, flags),
   clock = new ActiveTime(
     ledger,
     { experimentId: 'phase-' + phase },
@@ -71,6 +73,7 @@ const start = performance.now(),
     start,
   );
 try {
+  const peers = peerInputs(directory, ledger, flags.peers);
   const scale = JSON.parse(
     readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
   );
@@ -162,7 +165,12 @@ try {
       if (peer !== id) {
         const prior = JSON.parse(
           readFileSync(
-            join(directory, 'experiments', peer, 'audit.json'),
+            join(
+              peers ? peers.source(peer) : directory,
+              'experiments',
+              peer,
+              'audit.json',
+            ),
             'utf8',
           ),
         );
@@ -182,11 +190,11 @@ try {
   }
   let selected;
   if (phase === 'confirmation' || phase === 'long') {
-    const saved = ledger.db
-      .prepare('SELECT data FROM manifests WHERE id=?')
-      .get('selection:' + phase);
-    if (!saved) throw Error('Phase selection is not frozen');
-    selected = JSON.parse(saved.data);
+    const key = 'selection:' + phase;
+    selected = peers ? peers.common(key) : ledger.readManifest(key);
+    if (!selected || selected.phase !== phase)
+      throw Error('Phase selection is not frozen');
+    if (peers) ledger.transaction(() => ledger.manifest(key, selected));
   }
   const progress = {
     phase,
@@ -195,16 +203,26 @@ try {
     deferred: [],
     stopped: null,
   };
+  const assigned =
+    ledger.machine.experiments && new Set(ledger.machine.experiments);
+  const localSlots = assigned
+    ? slots.filter((s) => assigned.has(s.ExperimentID))
+    : slots;
+  const assignedBudget = (prefix, planned) =>
+    Math.min(
+      planned,
+      localSlots
+        .filter((s) => s.ExperimentID.startsWith(prefix))
+        .reduce((n, s) => n + Number(s.EpisodeBudget), 0),
+    );
+  let peerBaseline;
   for (const row of rows) {
     const id = row.ExperimentID,
       finalist = row.ConfigID.startsWith('Finalist '),
       config = finalist
         ? selected?.configs[Number(row.ConfigID.split(' ')[1]) - 1]
         : undefined;
-    if (
-      ledger.machine.experiments &&
-      !ledger.machine.experiments.includes(id)
-    ) {
+    if (assigned && !assigned.has(id)) {
       if (supplied) throw Error('Experiment assigned to a different machine');
       continue;
     }
@@ -253,14 +271,23 @@ try {
       clock.pulse();
       continue;
     }
-    if (ledger.readManifest('final-candidates'))
+    if (
+      peers
+        ? peers.common('final-candidates')
+        : ledger.readManifest('final-candidates')
+    )
       throw Error(
         'Campaign candidates are frozen; new training dispatch is closed',
       );
     const optionalReserve = extra
       ? interactionReserve(
           ledger,
-          requireSelectionPredecessors(directory, 'confirmation', ledger),
+          requireSelectionPredecessors(
+            directory,
+            'confirmation',
+            ledger,
+            peers,
+          ),
         )
       : null;
     clock.pulse();
@@ -304,7 +331,20 @@ try {
          FROM chunks WHERE experiment LIKE ?`,
           )
           .get(pattern);
-      const base = costs('B-%');
+      const measuredMin = scale.stats.find(
+        (stat) => stat.workers === workers,
+      )?.min;
+      const localBase = costs('B-%');
+      if (peers && !peerBaseline) {
+        peerBaseline = peers.baselineCost(measuredMin);
+        ledger.transaction(() =>
+          ledger.manifest('assigned-baseline-forecast', peerBaseline),
+        );
+      }
+      const base = {
+        ms: Math.max(localBase.ms ?? 0, peerBaseline?.ms ?? 0),
+        ticks: Math.max(localBase.ticks ?? 0, peerBaseline?.ticks ?? 0),
+      };
       if (!base.ms || !base.ticks)
         throw Error('Measured baselines required before comparison');
       const existing = costs(entry.definition.configId + '-%');
@@ -313,26 +353,30 @@ try {
       const reserveEpisodes =
         optionalReserve?.episodes ??
         (phase === 'screen'
-          ? 3 * 3 * 25600 + 2 * 2 * 51200
+          ? assignedBudget('C', 3 * 3 * 25600) +
+            assignedBudget('L', 2 * 2 * 51200)
           : phase === 'confirmation'
-            ? 2 * 2 * 51200
+            ? assignedBudget('L', 2 * 2 * 51200)
             : 0);
-      const seeds =
-        phase === 'screen'
-          ? [42, 43]
-          : phase === 'confirmation'
-            ? [101, 102, 103]
-            : [201, 202];
+      const remainingSeeds = localSlots.filter(
+        (s) =>
+          s.ExperimentID[0] === id[0] &&
+          s.ConfigID === row.ConfigID &&
+          Number(s.Seed) >= Number(row.Seed),
+      ).length;
       const proposed =
-        entry.definition.episodeBudget *
-        (extra ? 1 : seeds.length - seeds.indexOf(Number(row.Seed)));
+        entry.definition.episodeBudget * (extra ? 1 : remainingSeeds);
+      const devModels =
+        phase === 'screen' ? 100 : phase === 'confirmation' ? 18 : 4;
+      const localDevModels = assigned
+        ? localSlots.filter(
+            (s) => phase === 'screen' || s.ExperimentID[0] === id[0],
+          ).length
+        : devModels;
       const futureDevelopmentCases =
         optionalReserve?.developmentCases ??
-        40 * (phase === 'screen' ? 100 : phase === 'confirmation' ? 18 : 4);
+        40 * Math.min(devModels, localDevModels);
       const devTicks = futureDevelopmentCases * 7200;
-      const measuredMin = scale.stats.find(
-        (stat) => stat.workers === workers,
-      )?.min;
       if (!(measuredMin > 0)) throw Error('Measured worker throughput missing');
       const needed = {
         ms: Math.ceil(
@@ -368,7 +412,9 @@ try {
         // Later seeds of this group must not run alone just because their forecast is smaller.
         for (const other of rows.filter(
           (r) =>
-            r.ConfigID === row.ConfigID && Number(r.Seed) > Number(row.Seed),
+            r.ConfigID === row.ConfigID &&
+            Number(r.Seed) > Number(row.Seed) &&
+            (!assigned || assigned.has(r.ExperimentID)),
         ))
           progress.deferred.push({ ...reason, id: other.ExperimentID });
         continue;

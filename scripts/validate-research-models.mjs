@@ -4,11 +4,13 @@ import process from 'node:process';
 import { performance } from 'node:perf_hooks';
 import { environment } from './evolution-runtime.mjs';
 import { sha, hashJSON } from './research/manifest.mjs';
+import { peerInputs } from './research/peer-inputs.mjs';
 import {
   openCampaign,
   ActiveTime,
   publishJSON,
   parseFlags,
+  requireCampaignCoordinator,
 } from './research/campaign.mjs';
 import {
   loadCandidate,
@@ -21,7 +23,8 @@ const { evidenceHash } = await import('../src/storage/capabilities.ts');
 const directory = process.argv[2],
   start = performance.now(),
   runtime = environment(),
-  ledger = openCampaign(directory, parseFlags());
+  flags = parseFlags(),
+  ledger = openCampaign(directory, flags);
 const clock = new ActiveTime(
   ledger,
   { experimentId: 'final-model-validation' },
@@ -30,6 +33,8 @@ const clock = new ActiveTime(
   start,
 );
 async function validate() {
+  requireCampaignCoordinator(ledger);
+  const peers = peerInputs(directory, ledger, flags.peers);
   const folder = join(directory, 'validation');
   mkdirSync(folder, { recursive: true });
   const previous = ledger.readManifest('final-validation');
@@ -72,7 +77,11 @@ async function validate() {
   };
   const output = [];
   for (const f of freeze.candidates) {
-    const candidate = loadCandidate(directory, f.experimentId, f.modelRole);
+    const candidate = loadCandidate(
+      peers ? peers.source(f.experimentId) : directory,
+      f.experimentId,
+      f.modelRole,
+    );
     if (
       candidate.genome.hash !== f.genome ||
       candidate.genome.model.key !== f.modelKey ||

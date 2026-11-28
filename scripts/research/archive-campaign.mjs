@@ -18,7 +18,13 @@ import { availableParallelism } from 'node:os';
 import { TextDecoder } from 'node:util';
 import { performance } from 'node:perf_hooks';
 import process from 'node:process';
-import { ActiveTime, openCampaign, publishJSON } from './campaign.mjs';
+import {
+  ActiveTime,
+  openCampaign,
+  publishJSON,
+  parseFlags,
+} from './campaign.mjs';
+import { peerInputs } from './peer-inputs.mjs';
 import { fileHash, spaceCheck } from './evidence.mjs';
 import { hashJSON, sha } from './manifest.mjs';
 const { restore } = await import('../../src/storage/checkpoint.ts');
@@ -92,6 +98,43 @@ async function walk(name) {
   }
 }
 async function archive() {
+  const peers = peerInputs(source, ledger, parseFlags().peers);
+  if (peers) {
+    if (
+      peers.roots.some(
+        (root) =>
+          contains(resolve(root), target) || contains(target, resolve(root)),
+      )
+    )
+      throw Error('Backup must be outside every source campaign');
+    const receipts = Object.fromEntries(
+      [
+        'historical-reference',
+        'final-candidates',
+        'final-validation',
+        'final-raw-audit',
+      ].map((key) => [key, peers.common(key)]),
+    );
+    const freeze = receipts['final-candidates'],
+      validation = receipts['final-validation'],
+      raw = receipts['final-raw-audit'];
+    if (
+      !receipts['historical-reference'] ||
+      !freeze ||
+      !validation ||
+      !raw ||
+      validation.selectionHash !== hashJSON(freeze) ||
+      raw.result.validation !== hashJSON(validation)
+    )
+      throw Error(
+        'Verified frozen validation and raw audit required across assigned machines',
+      );
+    ledger.transaction(() => {
+      ledger.assertLease();
+      for (const [key, value] of Object.entries(receipts))
+        ledger.manifest(key, value);
+    });
+  }
   if (!ledger.readManifest('final-raw-audit'))
     throw Error(
       'Final raw-data audit required before archiving private panels',

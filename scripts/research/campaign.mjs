@@ -39,6 +39,12 @@ export function publish(path, bytes) {
 export function publishJSON(path, data) {
   publish(path, Buffer.from(JSON.stringify(data, null, 2) + '\n'));
 }
+export function requireCampaignCoordinator(ledger) {
+  if (ledger.definition.machines[0].id !== ledger.machine.id)
+    throw Error(
+      'Shared panels, phase selection and validation belong to the first assigned machine',
+    );
+}
 export function openCampaign(
   directory,
   { init = false, recover = false, allocationFile } = {},
@@ -188,6 +194,14 @@ export class ActiveTime {
 }
 export function parseFlags() {
   const place = process.argv.indexOf('--allocation');
+  const peers = [];
+  for (let i = 2; i < process.argv.length; i++) {
+    if (process.argv[i] !== '--peer') continue;
+    const root = process.argv[++i];
+    if (!root || root.startsWith('--'))
+      throw Error('Expected peer campaign directory');
+    peers.push(root);
+  }
   if (
     place >= 0 &&
     (!process.argv[place + 1] || !process.argv.includes('--init'))
@@ -197,5 +211,6 @@ export function parseFlags() {
     init: process.argv.includes('--init'),
     recover: process.argv.includes('--recover'),
     allocationFile: place >= 0 ? process.argv[place + 1] : undefined,
+    peers,
   };
 }

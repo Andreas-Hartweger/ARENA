@@ -5,7 +5,14 @@ import process from 'node:process';
 import { performance } from 'node:perf_hooks';
 import { environment } from '../evolution-runtime.mjs';
 import { loadCandidate, loadPanel, standardPanel } from './evaluate-panel.mjs';
-import { ActiveTime, openCampaign, publishJSON } from './campaign.mjs';
+import {
+  ActiveTime,
+  openCampaign,
+  publishJSON,
+  parseFlags,
+  requireCampaignCoordinator,
+} from './campaign.mjs';
+import { peerInputs } from './peer-inputs.mjs';
 import { hashJSON, sha } from './manifest.mjs';
 import { auditEpisode } from './audit-data.mjs';
 const { createTrack } = await import('../../src/tracks/track.ts');
@@ -39,6 +46,9 @@ function near(a, b) {
   );
 }
 async function review() {
+  const flags = parseFlags();
+  requireCampaignCoordinator(ledger);
+  const peers = peerInputs(directory, ledger, flags.peers);
   const outputDir = join(directory, 'validation'),
     dest = join(outputDir, 'audit.json');
   const frozen = ledger.readManifest('final-candidates'),
@@ -57,7 +67,11 @@ async function review() {
     track = createTrack();
   for (const item of final.results) {
     const f = item.candidate,
-      candidate = loadCandidate(directory, f.experimentId, f.modelRole);
+      candidate = loadCandidate(
+        peers ? peers.source(f.experimentId) : directory,
+        f.experimentId,
+        f.modelRole,
+      );
     assert(frozen.candidates.some((row) => hashJSON(row) === hashJSON(f)));
     assert.equal(f.genome, candidate.genome.hash);
     const data = readVerified(outputDir, item.file, item.sha256),

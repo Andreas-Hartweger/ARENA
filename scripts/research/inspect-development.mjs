@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
+import { mkdirSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { publish, publishJSON } from './campaign.mjs';
 import { evaluatePanel } from './evaluate-panel.mjs';
@@ -35,6 +36,7 @@ export async function inspectDevelopment(
   const samples = gzipSync(JSON.stringify(trace.samples));
   const name = 'development-' + model.role + '-trace.json.gz';
   const folder = join(directory, 'experiments', model.experimentId);
+  mkdirSync(folder, { recursive: true });
   publish(join(folder, name), samples);
   const report = {
     experiment: model.experimentId,

@@ -30,6 +30,7 @@ import {
 } from './status.mjs';
 import { reviewCases, casesCSV } from './review-cases.mjs';
 import { runExperiment } from './coordinator.mjs';
+import { peerInputs, combinedMilestone } from './peer-inputs.mjs';
 import {
   evaluatePanel,
   loadCandidate,
@@ -117,6 +118,38 @@ async function checkMachineQuotas() {
     () => combinedStatus([roots[0], roots[0]]),
     /one matching ledger/,
   );
+  const local = new ResearchLedger(
+    join(roots[0], 'research.sqlite'),
+    spec,
+    machines[0].id,
+  );
+  try {
+    const peers = peerInputs(roots[0], local, [roots[1]]);
+    const remote = machines[1].experiments[0];
+    assert.equal(peers.source(remote), roots[1]);
+    const remoteEntry = peers.manifest(
+      peers.source(remote),
+      'experiment:' + remote,
+    );
+    assert.equal(
+      loadCandidate(peers.source(remote), remote).report.entry.hash,
+      remoteEntry.hash,
+    );
+    const spent = report.charge.find((r) => r.scope === 'research');
+    const boundary = combinedMilestone(peers, spent.ms);
+    assert.deepEqual(boundary.total, {
+      ms: spent.ms,
+      ticks: 16 * 65,
+      episodes: 16,
+    });
+    assert.throws(
+      () => combinedMilestone(peers, spent.ms + 1),
+      /not been reached/,
+    );
+    assert.throws(() => peerInputs(roots[0], local, [roots[0]]), /Duplicate/);
+  } finally {
+    local.close();
+  }
 }
 try {
   await checkMachineQuotas();

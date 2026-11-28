@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { loadPanel, loadCandidate, evaluatePanel } from './evaluate-panel.mjs';
 import { publishJSON } from './campaign.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
@@ -10,7 +10,13 @@ const { caseStatistics, comparePaired } =
 
 // The sealed protocol evaluates each baseline on the same 40 development cases.
 // Hash-verified measurements are shared with later selection and never consume a second drive.
-export async function baselineDevelopment(directory, ledger, clock, workers) {
+export async function baselineDevelopment(
+  directory,
+  ledger,
+  clock,
+  workers,
+  peers,
+) {
   const key = 'baseline-development',
     file = join(directory, 'baseline-development.json');
   const saved = ledger.readManifest(key);
@@ -28,8 +34,11 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
   for (const seed of seeds) {
     for (const method of methods) {
       const id = 'B-' + method + '-' + seed,
-        folder = join(directory, 'experiments', id),
-        sealed = ledger.readManifest('baseline-audit:' + id);
+        root = peers ? peers.source(id) : directory,
+        folder = join(root, 'experiments', id),
+        sealed = peers
+          ? peers.manifest(root, 'baseline-audit:' + id)
+          : ledger.readManifest('baseline-audit:' + id);
       for (const name of ['audit.json', 'prefix-8192.json']) {
         const source = join(folder, name);
         if (!existsSync(source) || sha(readFileSync(source)) !== sealed?.[name])
@@ -39,7 +48,7 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
       let receipt = ledger.readManifest(statisticsKey);
       if (!receipt) {
         const { lapTimeBoundaries, ...audit } = await auditExperiment(
-          directory,
+          root,
           id,
           {
             pulse: () => clock.pulse(),
@@ -73,7 +82,11 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
       for (const method of methods) {
         clock.pulse();
         const id = 'B-' + method + '-' + seed;
-        const model = loadCandidate(directory, id, role),
+        const model = loadCandidate(
+            peers ? peers.source(id) : directory,
+            id,
+            role,
+          ),
           result = await evaluatePanel(ledger, clock, panel, model, workers);
         const summary = caseStatistics(result.actual);
         const casesValid =
@@ -89,6 +102,7 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
           );
         const relative = 'experiments/' + id + '/dev-' + role + '.json',
           target = join(directory, relative);
+        mkdirSync(join(directory, 'experiments', id), { recursive: true });
         publishJSON(target, result);
         runs.push({
           id,

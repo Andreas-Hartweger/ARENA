@@ -5,8 +5,9 @@ import { basename, dirname, extname, join } from 'node:path';
 import { Buffer } from 'node:buffer';
 import process from 'node:process';
 import { slots, hashJSON, sha } from './manifest.mjs';
-import { publish, publishJSON } from './campaign.mjs';
-import { campaignStatus } from './status.mjs';
+import { publish, publishJSON, parseFlags } from './campaign.mjs';
+import { campaignStatus, combinedStatus } from './status.mjs';
+import { peerInputs, combinedMilestone } from './peer-inputs.mjs';
 import { reviewCases, casesCSV } from './review-cases.mjs';
 
 const [directory, stage, output] = process.argv.slice(2);
@@ -25,6 +26,7 @@ const db = new DatabaseSync(join(directory, 'research.sqlite'), {
   readOnly: true,
 });
 const read = (p) => JSON.parse(readFileSync(p, 'utf8'));
+let peers;
 function manifest(id, required = true) {
   const r = db.prepare('SELECT hash,data FROM manifests WHERE id=?').get(id);
   if (!r && !required) return null;
@@ -33,11 +35,13 @@ function manifest(id, required = true) {
   return JSON.parse(r.data);
 }
 function summarize(id) {
-  const folder = join(directory, 'experiments', id),
+  const root = peers ? peers.source(id) : directory;
+  const folder = join(root, 'experiments', id),
     report = read(join(folder, 'experiment.json'));
-  const hashes = manifest(
-    (id.startsWith('B-') ? 'baseline-audit:' : 'experiment-audit:') + id,
-  );
+  const key =
+    (id.startsWith('B-') ? 'baseline-audit:' : 'experiment-audit:') + id;
+  const hashes = peers ? peers.manifest(root, key) : manifest(key);
+  assert(hashes, 'Missing audit for ' + id);
   for (const [file, digest] of Object.entries(hashes))
     assert.equal(sha(readFileSync(join(folder, file))), digest);
   const history = readFileSync(join(folder, 'generations.ndjson'));
@@ -269,9 +273,23 @@ try {
         episodes: slots.reduce((n, s) => n + Number(s.EpisodeBudget), 0),
       },
     };
+  const local = manifest('assignment');
+  peers = peerInputs(
+    directory,
+    {
+      definition: header.definition,
+      machine: { id: local.machineId },
+      readManifest: (key) => manifest(key, false),
+    },
+    parseFlags().peers,
+  );
   let report;
   if (stage === 'performance') {
     report = { ...base, ...performanceVariation() };
+  } else if (peers && ['12', '24', '48'].includes(stage)) {
+    if (peers.hosts.size !== header.definition.machines.length)
+      throw Error('Missing machine for combined milestone');
+    report = { ...base, ...combinedMilestone(peers, Number(stage) * 3600000) };
   } else if (['12', '24', '48'].includes(stage)) {
     const checkpoint = manifest('report-hour-' + stage),
       stamp = Date.parse(checkpoint.stamp);
@@ -317,7 +335,9 @@ try {
     ]);
     report = { ...base, comparisons: screenComparisons(experiments) };
   } else {
-    const status = campaignStatus(directory),
+    const status = peers
+        ? combinedStatus(peers.roots)
+        : campaignStatus(directory),
       ids =
         stage === 'baseline'
           ? slots
@@ -357,10 +377,19 @@ try {
       usage: status.charge,
       experiments,
       pairs,
-      milestones: status.milestones,
+      milestones: peers ? status.reachedHours : status.milestones,
+      ...(peers
+        ? {
+            machineAccounting: status.machines.map(
+              ({ machine, charge, active }) => ({ machine, charge, active }),
+            ),
+          }
+        : {}),
       reportedStates: status.state,
     };
     if (stage === 'final') {
+      if (status.active.some((r) => r.ms || r.ticks || r.episodes))
+        throw Error('Active campaign reservations at final reporting');
       const final = manifest('final-validation'),
         raw = manifest('final-raw-audit'),
         archive = manifest('verified-archive');
@@ -382,24 +411,29 @@ try {
           rows: caseRecords.length,
         };
       }
-      const phaseReports = readdirSync(directory)
-        .filter((file) => /^progress-[\w]+-[\dTZ.-]+\.json$/.test(file))
-        .sort()
-        .map((file) => {
-          const bytes = readFileSync(join(directory, file)),
-            { usage, digest, ...progress } = JSON.parse(bytes);
-          assert.equal(sha(JSON.stringify(progress)), digest);
-          return {
-            file,
-            sha256: sha(bytes),
-            phase: progress.phase,
-            source: progress.source,
-            completed: progress.completed,
-            deferred: progress.deferred,
-            stopped: progress.stopped,
-            usage,
-          };
-        });
+      const phaseReports = (peers?.roots ?? [directory]).flatMap((dir) =>
+        readdirSync(dir)
+          .filter((file) => /^progress-[\w]+-[\dTZ.-]+\.json$/.test(file))
+          .sort()
+          .map((file) => {
+            const bytes = readFileSync(join(dir, file)),
+              { usage, digest, ...progress } = JSON.parse(bytes);
+            assert.equal(sha(JSON.stringify(progress)), digest);
+            return {
+              file,
+              ...(peers
+                ? { machine: peers.manifest(dir, 'assignment').machineId }
+                : {}),
+              sha256: sha(bytes),
+              phase: progress.phase,
+              source: progress.source,
+              completed: progress.completed,
+              deferred: progress.deferred,
+              stopped: progress.stopped,
+              usage,
+            };
+          }),
+      );
       const choices = ['confirmation', 'long', 'freeze'].map((target) => {
         const key =
           target === 'freeze' ? 'final-candidates' : 'selection:' + target;
@@ -436,6 +470,15 @@ try {
         independentArithmetic: hashJSON(raw),
         comparisons: raw.result.pairs,
         archive,
+        ...(peers
+          ? {
+              machineArchives: [...peers.hosts].map(([machine, root]) => {
+                const receipt = peers.manifest(root, 'verified-archive');
+                assert(receipt, 'Missing verified archive for ' + machine);
+                return { machine, ...receipt };
+              }),
+            }
+          : {}),
         candidates: final.results.map((r) => ({
           genome: r.candidate.genome,
           version: r.candidate.version,

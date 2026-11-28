@@ -12,10 +12,13 @@ import {
   publishJSON,
   publish,
   parseFlags,
+  requireCampaignCoordinator,
 } from './campaign.mjs';
 import { loadCandidate, loadPanel, evaluatePanel } from './evaluate-panel.mjs';
 import { inspectDevelopment } from './inspect-development.mjs';
 import { requireSelectionPredecessors } from './status.mjs';
+import { peerInputs } from './peer-inputs.mjs';
+import { baselineDevelopment } from './baseline-development.mjs';
 import { NodeStore } from './store.mjs';
 import { sha } from './manifest.mjs';
 const { createModel, profiles, readVersion } =
@@ -30,7 +33,8 @@ if (!['confirmation', 'long', 'freeze'].includes(phase))
   throw Error('Expected target phase');
 const runtime = environment(),
   clockStart = performance.now(),
-  ledger = openCampaign(directory, parseFlags()),
+  flags = parseFlags(),
+  ledger = openCampaign(directory, flags),
   clock = new ActiveTime(
     ledger,
     { experimentId: 'selection-' + phase },
@@ -63,27 +67,35 @@ function rank(a, b) {
   return 0;
 }
 async function select() {
+  requireCampaignCoordinator(ledger);
+  const peers = peerInputs(directory, ledger, flags.peers);
   const key = phase === 'freeze' ? 'final-candidates' : 'selection:' + phase;
   const previous = ledger.readManifest(key);
   if (previous) {
     publishJSON(join(folder, phase + '.json'), previous);
     return;
   }
-  const status = requireSelectionPredecessors(directory, phase, ledger);
+  const status = requireSelectionPredecessors(directory, phase, ledger, peers);
   const scale = JSON.parse(
     readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
   );
   const development = loadPanel(directory, 'development', ledger),
     available = [],
     excluded = [];
+  if (peers && phase === 'confirmation')
+    await baselineDevelopment(directory, ledger, clock, scale.workers, peers);
   const eligibleSlots = [...slots];
   if (phase === 'freeze') {
     for (const r of status.slots) {
       if (!r.id.startsWith('X-') || r.state !== 'completed') continue;
-      const entry = ledger.readManifest('experiment:' + r.id);
+      const read = (key) =>
+        peers
+          ? peers.manifest(peers.source(r.id), key)
+          : ledger.readManifest(key);
+      const entry = read('experiment:' + r.id);
       if (
         entry?.definition.phase !== 'Interaction' ||
-        !ledger.readManifest('experiment-audit:' + r.id)
+        !read('experiment-audit:' + r.id)
       )
         throw Error('Interaction has no verified definition or audit: ' + r.id);
       eligibleSlots.push({
@@ -100,17 +112,18 @@ async function select() {
         slot.ExperimentID.startsWith('B-evolution-');
     else if (phase === 'long') relevant = slot.ExperimentID.startsWith('C');
     else relevant = !slot.ExperimentID.startsWith('B-random-');
+    if (!relevant) continue;
+    const root = peers ? peers.source(slot.ExperimentID) : directory;
     if (
-      !relevant ||
       !existsSync(
-        join(directory, 'experiments', slot.ExperimentID, 'experiment.json'),
+        join(root, 'experiments', slot.ExperimentID, 'experiment.json'),
       )
     )
       continue;
     const isPrefix =
       phase === 'confirmation' && slot.ExperimentID.startsWith('B-');
     const candidate = loadCandidate(
-      directory,
+      root,
       slot.ExperimentID,
       isPrefix ? 'prefixChampion' : 'champion',
     );
@@ -163,7 +176,7 @@ async function select() {
         outcome,
       );
     const gen = readFileSync(
-      join(directory, 'experiments', slot.ExperimentID, 'generations.ndjson'),
+      join(root, 'experiments', slot.ExperimentID, 'generations.ndjson'),
       'utf8',
     )
       .trim()
@@ -246,7 +259,11 @@ async function select() {
     const registry = new NodeStore(ledger, 'research-finalists');
     for (const r of shortlist) {
       clock.pulse();
-      const source = loadCandidate(directory, r.experimentId, r.role);
+      const source = loadCandidate(
+        peers ? peers.source(r.experimentId) : directory,
+        r.experimentId,
+        r.role,
+      );
       const name =
         'Forschung · ' + r.experimentId + ' · ' + r.genome.slice(0, 12);
       const profile =
