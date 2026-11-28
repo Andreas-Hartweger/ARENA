@@ -8,7 +8,11 @@ import { slots, hashJSON, sha } from './manifest.mjs';
 import { publish, publishJSON, parseFlags } from './campaign.mjs';
 import { campaignStatus, combinedStatus } from './status.mjs';
 import { peerInputs, combinedMilestone } from './peer-inputs.mjs';
-import { reviewCases, casesCSV } from './review-cases.mjs';
+import {
+  reviewCases,
+  casesCSV,
+  investigateRegression,
+} from './review-cases.mjs';
 
 const [directory, stage, output] = process.argv.slice(2);
 const screenConfig =
@@ -17,10 +21,18 @@ if (
   !directory ||
   !output ||
   (!screenConfig &&
-    !['baseline', 'performance', '12', '24', '48', 'final'].includes(stage))
+    ![
+      'baseline',
+      'baseline-cases',
+      'performance',
+      '12',
+      '24',
+      '48',
+      'final',
+    ].includes(stage))
 )
   throw Error(
-    'Expected campaign, baseline/performance/screen configuration/12/24/48/final and output file',
+    'Expected campaign, baseline/baseline-cases/performance/screen configuration/12/24/48/final and output file',
   );
 const db = new DatabaseSync(join(directory, 'research.sqlite'), {
   readOnly: true,
@@ -290,6 +302,60 @@ function performanceVariation() {
     results,
   };
 }
+function baselineCaseComparisons() {
+  const baseline = manifest('baseline-development');
+  const results = baseline.pairs.map(
+    ({ seed, role, evolutionAgainstRandom: paired }) => {
+      const arms = ['evolution', 'random'].map((method) => {
+        const arm = baseline.runs.find(
+          (r) => r.method === method && r.seed === seed && r.role === role,
+        );
+        assert(arm?.casesValid);
+        const bytes = readFileSync(join(directory, arm.file));
+        assert.equal(sha(bytes), arm.sha256);
+        const outcome = JSON.parse(bytes);
+        assert.equal(outcome.expected.length, baseline.caseCount);
+        const rows = reviewCases(
+          { ...arm, roles: [role] },
+          { genome: arm.genome, development: outcome },
+          arm.sha256,
+        );
+        return { arm, rows };
+      });
+      const [a, b] = arms.map((x) => x.arm);
+      const pair = {
+        a: a.genome,
+        b: b.genome,
+        paired,
+        deltaSuccess:
+          (b.statistics.success - a.statistics.success) / baseline.caseCount,
+      };
+      return {
+        seed,
+        role,
+        episodesPerArm: a.episodesPerArm,
+        sources: [a, b].map(({ id, file, sha256, genome }) => ({
+          id,
+          file,
+          sha256,
+          genome,
+        })),
+        ...pair,
+        investigation: investigateRegression(
+          pair,
+          arms.flatMap((x) => x.rows),
+          'development',
+        ),
+      };
+    },
+  );
+  return {
+    panel: baseline.panel,
+    caseCount: baseline.caseCount,
+    evidenceDigest: baseline.evidenceDigest,
+    pairs: results,
+  };
+}
 try {
   db.exec('BEGIN');
   const header = read(join(directory, 'campaign.json')),
@@ -318,6 +384,8 @@ try {
   let report;
   if (stage === 'performance') {
     report = { ...base, ...performanceVariation() };
+  } else if (stage === 'baseline-cases') {
+    report = { ...base, ...baselineCaseComparisons() };
   } else if (peers && ['12', '24', '48'].includes(stage)) {
     if (peers.hosts.size !== header.definition.machines.length)
       throw Error('Missing machine for combined milestone');
@@ -500,7 +568,14 @@ try {
         freeze: hashJSON(manifest('final-candidates')),
         validation: hashJSON(final),
         independentArithmetic: hashJSON(raw),
-        comparisons: raw.result.pairs,
+        comparisons: raw.result.pairs.map((pair) =>
+          pair.investigate
+            ? {
+                ...pair,
+                investigation: investigateRegression(pair, caseRecords),
+              }
+            : pair,
+        ),
         archive,
         ...(peers
           ? {

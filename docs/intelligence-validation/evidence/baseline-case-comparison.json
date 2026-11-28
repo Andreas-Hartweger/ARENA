@@ -1,0 +1,1043 @@
+{
+  "schema": "arena.campaign-report.v1",
+  "stage": "baseline-cases",
+  "campaign": "ARENA-02D",
+  "matrix": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+  "assignment": [
+    {
+      "id": "Benjamins-Yoga",
+      "total": {
+        "ms": 172800000,
+        "episodes": 1600000,
+        "ticks": 5000000000
+      },
+      "training": {
+        "ms": 146880000,
+        "episodes": 1600000,
+        "ticks": 4250000000
+      }
+    }
+  ],
+  "nominal": {
+    "variants": 47,
+    "slots": 122,
+    "episodes": 1512448
+  },
+  "panel": "cf5be24eed52c153a89b05b254e0094f0c154861f70b9b947e5c32a1d7f0032e",
+  "caseCount": 40,
+  "evidenceDigest": "84a5301bf589721b72fa50efb1bf8ccd2f7a088f8411beb57250ed60f39a736a",
+  "pairs": [
+    {
+      "seed": 42,
+      "role": "prefixChampion",
+      "episodesPerArm": 8192,
+      "sources": [
+        {
+          "id": "B-evolution-42",
+          "file": "experiments/B-evolution-42/dev-prefixChampion.json",
+          "sha256": "8b367fd00f0589e380827481e8f41fe77dd0b783e558e2f7a4139e490f4d0dd5",
+          "genome": "08e111719ece8eb49221b2ad9a71b423d59ac5c59d1d315cfee76033836a222f"
+        },
+        {
+          "id": "B-random-42",
+          "file": "experiments/B-random-42/dev-prefixChampion.json",
+          "sha256": "67cfbf6836c7d42eae88e21a689905a8c7bb52850604c53e1782837586a32291",
+          "genome": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac"
+        }
+      ],
+      "a": "08e111719ece8eb49221b2ad9a71b423d59ac5c59d1d315cfee76033836a222f",
+      "b": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac",
+      "paired": {
+        "paired": 40,
+        "successA": 4,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      },
+      "deltaSuccess": -0.1,
+      "investigation": {
+        "panel": "development",
+        "byGroup": [
+          {
+            "group": 0,
+            "scheduled": 14,
+            "successA": 3,
+            "successB": 0,
+            "lost": 3,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 1,
+            "scheduled": 13,
+            "successA": 1,
+            "successB": 0,
+            "lost": 1,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 2,
+            "scheduled": 13,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          }
+        ],
+        "changes": [
+          {
+            "caseId": "development-0-0",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "0db30584bd07c4d5e8c537f1af8f037c1d5542a0321856cc9f4a8b6a27aa38dc",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 674.199122374072
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "b393a04106c76f65cbb3a2f1b44945be15821dbb34460edb10d9323568dc5074",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 12.192749463101121,
+              "grassSeconds": 88.7333333333287,
+              "lawfulProgressM": 131.21392346785808
+            }
+          },
+          {
+            "caseId": "development-0-2",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "80f6b18949167aea9a3c7a224884b44b699894923ba20f305641e21bc988c699",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 673.6091086753972
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "622877f1d9caa2108fb699c454375a88eb44733aea4c337d77c1c89a0e6e4bf9",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 11.944657454076587,
+              "grassSeconds": 90.57499999999527,
+              "lawfulProgressM": 130.61856109640405
+            }
+          },
+          {
+            "caseId": "development-0-3",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "f661aa678d4343b0bf55ecca16e3f48472edd2234e2c61a83f5f8094748b3fcf",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 676.310712238434
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "68adf78fc06f1ddb11f9ccc83d8cb9808bc76fddff8303eb55254172105e8b75",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 13.082043927245202,
+              "grassSeconds": 15.283333333332903,
+              "lawfulProgressM": 112.9438726830831
+            }
+          },
+          {
+            "caseId": "development-1-12",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "3c56412751b4505ae635a76e5dd8c57917549aa84ba246c4d19ecbc8a8a1934e",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 672.3345432729789
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "75d05801ab674590803f9c0666eaa05cbf765cb8aa4253220ea5c9e59975365c",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 3.5818430238023824,
+              "grassSeconds": 17.06666666666642,
+              "lawfulProgressM": 49.62282550275518
+            }
+          }
+        ],
+        "commonTimes": []
+      }
+    },
+    {
+      "seed": 42,
+      "role": "champion",
+      "episodesPerArm": 12800,
+      "sources": [
+        {
+          "id": "B-evolution-42",
+          "file": "experiments/B-evolution-42/dev-champion.json",
+          "sha256": "ba1fdcfb49d307d0a46890e0f0e910b4fe2109f09536e5006cdd4b23978a3e5c",
+          "genome": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95"
+        },
+        {
+          "id": "B-random-42",
+          "file": "experiments/B-random-42/dev-champion.json",
+          "sha256": "67cfbf6836c7d42eae88e21a689905a8c7bb52850604c53e1782837586a32291",
+          "genome": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac"
+        }
+      ],
+      "a": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+      "b": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac",
+      "paired": {
+        "paired": 40,
+        "successA": 4,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      },
+      "deltaSuccess": -0.1,
+      "investigation": {
+        "panel": "development",
+        "byGroup": [
+          {
+            "group": 0,
+            "scheduled": 14,
+            "successA": 1,
+            "successB": 0,
+            "lost": 1,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 1,
+            "scheduled": 13,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 2,
+            "scheduled": 13,
+            "successA": 3,
+            "successB": 0,
+            "lost": 3,
+            "gained": 0,
+            "commonSuccessful": 0
+          }
+        ],
+        "changes": [
+          {
+            "caseId": "development-0-11",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "875e83630111b8e534e8a3f9cb1b768be41a75a80e8d2f3f14a0e54712da3f20",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0.5416666666666405,
+              "lawfulProgressM": 668.8465876897194
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "588812aaf4157602ee87511d4293d1a242d8229d46bef89114e44ae3bb46bee9",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 10.841360998869122,
+              "grassSeconds": 95.50833333332831,
+              "lawfulProgressM": 124.23030704590792
+            }
+          },
+          {
+            "caseId": "development-2-0",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "2244c5273d45def38196484beb5e123043d3e38bd83f17e5481cc57f3bc7dc88",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 670.3168251757838
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "ad12d7de9f32fd85c897d712878c91b673f3108dd202edefe7012d969f1c2da4",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 3.0739847730549172
+            }
+          },
+          {
+            "caseId": "development-2-2",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "6eff95654705e4478bd19e13dbf4bd51b99500a9af11d04aaf7109e0925a4761",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 672.5716013737351
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "5a0139ba18264099f0bc5f648a959898fb6f6d062c9d6a33b60c751efaef281a",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 14.559514234445016,
+              "grassSeconds": 71.72499999999638,
+              "lawfulProgressM": 129.56703337537112
+            }
+          },
+          {
+            "caseId": "development-2-8",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "fed866a397bf6b75d1657b5d7672cc5898f26ff905759400e5ff52f0fc5c17ea",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 672.4390518824898
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "c2119c273040d3438a5cae1ddabe8bacceff9e9665210035b436ca001290f413",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 13.528280336302139,
+              "grassSeconds": 23.91666666666572,
+              "lawfulProgressM": 141.22807711168616
+            }
+          }
+        ],
+        "commonTimes": []
+      }
+    },
+    {
+      "seed": 43,
+      "role": "prefixChampion",
+      "episodesPerArm": 8192,
+      "sources": [
+        {
+          "id": "B-evolution-43",
+          "file": "experiments/B-evolution-43/dev-prefixChampion.json",
+          "sha256": "eb99fd254d7736a0591472472066ace845f1f1bb80ba44e8bb665728950dac47",
+          "genome": "88e500a7c832271c0dbce373ff5f39ee3f28c849b3e461784d2b4fcfe446052e"
+        },
+        {
+          "id": "B-random-43",
+          "file": "experiments/B-random-43/dev-prefixChampion.json",
+          "sha256": "8f8cffa12ec4991dac78e950781b5b90708401d8827ce8d49225b17d0bfbe268",
+          "genome": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684"
+        }
+      ],
+      "a": "88e500a7c832271c0dbce373ff5f39ee3f28c849b3e461784d2b4fcfe446052e",
+      "b": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684",
+      "paired": {
+        "paired": 40,
+        "successA": 0,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      },
+      "deltaSuccess": 0,
+      "investigation": {
+        "panel": "development",
+        "byGroup": [
+          {
+            "group": 0,
+            "scheduled": 14,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 1,
+            "scheduled": 13,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 2,
+            "scheduled": 13,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          }
+        ],
+        "changes": [],
+        "commonTimes": []
+      }
+    },
+    {
+      "seed": 43,
+      "role": "champion",
+      "episodesPerArm": 12800,
+      "sources": [
+        {
+          "id": "B-evolution-43",
+          "file": "experiments/B-evolution-43/dev-champion.json",
+          "sha256": "de854db161e9df1889669c479d4572c3930727c8b38b6893ed0c5848a1e9843c",
+          "genome": "dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d"
+        },
+        {
+          "id": "B-random-43",
+          "file": "experiments/B-random-43/dev-champion.json",
+          "sha256": "8f8cffa12ec4991dac78e950781b5b90708401d8827ce8d49225b17d0bfbe268",
+          "genome": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684"
+        }
+      ],
+      "a": "dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d",
+      "b": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684",
+      "paired": {
+        "paired": 40,
+        "successA": 0,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      },
+      "deltaSuccess": 0,
+      "investigation": {
+        "panel": "development",
+        "byGroup": [
+          {
+            "group": 0,
+            "scheduled": 14,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 1,
+            "scheduled": 13,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 2,
+            "scheduled": 13,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          }
+        ],
+        "changes": [],
+        "commonTimes": []
+      }
+    },
+    {
+      "seed": 44,
+      "role": "prefixChampion",
+      "episodesPerArm": 8192,
+      "sources": [
+        {
+          "id": "B-evolution-44",
+          "file": "experiments/B-evolution-44/dev-prefixChampion.json",
+          "sha256": "b121157d497823fba72d483369f44e2054352e3eb364b87f55db1dd2917e45bd",
+          "genome": "0e2b66b7a9324c0f13e4ab6fe0738205a369c13bb16c1fb445f74cb46bb0f797"
+        },
+        {
+          "id": "B-random-44",
+          "file": "experiments/B-random-44/dev-prefixChampion.json",
+          "sha256": "9000445204331bfb7efa907466df3efcd7a3da4b448fa8f4f098222acdd8d3fd",
+          "genome": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed"
+        }
+      ],
+      "a": "0e2b66b7a9324c0f13e4ab6fe0738205a369c13bb16c1fb445f74cb46bb0f797",
+      "b": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed",
+      "paired": {
+        "paired": 40,
+        "successA": 1,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      },
+      "deltaSuccess": -0.025,
+      "investigation": {
+        "panel": "development",
+        "byGroup": [
+          {
+            "group": 0,
+            "scheduled": 14,
+            "successA": 1,
+            "successB": 0,
+            "lost": 1,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 1,
+            "scheduled": 13,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 2,
+            "scheduled": 13,
+            "successA": 0,
+            "successB": 0,
+            "lost": 0,
+            "gained": 0,
+            "commonSuccessful": 0
+          }
+        ],
+        "changes": [
+          {
+            "caseId": "development-0-5",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "4f3b2fd81302c131c97c9e9050a28232f5be2ed87d7a45f64a9407aa737d93c3",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 673.6906884746954
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "2dd34179f26e069302161f832e789046afd8ea1d9fb293a5a044f6d9a6645c80",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 8.893762792955373,
+              "grassSeconds": 13.96666666666642,
+              "lawfulProgressM": 13.77920272340998
+            }
+          }
+        ],
+        "commonTimes": []
+      }
+    },
+    {
+      "seed": 44,
+      "role": "champion",
+      "episodesPerArm": 12800,
+      "sources": [
+        {
+          "id": "B-evolution-44",
+          "file": "experiments/B-evolution-44/dev-champion.json",
+          "sha256": "5549fa497af0e5d671b0c4fb1557f917ec0eead2784d6c60c4b0791322795556",
+          "genome": "fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9"
+        },
+        {
+          "id": "B-random-44",
+          "file": "experiments/B-random-44/dev-champion.json",
+          "sha256": "9000445204331bfb7efa907466df3efcd7a3da4b448fa8f4f098222acdd8d3fd",
+          "genome": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed"
+        }
+      ],
+      "a": "fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9",
+      "b": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed",
+      "paired": {
+        "paired": 40,
+        "successA": 21,
+        "successB": 0,
+        "commonSuccessful": 0,
+        "timeDifference": null
+      },
+      "deltaSuccess": -0.525,
+      "investigation": {
+        "panel": "development",
+        "byGroup": [
+          {
+            "group": 0,
+            "scheduled": 14,
+            "successA": 5,
+            "successB": 0,
+            "lost": 5,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 1,
+            "scheduled": 13,
+            "successA": 8,
+            "successB": 0,
+            "lost": 8,
+            "gained": 0,
+            "commonSuccessful": 0
+          },
+          {
+            "group": 2,
+            "scheduled": 13,
+            "successA": 8,
+            "successB": 0,
+            "lost": 8,
+            "gained": 0,
+            "commonSuccessful": 0
+          }
+        ],
+        "changes": [
+          {
+            "caseId": "development-0-1",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "6f85174364e7870b833e5928f91a1777cce43a0d8a45f28f5c4aed5318eec464",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 675.6220633928992
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "97d290fbe9e30056c7318622b2335c3362f46289aedf63c2cbbaf2ae1cb47cd7",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 15.941666666666393,
+              "lawfulProgressM": 98.19951336052446
+            }
+          },
+          {
+            "caseId": "development-0-2",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "980ea22de13e07b584c94c2ecb01d5c6f18c45bfa84f91f462040bff332759ef",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 673.6091086753972
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "69a697866e85af8c58ffccc92d7d6c67a109e6e2b545c55b558c67641060e186",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 7.316200815794363,
+              "grassSeconds": 19.033333333332926,
+              "lawfulProgressM": 96.18655864302247
+            }
+          },
+          {
+            "caseId": "development-0-9",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "115ec208f399ceb943ecc9817a936d0c4d17ebd04b9178071f6e367b724f9bb2",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 674.3514786238179
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "9afcc48615b72e4486e1f7ed197089fbb6380deefb35ba829fbcd5016aa434dd",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 17.940007795680657,
+              "grassSeconds": 18.891666666666232,
+              "lawfulProgressM": 96.92892859144314
+            }
+          },
+          {
+            "caseId": "development-0-10",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "1ad0633016e502078fda314010bd846c0a661ecfe95e93b279fb9a7201f4b72f",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 667.7427578062147
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "1ce1174810d1a78b8ace76d394c6c7ccadd03c8199e76966356da2e02a02b377",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 8.102684038089158,
+              "grassSeconds": 20.791666666666067,
+              "lawfulProgressM": 106.28069894947271
+            }
+          },
+          {
+            "caseId": "development-0-11",
+            "group": 0,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "26b03df963400aa6a5ecaa5943ec2b1c3f8199ce01ee189bc8feab73d6d00b31",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 668.8465876897194
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "5a003b1fd496def0d4cc168634d3d43904a720db8f78047b50ffe6f4bdd30a1c",
+              "contactClusters": 3,
+              "peakNormalApproachMps": 15.187843820783401,
+              "grassSeconds": 56.0999999999974,
+              "lawfulProgressM": 434.4907571682668
+            }
+          },
+          {
+            "caseId": "development-1-0",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "74417ca299e2259e080ab6d553964bf12b09360420b9419ddde5574fa9f7a10f",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 675.5738185226314
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "402c86341907aaf85b88859565777862481bae81683f2c673cd67b42ab695655",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 7.235593086532846,
+              "grassSeconds": 19.04999999999957,
+              "lawfulProgressM": 98.15126849025665
+            }
+          },
+          {
+            "caseId": "development-1-1",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "eb7f5ec29d9207f51ceec76eb80176eb978a3c8ae97ccf3fd579b500c78280b6",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 671.3791436721899
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "904a1adbc71e6690277c40c146fe49e4a1deaac64d5d111449a6ddcb0550ae46",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 20.616666666666127,
+              "lawfulProgressM": 107.75136542798225
+            }
+          },
+          {
+            "caseId": "development-1-2",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "5d7ea0d965d47dc8664f38ed4d807063bcc70c4f66b037e67f299932b24b9190",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 670.7616705374189
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "dec4d28b5219d84a69b616e753c6a78bd60868a50e66e6e7f4cbf0aa3f2168b0",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 7.988576371600042,
+              "grassSeconds": 19.2416666666661,
+              "lawfulProgressM": 113.3991863720106
+            }
+          },
+          {
+            "caseId": "development-1-3",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "9f724776689fb4cc823f2a967130ebb4fc200cb6b8edaf2722b273d8b4393560",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 674.1664933549569
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "6bcede80c87338a3cd78729d366538660cd2f9723de73b7f31c23285c0fe32aa",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 5.17588396731585,
+              "grassSeconds": 18.808333333332868,
+              "lawfulProgressM": 96.74394332258208
+            }
+          },
+          {
+            "caseId": "development-1-4",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "848e20ee6fed751d40a7f3149623c94ec7fbf91d22eb86d0c140d2303e3a366e",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 667.2816091097288
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "248a58ccf5f6d9c49a894378b31b45a6053495b4adfeef46070a63407d7ca38a",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 5.806135607608771,
+              "grassSeconds": 17.32499999999964,
+              "lawfulProgressM": 89.85905907735406
+            }
+          },
+          {
+            "caseId": "development-1-6",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "233f38cb3ecc4bcd3f4a640ce1988f014e41536cd50ad80251e0d8024a84f22d",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 669.2181350077831
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "49fa8094979040172e8f4ca3c1f889502ea3b6d756de6c7a77ea5f0bbda58a29",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 19.188382683535306,
+              "grassSeconds": 18.39166666666616,
+              "lawfulProgressM": 91.7955849754083
+            }
+          },
+          {
+            "caseId": "development-1-8",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "49be1c23a9a58a44fc4224d33134f099ef41aed3d85ea7b0942b76a22d11d08e",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 669.0399694159955
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "becf916638318bd1bd8cb71f3ddd26ad1f52a54d124a6b061c70a1f789b6d729",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 9.220025571981711,
+              "grassSeconds": 19.516666666666218,
+              "lawfulProgressM": 104.82685465494501
+            }
+          },
+          {
+            "caseId": "development-1-11",
+            "group": 1,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "3856d4e1c76198e9b697bbf6abea75d3270a935827d16ddf34c042aececa0c0c",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 675.9002383375869
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "3d86268f5992d4b6298dfc6bc58448f53a2c9f0a81475d1030b516446df3d3fc",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 16.958333333332966,
+              "lawfulProgressM": 98.4776883052121
+            }
+          },
+          {
+            "caseId": "development-2-0",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "c2209d66762414e468d13f1a06b1e8563542193727c526563b6dad25eee14a43",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 670.3168251757838
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "691222d1c425d8d09c20490a3c374dc5be5694c3a9e1ad41090d19c2319daa7b",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 8.972767085223005,
+              "grassSeconds": 15.666666666666467,
+              "lawfulProgressM": 10.40533942449838
+            }
+          },
+          {
+            "caseId": "development-2-1",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "33b04b1344c8603f7669cdce8e8d7c018d3d0c4c9658107416e553f21e27dd66",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 667.2066884274923
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "d246ffd624879f07e47803c33c99dbb1f12ce056cf3d7857b79fb453564ce490",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 9.060431138866669,
+              "grassSeconds": 18.93333333333278,
+              "lawfulProgressM": 105.12916645447172
+            }
+          },
+          {
+            "caseId": "development-2-3",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "72e0256594172a57737a262ed986fb5be3ae91a8bd1719abb6227bfb7a53f35b",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 674.5048991587341
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "8ab867dee80290068ab2e5e66614c0753decdbdd597c83e0a45cd75d5213c0c7",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 9.54537292053071,
+              "grassSeconds": 19.483333333332865,
+              "lawfulProgressM": 111.29541713881986
+            }
+          },
+          {
+            "caseId": "development-2-4",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "c99794111e2282c291b5a55bdfecf0f30d0533f6bf7f91d5f291f65fe7c3c68c",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 674.3319428894997
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "bfe178c949c9927710d4c7bb9d721ccb64bfb7b105a0f8df4c103adf5eca58fe",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 19.842044531181898,
+              "grassSeconds": 14.558333333333088,
+              "lawfulProgressM": 14.42045713821426
+            }
+          },
+          {
+            "caseId": "development-2-5",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "b09e002cb4a45263ca3988fab61076d6a1dfda5c2061c670211c53cdd7b5ad3f",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 672.344039473343
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "e11a8a91d591690b6f4e9ff714a56aebf85d9576e8d056b44efc275f29358aa9",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 9.370747232316784,
+              "grassSeconds": 11.308333333333083,
+              "lawfulProgressM": 12.432553722057492
+            }
+          },
+          {
+            "caseId": "development-2-6",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "056389e1e475bdddac86634937b41641fc0dd91add7acb32f805c2afaf84f95f",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 676.3684110829004
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "3771f20e11b366543456425e279d789ea875541995a8f7efd1df17488bc183dc",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 8.202370604234188,
+              "grassSeconds": 15.649999999999656,
+              "lawfulProgressM": 98.9458610505256
+            }
+          },
+          {
+            "caseId": "development-2-9",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "fe9e4d5d41fe9b957e07643c10b2282fcfe0d956ce32e6921e609ec49dfc7dfa",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 671.2917357703068
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "408b86245deda87de2e16f5ad622d296bd239c33ff187b55e791cc3e39b43e6e",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 16.88333333333302,
+              "lawfulProgressM": 93.86918573793201
+            }
+          },
+          {
+            "caseId": "development-2-11",
+            "group": 2,
+            "direction": "lost",
+            "a": {
+              "reason": "completed",
+              "record": "698f218a3154d8cf092cd9b68758af4cb32ae40a069f7c455755638573ba8487",
+              "contactClusters": 0,
+              "peakNormalApproachMps": 0,
+              "grassSeconds": 0,
+              "lawfulProgressM": 667.5055863704861
+            },
+            "b": {
+              "reason": "noProgress",
+              "record": "c7fc830c832f9779d79277788da9e83a5109e8d0783f43ade9766226523db898",
+              "contactClusters": 1,
+              "peakNormalApproachMps": 11.006588386193057,
+              "grassSeconds": 18.941666666666237,
+              "lawfulProgressM": 107.79298204699774
+            }
+          }
+        ],
+        "commonTimes": []
+      }
+    }
+  ]
+}

@@ -61,3 +61,84 @@ export function casesCSV(rows) {
     ].join('\n') + '\n'
   );
 }
+
+// Compare the same scheduled starts, retaining both lost and newly successful cases.
+export function investigateRegression(pair, rows, panel = 'holdout') {
+  const cases = (genome) =>
+    new Map(
+      rows
+        .filter((r) => r.genome === genome && r.panel === panel)
+        .map((r) => [r.caseId, r]),
+    );
+  const a = cases(pair.a),
+    b = cases(pair.b);
+  assert(a.size && a.size === b.size);
+  const groups = new Map(),
+    changes = [],
+    commonTimes = [];
+  const successful = (r) => r.scored && r.outcome === 'completed';
+  const facts = (r) => ({
+    reason: r.outcome,
+    record: r.recordDigest,
+    contactClusters: r.contactClusters,
+    peakNormalApproachMps: r.peakNormalApproachMps,
+    grassSeconds: r.grassSeconds,
+    lawfulProgressM: r.lawfulProgressM,
+  });
+  for (const x of a.values()) {
+    const y = b.get(x.caseId);
+    assert(y && x.group === y.group && x.effective === y.effective);
+    const g = groups.get(x.group) ?? {
+      group: x.group,
+      scheduled: 0,
+      successA: 0,
+      successB: 0,
+      lost: 0,
+      gained: 0,
+      commonSuccessful: 0,
+    };
+    groups.set(x.group, g);
+    const first = successful(x),
+      next = successful(y);
+    g.scheduled++;
+    g.successA += Number(first);
+    g.successB += Number(next);
+    if (first && next) {
+      g.commonSuccessful++;
+      const [timeA] = JSON.parse(x.lapSeconds),
+        [timeB] = JSON.parse(y.lapSeconds);
+      assert(timeA > 0 && timeB > 0);
+      commonTimes.push({
+        caseId: x.caseId,
+        group: x.group,
+        secondsA: timeA,
+        secondsB: timeB,
+        differenceSeconds: timeB - timeA,
+      });
+    } else if (first !== next) {
+      const direction = first ? 'lost' : 'gained';
+      g[direction]++;
+      changes.push({
+        caseId: x.caseId,
+        group: x.group,
+        direction,
+        a: facts(x),
+        b: facts(y),
+      });
+    }
+  }
+  const byGroup = [...groups.values()];
+  assert.equal(
+    byGroup.reduce((n, g) => n + g.successB - g.successA, 0) / a.size,
+    pair.deltaSuccess,
+  );
+  assert.equal(commonTimes.length, pair.paired.commonSuccessful);
+  return {
+    panel,
+    byGroup,
+    changes,
+    commonTimes: commonTimes.sort(
+      (x, y) => y.differenceSeconds - x.differenceSeconds,
+    ),
+  };
+}

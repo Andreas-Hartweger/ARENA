@@ -28,7 +28,11 @@ import {
   requireSelectionPredecessors,
   interactionReserve,
 } from './status.mjs';
-import { reviewCases, casesCSV } from './review-cases.mjs';
+import {
+  reviewCases,
+  casesCSV,
+  investigateRegression,
+} from './review-cases.mjs';
 import { runExperiment } from './coordinator.mjs';
 import { peerInputs, combinedMilestone } from './peer-inputs.mjs';
 import {
@@ -278,6 +282,48 @@ try {
     assert.equal(absent.lapSeconds, null);
     assert.equal(absent.grassSeconds, null);
     assert.equal(casesCSV([caseRow, absent]).trim().split('\n').length, 3);
+    // Arithmetic fixture only, independent from physical panel evidence.
+    const testCase = (genome, caseId, group, outcome, time) => ({
+      ...(outcome === 'missing' ? absent : caseRow),
+      genome,
+      caseId,
+      effective: caseId,
+      group,
+      outcome,
+      panel: 'holdout',
+      scored: outcome !== 'missing',
+      lapSeconds: time === null ? null : JSON.stringify([time]),
+    });
+    const cases = [
+      testCase('a', 'c1', 0, 'completed', 40),
+      testCase('b', 'c1', 0, 'completed', 46),
+      testCase('a', 'c2', 0, 'completed', 42),
+      testCase('b', 'c2', 0, 'noProgress', null),
+      testCase('a', 'c3', 1, 'missing', null),
+      testCase('b', 'c3', 1, 'completed', 45),
+      testCase('a', 'c4', 1, 'completed', 50),
+      testCase('b', 'c4', 1, 'missing', null),
+    ];
+    const pair = {
+      a: 'a',
+      b: 'b',
+      deltaSuccess: -0.25,
+      paired: { commonSuccessful: 1 },
+    };
+    const comparison = investigateRegression(pair, cases);
+    assert.deepEqual(
+      comparison.byGroup.map((g) => [g.lost, g.gained, g.commonSuccessful]),
+      [
+        [1, 0, 1],
+        [1, 1, 0],
+      ],
+    );
+    assert.deepEqual(
+      comparison.changes.map((c) => c.b.reason),
+      ['noProgress', 'completed', 'missing'],
+    );
+    assert.equal(comparison.commonTimes[0].differenceSeconds, 6);
+    assert.throws(() => investigateRegression(pair, cases.slice(1)));
     assert.equal(ledger.usage().charged.ticks - before.ticks, 65);
     assert.deepEqual(
       await evaluatePanel(ledger, clock, panel, candidate, 1, {
