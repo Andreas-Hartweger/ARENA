@@ -1,0 +1,150 @@
+{
+  "schema": "arena.campaign-report.v1",
+  "stage": "S47",
+  "campaign": "ARENA-02D",
+  "matrix": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+  "assignment": [
+    {
+      "id": "Benjamins-Yoga",
+      "total": {
+        "ms": 172800000,
+        "episodes": 1600000,
+        "ticks": 5000000000
+      },
+      "training": {
+        "ms": 146880000,
+        "episodes": 1600000,
+        "ticks": 4250000000
+      }
+    }
+  ],
+  "nominal": {
+    "variants": 47,
+    "slots": 122,
+    "episodes": 1512448
+  },
+  "comparisons": [
+    {
+      "config": "S47",
+      "seed": 42,
+      "episodesPerArm": 8192,
+      "fitnessContracts": {
+        "reference": "D10-v1/Balanced",
+        "variant": "D10-v1/Safety"
+      },
+      "reference": {
+        "id": "B-evolution-42",
+        "source": "44c100c22854793b200a104dbc358e49ea9190fa",
+        "manifestSHA256": "38fa1d67215250abd48b7ed059bd7480953fd9325385e103aa47a121ed564489",
+        "audit": "92db9c885633186329023cc808005a796a63b3ae4cb02321d9f4077cd92a84d3",
+        "population": 128,
+        "generations": 64,
+        "successes": 215,
+        "validLapSeconds": {
+          "min": 73.74142008660284,
+          "max": 113.08632490974276,
+          "mean": 85.64856233360472,
+          "q1": 77.84378978278913,
+          "median": 82.04329330022213,
+          "q3": 91.72784027844642
+        },
+        "finalMedianProgressM": 135.49283864634532,
+        "firstCommittedSuccess": {
+          "generation": 31,
+          "episodes": 4096,
+          "generationWallMs": 1300580.6288000003
+        },
+        "censored": false,
+        "generationWallMs": 2883343.346,
+        "ticks": 17877521
+      },
+      "variant": {
+        "id": "S47-42",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "ec1fee43f3955ac6180d09647caa3adaee4437d726af3f435510ca76d0eaae4c",
+        "audit": "d4fbf7dc423750106fbe50e5cc938731d9eee532d91ab39d447efc1607086944",
+        "population": 128,
+        "generations": 64,
+        "successes": 121,
+        "validLapSeconds": {
+          "min": 87.40678183442343,
+          "max": 115.80963181761565,
+          "mean": 100.83454860843533,
+          "q1": 94.50180690769628,
+          "median": 99.15333361713812,
+          "q3": 106.57166818323682
+        },
+        "finalMedianProgressM": 138.34179217851243,
+        "firstCommittedSuccess": {
+          "generation": 44,
+          "episodes": 5760,
+          "generationWallMs": 342924.77589999884
+        },
+        "censored": false,
+        "generationWallMs": 541102.3409000002,
+        "ticks": 18153477
+      }
+    },
+    {
+      "config": "S47",
+      "seed": 43,
+      "episodesPerArm": 8192,
+      "fitnessContracts": {
+        "reference": "D10-v1/Balanced",
+        "variant": "D10-v1/Safety"
+      },
+      "reference": {
+        "id": "B-evolution-43",
+        "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+        "manifestSHA256": "6798b9391854f3cbd61595c42da48de2c293d14a3d0d7125ecdab93a4d8ec275",
+        "audit": "1cae7989267cd49aa14222aa874f45652761cd5cfb7c364161b2125ddacf46f6",
+        "population": 128,
+        "generations": 64,
+        "successes": 411,
+        "validLapSeconds": {
+          "min": 62.251439577544886,
+          "max": 113.1724772321925,
+          "mean": 83.53193479183173,
+          "q1": 74.35842663321645,
+          "median": 82.20327737683756,
+          "q3": 91.3280791740265
+        },
+        "finalMedianProgressM": 164.60639204309547,
+        "firstCommittedSuccess": {
+          "generation": 19,
+          "episodes": 2560,
+          "generationWallMs": 155788.3128000001
+        },
+        "censored": false,
+        "generationWallMs": 589627.8610999999,
+        "ticks": 18314889
+      },
+      "variant": {
+        "id": "S47-43",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "20d19676f6e532c59d3131d97ea4fe05fb380271ec2b5a6a6fa4de892b6a2020",
+        "audit": "42eb02eccd0e8eb4811597d84c374f4cc3abeba0c342749b0fe3395410b190d1",
+        "population": 128,
+        "generations": 64,
+        "successes": 209,
+        "validLapSeconds": {
+          "min": 70.10974115392517,
+          "max": 102.18866045548727,
+          "mean": 80.2836220191666,
+          "q1": 75.41350968831001,
+          "median": 79.07704072095046,
+          "q3": 82.69139990942631
+        },
+        "finalMedianProgressM": 118.97346634441033,
+        "firstCommittedSuccess": {
+          "generation": 25,
+          "episodes": 3328,
+          "generationWallMs": 195571.0236000046
+        },
+        "censored": false,
+        "generationWallMs": 510063.4797000047,
+        "ticks": 16909762
+      }
+    }
+  ]
+}

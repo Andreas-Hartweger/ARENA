@@ -67,9 +67,20 @@ function summarize(id) {
       return counts;
     };
     const adaptation = {};
+    const settings = report.entry.definition.draft.options.adaptation;
+    const triggers = [];
     for (const g of included) {
       const reason = g.adaptive.reason;
       adaptation[reason] = (adaptation[reason] ?? 0) + 1;
+      if (reason === 'probability' || reason === 'strength') {
+        const previous = included[g.generation - 1];
+        assert(previous);
+        triggers.push({
+          generation: g.generation,
+          previous: previous.adaptive,
+          current: g.adaptive,
+        });
+      }
     }
     const snapshot = (g) => ({
       generation: g.generation,
@@ -102,6 +113,16 @@ function summarize(id) {
       mutation: total('mutation'),
       terminalReasons: total('reasons'),
       adaptation,
+      ...(settings?.probabilityEnabled || settings?.strengthEnabled
+        ? {
+            adaptationTriggers: {
+              settings,
+              reasons: adaptation,
+              generationsSHA256: report.artifacts['generations.ndjson'].sha256,
+              events: triggers,
+            },
+          }
+        : {}),
       ...(stage !== 'baseline'
         ? {
             generationWallMs: included.reduce(
@@ -163,6 +184,9 @@ function screenComparisons(experiments) {
       censored: metric.firstSuccessCensored,
       generationWallMs: metric.generationWallMs,
       ticks: metric.rawTicks,
+      ...(metric.adaptationTriggers
+        ? { adaptationTriggers: metric.adaptationTriggers }
+        : {}),
     };
   };
   const comparisons = [];
@@ -178,6 +202,14 @@ function screenComparisons(experiments) {
       config: variant.configId,
       seed: variant.seed,
       episodesPerArm: arm.episodes,
+      ...(reference.fitnessContract !== variant.fitnessContract
+        ? {
+            fitnessContracts: {
+              reference: reference.fitnessContract,
+              variant: variant.fitnessContract,
+            },
+          }
+        : {}),
       reference: view(reference, baseline),
       variant: view(variant, arm),
     });

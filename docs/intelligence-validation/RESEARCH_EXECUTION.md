@@ -34,6 +34,10 @@ Vor der Auswahl wurden 40 Entwicklungsfälle, 60 finale Einzelfahrten, 12 Drei-R
 
 ## Screening
 
+Bei S26 erhöhte die Stagnationsregel bei beiden Seeds in G59 die Mutationswahrscheinlichkeit von 0,05 auf 0,075. Der Zähler stieg von 14 auf 15, die Mutationsstärke blieb bei 0,2. Der Bericht bindet beide Zustände jedes Übergangs an die Prüfsumme der vollständigen Generationsdatei. [Gemessene Adaption](evidence/paired-adaptation.json)
+
+Die D10-Profile Balanced, Speed und Safety erreichten bei Seed 42 jeweils 215, 264 und 121 erfolgreiche Trainingsrunden. Bei Seed 43 waren es 411, 357 und 209. Alle Arme liefen auf der Standardstrecke mit je 8.192 Kandidaten. Die Berichte nennen die Fitnessverträge einzeln und vergleichen gültige Runden, Rundenzeiten, Fortschritt und Ticks in gemeinsamen Einheiten. [Speed und Balanced](evidence/paired-fitness-speed.json) · [Safety und Balanced](evidence/paired-fitness-safety.json)
+
 Die ersten 20 auditierten Läufe umfassen zehn Varianten mit je zwei Seeds. In den folgenden vier Konfigurationen bewertete jeder Arm 8.192 Kandidaten bei 128 Kandidaten pro Generation. Die Zahlen zählen erfolgreich beendete Trainingsepisoden. Für die Prüfung eines einzelnen Genoms dienen die getrennten Entwicklungs- und Finalfälle.
 
 | Konfiguration                                                               | Seed 42 | Seed 43 |
