@@ -4,6 +4,8 @@ A bestätigte im Auftragschat den geprüften Stand von PR #7 und die Übernahme 
 
 Die sechs Baselines und ihre zwölf Vergleiche auf je 40 Entwicklungsfällen sind ausgewertet. Der beste Baseline-Champion erreichte 21/40. Das gepaarte Screening läuft auf `160db2c` mit 14 Workern, dauerhaften Checkpoints und Budgetledger. In PR #8 ist A als unabhängiger Reviewer angefragt. Das Technical Gate und die Model Readiness sind offen. [Forschung](../intelligence-validation/RESEARCH_EXECUTION.md) · [Prüfstatus](../intelligence-validation/ACCEPTANCE_RESULTS.csv) · [Review](https://github.com/Andreas-Hartweger/ARENA/pull/8)
 
+Die erste Stundenprüfung erreichte 644.736 neu gebuchte Trainingsepisoden und 1.293.958.291 Fahrzeugticks. 70 Screeningläufe waren abgeschlossen. Die Validierungsreserve war vollständig verfügbar. [Budget und Stand der einzelnen Läufe nach zwölf Stunden](../intelligence-validation/evidence/budget-12h.json)
+
 ## Abschlussübergabe Batch 02C
 
 Am 27.11.2026 erteilte A die bedingte Merge-Freigabe und delegierte die verbleibenden Review- und Abnahmeschritte. Codex prüfte den Stand von B `6818084` gegen `61cd54a`, insbesondere physische Kontaktkorrekturen, interpolierte Ziellinie, Fehlerisolation und deterministische Reproduktion. Der Datenabgleich aus der Übergabe umfasst 12.800 Ergebnisse und 594 Elite-Neubewertungen. [PR #6](https://github.com/Andreas-Hartweger/ARENA/pull/6) wurde als `c74ab27daf3159329d9049076ab3c30c5a4759ea` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46009031010) bestand.

@@ -1,0 +1,542 @@
+{
+  "schema": "arena.campaign-report.v1",
+  "stage": "12",
+  "campaign": "ARENA-02D",
+  "matrix": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+  "assignment": [
+    {
+      "id": "Benjamins-Yoga",
+      "total": {
+        "ms": 172800000,
+        "episodes": 1600000,
+        "ticks": 5000000000
+      },
+      "training": {
+        "ms": 146880000,
+        "episodes": 1600000,
+        "ticks": 4250000000
+      }
+    }
+  ],
+  "nominal": {
+    "variants": 47,
+    "slots": 122,
+    "episodes": 1512448
+  },
+  "stamp": "2026-11-28T10:09:21.936Z",
+  "usage": {
+    "charged": {
+      "ms": 43244585,
+      "ticks": 1293958291,
+      "episodes": 644736
+    },
+    "reserved": {
+      "ms": 0,
+      "ticks": 187200,
+      "episodes": 128
+    }
+  },
+  "eventSequence": 1324636,
+  "chargedByScope": [
+    {
+      "scope": "research",
+      "ms": 43244585,
+      "ticks": 1293958291,
+      "episodes": 644736
+    }
+  ],
+  "researchCursor": {
+    "experimentId": "phase-screen"
+  },
+  "createdAtBoundary": [
+    "experiment:B-evolution-42",
+    "experiment:B-evolution-43",
+    "experiment:B-evolution-44",
+    "experiment:B-random-42",
+    "experiment:B-random-43",
+    "experiment:B-random-44",
+    "experiment:S01-42",
+    "experiment:S01-43",
+    "experiment:S02-42",
+    "experiment:S02-43",
+    "experiment:S03-42",
+    "experiment:S03-43",
+    "experiment:S04-42",
+    "experiment:S04-43",
+    "experiment:S05-42",
+    "experiment:S05-43",
+    "experiment:S06-42",
+    "experiment:S06-43",
+    "experiment:S07-42",
+    "experiment:S07-43",
+    "experiment:S08-42",
+    "experiment:S08-43",
+    "experiment:S09-42",
+    "experiment:S09-43",
+    "experiment:S10-42",
+    "experiment:S10-43",
+    "experiment:S11-42",
+    "experiment:S11-43",
+    "experiment:S12-42",
+    "experiment:S12-43",
+    "experiment:S13-42",
+    "experiment:S13-43",
+    "experiment:S14-42",
+    "experiment:S14-43",
+    "experiment:S15-42",
+    "experiment:S15-43",
+    "experiment:S16-42",
+    "experiment:S16-43",
+    "experiment:S17-42",
+    "experiment:S17-43",
+    "experiment:S18-42",
+    "experiment:S18-43",
+    "experiment:S19-42",
+    "experiment:S19-43",
+    "experiment:S20-42",
+    "experiment:S20-43",
+    "experiment:S21-42",
+    "experiment:S21-43",
+    "experiment:S22-42",
+    "experiment:S22-43",
+    "experiment:S23-42",
+    "experiment:S23-43",
+    "experiment:S24-42",
+    "experiment:S24-43",
+    "experiment:S25-42",
+    "experiment:S25-43",
+    "experiment:S26-42",
+    "experiment:S26-43",
+    "experiment:S27-42",
+    "experiment:S28-42",
+    "experiment:S28-43",
+    "experiment:S31-42",
+    "experiment:S31-43",
+    "experiment:S33-42",
+    "experiment:S33-43",
+    "experiment:S35-42",
+    "experiment:S35-43",
+    "experiment:S36-42",
+    "experiment:S36-43",
+    "experiment:S42-42",
+    "experiment:S42-43",
+    "experiment:S45-42",
+    "experiment:S45-43",
+    "experiment:S46-42",
+    "experiment:S46-43",
+    "experiment:S47-42",
+    "experiment:S47-43",
+    "experiment:bench--1-1",
+    "experiment:bench--1-12",
+    "experiment:bench--1-14",
+    "experiment:bench--1-2",
+    "experiment:bench--1-4",
+    "experiment:bench--1-6",
+    "experiment:bench--1-8",
+    "experiment:bench-0-1",
+    "experiment:bench-0-12",
+    "experiment:bench-0-14",
+    "experiment:bench-0-2",
+    "experiment:bench-0-4",
+    "experiment:bench-0-6",
+    "experiment:bench-0-8",
+    "experiment:bench-1-1",
+    "experiment:bench-1-12",
+    "experiment:bench-1-14",
+    "experiment:bench-1-2",
+    "experiment:bench-1-4",
+    "experiment:bench-1-6",
+    "experiment:bench-1-8",
+    "experiment:bench-2-1",
+    "experiment:bench-2-12",
+    "experiment:bench-2-14",
+    "experiment:bench-2-2",
+    "experiment:bench-2-4",
+    "experiment:bench-2-6",
+    "experiment:bench-2-8"
+  ],
+  "generationsAtBoundary": [
+    {
+      "id": "B-evolution-43",
+      "generations": 100,
+      "committedEpisodes": 12800
+    },
+    {
+      "id": "B-evolution-44",
+      "generations": 100,
+      "committedEpisodes": 12800
+    },
+    {
+      "id": "B-random-42",
+      "generations": 100,
+      "committedEpisodes": 12800
+    },
+    {
+      "id": "B-random-43",
+      "generations": 100,
+      "committedEpisodes": 12800
+    },
+    {
+      "id": "B-random-44",
+      "generations": 100,
+      "committedEpisodes": 12800
+    },
+    {
+      "id": "S01-42",
+      "generations": 256,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S01-43",
+      "generations": 256,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S02-42",
+      "generations": 128,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S02-43",
+      "generations": 128,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S03-42",
+      "generations": 32,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S03-43",
+      "generations": 32,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S04-42",
+      "generations": 16,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S04-43",
+      "generations": 16,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S05-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S05-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S06-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S06-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S07-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S07-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S08-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S08-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S09-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S09-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S10-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S10-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S11-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S11-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S12-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S12-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S13-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S13-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S14-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S14-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S15-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S15-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S16-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S16-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S17-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S17-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S18-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S18-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S19-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S19-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S20-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S20-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S21-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S21-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S22-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S22-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S23-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S23-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S24-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S24-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S25-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S25-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S26-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S26-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S27-42",
+      "generations": 57,
+      "committedEpisodes": 7296
+    },
+    {
+      "id": "S28-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S28-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S31-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S31-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S33-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S33-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S35-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S35-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S36-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S36-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S42-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S42-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S45-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S45-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S46-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S46-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S47-42",
+      "generations": 64,
+      "committedEpisodes": 8192
+    },
+    {
+      "id": "S47-43",
+      "generations": 64,
+      "committedEpisodes": 8192
+    }
+  ],
+  "reusedReference": "4e474e10a6f9f2dce89a0378921c86cd303f4e46778a7db178cb1b4035e7d9c6",
+  "benchmarkRows": 28
+}
