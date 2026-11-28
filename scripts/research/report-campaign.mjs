@@ -15,10 +15,11 @@ const screenConfig =
 if (
   !directory ||
   !output ||
-  (!screenConfig && !['baseline', '12', '24', '48', 'final'].includes(stage))
+  (!screenConfig &&
+    !['baseline', 'performance', '12', '24', '48', 'final'].includes(stage))
 )
   throw Error(
-    'Expected campaign, baseline/screen configuration/12/24/48/final and output file',
+    'Expected campaign, baseline/performance/screen configuration/12/24/48/final and output file',
   );
 const db = new DatabaseSync(join(directory, 'research.sqlite'), {
   readOnly: true,
@@ -179,6 +180,80 @@ function screenComparisons(experiments) {
   }
   return comparisons;
 }
+function performanceVariation() {
+  const bytes = readFileSync(join(directory, 'worker-scaling.json'));
+  const scaling = JSON.parse(bytes);
+  const generationRows = db.prepare(
+    'SELECT generation,checksum,summary FROM chunks WHERE experiment=? ORDER BY generation',
+  );
+  const results = scaling.stats.map((stat) => {
+    const runs = scaling.rows
+      .filter((r) => r.workers === stat.workers)
+      .map((r) => {
+        assert.deepEqual(manifest('measurement:' + r.id), r);
+        const chunks = generationRows.all(r.id);
+        assert.deepEqual(
+          chunks.map((g) => g.checksum),
+          r.archives,
+        );
+        const generations = chunks.map((g) => {
+          const s = JSON.parse(g.summary);
+          return {
+            generation: g.generation,
+            ticks: s.actualOrConservativelyChargedTicks,
+            ms: s.durationMs,
+          };
+        });
+        assert.equal(
+          generations.reduce((n, g) => n + g.ticks, 0),
+          r.ticks,
+        );
+        return {
+          id: r.id,
+          ticks: r.ticks,
+          result: r.equivalent,
+          ms: r.ms,
+          ticksPerS: r.ticksPerS,
+          cpuMs: (r.cpu.user + r.cpu.system) / 1000,
+          saveMs: r.saveMs,
+          observedGcMs: r.gcMs,
+          generations,
+        };
+      })
+      .sort((a, b) => a.ticksPerS - b.ticksPerS);
+    assert.equal(runs.length, 3);
+    const [slow, median, fast] = runs;
+    assert.deepEqual(
+      runs.map((r) => r.ticksPerS),
+      [stat.min, stat.median, stat.max],
+    );
+    assert(
+      runs.every(
+        (r) =>
+          r.ticks === scaling.rows[0].ticks &&
+          r.result === scaling.rows[0].equivalent,
+      ),
+    );
+    return {
+      workers: stat.workers,
+      runs,
+      slowAgainstMedian: slow.ticksPerS / median.ticksPerS - 1,
+      slowAgainstFast: slow.ticksPerS / fast.ticksPerS - 1,
+      slowMinusFastMs: slow.ms - fast.ms,
+      generationDeltasMs: slow.generations.map(
+        (g, i) => g.ms - fast.generations[i].ms,
+      ),
+      saveDeltaMs: slow.saveMs - fast.saveMs,
+      observedGcDeltaMs: slow.observedGcMs - fast.observedGcMs,
+    };
+  });
+  return {
+    source: scaling.runtime,
+    scalingSHA256: sha(bytes),
+    selectedWorkers: scaling.workers,
+    results,
+  };
+}
 try {
   db.exec('BEGIN');
   const header = read(join(directory, 'campaign.json')),
@@ -195,7 +270,9 @@ try {
       },
     };
   let report;
-  if (['12', '24', '48'].includes(stage)) {
+  if (stage === 'performance') {
+    report = { ...base, ...performanceVariation() };
+  } else if (['12', '24', '48'].includes(stage)) {
     const checkpoint = manifest('report-hour-' + stage),
       stamp = Date.parse(checkpoint.stamp);
     const boundary = db
