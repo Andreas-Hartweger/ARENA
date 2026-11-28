@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "runtime": {
+    "sha": "81aa5f02342d2be4b437ae61b3c8491712736e88",
+    "sourceDiff": "M scripts/research/ledger.mjs\n M scripts/research/manifest.mjs\n M scripts/research/select.mjs\n M scripts/run-research.mjs\n M scripts/validate-research-models.mjs\n M scripts/verify-research-library.mjs\n M src/research/validation.ts\n M src/storage/capabilities.ts",
+    "node": "v24.22.3",
+    "os": "Windows 11 Pro",
+    "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+    "logicalCpus": 16,
+    "totalRam": 33820106752,
+    "power": "uncontrolled",
+    "backgroundLoad": "uncontrolled",
+    "renderer": null
+  },
+  "browser": "158.0.8127.89",
+  "artifact": "9b683bafff417a24e4eeef8899041a7d05b96bfef7898c58002974a36ad0a8df",
+  "fingerprint": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+  "version": "version:0ea0ca2d-2897-4e29-992b-3482b5524be8",
+  "imported": true,
+  "cloneSurvivedReload": true,
+  "officialStarterAvailable": false,
+  "pageErrors": []
+}

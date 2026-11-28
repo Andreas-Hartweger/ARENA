@@ -1,0 +1,214 @@
+{
+  "schema": "arena.cpu-profile.v1",
+  "runtime": {
+    "sha": "893fcb9b47d72ace062b6a818bed165d279d5773",
+    "sourceDiff": "",
+    "node": "v24.22.3",
+    "os": "Windows 11 Pro",
+    "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+    "logicalCpus": 16,
+    "totalRam": 33820106752,
+    "power": "uncontrolled",
+    "backgroundLoad": "uncontrolled",
+    "renderer": null
+  },
+  "genome": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+  "repetitions": 3,
+  "ticks": 11391,
+  "samplingIntervalUs": 1000,
+  "samples": 1249,
+  "hot": [
+    {
+      "function": "measure",
+      "module": "ai/geometry.ts",
+      "line": 181,
+      "selfSamples": 179
+    },
+    {
+      "function": "project",
+      "module": "tracks/track.ts",
+      "line": 185,
+      "selfSamples": 89
+    },
+    {
+      "function": "evaluate",
+      "module": "ai/network.ts",
+      "line": 104,
+      "selfSamples": 59
+    },
+    {
+      "function": "(garbage collector)",
+      "module": "",
+      "line": 0,
+      "selfSamples": 58
+    },
+    {
+      "function": "at",
+      "module": "tracks/track.ts",
+      "line": 66,
+      "selfSamples": 52
+    },
+    {
+      "function": "(anonymous)",
+      "module": "collision/solver.ts",
+      "line": 71,
+      "selfSamples": 46
+    },
+    {
+      "function": "visit",
+      "module": "ai/geometry.ts",
+      "line": 61,
+      "selfSamples": 42
+    },
+    {
+      "function": "hit",
+      "module": "ai/geometry.ts",
+      "line": 88,
+      "selfSamples": 31
+    },
+    {
+      "function": "roadEdges",
+      "module": "ai/geometry.ts",
+      "line": 143,
+      "selfSamples": 25
+    },
+    {
+      "function": "observe",
+      "module": "ai/perception.ts",
+      "line": 9,
+      "selfSamples": 21
+    },
+    {
+      "function": "bounds",
+      "module": "ai/geometry.ts",
+      "line": 10,
+      "selfSamples": 20
+    },
+    {
+      "function": "freezeTree",
+      "module": "physics/vehicleTick.ts",
+      "line": 47,
+      "selfSamples": 18
+    },
+    {
+      "function": "freezeTree",
+      "module": "physics/vehicleTick.ts",
+      "line": 47,
+      "selfSamples": 17
+    },
+    {
+      "function": "project",
+      "module": "tracks/track.ts",
+      "line": 185,
+      "selfSamples": 17
+    },
+    {
+      "function": "freezeTree",
+      "module": "physics/vehicleTick.ts",
+      "line": 47,
+      "selfSamples": 14
+    },
+    {
+      "function": "headingAxes",
+      "module": "core/math.ts",
+      "line": 17,
+      "selfSamples": 13
+    },
+    {
+      "function": "(anonymous)",
+      "module": "collision/solver.ts",
+      "line": 73,
+      "selfSamples": 13
+    },
+    {
+      "function": "freezeTree",
+      "module": "physics/vehicleTick.ts",
+      "line": 47,
+      "selfSamples": 13
+    },
+    {
+      "function": "(program)",
+      "module": "",
+      "line": 0,
+      "selfSamples": 13
+    },
+    {
+      "function": "headingAxes",
+      "module": "core/math.ts",
+      "line": 17,
+      "selfSamples": 12
+    },
+    {
+      "function": "(anonymous)",
+      "module": "game/world.ts",
+      "line": 201,
+      "selfSamples": 11
+    },
+    {
+      "function": "preview",
+      "module": "ai/preview.ts",
+      "line": 36,
+      "selfSamples": 10
+    },
+    {
+      "function": "sample",
+      "module": "tracks/track.ts",
+      "line": 170,
+      "selfSamples": 10
+    },
+    {
+      "function": "freezeTree",
+      "module": "physics/vehicleTick.ts",
+      "line": 47,
+      "selfSamples": 10
+    },
+    {
+      "function": "denseLayer",
+      "module": "ai/network.ts",
+      "line": 15,
+      "selfSamples": 9
+    },
+    {
+      "function": "at",
+      "module": "tracks/track.ts",
+      "line": 66,
+      "selfSamples": 9
+    },
+    {
+      "function": "visit",
+      "module": "ai/geometry.ts",
+      "line": 61,
+      "selfSamples": 8
+    },
+    {
+      "function": "separated",
+      "module": "ai/preview.ts",
+      "line": 18,
+      "selfSamples": 8
+    },
+    {
+      "function": "normalize",
+      "module": "ai/schema.ts",
+      "line": 131,
+      "selfSamples": 8
+    },
+    {
+      "function": "activate",
+      "module": "ai/network.ts",
+      "line": 3,
+      "selfSamples": 8
+    },
+    {
+      "function": "calculateFreeMotion",
+      "module": "physics/vehicleDynamics.ts",
+      "line": 63,
+      "selfSamples": 8
+    },
+    {
+      "function": "project",
+      "module": "tracks/track.ts",
+      "line": 185,
+      "selfSamples": 8
+    }
+  ]
+}

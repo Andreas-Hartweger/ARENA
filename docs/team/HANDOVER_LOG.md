@@ -27,3 +27,17 @@ Am 27.11.2026 erteilte A die bedingte Merge-Freigabe und delegierte die verbleib
 ## 27.11.2026 · Prüfergebnisse des Trainingslabors
 
 Nach dem Merge von 02B und grüner Main-CI wurde `feature/batch-02c-training-model-management` bearbeitet. Das Labor, die Modellbibliothek und die Speicherverwaltung stehen in [PR #7](https://github.com/Andreas-Hartweger/ARENA/pull/7). A beendete die beiden Vorläufe um 19:07 Uhr und den anschließend einzeln gestarteten Endabnahmelauf um 19:14 Uhr. Der Prüfpunkt ist auf Anweisung von A geschlossen. Der [02C-Bericht](../training-management/BATCH-02C_COMPLETION_REPORT.md) enthält die gemessenen Laufzeiten, das Ergebnis der Altprüfungen, den unabhängigen Freigabeschritt und Links zur Abnahmematrix.
+
+## 27.11.2026 · Eingang von Handover 005
+
+A hat v0.11 und die bedingte Freigabe für den 02C-Merge übermittelt. Das geprüfte PR-Head ist `9d6baff`. Das unabhängige Review ist angefordert. PRE-D01 trennt die historische Planungsaufnahme vom aktuellen PR- und Belegstand. [Prüfung](../intelligence-validation/PRE-D01.md)
+
+A bestätigte im Auftragschat den geprüften Stand von PR #7 und die Übernahme des administrativen SYS-03-Abschlusses. PR #7 wurde als `e6a95a92b6241a750ba7fff599ff2dac123c3149` gemergt. Die [CI auf main](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46073023305) sowie lokal `npm ci`, `npm run check` (233 Tests) und `npm run calibrate` bestanden. Die Kalibrierwerte stimmen mit der 02B-Referenz überein.
+
+Die 122 Experimentdefinitionen, der Schutz der Rechenbudgets, die drei historischen Modellarchive für vier Rollen und der Test des Wiederanlaufs aus einem realen Checkpoint sind geprüft. Die Szenarien sind vor der Auswahl eingefroren. Der Worker-Vergleich läuft auf einem eigenen Checkout. [Forschungsstand](../intelligence-validation/RESEARCH_EXECUTION.md)
+
+Der Headless-Vergleich ist abgeschlossen. Die Kampagne hat den historischen Seed 42 geprüft und für Seed 43 12.800 reguläre Episoden, 834 gültige Runden und 30.155.325 Fahrzeugticks ausgewertet. Chromium hat den Import und das Klonen des historischen G99-Modells nach Neuladen bestätigt. [Fahr- und Prüfnachweise](../intelligence-validation/RESEARCH_EXECUTION.md)
+
+Am 28.11.2026 wurden die sechs Baseline-Audits, die Entwicklungsvergleiche bei 8.192 und 12.800 Episoden sowie das CPU-Profil abgeschlossen. Der Hauptcursor ist das gepaarte Screening auf `160db2c`. [Kampagnenbericht](../intelligence-validation/RESEARCH_EXECUTION.md) · [CI](https://github.com/Andreas-Hartweger/ARENA/actions/runs/46083573828)
+
+Am 28.11.2026 waren nach 94 Screeningläufen alle 97 Bewertungen auf den 40 Entwicklungsfällen verfügbar. Der Hauptcursor wechselte zur Bestätigung von Referenz, S17, S21, S23, S28 und S01. Die Eingabedateien der Auswahl und der vollständige Auswahlentscheid wurden in das separate Sicherungsverzeichnis kopiert und über ihre Prüfsummen abgeglichen. [Auswahlprotokoll](../intelligence-validation/evidence/selection-confirmation.json)

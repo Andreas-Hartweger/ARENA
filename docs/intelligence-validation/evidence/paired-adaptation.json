@@ -1,0 +1,218 @@
+{
+  "schema": "arena.campaign-report.v1",
+  "stage": "S26",
+  "campaign": "ARENA-02D",
+  "matrix": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+  "assignment": [
+    {
+      "id": "Benjamins-Yoga",
+      "total": {
+        "ms": 172800000,
+        "episodes": 1600000,
+        "ticks": 5000000000
+      },
+      "training": {
+        "ms": 146880000,
+        "episodes": 1600000,
+        "ticks": 4250000000
+      }
+    }
+  ],
+  "nominal": {
+    "variants": 47,
+    "slots": 122,
+    "episodes": 1512448
+  },
+  "comparisons": [
+    {
+      "config": "S26",
+      "seed": 42,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-42",
+        "source": "44c100c22854793b200a104dbc358e49ea9190fa",
+        "manifestSHA256": "38fa1d67215250abd48b7ed059bd7480953fd9325385e103aa47a121ed564489",
+        "audit": "92db9c885633186329023cc808005a796a63b3ae4cb02321d9f4077cd92a84d3",
+        "population": 128,
+        "generations": 64,
+        "successes": 215,
+        "validLapSeconds": {
+          "min": 73.74142008660284,
+          "max": 113.08632490974276,
+          "mean": 85.64856233360472,
+          "q1": 77.84378978278913,
+          "median": 82.04329330022213,
+          "q3": 91.72784027844642
+        },
+        "finalMedianProgressM": 135.49283864634532,
+        "firstCommittedSuccess": {
+          "generation": 31,
+          "episodes": 4096,
+          "generationWallMs": 1300580.6288000003
+        },
+        "censored": false,
+        "generationWallMs": 2883343.346,
+        "ticks": 17877521
+      },
+      "variant": {
+        "id": "S26-42",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "41c33a14dc13711bb3858ce37f15623859913ceaec4f1e2b76d5d6abab7a49c9",
+        "audit": "bb5d352e8dd30aa1ca8462fc437ae644df29484bf9d1fa67cccc56690f3cf6ae",
+        "population": 128,
+        "generations": 64,
+        "successes": 212,
+        "validLapSeconds": {
+          "min": 73.74142008660284,
+          "max": 113.08632490974276,
+          "mean": 85.58426458203434,
+          "q1": 77.84680769065606,
+          "median": 82.20793712892065,
+          "q3": 91.72784027844642
+        },
+        "finalMedianProgressM": 134.21864128135206,
+        "firstCommittedSuccess": {
+          "generation": 31,
+          "episodes": 4096,
+          "generationWallMs": 215391.20450000372
+        },
+        "censored": false,
+        "generationWallMs": 479534.5946000051,
+        "ticks": 17815985,
+        "adaptationTriggers": {
+          "settings": {
+            "window": 15,
+            "epsilon": 1,
+            "probabilityEnabled": true,
+            "strengthEnabled": true,
+            "immigrantRate": 0,
+            "rescueEnabled": false
+          },
+          "reasons": {
+            "initial": 1,
+            "no trigger": 47,
+            "improvement": 15,
+            "probability": 1
+          },
+          "generationsSHA256": "3e1ea28ccf215254e25349094c914d2c20aa0afe6b3247e956ad6edb537ebeba",
+          "events": [
+            {
+              "generation": 59,
+              "previous": {
+                "refBest": 4275.771428196007,
+                "count": 14,
+                "next": "p",
+                "p": 0.05,
+                "alpha": 0.2,
+                "reason": "no trigger"
+              },
+              "current": {
+                "refBest": 4275.771428196007,
+                "count": 15,
+                "next": "alpha",
+                "p": 0.07500000000000001,
+                "alpha": 0.2,
+                "reason": "probability"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "config": "S26",
+      "seed": 43,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-43",
+        "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+        "manifestSHA256": "6798b9391854f3cbd61595c42da48de2c293d14a3d0d7125ecdab93a4d8ec275",
+        "audit": "1cae7989267cd49aa14222aa874f45652761cd5cfb7c364161b2125ddacf46f6",
+        "population": 128,
+        "generations": 64,
+        "successes": 411,
+        "validLapSeconds": {
+          "min": 62.251439577544886,
+          "max": 113.1724772321925,
+          "mean": 83.53193479183173,
+          "q1": 74.35842663321645,
+          "median": 82.20327737683756,
+          "q3": 91.3280791740265
+        },
+        "finalMedianProgressM": 164.60639204309547,
+        "firstCommittedSuccess": {
+          "generation": 19,
+          "episodes": 2560,
+          "generationWallMs": 155788.3128000001
+        },
+        "censored": false,
+        "generationWallMs": 589627.8610999999,
+        "ticks": 18314889
+      },
+      "variant": {
+        "id": "S26-43",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "ab7f800e8b1e8b844bd99d775eec5fdcaffdee7ee9f9fa55c49973798fae3c5a",
+        "audit": "7b5305684ef311575af4abe98f005f7188e8f7ca9198b9152279b91859e88acf",
+        "population": 128,
+        "generations": 64,
+        "successes": 400,
+        "validLapSeconds": {
+          "min": 71.0294773665157,
+          "max": 113.1724772321925,
+          "mean": 83.43332264006642,
+          "q1": 74.35842663321645,
+          "median": 82.17283602853797,
+          "q3": 91.3280791740265
+        },
+        "finalMedianProgressM": 132.03035161375902,
+        "firstCommittedSuccess": {
+          "generation": 19,
+          "episodes": 2560,
+          "generationWallMs": 133167.74320000038
+        },
+        "censored": false,
+        "generationWallMs": 540349.5068999995,
+        "ticks": 18228819,
+        "adaptationTriggers": {
+          "settings": {
+            "window": 15,
+            "epsilon": 1,
+            "probabilityEnabled": true,
+            "strengthEnabled": true,
+            "immigrantRate": 0,
+            "rescueEnabled": false
+          },
+          "reasons": {
+            "initial": 1,
+            "improvement": 13,
+            "no trigger": 49,
+            "probability": 1
+          },
+          "generationsSHA256": "f3066a724cd377ba55a597bf9632a5d0c464e3286d141ce97adf132894bd3036",
+          "events": [
+            {
+              "generation": 59,
+              "previous": {
+                "refBest": 4276.771732744456,
+                "count": 14,
+                "next": "p",
+                "p": 0.05,
+                "alpha": 0.2,
+                "reason": "no trigger"
+              },
+              "current": {
+                "refBest": 4276.771732744456,
+                "count": 15,
+                "next": "alpha",
+                "p": 0.07500000000000001,
+                "alpha": 0.2,
+                "reason": "probability"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

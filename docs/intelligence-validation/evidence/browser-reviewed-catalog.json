@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "runtime": {
+    "sha": "2848529698533f492a962ec93476ba6f5cf9fcc3",
+    "sourceDiff": "M scripts/research/check-evidence.mjs\n M scripts/research/evaluate-panel.mjs\n M scripts/verify-research-library.mjs",
+    "node": "v24.22.3",
+    "os": "Windows 11 Pro",
+    "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+    "logicalCpus": 16,
+    "totalRam": 33820106752,
+    "power": "uncontrolled",
+    "backgroundLoad": "uncontrolled",
+    "renderer": null
+  },
+  "browser": "158.0.8127.89",
+  "headless": true,
+  "bundle": {
+    "/assets/TrainingLab-B9TF_UAd.js": "84f2cb8a3d192d2ef313f216c26607cb20206a5d60086385984d979191e8ff2c",
+    "/assets/TrainingLab-D0oNrPbb.css": "2c99d68fc7906d20acf3781c1fe7caefee56d09dda4f60f98aa9bca9b2e96587",
+    "/assets/camera-6znsKKig.js": "39f6c7f4834d66fddae5aaaa3213fd870e48c79a68de6e7c106dc7230cabe487",
+    "/assets/fingerprint-COg-4IZO.js": "feb29d141e6a21967cb75123f1f75bd8d39731a3aa9b45ebaf17b2a911c07ce4",
+    "/assets/index-CQ4xv55B.js": "1f272bbabf030e78b0b46b02f89358a2c908d03c89b017ee8cb44bffcdc1b15b",
+    "/assets/index-JCmdNjkm.css": "d1cd8d3eb90dfd703b0c8dd5a8f0a065f00db3593045e6adf4563b9096e816bc",
+    "/assets/lab.worker-7K51lXBY.js": "a26d1e7c19d6ffbbf7170ba7c1598b9ee0a2cf9414a3fc2ad91e0e50a8b8cf7d"
+  },
+  "artifact": "9b683bafff417a24e4eeef8899041a7d05b96bfef7898c58002974a36ad0a8df",
+  "fingerprint": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+  "version": "version:0ea0ca2d-2897-4e29-992b-3482b5524be8",
+  "imported": true,
+  "cloneSurvivedReload": true,
+  "officialStarterAvailable": false,
+  "pageErrors": []
+}

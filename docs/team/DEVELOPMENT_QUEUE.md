@@ -1,8 +1,12 @@
 # Entwicklungswarteschlange
 
+## Batch 02D · Bestätigungsläufe
+
+PRE-D01, die sechs Baselines und sämtliche 94 gepaarten Screeningläufe sind abgeschlossen. RS-009 führt die Referenz und die fünf aus 40 Entwicklungsfällen ausgewählten Alternativen auf neuen Seeds aus. Es folgen die Langzeitläufe, der Kandidatenfreeze und die finalen Fälle. Für das unabhängige Review von 02D ist A in PR #8 angefragt. [Auswahlnachweis](../intelligence-validation/evidence/selection-confirmation.json) · [158 Abnahmepunkte](../intelligence-validation/ACCEPTANCE_RESULTS.csv) · [PR #8](https://github.com/Andreas-Hartweger/ARENA/pull/8)
+
 ## Batch 02C
 
-Die 18 Arbeitspakete und ihre Lieferergebnisse stehen im [02C-Abschlussbericht](../training-management/BATCH-02C_COMPLETION_REPORT.md). Die 210 Abnahmepunkte und 96 Entscheidungen sind in der [Prüfmatrix](../training-management/ACCEPTANCE_RESULTS.md) einzeln zugeordnet. SYS-03 enthält die von A verkürzte Headless-Dauerprüfung. Das unabhängige 02C-Schlussreview und die Mergefreigabe stehen aus. [Arbeitsplan](../training-management/specification/BATCH-02C_TASKS.md) · [Referenzvergleich](../training-management/evidence/node-pool-reference.json)
+02C ist als `e6a95a9` in `main` integriert. A bestätigte den geprüften Stand und den administrativen Abschluss von SYS-03. Der Abschlussbericht dokumentiert die gemessenen Laufzeiten. Die Prüfmatrix ordnet 210 Abnahmepunkte und 96 Entscheidungen den 18 Arbeitspaketen zu. [02C-Abschlussbericht](../training-management/BATCH-02C_COMPLETION_REPORT.md) · [Prüfmatrix](../training-management/ACCEPTANCE_RESULTS.md) · [Merge und CI](../intelligence-validation/PRE-D01.md)
 
 ## Frühere Arbeitspakete
 

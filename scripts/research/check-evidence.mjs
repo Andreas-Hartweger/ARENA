@@ -1,0 +1,458 @@
+import assert from 'node:assert/strict';
+import { DatabaseSync } from 'node:sqlite';
+import {
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  rmSync,
+} from 'node:fs';
+import { join } from 'node:path';
+import { hostname, tmpdir } from 'node:os';
+import process from 'node:process';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { campaign, ResearchLedger } from './ledger.mjs';
+import {
+  caps,
+  trainingCaps,
+  matrixHash,
+  experiment,
+  hashJSON,
+} from './manifest.mjs';
+import { ActiveTime, publishJSON } from './campaign.mjs';
+import { nodeComputePort } from '../node-compute-port.mjs';
+import { exportExperiment } from './evidence.mjs';
+import { inspectDevelopment } from './inspect-development.mjs';
+import { auditExperiment } from './audit-data.mjs';
+import {
+  combinedStatus,
+  requireSelectionPredecessors,
+  interactionReserve,
+} from './status.mjs';
+import {
+  reviewCases,
+  casesCSV,
+  investigateRegression,
+} from './review-cases.mjs';
+import { runExperiment } from './coordinator.mjs';
+import { peerInputs, combinedMilestone } from './peer-inputs.mjs';
+import {
+  evaluatePanel,
+  loadCandidate,
+  loadPanel,
+  standardPanel,
+} from './evaluate-panel.mjs';
+const base = mkdtempSync(join(tmpdir(), 'arena-technical-evidence-')),
+  src = join(base, 'source'),
+  out = join(base, 'copy');
+async function checkMachineQuotas() {
+  const machines = [42, 43].map((seed) => ({
+    id: 'technical-' + seed,
+    experiments: ['S01-' + seed],
+    total: { ms: 240000, ticks: 3000, episodes: 8 },
+    training: { ms: 180000, ticks: 2000, episodes: 8 },
+  }));
+  const spec = campaign(
+    'technical-split',
+    matrixHash,
+    'b'.repeat(40),
+    machines,
+  );
+  const roots = machines.map((m) => join(base, m.id));
+  const runs = await Promise.allSettled(
+    machines.map(async (machine, index) => {
+      const dir = roots[index];
+      mkdirSync(dir);
+      publishJSON(join(dir, 'campaign.json'), {
+        definition: spec,
+        testFixture: true,
+      });
+      const db = new ResearchLedger(
+        join(dir, 'research.sqlite'),
+        spec,
+        machine.id,
+      );
+      db.claim();
+      const clock = new ActiveTime(db, { experimentId: 'technical-split' });
+      try {
+        const foreign = experiment(
+          machines[1 - index].experiments[0],
+          spec.id,
+          1,
+          8,
+        );
+        await assert.rejects(
+          runExperiment(db, foreign, clock, { hardware: 8 }),
+          /outside static/,
+        );
+        assert.equal(
+          db.readManifest('experiment:' + foreign.definition.experimentId),
+          undefined,
+        );
+        const def = globalThis.structuredClone(
+          experiment(machine.experiments[0], spec.id, 1, 8).definition,
+        );
+        Object.assign(def.draft.options, { n: 8, generations: 1, budget: 8 });
+        def.draft.scenarios = [{ task: { maxTicks: 65, graceTicks: 0 } }];
+        def.episodeBudget = 8;
+        const entry = { definition: def, hash: hashJSON(def) };
+        const result = await runExperiment(db, entry, clock, { hardware: 8 });
+        assert.equal(result.phase, 'Completed', result.error);
+        await exportExperiment(db, dir, entry, result, {
+          sha: spec.sha,
+          node: process.version,
+          testFixture: true,
+        });
+      } finally {
+        clock.finish();
+        db.release();
+        db.close();
+      }
+    }),
+  );
+  for (const run of runs) if (run.status === 'rejected') throw run.reason;
+  const report = combinedStatus(roots);
+  assert.equal(report.state.completed, 2);
+  assert.equal(report.state.unassigned, 120);
+  assert.equal(report.charge.find((c) => c.scope === 'research').episodes, 16);
+  assert.equal(
+    report.charge.find((c) => c.scope === 'research').ticks,
+    16 * 65,
+  );
+  assert.throws(
+    () => combinedStatus([roots[0], roots[0]]),
+    /one matching ledger/,
+  );
+  const local = new ResearchLedger(
+    join(roots[0], 'research.sqlite'),
+    spec,
+    machines[0].id,
+  );
+  try {
+    const peers = peerInputs(roots[0], local, [roots[1]]);
+    const remote = machines[1].experiments[0];
+    assert.equal(peers.source(remote), roots[1]);
+    const remoteEntry = peers.manifest(
+      peers.source(remote),
+      'experiment:' + remote,
+    );
+    assert.equal(
+      loadCandidate(peers.source(remote), remote).report.entry.hash,
+      remoteEntry.hash,
+    );
+    const spent = report.charge.find((r) => r.scope === 'research');
+    const boundary = combinedMilestone(peers, spent.ms);
+    assert.deepEqual(boundary.total, {
+      ms: spent.ms,
+      ticks: 16 * 65,
+      episodes: 16,
+    });
+    assert.throws(
+      () => combinedMilestone(peers, spent.ms + 1),
+      /not been reached/,
+    );
+    assert.throws(() => peerInputs(roots[0], local, [roots[0]]), /Duplicate/);
+  } finally {
+    local.close();
+  }
+}
+try {
+  await checkMachineQuotas();
+  mkdirSync(src);
+  const spec = campaign('qa', matrixHash, 'a'.repeat(40), [
+    { id: hostname(), total: caps, training: trainingCaps },
+  ]);
+  publishJSON(join(src, 'campaign.json'), {
+    definition: spec,
+    testFixture: true,
+  });
+  const ledger = new ResearchLedger(
+    join(src, 'research.sqlite'),
+    spec,
+    hostname(),
+  );
+  const freezeCommand = ['scripts/freeze-research-panels.mjs', src];
+  execFileSync(process.execPath, freezeCommand);
+  const panelReceipts = ledger.readManifest('frozen-panels');
+  assert.deepEqual(
+    JSON.parse(readFileSync(join(src, 'panel-commitments.json'), 'utf8')),
+    panelReceipts,
+  );
+  execFileSync(process.execPath, freezeCommand);
+  assert.deepEqual(ledger.readManifest('frozen-panels'), panelReceipts);
+  assert.equal(loadPanel(src, 'development', ledger).cases.length, 40);
+  const localPanel = join(src, 'panels', 'development.json');
+  const panelBytes = readFileSync(localPanel);
+  writeFileSync(localPanel, JSON.stringify({ name: 'development', cases: [] }));
+  assert.throws(() => loadPanel(src, 'development', ledger), /changed/);
+  writeFileSync(localPanel, panelBytes);
+  ledger.claim();
+  const clock = new ActiveTime(ledger, { experimentId: 'qa' });
+  try {
+    for (const phase of ['confirmation', 'long', 'freeze'])
+      assert.throws(
+        () => requireSelectionPredecessors(src, phase, ledger),
+        /predecessor/,
+      );
+    const def = globalThis.structuredClone(
+      experiment('B-evolution-43', 'qa', 1, 8).definition,
+    );
+    def.experimentId = 'qa-technical';
+    def.episodeBudget = 8;
+    Object.assign(def.draft.options, { n: 8, generations: 1, budget: 8 });
+    def.draft.scenarios = [{ task: { maxTicks: 65, graceTicks: 0 } }];
+    const entry = { definition: def, hash: hashJSON(def) };
+    const state = await runExperiment(ledger, entry, clock, { hardware: 8 });
+    assert.equal(state.phase, 'Completed');
+    const outstanding = interactionReserve(ledger, { slots: [] });
+    assert.equal(outstanding.episodes, 18 * 25600 + 4 * 51200);
+    const afterOne = interactionReserve(ledger, {
+      slots: [{ id: 'C01-101', state: 'completed' }],
+    });
+    assert.equal(afterOne.episodes, outstanding.episodes - 25600);
+    await exportExperiment(ledger, src, entry, state, {
+      node: process.version,
+      sha: spec.sha,
+      testFixture: true,
+    });
+    const candidate = loadCandidate(src, def.experimentId);
+    const audited = await auditExperiment(src, def.experimentId, {
+      timeStatistics: true,
+    });
+    assert.deepEqual(audited.lapTimeBoundaries, [
+      { episodes: 8, validLaps: 0, seconds: null },
+    ]);
+    const expFile = join(
+      src,
+      'experiments',
+      def.experimentId,
+      'experiment.json',
+    );
+    const original = readFileSync(expFile);
+    const altered = JSON.parse(original);
+    delete altered.runtime.sha;
+    writeFileSync(expFile, JSON.stringify(altered));
+    assert.throws(() => loadCandidate(src, def.experimentId), /provenance/);
+    writeFileSync(expFile, original);
+    const paramFile = join(
+      src,
+      'experiments',
+      def.experimentId,
+      candidate.report.models.champion.file,
+    );
+    const parameters = readFileSync(paramFile);
+    const modified = parameters.slice(1);
+    writeFileSync(paramFile, modified);
+    assert.throws(() => loadCandidate(src, def.experimentId), /damaged/);
+    writeFileSync(paramFile, parameters);
+    const panel = {
+      name: 'development',
+      hash: hashJSON('qa-development'),
+      cases: [
+        {
+          id: 'qa-dev',
+          group: 0,
+          effective: 'qa-state',
+          scenario: {
+            purpose: 'validation',
+            id: 'qa-dev',
+            task: { maxTicks: 65, graceTicks: 0 },
+          },
+        },
+      ],
+    };
+    const before = ledger.usage().charged;
+    const first = await evaluatePanel(ledger, clock, panel, candidate, 1);
+    assert(first.actual[0].result.ok);
+    const qc = {
+      genome: candidate.genome.hash,
+      version: 'qa',
+      roles: ['Starter'],
+    };
+    const raw = { genome: qc.genome, development: first };
+    const [caseRow] = reviewCases(qc, raw, hashJSON(raw));
+    assert.equal(caseRow.physicalTicks, 65);
+    assert.equal(caseRow.grassSeconds, first.actual[0].result.raw.grassSeconds);
+    assert.equal(caseRow.recordDigest, hashJSON(first.actual[0].result));
+    const [absent] = reviewCases(
+      qc,
+      { ...raw, development: { ...first, actual: [] } },
+      'qa',
+    );
+    assert.equal(absent.outcome, 'missing');
+    assert.equal(absent.lapSeconds, null);
+    assert.equal(absent.grassSeconds, null);
+    assert.equal(casesCSV([caseRow, absent]).trim().split('\n').length, 3);
+    // Arithmetic fixture only, independent from physical panel evidence.
+    const testCase = (genome, caseId, group, outcome, time) => ({
+      ...(outcome === 'missing' ? absent : caseRow),
+      genome,
+      caseId,
+      effective: caseId,
+      group,
+      outcome,
+      panel: 'holdout',
+      scored: outcome !== 'missing',
+      lapSeconds: time === null ? null : JSON.stringify([time]),
+    });
+    const cases = [
+      testCase('a', 'c1', 0, 'completed', 40),
+      testCase('b', 'c1', 0, 'completed', 46),
+      testCase('a', 'c2', 0, 'completed', 42),
+      testCase('b', 'c2', 0, 'noProgress', null),
+      testCase('a', 'c3', 1, 'missing', null),
+      testCase('b', 'c3', 1, 'completed', 45),
+      testCase('a', 'c4', 1, 'completed', 50),
+      testCase('b', 'c4', 1, 'missing', null),
+    ];
+    const pair = {
+      a: 'a',
+      b: 'b',
+      deltaSuccess: -0.25,
+      paired: { commonSuccessful: 1 },
+    };
+    const comparison = investigateRegression(pair, cases);
+    assert.deepEqual(
+      comparison.byGroup.map((g) => [g.lost, g.gained, g.commonSuccessful]),
+      [
+        [1, 0, 1],
+        [1, 1, 0],
+      ],
+    );
+    assert.deepEqual(
+      comparison.changes.map((c) => c.b.reason),
+      ['noProgress', 'completed', 'missing'],
+    );
+    assert.equal(comparison.commonTimes[0].differenceSeconds, 6);
+    assert.throws(() => investigateRegression(pair, cases.slice(1)));
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 65);
+    assert.deepEqual(
+      await evaluatePanel(ledger, clock, panel, candidate, 1, {
+        portFactory() {
+          throw Error('A cached case must not start any worker');
+        },
+      }),
+      first,
+    );
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 65);
+    const retry = globalThis.structuredClone(panel);
+    retry.cases[0].id = retry.cases[0].scenario.id = 'qa-receipt-loss';
+    let lost = false;
+    const measured = await evaluatePanel(ledger, clock, retry, candidate, 1, {
+      portFactory() {
+        const port = nodeComputePort();
+        return {
+          ...port,
+          listen(event, fault) {
+            port.listen((message) => {
+              if (!lost && message.type === 'result') {
+                lost = true;
+                fault(Error('Lost measured receipt'));
+              } else event(message);
+            }, fault);
+          },
+        };
+      },
+    });
+    assert(lost && measured.actual[0].result.ok);
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 195);
+    const lostEvent = ledger.db
+      .prepare(
+        "SELECT context FROM events WHERE state='measurement-attempt' AND json_extract(context,'$.uncertain')=1",
+      )
+      .get();
+    const receipt = JSON.parse(lostEvent.context);
+    assert.equal(receipt.ticks, null);
+    assert.equal(receipt.chargedTicks, 65);
+    await inspectDevelopment(src, ledger, clock, panel, candidate, first);
+    const diagnostics = ledger.readManifest(
+      'development-trace:qa-technical:champion',
+    );
+    assert.equal(diagnostics.sampleCount, 6);
+    assert.equal(diagnostics.diagnostics.observations, 6);
+    assert.equal(diagnostics.diagnostics.measuredDecisions, 6);
+    assert.equal(diagnostics.driving.measured, 6);
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 260);
+    await inspectDevelopment(src, ledger, clock, panel, candidate, first);
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 260);
+    await assert.rejects(
+      evaluatePanel(ledger, clock, standardPanel(), candidate, 1),
+      /frozen/i,
+    );
+    // Minimal typed fixtures for the backup preconditions, never part of campaign results.
+    for (const id of [
+      'historical-reference',
+      'final-candidates',
+      'final-validation',
+      'final-raw-audit',
+    ])
+      ledger.manifest(id, { testOnly: id });
+    assert.deepEqual(
+      await evaluatePanel(ledger, clock, panel, candidate, 1),
+      first,
+    );
+    const afterFreeze = globalThis.structuredClone(panel);
+    afterFreeze.cases[0].id = afterFreeze.cases[0].scenario.id = 'qa-late-dev';
+    await assert.rejects(
+      evaluatePanel(ledger, clock, afterFreeze, candidate, 1),
+      /freeze/,
+    );
+    assert.equal(ledger.usage().charged.ticks - before.ticks, 260);
+  } finally {
+    clock.finish();
+    ledger.release();
+    ledger.close();
+  }
+  const command = ['scripts/research/archive-campaign.mjs', src, out];
+  // Interrupt the isolated archive after its atomic index write but before its
+  // ledger receipt. Recovery must rebuild and verify the same archive.
+  const path = join(src, 'research.sqlite');
+  const setup = new DatabaseSync(path);
+  try {
+    setup.exec(`CREATE TRIGGER interrupt_receipt BEFORE INSERT ON manifests
+      WHEN NEW.id='verified-archive' BEGIN SELECT RAISE(ABORT, 'test receipt interruption'); END`);
+  } finally {
+    setup.close();
+  }
+  const interrupted = spawnSync(process.execPath, command, {
+    encoding: 'utf8',
+  });
+  assert.notEqual(interrupted.status, 0);
+  assert.match(interrupted.stderr, /test receipt interruption/);
+  const originalIndex = readFileSync(join(out, 'archive-manifest.json'));
+  const resume = new DatabaseSync(path);
+  try {
+    assert.equal(
+      resume
+        .prepare("SELECT 1 FROM manifests WHERE id='verified-archive'")
+        .get(),
+      undefined,
+    );
+    resume.exec('DROP TRIGGER interrupt_receipt');
+  } finally {
+    resume.close();
+  }
+  const generationFile = join(
+    out,
+    'experiments',
+    'qa-technical',
+    'generations.ndjson',
+  );
+  rmSync(generationFile);
+  execFileSync(process.execPath, command);
+  assert.deepEqual(
+    readFileSync(join(out, 'archive-manifest.json')),
+    originalIndex,
+  );
+  const index = JSON.parse(
+    readFileSync(join(out, 'archive-manifest.json'), 'utf8'),
+  );
+  assert.equal(index.checkpoints[0].regularEpisodes, 8);
+  execFileSync(process.execPath, command);
+  writeFileSync(generationFile, 'corrupt test copy');
+  const result = spawnSync(process.execPath, command, { encoding: 'utf8' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Damaged archive/);
+} finally {
+  rmSync(base, { recursive: true, force: true });
+}

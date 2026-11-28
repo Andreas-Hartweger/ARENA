@@ -1,0 +1,179 @@
+{
+  "ended": "2026-11-27T23:48:34.056Z",
+  "elapsedMs": 3411.5108,
+  "observedActiveMs": 2243.755200000001,
+  "gaps": 0,
+  "last": {
+    "state": {
+      "phase": "Completed",
+      "runId": "c0a5b7aa-1cab-4cdf-a73d-5cf8f20a8c7a",
+      "sessionId": "af810fdf-65d5-4481-a943-42e37accf1eb",
+      "seq": 7,
+      "segment": 0,
+      "generation": 4,
+      "evaluations": 32,
+      "activeMs": 3193.7999999970198,
+      "sessionActiveMs": 3193.7999999970198,
+      "managedEstimate": 26905152,
+      "saveMs": 81.79999999701977,
+      "commits": 5,
+      "durableGeneration": 4,
+      "reason": "budget",
+      "error": null,
+      "unsaved": false,
+      "saveRequested": false,
+      "summary": {
+        "version": "arena.generation.v1",
+        "generation": 3,
+        "champion": {
+          "id": "[\"c0a5b7aa-1cab-4cdf-a73d-5cf8f20a8c7a\",3,2]",
+          "fitness": 30.752942272671174
+        },
+        "adaptive": {
+          "refBest": 30.19090867384178,
+          "count": 1,
+          "next": "p",
+          "p": 0.05,
+          "alpha": 0.2,
+          "reason": "no trigger"
+        },
+        "before": {
+          "p": 0.05,
+          "alpha": 0.2
+        },
+        "fitness": {
+          "best": 30.752942272671174,
+          "worst": 23.647824025015847,
+          "mean": 28.782880924477517,
+          "median": 30.030676921483035,
+          "q1": 27.937012510471725,
+          "q3": 30.266466294922324
+        },
+        "bestId": "[\"c0a5b7aa-1cab-4cdf-a73d-5cf8f20a8c7a\",3,2]",
+        "diversity": {
+          "unique": 8,
+          "duplicates": 0,
+          "uniqueFraction": 1,
+          "D2": 0.012651335403354079,
+          "D": 0.11247815522737772,
+          "layers": [
+            0.012859549578886385,
+            0.010173436308941334,
+            0.0057744760152859224
+          ]
+        },
+        "origins": {
+          "elite": 1,
+          "offspring": 7
+        },
+        "operators": {
+          "copy": 7
+        },
+        "mutation": {
+          "eligible": 59829,
+          "selected": 3050,
+          "changed": 3050,
+          "large": 137,
+          "normal": 2913,
+          "clipped": 0
+        },
+        "reasons": {
+          "timeout": 8
+        },
+        "successes": 0,
+        "successRate": 0,
+        "laps": 0,
+        "lapTimes": null,
+        "progress": {
+          "best": 22.595199940505154,
+          "worst": 17.60119196058895,
+          "mean": 21.210638781736264,
+          "median": 22.08767493514381,
+          "q1": 20.616303762921177,
+          "q3": 22.25336425998745
+        },
+        "components": {
+          "P": 0.020018804138098048,
+          "A": 1,
+          "K": 0,
+          "T": 0.020018804138098048,
+          "Q": 0.5100094020690491,
+          "R": 28.782880924477517,
+          "F": 28.782880924477517
+        },
+        "rawMeans": {
+          "contactSeconds": 0,
+          "clusters": 0,
+          "impactSum": 0,
+          "peakApproach": 0,
+          "grassSeconds": 0,
+          "idleSeconds": 0,
+          "wrongWaySeconds": 0,
+          "unstableSeconds": 0,
+          "steeringWindows": 0,
+          "steeringChange": 0.12203472866261122,
+          "reverseSeconds": 0,
+          "unknownTangentSeconds": 0,
+          "maxSpeed": 14.324719716639807,
+          "speedIntegral": 21.237864779040983,
+          "tangentialIntegral": 21.21063878173621,
+          "fallbackTicks": 0,
+          "recoveries": 0,
+          "distance": 21.237864779041047,
+          "approach": 8,
+          "progress": 21.210638781736264,
+          "partial": 13.210638781736264,
+          "meanSpeed": 7.079288259680328,
+          "productiveMps": 7.0702129272454215
+        },
+        "penaltyMeans": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "attempts": 8,
+        "evaluations": 8,
+        "simulatedSeconds": 24
+      },
+      "monitor": {
+        "evaluated": 32,
+        "ticks": 5760,
+        "computeMs": 5251.30000000447,
+        "yieldWaitMs": 92.0999999716878,
+        "attempts": 32,
+        "transferredBytes": 2188032,
+        "receivedMessages": 66,
+        "oldestSignalMs": null,
+        "busy": 0,
+        "workers": 0
+      }
+    },
+    "storage": {
+      "owner": null,
+      "epoch": 1,
+      "revision": 7,
+      "total": 1116503,
+      "budget": 1073741824
+    },
+    "records": 23
+  },
+  "durable": {
+    "run": {
+      "id": "c0a5b7aa-1cab-4cdf-a73d-5cf8f20a8c7a",
+      "latest": "checkpoint:458d28ff-e8cf-482f-81e0-deaf01d3b62d",
+      "automatic": [
+        "checkpoint:606b01fc-bbe2-449a-8069-a1f61a8ff0be",
+        "checkpoint:a1c8749e-b2c7-49ce-9a92-bb653ab630af",
+        "checkpoint:458d28ff-e8cf-482f-81e0-deaf01d3b62d"
+      ],
+      "milestones": [],
+      "terminal": true,
+      "globalGeneration": 4
+    },
+    "checkpoints": 3
+  },
+  "errors": []
+}

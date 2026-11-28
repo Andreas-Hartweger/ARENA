@@ -33,3 +33,7 @@ Für PRE-B01 und EV-001–013 gilt der Auftrag vom 27.11.2026. A und B haben die
 ## Development Batch 02C
 
 Nach dem Merge von PR #6 und erfolgreicher CI gibt A PRE-C01 und die 17 Folgeaufgaben im [02C-Arbeitsplan](docs/training-management/specification/BATCH-02C_TASKS.md) frei. Für die Arbeit gelten [TR-01 bis TR-08](docs/team/DEVELOPMENT_CONTINUITY_CONTRACT.md). Geprüfte eigene Änderungen dürfen ausschließlich auf `feature/batch-02c-training-model-management` mit `git push -u origin HEAD` gesichert werden. Ein gemeinsamer PR nach main und CI-Prüfung sind freigegeben. Den 02C-Merge entscheidet A gesondert.
+
+## Development Batch 02D
+
+A erteilt mit Prompt und Paket v0.11 die bedingte Mergefreigabe ausschließlich für den Vorgänger-PR #7. PRE-D01 prüft alle Pflichtnachweise und das unabhängige A/B-Review. Nach dem Merge, erfolgreicher CI auf dem tatsächlichen Mergecommit und lokaler Baseline bearbeitet B die 14 Arbeitspakete gemäß [Arbeitsplan](docs/intelligence-validation/specification/BATCH-02D_TASKS.md). Geprüfte eigene Commits und Pushes sind auf `feature/batch-02d-integration-training-validation` begrenzt. Für diesen Branch sind ein PR nach `main` und die Prüfung seiner CI freigegeben. Über den Merge von 02D entscheidet A gesondert. TR-01 bis TR-08 und die [Forschungsbudgets](docs/intelligence-validation/specification/BUDGET_COMPUTE_SPEC.md) gelten.

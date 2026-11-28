@@ -1,9 +1,12 @@
+import { startState, type ScenarioStart } from './scenarioStart';
+import { RecoveryProof } from './recovery';
 import { Brain } from '../ai/network';
 import { profile, standardProfile, period } from '../ai/profile';
 import { canonical, signature } from '../ai/schema';
 import { dot } from '../core/math';
 import { DriveWorld } from '../game/world';
 import { freezeTree } from '../physics/vehicleTick';
+import type { PhysicsDiagnostics } from '../physics/vehicleDynamics';
 import { startGrid } from '../tracks/grid';
 import { createTrack, type TrackDefinition } from '../tracks/track';
 import { createVehicle } from '../vehicles/vehicle';
@@ -57,6 +60,7 @@ export function deadline(
   };
 }
 export interface ScenarioOptions {
+  start?: ScenarioStart;
   id?: string;
   seed?: number;
   track?: TrackDefinition;
@@ -81,12 +85,18 @@ export function scenario(digest: Digest, options: ScenarioOptions = {}) {
   );
   if (!(Number.isFinite(task.progressM) && task.progressM > 0))
     throw Error('Invalid progress threshold');
-  const track = createTrack(options.track),
-    pose = startGrid(track, 1, GT_01.lengthM, GT_01.widthM)[0];
+  const track = createTrack(options.track);
+  let initialState;
+  if (options.start) {
+    initialState = startState(track, options.start);
+  } else {
+    const pose = startGrid(track, 1, GT_01.lengthM, GT_01.widthM)[0];
+    initialState = { positionM: pose.position, headingRad: pose.heading };
+  }
   const vehicle = {
     id: 'candidate',
     startNumber: 0,
-    initialState: { positionM: pose.position, headingRad: pose.heading },
+    initialState,
   };
   const sensor = profile(standardProfile.rays, options.sensorHz ?? 30),
     decisionHz = options.decisionHz ?? 30;
@@ -109,9 +119,21 @@ export function scenario(digest: Digest, options: ScenarioOptions = {}) {
     purpose = options.purpose ?? 'training';
   if (!id || !['training', 'validation', 'test'].includes(purpose))
     throw Error('Invalid scenario identity');
+  const recovery = options.start?.kind === 'recovery';
+  if (
+    recovery &&
+    (purpose === 'training' ||
+      task.maxTicks !== 1500 ||
+      task.noProgressTicks < 1500 ||
+      task.laps !== 1)
+  )
+    throw Error(
+      'Recovery certification requires its own validation task and full 1200 + 300 ticks',
+    );
   const structure = digest(
     canonical({
       version: 'arena.evaluation.v1',
+      ...(recovery ? { objective: 'arena.recovery.v1' } : {}),
       physics: 'first-drive.v1',
       task,
       fitness,
@@ -122,10 +144,19 @@ export function scenario(digest: Digest, options: ScenarioOptions = {}) {
     }),
   );
   const key = digest(
-    canonical({ structure, track: track.def, vehicle, id, seed, purpose }),
+    canonical({
+      structure,
+      track: track.def,
+      vehicle,
+      id,
+      seed,
+      purpose,
+      ...(options.start ? { start: options.start } : {}),
+    }),
   );
   // Track compilation is shared read-only. Every call to evaluate starts a fresh world and driver.
   return freezeTree({
+    ...(options.start ? { start: { ...options.start } } : {}),
     track,
     vehicle,
     sensor,
@@ -145,13 +176,13 @@ export function scenarioSet(
   digest: Digest,
   master = 42,
   segment = 0,
-  options: readonly Omit<ScenarioOptions, 'seed'>[] = [{}],
+  options: readonly ScenarioOptions[] = [{}],
 ) {
   return Object.freeze(
     options.map((s, i) =>
       scenario(digest, {
         ...s,
-        seed: derivedSeed(master, 'scenario', 0, segment, i),
+        seed: s.seed ?? derivedSeed(master, 'scenario', 0, segment, i),
       }),
     ),
   );
@@ -159,6 +190,7 @@ export function scenarioSet(
 export interface TraceOptions {
   maxSamples: number;
   everyTicks: number;
+  dynamics?: boolean;
 }
 export interface TraceSample {
   tick: number;
@@ -176,6 +208,12 @@ export interface TraceSample {
   travel: readonly TravelFact[];
   contacts: readonly ContactInterval[];
   terminalTime: number;
+  dynamics?: {
+    stationM: number;
+    lateralM: number;
+    curvaturePerM: number;
+    physics: PhysicsDiagnostics;
+  };
 }
 export interface EpisodeFailure {
   ok: false;
@@ -231,6 +269,7 @@ export function* stepEpisode(
         world.frame.cars[0].lap.s,
       ),
       penalty = new Penalties();
+    const recovery = s.start?.kind === 'recovery' ? new RecoveryProof() : null;
     const clock = { anchor: 0, last: s.task.graceTicks },
       commands = new Map(),
       samples: TraceSample[] = [];
@@ -283,6 +322,21 @@ export function* stepEpisode(
         facts.contacts,
         ledger.highwater - before,
       );
+      if (recovery)
+        recovery.accept(
+          tick,
+          s.track,
+          {
+            position: car.state.positionM,
+            heading: car.state.headingRad,
+            lengthM: GT_01.lengthM,
+            widthM: GT_01.widthM,
+          },
+          car.lap.s,
+          p.longitudinalMps,
+          facts.travel,
+          facts.contacts,
+        );
       if (sampled) {
         if (record)
           samples.push({
@@ -296,6 +350,16 @@ export function* stepEpisode(
             travel: facts.travel,
             contacts: facts.contacts,
             terminalTime: end,
+            ...(trace?.dynamics
+              ? {
+                  dynamics: {
+                    stationM: local.s,
+                    lateralM: local.lateral,
+                    curvaturePerM: local.curvature,
+                    physics: p,
+                  },
+                }
+              : {}),
           });
         else truncated = true;
       }
@@ -339,6 +403,7 @@ export function* stepEpisode(
             productiveMps: end ? ledger.highwater / end : null,
           },
           lapTimes: ledger.lapTimes,
+          ...(recovery ? { recovery: recovery.result } : {}),
           ...(trace ? { trace: { samples, truncated } } : {}),
         });
       }

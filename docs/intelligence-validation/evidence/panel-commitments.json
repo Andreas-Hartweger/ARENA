@@ -1,0 +1,22 @@
+{
+  "development": {
+    "count": 40,
+    "contentHash": "cf5be24eed52c153a89b05b254e0094f0c154861f70b9b947e5c32a1d7f0032e",
+    "sha256": "b2e81f13b1b8bd071546c1951b40eca709f8c4f2d66c88bc97b662e58999f5e6"
+  },
+  "holdout": {
+    "count": 60,
+    "contentHash": "b6d12b621ecc8a2d3926dd6423d7713e66061a8cd3128543b306a68d68e59f56",
+    "sha256": "174967e5db7c1b36899aa57ca88a9e28ee9cf285e2160014718a4b079cf36ef7"
+  },
+  "endurance": {
+    "count": 12,
+    "contentHash": "e641e988b59087faf58304ca6717cb0b10f1fa1df25850d923c27b32e00de460",
+    "sha256": "6a93643d7be250eb0a423f37ebf0042cdef10edf1e5c0bacf45fae508f33401a"
+  },
+  "recovery": {
+    "count": 18,
+    "contentHash": "53cce33ce31553c22cc10b73e2676451e2eabd6880a881e17c84d1fcc919e812",
+    "sha256": "974ebf9f15bc43a9803c54015ee319fc1d12c894f7e71f76848c3d9f1c58834b"
+  }
+}

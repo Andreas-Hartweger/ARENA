@@ -1,0 +1,131 @@
+{
+  "schema": "arena.campaign-report.v1",
+  "stage": "S33",
+  "campaign": "ARENA-02D",
+  "matrix": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+  "assignment": [
+    {
+      "id": "Benjamins-Yoga",
+      "total": {
+        "ms": 172800000,
+        "episodes": 1600000,
+        "ticks": 5000000000
+      },
+      "training": {
+        "ms": 146880000,
+        "episodes": 1600000,
+        "ticks": 4250000000
+      }
+    }
+  ],
+  "nominal": {
+    "variants": 47,
+    "slots": 122,
+    "episodes": 1512448
+  },
+  "comparisons": [
+    {
+      "config": "S33",
+      "seed": 42,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-42",
+        "source": "44c100c22854793b200a104dbc358e49ea9190fa",
+        "manifestSHA256": "38fa1d67215250abd48b7ed059bd7480953fd9325385e103aa47a121ed564489",
+        "audit": "92db9c885633186329023cc808005a796a63b3ae4cb02321d9f4077cd92a84d3",
+        "population": 128,
+        "generations": 64,
+        "successes": 215,
+        "validLapSeconds": {
+          "min": 73.74142008660284,
+          "max": 113.08632490974276,
+          "mean": 85.64856233360472,
+          "q1": 77.84378978278913,
+          "median": 82.04329330022213,
+          "q3": 91.72784027844642
+        },
+        "finalMedianProgressM": 135.49283864634532,
+        "firstCommittedSuccess": {
+          "generation": 31,
+          "episodes": 4096,
+          "generationWallMs": 1300580.6288000003
+        },
+        "censored": false,
+        "generationWallMs": 2883343.346,
+        "ticks": 17877521
+      },
+      "variant": {
+        "id": "S33-42",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "7dc51f9b5ec1fd89c9bf8395f530e6387942d529bacf661e73e4b6868190ea3d",
+        "audit": "3a2a9d319bcbba6c92221ccdf0fe7aec88afd9e10f4d4291bc6b643cafac82be",
+        "population": 128,
+        "generations": 64,
+        "successes": 266,
+        "validLapSeconds": {
+          "min": 83.42671173558973,
+          "max": 117.02858294089408,
+          "mean": 97.67334279356837,
+          "q1": 92.23744711160802,
+          "median": 94.06812728931965,
+          "q3": 104.18330040914235
+        },
+        "finalMedianProgressM": 155.1243796349462,
+        "firstCommittedSuccess": {
+          "generation": 26,
+          "episodes": 3456,
+          "generationWallMs": 191044.5987999998
+        },
+        "censored": false,
+        "generationWallMs": 577761.9971999982,
+        "ticks": 19322734
+      }
+    },
+    {
+      "config": "S33",
+      "seed": 43,
+      "episodesPerArm": 8192,
+      "reference": {
+        "id": "B-evolution-43",
+        "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+        "manifestSHA256": "6798b9391854f3cbd61595c42da48de2c293d14a3d0d7125ecdab93a4d8ec275",
+        "audit": "1cae7989267cd49aa14222aa874f45652761cd5cfb7c364161b2125ddacf46f6",
+        "population": 128,
+        "generations": 64,
+        "successes": 411,
+        "validLapSeconds": {
+          "min": 62.251439577544886,
+          "max": 113.1724772321925,
+          "mean": 83.53193479183173,
+          "q1": 74.35842663321645,
+          "median": 82.20327737683756,
+          "q3": 91.3280791740265
+        },
+        "finalMedianProgressM": 164.60639204309547,
+        "firstCommittedSuccess": {
+          "generation": 19,
+          "episodes": 2560,
+          "generationWallMs": 155788.3128000001
+        },
+        "censored": false,
+        "generationWallMs": 589627.8610999999,
+        "ticks": 18314889
+      },
+      "variant": {
+        "id": "S33-43",
+        "source": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+        "manifestSHA256": "f8b686bf57cc252b17de2ff34fb694ef152fe905b2f1cfe4c8c4ac10fb270b19",
+        "audit": "32437e66ad000b9ff913233b34873ba51c6cd7f38627d45b619ed1ff536d6c78",
+        "population": 128,
+        "generations": 64,
+        "successes": 0,
+        "validLapSeconds": null,
+        "finalMedianProgressM": 138.03714567799005,
+        "firstCommittedSuccess": null,
+        "censored": true,
+        "generationWallMs": 332722.47489999887,
+        "ticks": 12995059
+      }
+    }
+  ]
+}

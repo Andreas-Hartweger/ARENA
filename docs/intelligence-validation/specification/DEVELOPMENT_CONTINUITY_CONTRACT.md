@@ -1,0 +1,13 @@
+# Development Continuity & Scope Protection · TR-01–08
+TR-01 Scope: neither B nor Codex changes/removes/weakens confirmed functionality, mathematical contracts, acceptance without A explicit product approval. Reversible implementation details and parity-proven optimizations permitted. Safety stop overrides uninterrupted execution.
+TR-02 Main task: extra requests, explanation, demo, video do not replace authorized queue or reset task cursor. Preserve documented main task and status.
+TR-03 Isolation: read-only snapshots, copied immutable models, separate process/DB/worktree/output paths; no destructive experiments on actual train state or only copy of champion.
+TR-04 Progress: save verified safe boundary and own changes before risky actions; do not interrupt active training needlessly; no false checkpoint claim for 02B runner. Preserve actual artifacts and report missing. No kill/cleanup of other tasks.
+TR-05 Resources: side tasks share explicit RAM/CPU budget, main task priority; if parallel unsafe, offer deferred demo or safe boundary, no guarantee concurrent execution. No new dependencies/permissions without approval.
+TR-06 Continuation: after side task resume authorized task at documented cursor, do not redo completed steps unless justified. Record commands and checkpoint, continue independent authorized tasks.
+TR-07 Quality: do not skip/weaken tests to get green. Fix or document blocker, actual evidence only. Independent review not self-certified.
+TR-08 Conflict: `PLANUNGSENTSCHEIDUNG ERFORDERLICH` ID, reproduction, cause, alternatives, recommendation, affected downstream, SHA. Stop affected work only; independent authorized work continues. If severe fault stop safely, protect progress. No unsanctioned next batch. 
+Integrate in docs/team/DEVELOPMENT_CONTINUITY_CONTRACT.md and AGENTS via scoped exception after PRE-C01. Current 02B agent not automatically altered. Repository permissions/branch rules recommended for A, no permission changes in this package. Prompt alone not enforcement against repo owners or malicious code. When queue empty secure checkpoint, `NÄCHSTER PLANUNGSAUFTRAG ERFORDERLICH`.
+
+## Bedingte Batch-Freigabe (von A bestätigt)
+A übermittelt Prompt + Paket als ausdrückliche bedingte Freigabe ausschließlich zum Merge des vorherigen Batches nach allen Pflichtnachweisen und unabhängigem Review. Kein Eigenreview als unabhängig; keine weitere A-Bestätigung wenn alle Gates erfüllt, sonst betroffenes Gate blockieren. Nach grüner main-CI scoped Folgebranch. Kein Merge des neuen Batches ohne nächsten A-Auftrag bzw separate Freigabe. Keine Aufweichung von TR01–08.

@@ -1,0 +1,466 @@
+import process from 'node:process';
+import { readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { availableParallelism } from 'node:os';
+import { performance } from 'node:perf_hooks';
+import { environment } from './evolution-runtime.mjs';
+import {
+  openCampaign,
+  ActiveTime,
+  publishJSON,
+  parseFlags,
+} from './research/campaign.mjs';
+import {
+  experiment,
+  interaction,
+  slots,
+  sha,
+  hashJSON,
+} from './research/manifest.mjs';
+import {
+  exportExperiment,
+  fileHash,
+  spaceCheck,
+  storageProjection,
+} from './research/evidence.mjs';
+import { runExperiment } from './research/coordinator.mjs';
+import { auditExperiment } from './research/audit-data.mjs';
+import { reuseReference } from './research/reference.mjs';
+import { baselineDevelopment } from './research/baseline-development.mjs';
+import { peerInputs } from './research/peer-inputs.mjs';
+import {
+  requireSelectionPredecessors,
+  interactionReserve,
+} from './research/status.mjs';
+
+const [directory, request, manifestFile] = process.argv.slice(2),
+  runtime = environment();
+if (runtime.sourceDiff) throw Error('Research CLI needs committed source');
+const supplied =
+  request === '--manifest'
+    ? JSON.parse(readFileSync(manifestFile, 'utf8'))
+    : null;
+const id = supplied?.definition?.experimentId;
+const proposedInteraction = supplied?.definition?.interaction;
+if (
+  supplied &&
+  (supplied.hash !== hashJSON(supplied.definition) ||
+    (!proposedInteraction && !slots.some((row) => row.ExperimentID === id)))
+)
+  throw Error('Invalid or unknown manifest');
+const phase = supplied
+  ? {
+      B: 'baseline',
+      S: 'screen',
+      C: 'confirmation',
+      L: 'long',
+      X: 'interaction',
+    }[id[0]]
+  : request;
+if (
+  !['baseline', 'screen', 'confirmation', 'long'].includes(phase) &&
+  !(phase === 'interaction' && proposedInteraction)
+)
+  throw Error('Expected baseline, screen, confirmation or long');
+const start = performance.now(),
+  flags = parseFlags(),
+  ledger = openCampaign(directory, flags),
+  clock = new ActiveTime(
+    ledger,
+    { experimentId: 'phase-' + phase },
+    'research',
+    120000,
+    start,
+  );
+try {
+  const peers = peerInputs(directory, ledger, flags.peers);
+  const scale = JSON.parse(
+    readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
+  );
+  const workers = scale.workers,
+    hardware = availableParallelism();
+  if (phase === 'screen' && ledger.definition.machines.length === 1)
+    await baselineDevelopment(directory, ledger, clock, workers);
+  const prefixes = {
+    baseline: 'B-',
+    screen: 'S',
+    confirmation: 'C',
+    long: 'L',
+  };
+  const extra = proposedInteraction
+    ? interaction(ledger.definition.id, proposedInteraction, workers, hardware)
+    : undefined;
+  if (
+    extra &&
+    (extra.hash !== supplied.hash || extra.definition.experimentId !== id)
+  )
+    throw Error('Interaction differs from approved parameters');
+  const rows = extra
+    ? [
+        {
+          ExperimentID: id,
+          ConfigID: extra.definition.configId,
+          Seed: extra.definition.masterSeed,
+        },
+      ]
+    : slots.filter(
+        (s) =>
+          s.ExperimentID.startsWith(prefixes[phase]) &&
+          (!supplied || s.ExperimentID === id),
+      );
+  if (phase === 'screen') {
+    // Bring each family into the paired comparison before deeper exploration.
+    const priority = [
+      'S01',
+      'S03',
+      'S15',
+      'S19',
+      'S22',
+      'S26',
+      'S28',
+      'S33',
+      'S35',
+      'S42',
+      'S45',
+      'S46',
+      'S47',
+      'S31',
+      'S06',
+      'S12',
+      'S36',
+    ];
+    rows.sort((a, b) => {
+      const index = (id) =>
+        priority.includes(id)
+          ? priority.indexOf(id)
+          : priority.length + Number(id.slice(1));
+      return (
+        index(a.ConfigID) - index(b.ConfigID) || Number(a.Seed) - Number(b.Seed)
+      );
+    });
+  }
+  async function auditCompleted(id) {
+    const root = join(directory, 'experiments', id),
+      baseline = phase === 'baseline';
+    const key = (baseline ? 'baseline-audit:' : 'experiment-audit:') + id;
+    const cached = ledger.readManifest(key);
+    if (cached) {
+      for (const [name, hash] of Object.entries(cached))
+        if (
+          (await fileHash(join(root, name), () => clock.pulse())).sha256 !==
+          hash
+        )
+          throw Error('Research audit changed');
+      return;
+    }
+    const options = { pulse: () => clock.pulse(), timeStatistics: !baseline };
+    const audit = await auditExperiment(directory, id, options);
+    const reports = { 'audit.json': audit };
+    if (baseline) {
+      reports['prefix-8192.json'] = await auditExperiment(directory, id, {
+        ...options,
+        prefix: true,
+      });
+      const peer = id.replace('random', 'evolution');
+      if (peer !== id) {
+        const prior = JSON.parse(
+          readFileSync(
+            join(
+              peers ? peers.source(peer) : directory,
+              'experiments',
+              peer,
+              'audit.json',
+            ),
+            'utf8',
+          ),
+        );
+        if (hashJSON(prior.g0) !== hashJSON(audit.g0))
+          throw Error('Random search starts from different G0');
+      }
+    }
+    const files = {};
+    for (const [name, data] of Object.entries(reports)) {
+      publishJSON(join(root, name), data);
+      files[name] = (await fileHash(join(root, name))).sha256;
+    }
+    ledger.transaction(() => {
+      ledger.assertLease();
+      ledger.manifest(key, files);
+    });
+  }
+  let selected;
+  if (phase === 'confirmation' || phase === 'long') {
+    const key = 'selection:' + phase;
+    selected = peers ? peers.common(key) : ledger.readManifest(key);
+    if (!selected || selected.phase !== phase)
+      throw Error('Phase selection is not frozen');
+    if (peers) ledger.transaction(() => ledger.manifest(key, selected));
+  }
+  const progress = {
+    phase,
+    source: runtime.sha,
+    completed: [],
+    deferred: [],
+    stopped: null,
+  };
+  const assigned =
+    ledger.machine.experiments && new Set(ledger.machine.experiments);
+  const localSlots = assigned
+    ? slots.filter((s) => assigned.has(s.ExperimentID))
+    : slots;
+  const assignedBudget = (prefix, planned) =>
+    Math.min(
+      planned,
+      localSlots
+        .filter((s) => s.ExperimentID.startsWith(prefix))
+        .reduce((n, s) => n + Number(s.EpisodeBudget), 0),
+    );
+  let peerBaseline;
+  for (const row of rows) {
+    const id = row.ExperimentID,
+      finalist = row.ConfigID.startsWith('Finalist '),
+      config = finalist
+        ? selected?.configs[Number(row.ConfigID.split(' ')[1]) - 1]
+        : undefined;
+    if (assigned && !assigned.has(id)) {
+      if (supplied) throw Error('Experiment assigned to a different machine');
+      continue;
+    }
+    if (finalist && !config) {
+      progress.deferred.push({ id, reason: 'outside frozen selection' });
+      continue;
+    }
+    if (progress.deferred.some((r) => r.id === id)) {
+      ledger.transaction(() => {
+        ledger.assertLease();
+        ledger.event(
+          ledger.token,
+          'deferred',
+          'research',
+          { experimentId: id, reason: 'paired seed postponed' },
+          { ms: 0, ticks: 0, episodes: 0 },
+          { ms: 0, ticks: 0, episodes: 0 },
+        );
+      });
+      continue;
+    }
+    const entry =
+        extra ??
+        experiment(id, ledger.definition.id, workers, hardware, config),
+      published = join(directory, 'experiments', id, 'experiment.json');
+    if (supplied && supplied.hash !== entry.hash)
+      throw Error(
+        'Manifest conflicts with frozen parameters or worker allocation',
+      );
+    if (existsSync(published)) {
+      const saved = JSON.parse(readFileSync(published, 'utf8'));
+      if (
+        saved.entry.hash !== entry.hash ||
+        saved.completed !== entry.definition.draft.options.generations
+      )
+        throw Error('Conflicting or incomplete experiment');
+      for (const [name, asset] of Object.entries(saved.artifacts)) {
+        if (
+          (await fileHash(join(directory, 'experiments', id, name))).sha256 !==
+          asset.sha256
+        )
+          throw Error('Missing or changed evidence');
+      }
+      await auditCompleted(id);
+      progress.completed.push(id);
+      clock.pulse();
+      continue;
+    }
+    if (
+      peers
+        ? peers.common('final-candidates')
+        : ledger.readManifest('final-candidates')
+    )
+      throw Error(
+        'Campaign candidates are frozen; new training dispatch is closed',
+      );
+    const optionalReserve = extra
+      ? interactionReserve(
+          ledger,
+          requireSelectionPredecessors(
+            directory,
+            'confirmation',
+            ledger,
+            peers,
+          ),
+        )
+      : null;
+    clock.pulse();
+    spaceCheck(directory, 2 * 1024 ** 3);
+    if (id === 'B-evolution-42') {
+      await reuseReference(ledger, directory, entry);
+      await auditCompleted(id);
+      progress.completed.push(id);
+      continue;
+    }
+    const storage = storageProjection(ledger, entry, hardware);
+    if (!storage.fits) {
+      const reason = {
+        id,
+        reason: 'D13 storage projection exceeds quota',
+        storage,
+      };
+      progress.deferred.push(reason);
+      ledger.transaction(() => {
+        ledger.assertLease();
+        ledger.event(
+          ledger.token,
+          'deferred',
+          'research',
+          { experimentId: id, ...reason },
+          { ms: 0, ticks: 0, episodes: 0 },
+          { ms: 0, ticks: 0, episodes: 0 },
+        );
+      });
+      continue;
+    }
+    if (phase !== 'baseline') {
+      const used = ledger.usage('research').charged,
+        limit = ledger.machine.training;
+      // Use SQLite aggregates so a large campaign does not materialize every history row.
+      const costs = (pattern) =>
+        ledger.db
+          .prepare(
+            `SELECT SUM(json_extract(summary,'$.durationMs'))/SUM(json_extract(summary,'$.evaluations')) ms,
+         1.0*SUM(json_extract(summary,'$.actualOrConservativelyChargedTicks'))/SUM(json_extract(summary,'$.evaluations')) ticks
+         FROM chunks WHERE experiment LIKE ?`,
+          )
+          .get(pattern);
+      const measuredMin = scale.stats.find(
+        (stat) => stat.workers === workers,
+      )?.min;
+      const localBase = costs('B-%');
+      if (peers && !peerBaseline) {
+        peerBaseline = peers.baselineCost(measuredMin);
+        ledger.transaction(() =>
+          ledger.manifest('assigned-baseline-forecast', peerBaseline),
+        );
+      }
+      const base = {
+        ms: Math.max(localBase.ms ?? 0, peerBaseline?.ms ?? 0),
+        ticks: Math.max(localBase.ticks ?? 0, peerBaseline?.ticks ?? 0),
+      };
+      if (!base.ms || !base.ticks)
+        throw Error('Measured baselines required before comparison');
+      const existing = costs(entry.definition.configId + '-%');
+      const perMs = Math.max(base.ms, existing.ms ?? 0),
+        perTick = Math.max(base.ticks, existing.ticks ?? 0);
+      const reserveEpisodes =
+        optionalReserve?.episodes ??
+        (phase === 'screen'
+          ? assignedBudget('C', 3 * 3 * 25600) +
+            assignedBudget('L', 2 * 2 * 51200)
+          : phase === 'confirmation'
+            ? assignedBudget('L', 2 * 2 * 51200)
+            : 0);
+      const remainingSeeds = localSlots.filter(
+        (s) =>
+          s.ExperimentID[0] === id[0] &&
+          s.ConfigID === row.ConfigID &&
+          Number(s.Seed) >= Number(row.Seed),
+      ).length;
+      const proposed =
+        entry.definition.episodeBudget * (extra ? 1 : remainingSeeds);
+      const devModels =
+        phase === 'screen' ? 100 : phase === 'confirmation' ? 18 : 4;
+      const localDevModels = assigned
+        ? localSlots.filter(
+            (s) => phase === 'screen' || s.ExperimentID[0] === id[0],
+          ).length
+        : devModels;
+      const futureDevelopmentCases =
+        optionalReserve?.developmentCases ??
+        40 * Math.min(devModels, localDevModels);
+      const devTicks = futureDevelopmentCases * 7200;
+      if (!(measuredMin > 0)) throw Error('Measured worker throughput missing');
+      const needed = {
+        ms: Math.ceil(
+          proposed * perMs +
+            reserveEpisodes * base.ms +
+            devTicks * Math.max(base.ms / base.ticks, 1000 / measuredMin),
+        ),
+        ticks: Math.ceil(
+          proposed * perTick + reserveEpisodes * base.ticks + devTicks,
+        ),
+        episodes: proposed + reserveEpisodes,
+      };
+      if (Object.keys(needed).some((k) => used[k] + needed[k] > limit[k])) {
+        const reason = {
+          id,
+          reason: 'remaining paired phase allocation',
+          estimated: needed,
+          usage: used,
+          limit,
+        };
+        progress.deferred.push(reason);
+        ledger.transaction(() => {
+          ledger.assertLease();
+          ledger.event(
+            ledger.token,
+            'deferred',
+            'research',
+            { experimentId: id, ...reason },
+            { ms: 0, ticks: 0, episodes: 0 },
+            { ms: 0, ticks: 0, episodes: 0 },
+          );
+        });
+        // Later seeds of this group must not run alone just because their forecast is smaller.
+        for (const other of rows.filter(
+          (r) =>
+            r.ConfigID === row.ConfigID &&
+            Number(r.Seed) > Number(row.Seed) &&
+            (!assigned || assigned.has(r.ExperimentID)),
+        ))
+          progress.deferred.push({ ...reason, id: other.ExperimentID });
+        continue;
+      }
+    }
+    const expDir = join(directory, 'experiments', id);
+    mkdirSync(expDir, { recursive: true });
+    publishJSON(join(expDir, 'definition.json'), entry);
+    const state = await runExperiment(ledger, entry, clock, { hardware });
+    if (state.phase !== 'Completed') {
+      progress.stopped = {
+        id,
+        phase: state.phase,
+        error: state.error,
+        committed: state.durableGeneration,
+      };
+      break;
+    }
+    await exportExperiment(ledger, directory, entry, state, runtime);
+    await auditCompleted(id);
+    progress.completed.push(id);
+    process.stdout.write(
+      JSON.stringify({
+        id,
+        completed: progress.completed.length,
+        usage: ledger.usage().charged,
+      }) + '\n',
+    );
+  }
+  const stamp = new Date().toISOString().replaceAll(':', '-'),
+    bytes = JSON.stringify(progress);
+  publishJSON(join(directory, 'progress-' + phase + '-' + stamp + '.json'), {
+    ...progress,
+    digest: sha(bytes),
+    usage: ledger.usage().charged,
+  });
+  if (
+    progress.stopped &&
+    !/budget exhausted/i.test(progress.stopped.error ?? '')
+  )
+    throw Error(JSON.stringify(progress.stopped));
+} finally {
+  try {
+    clock.finish();
+    ledger.release();
+  } finally {
+    ledger.close();
+  }
+}

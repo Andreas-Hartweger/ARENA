@@ -16,3 +16,7 @@
 Während der Entwicklung prüfen kurze Funktionsfälle gezielt den geänderten Pfad und seine Grenzen. Für die Endabnahme werden vorhandene Belege anhand von Quellstand, Laufvertrag, Arbeitsmenge, Runtime und Änderungen seit der Messung zugeordnet. Ein reiner Dokumentations- oder Auswertungswechsel erfordert keine neue Simulation. Berühren Änderungen Physik, Seedfolge, Worker-Zuteilung, Persistenz oder Ressourcenverhalten, wird der davon betroffene Beleg erneut geprüft.
 
 Für einen freigegebenen zweistündigen Headless-Abnahmelauf genügt ein vollständiger Lauf am geprüften Stand. Eine Wiederholung braucht eine Änderung, die den bisherigen Nachweis entwertet. Währenddessen können unabhängige Reviews, Dokumentation und ressourcenschonende Prüfungen weiterlaufen. Für 02C hat A den Headless-Prüfpunkt nach Abbruch geschlossen. [Decision Request und Ergebnis](DECISION_REQUESTS.md)
+
+## Bedingter Übergang von 02C zu 02D
+
+A hat mit v0.11 den Merge des Vorgängerbatches bedingt freigegeben. B prüft den freigegebenen Codestand, sämtliche Pflichtnachweise und die unabhängige Bewertung durch A/B. Sobald diese Bedingungen erfüllt sind, gilt die erteilte Mergefreigabe. Der Folgebranch beginnt auf dem geprüften Mergecommit mit grüner Main-CI. Forschungsarbeit und ihre Verbrauchszähler beginnen erst im freigegebenen Kampagnenkontext. [PRE-D01](../intelligence-validation/PRE-D01.md)

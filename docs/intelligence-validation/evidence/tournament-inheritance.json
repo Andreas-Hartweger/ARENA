@@ -1,0 +1,574 @@
+{
+  "schema": "arena.inheritance-audit.v1",
+  "simulatedTicks": 0,
+  "experiments": [
+    {
+      "id": "S05-42",
+      "seed": 42,
+      "definition": "267d0903fcf43325249134f538d4218e70357511ff726ab2c03c74d577d6cd0a",
+      "audit": "20bd7adbda8116dad313cc84b0b7dfe572040d8c9dc5a066f98f215398eed7ea",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "4578657faca5b317fe301713183d9b7908fb15890f8dd69d2cbe3e4217569431",
+      "g1Chunk": "2ec50cb65c49c40cfd2b42444d3dc71b6e946f447d72238e76b4f896b75d5bb5",
+      "orderedInitialGenomes": "8d931049c4d93de7e2b8e738efbab6364435934c7b1b6fac2df8473b4a5b3ec0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638462682781306,
+          "max": 0.14638471619321966,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35353479576591024,
+          "max": 0.3535464633635943,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5617094257131098,
+          "max": 0.5618812389456085,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 167.18011493946813,
+        "worst": 0,
+        "mean": 14.985159472396074,
+        "median": 0,
+        "q1": 0,
+        "q3": 10
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 2,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 71,
+      "parentRankOneBased": {
+        "best": 121,
+        "worst": 1,
+        "mean": 41.99180327868852,
+        "median": 38,
+        "q1": 17,
+        "q3": 59.75
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 201,
+      "firstSuccessfulGeneration": 13
+    },
+    {
+      "id": "S05-43",
+      "seed": 43,
+      "definition": "1e7c55104171a4b7fd85af4af4b73c07216ce9ae079a6b6fc006b5878798fd68",
+      "audit": "c50549142be079e4fbd5d7b61676ca16e3e3e00550716a1b9cf155a8a764877b",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "37b97598c4b7df7c38872f2d421706d27d0d51cd2f17e1530a2d9c2f0b8f14ea",
+      "g1Chunk": "b20b336677326f705baa3ab98d7a3d256762cb1562176c15212c1fdb9515ebe6",
+      "orderedInitialGenomes": "c81309a8735b7392c562cb72d727dd650d36c4d8ea8deac586ae83a117515ee0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638464918620617,
+          "max": 0.14638467168093094,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35352684927396855,
+          "max": 0.3535529190754061,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5618009602607481,
+          "max": 0.5614751627746563,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 163.16966545826074,
+        "worst": 0,
+        "mean": 17.959111953490826,
+        "median": 0.000047927369024591826,
+        "q1": 0,
+        "q3": 16.71492270545231
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 2,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 69,
+      "parentRankOneBased": {
+        "best": 121,
+        "worst": 1,
+        "mean": 40.0655737704918,
+        "median": 33,
+        "q1": 16.5,
+        "q3": 58.75
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 123,
+      "firstSuccessfulGeneration": 45
+    },
+    {
+      "id": "S06-42",
+      "seed": 42,
+      "definition": "9593ebbed4ef5531620687d24ade1d99eb56e3d3b3a5217dff357be1dca03f0c",
+      "audit": "0036fb83789c42b40a0b6ba2ebe27ada95fcdeed892e55b60d171c20e91b754a",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "9b6e2d48f1a5363e136bb8cb94de2486254e56817e8ef46e171ef24ceb44a512",
+      "g1Chunk": "4a847dc367c7d4e1d4111b49ed96159120e05441ed1f3be177175fedf116607f",
+      "orderedInitialGenomes": "8d931049c4d93de7e2b8e738efbab6364435934c7b1b6fac2df8473b4a5b3ec0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638462682781306,
+          "max": 0.14638471619321966,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35353479576591024,
+          "max": 0.3535464633635943,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5617094257131098,
+          "max": 0.5618812389456085,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 167.18011493946813,
+        "worst": 0,
+        "mean": 14.985159472396074,
+        "median": 0,
+        "q1": 0,
+        "q3": 10
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 5,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 52,
+      "parentRankOneBased": {
+        "best": 85,
+        "worst": 1,
+        "mean": 23.15573770491803,
+        "median": 20,
+        "q1": 8,
+        "q3": 31.75
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 54,
+      "firstSuccessfulGeneration": 51
+    },
+    {
+      "id": "S06-43",
+      "seed": 43,
+      "definition": "e0fd3cc9a7b4d8762ef0a0ec247749493d9261ec65ddd28f49792f00f158b2f9",
+      "audit": "fc3d57a92be95cf55befdcd64c9cff90a06f81134beed94e5b4e21b8a14ca8cf",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "63d11292eddf8da158717e258477adee5692e288d575a3d7650c8de8e2f19e6d",
+      "g1Chunk": "b1397b8f13d15078b85fa486c89c9c8090d965136d8d24dde8efdcb1edb8f0d0",
+      "orderedInitialGenomes": "c81309a8735b7392c562cb72d727dd650d36c4d8ea8deac586ae83a117515ee0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638464918620617,
+          "max": 0.14638467168093094,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35352684927396855,
+          "max": 0.3535529190754061,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5618009602607481,
+          "max": 0.5614751627746563,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 163.16966545826074,
+        "worst": 0,
+        "mean": 17.959111953490826,
+        "median": 0.000047927369024591826,
+        "q1": 0,
+        "q3": 16.71492270545231
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 5,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 49,
+      "parentRankOneBased": {
+        "best": 68,
+        "worst": 1,
+        "mean": 19.84426229508197,
+        "median": 18,
+        "q1": 7,
+        "q3": 28
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 796,
+      "firstSuccessfulGeneration": 12
+    },
+    {
+      "id": "S07-42",
+      "seed": 42,
+      "definition": "26f2c52d3dfc8108a3fec784eb84634cab009270c37baa6ae89b284124d57f67",
+      "audit": "c621c9872c93abb6669384a35c4d17d0bbc237b54631deadd0cf8119f4943272",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "bb81022de2b0206ffb91dffb33ce444ef2a33b36677137faab8862a51234e429",
+      "g1Chunk": "ec6bddf436674f678e8674198f37a6a061ebcd5aa7125ffe92f07f6bcc979eff",
+      "orderedInitialGenomes": "8d931049c4d93de7e2b8e738efbab6364435934c7b1b6fac2df8473b4a5b3ec0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638462682781306,
+          "max": 0.14638471619321966,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35353479576591024,
+          "max": 0.3535464633635943,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5617094257131098,
+          "max": 0.5618812389456085,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 167.18011493946813,
+        "worst": 0,
+        "mean": 14.985159472396074,
+        "median": 0,
+        "q1": 0,
+        "q3": 10
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 8,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 42,
+      "parentRankOneBased": {
+        "best": 78,
+        "worst": 1,
+        "mean": 16.442622950819672,
+        "median": 12,
+        "q1": 5,
+        "q3": 24.5
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 0,
+      "firstSuccessfulGeneration": null
+    },
+    {
+      "id": "S07-43",
+      "seed": 43,
+      "definition": "0028706f818e89daf581e517823ed293e4b20a9aeae4ae1708fae7f39d6ef5a8",
+      "audit": "d4e724e822ec3b201f894a6c830fd3efcaf3ec8aafabf1df444daf2ea7eb9b37",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "e6969f6ebb2c3b2d7e5fb715326ed4fe831f47b9190696b7c5385b5b360c9e7b",
+      "g1Chunk": "ce28fed54fd79623af449d5f860181a06d950faa6bf078a8994fa213fbf397cb",
+      "orderedInitialGenomes": "c81309a8735b7392c562cb72d727dd650d36c4d8ea8deac586ae83a117515ee0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638464918620617,
+          "max": 0.14638467168093094,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35352684927396855,
+          "max": 0.3535529190754061,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5618009602607481,
+          "max": 0.5614751627746563,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 163.16966545826074,
+        "worst": 0,
+        "mean": 17.959111953490826,
+        "median": 0.000047927369024591826,
+        "q1": 0,
+        "q3": 16.71492270545231
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 8,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 39,
+      "parentRankOneBased": {
+        "best": 61,
+        "worst": 1,
+        "mean": 14.565573770491802,
+        "median": 10.5,
+        "q1": 5,
+        "q3": 21
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 490,
+      "firstSuccessfulGeneration": 16
+    },
+    {
+      "id": "S12-42",
+      "seed": 42,
+      "definition": "6650f589b1a6ade88b2dec15ffafb4c7b8cd5ba4c341a51af5628861d7fde992",
+      "audit": "aae26357c52aca5864481d1fd3e851e7f045d8b84907918f598f7f654c9757cb",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "f33a8e2517df2a3bf2f58f9a297354ee5f0a6f57aa03b4506cf2d5db0fbf5c17",
+      "g1Chunk": "693d8c5dc970ea3b4ee176015c86bf307ba8e30dc048ff7665830620b9c3da9b",
+      "orderedInitialGenomes": "8d931049c4d93de7e2b8e738efbab6364435934c7b1b6fac2df8473b4a5b3ec0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638462682781306,
+          "max": 0.14638471619321966,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35353479576591024,
+          "max": 0.3535464633635943,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5617094257131098,
+          "max": 0.5618812389456085,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 167.18011493946813,
+        "worst": 0,
+        "mean": 14.985159472396074,
+        "median": 0,
+        "q1": 0,
+        "q3": 10
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 3,
+      "parentPoolSize": 32,
+      "distinctChosenParents": 23,
+      "parentRankOneBased": {
+        "best": 26,
+        "worst": 1,
+        "mean": 8.049180327868852,
+        "median": 6.5,
+        "q1": 3.25,
+        "q3": 11
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 0,
+      "firstSuccessfulGeneration": null
+    },
+    {
+      "id": "S12-43",
+      "seed": 43,
+      "definition": "5f50ed70d8cf8d35ac5cfaec9540028b65e12302c8f5c1edf6a2efa4e88df6e2",
+      "audit": "f061995f7830a0373c214757a615c6419fc8f41488c5601ae35b63656612e25a",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "dd6ce4489e56a68a45484c89a496613af13866302d9c55ee8e56678eb9c4cefa",
+      "g1Chunk": "3521cb23bf96a037623727f3b24e2627c8767d5a0f7e47c0def237dfed55cf8f",
+      "orderedInitialGenomes": "c81309a8735b7392c562cb72d727dd650d36c4d8ea8deac586ae83a117515ee0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638464918620617,
+          "max": 0.14638467168093094,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35352684927396855,
+          "max": 0.3535529190754061,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5618009602607481,
+          "max": 0.5614751627746563,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 163.16966545826074,
+        "worst": 0,
+        "mean": 17.959111953490826,
+        "median": 0.000047927369024591826,
+        "q1": 0,
+        "q3": 16.71492270545231
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 3,
+      "parentPoolSize": 32,
+      "distinctChosenParents": 21,
+      "parentRankOneBased": {
+        "best": 25,
+        "worst": 1,
+        "mean": 7.942622950819672,
+        "median": 7,
+        "q1": 3,
+        "q3": 11.75
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 599,
+      "firstSuccessfulGeneration": 13
+    }
+  ]
+}

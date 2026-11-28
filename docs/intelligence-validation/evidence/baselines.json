@@ -1,0 +1,1730 @@
+{
+  "schema": "arena.campaign-report.v1",
+  "stage": "baseline",
+  "campaign": "ARENA-02D",
+  "matrix": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+  "assignment": [
+    {
+      "id": "Benjamins-Yoga",
+      "total": {
+        "ms": 172800000,
+        "episodes": 1600000,
+        "ticks": 5000000000
+      },
+      "training": {
+        "ms": 146880000,
+        "episodes": 1600000,
+        "ticks": 4250000000
+      }
+    }
+  ],
+  "nominal": {
+    "variants": 47,
+    "slots": 122,
+    "episodes": 1512448
+  },
+  "usage": [
+    {
+      "scope": "research",
+      "ms": 5751294,
+      "ticks": 123283106,
+      "episodes": 64000
+    },
+    {
+      "scope": "validation",
+      "ms": 0,
+      "ticks": 0,
+      "episodes": 0
+    }
+  ],
+  "experiments": [
+    {
+      "id": "B-evolution-42",
+      "seed": 42,
+      "configId": "evolution",
+      "hypothesis": "evolution",
+      "fitnessContract": "D10-v1/Balanced",
+      "source": "44c100c22854793b200a104dbc358e49ea9190fa",
+      "status": "reused-historical",
+      "outcome": "success",
+      "models": {
+        "prefixChampion": {
+          "id": "genome:08e111719ece8eb49221b2ad9a71b423d59ac5c59d1d315cfee76033836a222f:9524ca6f4ef8dd3ff2873afbe7ca5ca716ba7375a7779e5c87ecd60d448ce149",
+          "file": "08e111719ece8eb49221b2ad9a71b423d59ac5c59d1d315cfee76033836a222f.f64le",
+          "size": 68376,
+          "sha256": "9524ca6f4ef8dd3ff2873afbe7ca5ca716ba7375a7779e5c87ecd60d448ce149"
+        },
+        "champion": {
+          "id": "genome:5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95:f6d777346f7d12553d20dfcee93bc64d9a39db6c6620d61e2940f0d5caf4133c",
+          "file": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95.f64le",
+          "size": 68376,
+          "sha256": "f6d777346f7d12553d20dfcee93bc64d9a39db6c6620d61e2940f0d5caf4133c"
+        },
+        "fastest": {
+          "id": "genome:5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95:f6d777346f7d12553d20dfcee93bc64d9a39db6c6620d61e2940f0d5caf4133c",
+          "file": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95.f64le",
+          "size": 68376,
+          "sha256": "f6d777346f7d12553d20dfcee93bc64d9a39db6c6620d61e2940f0d5caf4133c"
+        }
+      },
+      "regularEpisodes": 12800,
+      "chargedRegularEpisodes": 0,
+      "auditHashes": {
+        "audit.json": "5601969f958d94d870d57d361589fadb336b65313f924b800e47b28420599839",
+        "prefix-8192.json": "92db9c885633186329023cc808005a796a63b3ae4cb02321d9f4077cd92a84d3"
+      },
+      "artifacts": {
+        "episodes.ndjson.gz": {
+          "size": 4873376,
+          "sha256": "f11abab76aadded0d4595ced107b3c40f254ab996e5468cc159d18dae18bedf7"
+        },
+        "generations.ndjson": {
+          "size": 287628,
+          "sha256": "e8aee3f6c140bb2c071962d4e8e45401bb659f20a8916017f13cc14e448a4d8b"
+        }
+      },
+      "metrics": [
+        {
+          "file": "audit.json",
+          "episodes": 12800,
+          "generations": 100,
+          "successes": 664,
+          "successRate": 0.051875,
+          "firstSuccessGeneration": 31,
+          "firstSuccessCensored": false,
+          "fastest": {
+            "generation": 99,
+            "slot": 65,
+            "time": 59.663774729747736,
+            "genome": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95"
+          },
+          "champion": {
+            "generation": 99,
+            "slot": 65,
+            "genome": "5ea750f9d24cb861b2a901f9e325dd0b79f0b4a8f45c94a2202829ae4eb21c95",
+            "score": 4280.189069348133
+          },
+          "rawTicks": 30575844,
+          "saturated": [
+            222,
+            733,
+            9057,
+            22,
+            0,
+            8
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 118.83098121195803,
+              "worst": 0,
+              "mean": 10.895836072130585,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.986555944825713,
+              "D": 1.4094523563518255,
+              "layers": [
+                1.99095657810221,
+                1.9300995406537174,
+                1.8835115419960557
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 99,
+            "evaluated": 128,
+            "validLaps": 25,
+            "successfulEpisodes": 25,
+            "lapTimesSeconds": {
+              "best": 110.50832721897513,
+              "worst": 59.663774729747736,
+              "mean": 77.99964026056287,
+              "median": 75.06771857583682,
+              "q1": 64.10732477492851,
+              "q3": 88.55984479524852
+            },
+            "progressMetres": {
+              "best": 667.9114857512855,
+              "worst": 2.857352863916276,
+              "mean": 349.0396479239443,
+              "median": 361.2002591161105,
+              "q1": 121.08399006121317,
+              "q3": 567.4440108779761
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 0.11240225665405423,
+              "D": 0.3352644577852747,
+              "layers": [
+                0.11306573863026705,
+                0.1077954010396462,
+                0.056437460143149355
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "elite": 594,
+            "offspring": 12078
+          },
+          "operators": {
+            "copy": 12078
+          },
+          "mutation": {
+            "eligible": 103230666,
+            "selected": 5168535,
+            "changed": 5168535,
+            "large": 257767,
+            "normal": 4910768,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 12076,
+            "timeout": 60,
+            "completed": 664
+          },
+          "adaptation": {
+            "initial": 1,
+            "no trigger": 81,
+            "improvement": 18
+          }
+        },
+        {
+          "file": "prefix-8192.json",
+          "episodes": 8192,
+          "generations": 64,
+          "successes": 215,
+          "successRate": 0.0262451171875,
+          "firstSuccessGeneration": 31,
+          "firstSuccessCensored": false,
+          "fastest": {
+            "generation": 44,
+            "slot": 71,
+            "time": 73.74142008660284,
+            "genome": "08e111719ece8eb49221b2ad9a71b423d59ac5c59d1d315cfee76033836a222f"
+          },
+          "champion": {
+            "generation": 44,
+            "slot": 71,
+            "genome": "08e111719ece8eb49221b2ad9a71b423d59ac5c59d1d315cfee76033836a222f",
+            "score": 4275.771428196007
+          },
+          "rawTicks": 17877521,
+          "saturated": [
+            222,
+            723,
+            5518,
+            18,
+            0,
+            3
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 118.83098121195803,
+              "worst": 0,
+              "mean": 10.895836072130585,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.986555944825713,
+              "D": 1.4094523563518255,
+              "layers": [
+                1.99095657810221,
+                1.9300995406537174,
+                1.8835115419960557
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 63,
+            "evaluated": 128,
+            "validLaps": 7,
+            "successfulEpisodes": 7,
+            "lapTimesSeconds": {
+              "best": 95.35274525604407,
+              "worst": 73.74142008660284,
+              "mean": 79.21727061808008,
+              "median": 77.84378978278913,
+              "q1": 75.66419688289886,
+              "q3": 78.1272727176634
+            },
+            "progressMetres": {
+              "best": 667.9114857512855,
+              "worst": 0,
+              "mean": 181.45800323802197,
+              "median": 135.49283864634532,
+              "q1": 67.63110912335713,
+              "q3": 218.91975184437985
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 0.09526757649489905,
+              "D": 0.3086544613234985,
+              "layers": [
+                0.0952304387269941,
+                0.09841630214779111,
+                0.06847123512116632
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "elite": 378,
+            "offspring": 7686
+          },
+          "operators": {
+            "copy": 7686
+          },
+          "mutation": {
+            "eligible": 65692242,
+            "selected": 3290071,
+            "changed": 3290071,
+            "large": 164204,
+            "normal": 3125867,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 7951,
+            "timeout": 26,
+            "completed": 215
+          },
+          "adaptation": {
+            "initial": 1,
+            "no trigger": 48,
+            "improvement": 15
+          }
+        }
+      ],
+      "sourceManifest": "38fa1d67215250abd48b7ed059bd7480953fd9325385e103aa47a121ed564489"
+    },
+    {
+      "id": "B-evolution-43",
+      "seed": 43,
+      "configId": "evolution",
+      "hypothesis": "evolution",
+      "fitnessContract": "D10-v1/Balanced",
+      "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+      "status": "completed",
+      "outcome": "success",
+      "models": {
+        "champion": {
+          "id": "genome:dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d:9ed8fcbac2476982888d398ef1443adf850e7dda5f71c4f2a8403654f924230f",
+          "file": "dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d.f64le",
+          "size": 68376,
+          "sha256": "9ed8fcbac2476982888d398ef1443adf850e7dda5f71c4f2a8403654f924230f"
+        },
+        "generationBest": {
+          "id": "genome:dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d:9ed8fcbac2476982888d398ef1443adf850e7dda5f71c4f2a8403654f924230f",
+          "file": "dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d.f64le",
+          "size": 68376,
+          "sha256": "9ed8fcbac2476982888d398ef1443adf850e7dda5f71c4f2a8403654f924230f"
+        },
+        "fastest": {
+          "id": "genome:dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d:9ed8fcbac2476982888d398ef1443adf850e7dda5f71c4f2a8403654f924230f",
+          "file": "dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d.f64le",
+          "size": 68376,
+          "sha256": "9ed8fcbac2476982888d398ef1443adf850e7dda5f71c4f2a8403654f924230f"
+        },
+        "prefixChampion": {
+          "id": "genome:88e500a7c832271c0dbce373ff5f39ee3f28c849b3e461784d2b4fcfe446052e:4c3c270559fdecb543596867ffcf748dfb4878292f038a557d12cfb1ecd35d72",
+          "file": "88e500a7c832271c0dbce373ff5f39ee3f28c849b3e461784d2b4fcfe446052e.f64le",
+          "size": 68376,
+          "sha256": "4c3c270559fdecb543596867ffcf748dfb4878292f038a557d12cfb1ecd35d72"
+        }
+      },
+      "regularEpisodes": 12800,
+      "chargedRegularEpisodes": 12800,
+      "auditHashes": {
+        "audit.json": "8d096cb94b314b1c18d32674e5c7f97c79a46d52dac94c85baa0ed2ada2594bf",
+        "prefix-8192.json": "1cae7989267cd49aa14222aa874f45652761cd5cfb7c364161b2125ddacf46f6"
+      },
+      "artifacts": {
+        "episodes.ndjson.gz": {
+          "size": 6325996,
+          "sha256": "72561bc545cf1520eb11c0a42c10753a39da47a3c0e00224ac6870112a56dfc6"
+        },
+        "generations.ndjson": {
+          "size": 292503,
+          "sha256": "1b8f70fef09f8f380c9ab9a9d4d3edc16dc2df1def7be2d4021cae53ed6a1040"
+        }
+      },
+      "metrics": [
+        {
+          "file": "audit.json",
+          "episodes": 12800,
+          "generations": 100,
+          "successes": 834,
+          "successRate": 0.06515625,
+          "firstSuccessGeneration": 19,
+          "firstSuccessCensored": false,
+          "fastest": {
+            "generation": 91,
+            "slot": 44,
+            "time": 52.26689530564939,
+            "genome": "dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d"
+          },
+          "champion": {
+            "generation": 91,
+            "slot": 44,
+            "genome": "dd489b80fc28ea5f522525077477ee55fbb82da011e145655553b80a4a62c38d",
+            "score": 4282.491288315281
+          },
+          "rawTicks": 30155325,
+          "saturated": [
+            2,
+            435,
+            7578,
+            5,
+            0,
+            0
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 115.53219676294395,
+              "worst": 0,
+              "mean": 13.109526223410501,
+              "median": 0.00003834189521967346,
+              "q1": 0,
+              "q3": 12.783297325608459
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9892218335343028,
+              "D": 1.4103977572069175,
+              "layers": [
+                1.9928422648395574,
+                1.946257185631147,
+                1.8683931561342773
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 99,
+            "evaluated": 128,
+            "validLaps": 11,
+            "successfulEpisodes": 11,
+            "lapTimesSeconds": {
+              "best": 88.47335922848717,
+              "worst": 52.26689530564939,
+              "mean": 63.75082446534937,
+              "median": 58.95376041863318,
+              "q1": 57.37756722947016,
+              "q3": 63.425698550618165
+            },
+            "progressMetres": {
+              "best": 667.9114857512855,
+              "worst": 0,
+              "mean": 230.46053377790656,
+              "median": 170.6062532539562,
+              "q1": 112.20815146588626,
+              "q3": 284.0861675025576
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 0.06687089830378595,
+              "D": 0.2585940801793149,
+              "layers": [
+                0.06774718839414852,
+                0.05349693948175297,
+                0.06842326728465767
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "elite": 594,
+            "offspring": 12078
+          },
+          "operators": {
+            "copy": 12078
+          },
+          "mutation": {
+            "eligible": 103230666,
+            "selected": 5168514,
+            "changed": 5168514,
+            "large": 259329,
+            "normal": 4909185,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 11947,
+            "completed": 834,
+            "timeout": 19
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 17,
+            "no trigger": 82
+          }
+        },
+        {
+          "file": "prefix-8192.json",
+          "episodes": 8192,
+          "generations": 64,
+          "successes": 411,
+          "successRate": 0.0501708984375,
+          "firstSuccessGeneration": 19,
+          "firstSuccessCensored": false,
+          "fastest": {
+            "generation": 63,
+            "slot": 87,
+            "time": 62.251439577544886,
+            "genome": "88e500a7c832271c0dbce373ff5f39ee3f28c849b3e461784d2b4fcfe446052e"
+          },
+          "champion": {
+            "generation": 63,
+            "slot": 87,
+            "genome": "88e500a7c832271c0dbce373ff5f39ee3f28c849b3e461784d2b4fcfe446052e",
+            "score": 4279.540926837132
+          },
+          "rawTicks": 18314889,
+          "saturated": [
+            2,
+            148,
+            4791,
+            5,
+            0,
+            0
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 115.53219676294395,
+              "worst": 0,
+              "mean": 13.109526223410501,
+              "median": 0.00003834189521967346,
+              "q1": 0,
+              "q3": 12.783297325608459
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9892218335343028,
+              "D": 1.4103977572069175,
+              "layers": [
+                1.9928422648395574,
+                1.946257185631147,
+                1.8683931561342773
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 63,
+            "evaluated": 128,
+            "validLaps": 14,
+            "successfulEpisodes": 14,
+            "lapTimesSeconds": {
+              "best": 102.5934222030083,
+              "worst": 62.251439577544886,
+              "mean": 79.88664756975224,
+              "median": 76.8217718052023,
+              "q1": 71.20163369619931,
+              "q3": 90.23600127216292
+            },
+            "progressMetres": {
+              "best": 667.9114857512855,
+              "worst": 0,
+              "mean": 218.2933543692684,
+              "median": 164.60639204309547,
+              "q1": 104.70627027972759,
+              "q3": 255.68009664269493
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 0.10955541323949178,
+              "D": 0.3309915606771444,
+              "layers": [
+                0.11028968584260572,
+                0.1029626398194174,
+                0.06309071253728313
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "elite": 378,
+            "offspring": 7686
+          },
+          "operators": {
+            "copy": 7686
+          },
+          "mutation": {
+            "eligible": 65692242,
+            "selected": 3290747,
+            "changed": 3290747,
+            "large": 165039,
+            "normal": 3125708,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 7765,
+            "completed": 411,
+            "timeout": 16
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 15,
+            "no trigger": 48
+          }
+        }
+      ],
+      "sourceManifest": "6798b9391854f3cbd61595c42da48de2c293d14a3d0d7125ecdab93a4d8ec275"
+    },
+    {
+      "id": "B-evolution-44",
+      "seed": 44,
+      "configId": "evolution",
+      "hypothesis": "evolution",
+      "fitnessContract": "D10-v1/Balanced",
+      "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+      "status": "completed",
+      "outcome": "success",
+      "models": {
+        "champion": {
+          "id": "genome:fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9:990a4a2d8369d9b151cb83ed689053ca60036274e66d1f654b0232e2649f1553",
+          "file": "fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9.f64le",
+          "size": 68376,
+          "sha256": "990a4a2d8369d9b151cb83ed689053ca60036274e66d1f654b0232e2649f1553"
+        },
+        "generationBest": {
+          "id": "genome:fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9:990a4a2d8369d9b151cb83ed689053ca60036274e66d1f654b0232e2649f1553",
+          "file": "fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9.f64le",
+          "size": 68376,
+          "sha256": "990a4a2d8369d9b151cb83ed689053ca60036274e66d1f654b0232e2649f1553"
+        },
+        "fastest": {
+          "id": "genome:fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9:990a4a2d8369d9b151cb83ed689053ca60036274e66d1f654b0232e2649f1553",
+          "file": "fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9.f64le",
+          "size": 68376,
+          "sha256": "990a4a2d8369d9b151cb83ed689053ca60036274e66d1f654b0232e2649f1553"
+        },
+        "prefixChampion": {
+          "id": "genome:0e2b66b7a9324c0f13e4ab6fe0738205a369c13bb16c1fb445f74cb46bb0f797:b9305ac2e171fe9512409deb28ca52fa910ec9a5a707abdf1d93df1567563882",
+          "file": "0e2b66b7a9324c0f13e4ab6fe0738205a369c13bb16c1fb445f74cb46bb0f797.f64le",
+          "size": 68376,
+          "sha256": "b9305ac2e171fe9512409deb28ca52fa910ec9a5a707abdf1d93df1567563882"
+        }
+      },
+      "regularEpisodes": 12800,
+      "chargedRegularEpisodes": 12800,
+      "auditHashes": {
+        "audit.json": "82211a3c1e48e29bbfe7121d27a83cdd1ac7a537912b96ab52f01d30f2715545",
+        "prefix-8192.json": "f91e46904c23f2261c58b455ec0571dc0a1878456f763035e309d6c58e55eea1"
+      },
+      "artifacts": {
+        "episodes.ndjson.gz": {
+          "size": 6405986,
+          "sha256": "f623a1d42eaf971fb4c2d695a8595d99497c5fddc0ad36c96c6273c3b26f385c"
+        },
+        "generations.ndjson": {
+          "size": 292867,
+          "sha256": "4559b84d90b54ff22b01bb8c8cd7ab98656b5995047a03b2b2f0dae81b7beefc"
+        }
+      },
+      "metrics": [
+        {
+          "file": "audit.json",
+          "episodes": 12800,
+          "generations": 100,
+          "successes": 1218,
+          "successRate": 0.09515625,
+          "firstSuccessGeneration": 39,
+          "firstSuccessCensored": false,
+          "fastest": {
+            "generation": 99,
+            "slot": 35,
+            "time": 42.40798767734166,
+            "genome": "fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9"
+          },
+          "champion": {
+            "generation": 99,
+            "slot": 35,
+            "genome": "fb7f0e9a2b94bb795d9bd9c974cae4b7d16909c9eb740434185653c3f69135a9",
+            "score": 4285.931754569258
+          },
+          "rawTicks": 31399377,
+          "saturated": [
+            16,
+            799,
+            5817,
+            7,
+            0,
+            4
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 117.96002939150492,
+              "worst": 0,
+              "mean": 11.744892432454378,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9876123728764732,
+              "D": 1.4098270719760184,
+              "layers": [
+                1.9915503899222284,
+                1.9383406469784803,
+                1.882462401377704
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 99,
+            "evaluated": 128,
+            "validLaps": 27,
+            "successfulEpisodes": 27,
+            "lapTimesSeconds": {
+              "best": 78.4550186439404,
+              "worst": 42.40798767734166,
+              "mean": 54.583439121875536,
+              "median": 52.13696385892623,
+              "q1": 44.73168043484557,
+              "q3": 62.199575653749626
+            },
+            "progressMetres": {
+              "best": 667.9114857512855,
+              "worst": 0,
+              "mean": 334.8135764264139,
+              "median": 257.7991068305158,
+              "q1": 146.58093692108952,
+              "q3": 502.9336143134641
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 0.13481940277255325,
+              "D": 0.36717761747218913,
+              "layers": [
+                0.1346556553834044,
+                0.13950822731537613,
+                0.1118593995985855
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "elite": 594,
+            "offspring": 12078
+          },
+          "operators": {
+            "copy": 12078
+          },
+          "mutation": {
+            "eligible": 103230666,
+            "selected": 5164917,
+            "changed": 5164917,
+            "large": 258776,
+            "normal": 4906141,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 11559,
+            "timeout": 23,
+            "completed": 1218
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 17,
+            "no trigger": 82
+          }
+        },
+        {
+          "file": "prefix-8192.json",
+          "episodes": 8192,
+          "generations": 64,
+          "successes": 306,
+          "successRate": 0.037353515625,
+          "firstSuccessGeneration": 39,
+          "firstSuccessCensored": false,
+          "fastest": {
+            "generation": 62,
+            "slot": 44,
+            "time": 50.15932935578593,
+            "genome": "0e2b66b7a9324c0f13e4ab6fe0738205a369c13bb16c1fb445f74cb46bb0f797"
+          },
+          "champion": {
+            "generation": 62,
+            "slot": 44,
+            "genome": "0e2b66b7a9324c0f13e4ab6fe0738205a369c13bb16c1fb445f74cb46bb0f797",
+            "score": 4283.139178374458
+          },
+          "rawTicks": 19133713,
+          "saturated": [
+            16,
+            623,
+            3972,
+            3,
+            0,
+            2
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 117.96002939150492,
+              "worst": 0,
+              "mean": 11.744892432454378,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9876123728764732,
+              "D": 1.4098270719760184,
+              "layers": [
+                1.9915503899222284,
+                1.9383406469784803,
+                1.882462401377704
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 63,
+            "evaluated": 128,
+            "validLaps": 21,
+            "successfulEpisodes": 21,
+            "lapTimesSeconds": {
+              "best": 94.29488376754144,
+              "worst": 50.15932935578593,
+              "mean": 65.17044770883977,
+              "median": 66.09442447474184,
+              "q1": 55.07246852077878,
+              "q3": 69.03012089456483
+            },
+            "progressMetres": {
+              "best": 667.9114857512855,
+              "worst": 0,
+              "mean": 274.5771083490931,
+              "median": 246.5048217496767,
+              "q1": 106.33152286759784,
+              "q3": 426.06058445725006
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 0.06026477858999707,
+              "D": 0.24548885634585751,
+              "layers": [
+                0.06027979270731224,
+                0.057019087501381197,
+                0.09152149247278
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "elite": 378,
+            "offspring": 7686
+          },
+          "operators": {
+            "copy": 7686
+          },
+          "mutation": {
+            "eligible": 65692242,
+            "selected": 3287247,
+            "changed": 3287247,
+            "large": 165039,
+            "normal": 3122208,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 7872,
+            "timeout": 14,
+            "completed": 306
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 16,
+            "no trigger": 47
+          }
+        }
+      ],
+      "sourceManifest": "68c550a96fde8858dc7515c98cad40f551eb6cc356be6422ca0acf73a278cfb0"
+    },
+    {
+      "id": "B-random-42",
+      "seed": 42,
+      "configId": "random",
+      "hypothesis": "random",
+      "fitnessContract": "D10-v1/Balanced",
+      "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+      "status": "completed",
+      "outcome": "no-success",
+      "models": {
+        "champion": {
+          "id": "genome:72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac:1b391c1b93abd519e797c6f8f77e7f6a7bfb65b03f4940e1be73fe391d37c1b3",
+          "file": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac.f64le",
+          "size": 68376,
+          "sha256": "1b391c1b93abd519e797c6f8f77e7f6a7bfb65b03f4940e1be73fe391d37c1b3"
+        },
+        "generationBest": {
+          "id": "genome:be4c48674ebd2876739d11d22baf26a3611c6b47f3b03a871cf6f589e12c7d51:8b21a1d3ee1c2f21004e12e2c95a4c329bd8c03addf20644f439ed3b24430eac",
+          "file": "be4c48674ebd2876739d11d22baf26a3611c6b47f3b03a871cf6f589e12c7d51.f64le",
+          "size": 68376,
+          "sha256": "8b21a1d3ee1c2f21004e12e2c95a4c329bd8c03addf20644f439ed3b24430eac"
+        },
+        "prefixChampion": {
+          "id": "genome:72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac:1b391c1b93abd519e797c6f8f77e7f6a7bfb65b03f4940e1be73fe391d37c1b3",
+          "file": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac.f64le",
+          "size": 68376,
+          "sha256": "1b391c1b93abd519e797c6f8f77e7f6a7bfb65b03f4940e1be73fe391d37c1b3"
+        }
+      },
+      "regularEpisodes": 12800,
+      "chargedRegularEpisodes": 12800,
+      "auditHashes": {
+        "audit.json": "8c7688a38c9cca8f3ee0562f5fe352d436674e65bf320124291428c2304192df",
+        "prefix-8192.json": "4dde1d4fffa3afc2a7218b2594b8ca72ef387f68f1c257782c8e44e8c08b4734"
+      },
+      "artifacts": {
+        "episodes.ndjson.gz": {
+          "size": 2447563,
+          "sha256": "edd7028c904da885632cb29de11538c0cecbbdd2373b542876649da55c3e379d"
+        },
+        "generations.ndjson": {
+          "size": 269340,
+          "sha256": "a51647580df8eebd403308b920696f3e4583ba6d89969dc95d1ec5e4d8f81b3c"
+        }
+      },
+      "metrics": [
+        {
+          "file": "audit.json",
+          "episodes": 12800,
+          "generations": 100,
+          "successes": 0,
+          "successRate": 0,
+          "firstSuccessGeneration": null,
+          "firstSuccessCensored": true,
+          "fastest": null,
+          "champion": {
+            "generation": 36,
+            "slot": 109,
+            "genome": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac",
+            "score": 352.8175164730063
+          },
+          "rawTicks": 15987339,
+          "saturated": [
+            24,
+            229,
+            10073,
+            154,
+            0,
+            3
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 118.83098121195803,
+              "worst": 0,
+              "mean": 10.895836072130585,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.986555944825713,
+              "D": 1.4094523563518255,
+              "layers": [
+                1.99095657810221,
+                1.9300995406537174,
+                1.8835115419960557
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 99,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 119.37808800618006,
+              "worst": 0,
+              "mean": 10.072786622847758,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9884547080595463,
+              "D": 1.4101257773899272,
+              "layers": [
+                1.9916424377552244,
+                1.9489324234377647,
+                1.8995907093368096
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "random": 12672
+          },
+          "operators": {},
+          "mutation": {
+            "eligible": 0,
+            "selected": 0,
+            "changed": 0,
+            "large": 0,
+            "normal": 0,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 12782,
+            "timeout": 18
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 5,
+            "no trigger": 94
+          }
+        },
+        {
+          "file": "prefix-8192.json",
+          "episodes": 8192,
+          "generations": 64,
+          "successes": 0,
+          "successRate": 0,
+          "firstSuccessGeneration": null,
+          "firstSuccessCensored": true,
+          "fastest": null,
+          "champion": {
+            "generation": 36,
+            "slot": 109,
+            "genome": "72d1300988b8c0c3dfc816ed97b37fb03343ad3d74e55b9883a1c713891b54ac",
+            "score": 352.8175164730063
+          },
+          "rawTicks": 10234148,
+          "saturated": [
+            15,
+            142,
+            6481,
+            111,
+            0,
+            2
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 118.83098121195803,
+              "worst": 0,
+              "mean": 10.895836072130585,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.986555944825713,
+              "D": 1.4094523563518255,
+              "layers": [
+                1.99095657810221,
+                1.9300995406537174,
+                1.8835115419960557
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 63,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 195.70469352810005,
+              "worst": 0,
+              "mean": 11.468086527049062,
+              "median": 0,
+              "q1": 0,
+              "q3": 7.305566726613961
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9891252234426118,
+              "D": 1.4103635075549181,
+              "layers": [
+                1.9929796258848949,
+                1.9427341700616223,
+                1.8672153709926047
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "random": 8064
+          },
+          "operators": {},
+          "mutation": {
+            "eligible": 0,
+            "selected": 0,
+            "changed": 0,
+            "large": 0,
+            "normal": 0,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 8181,
+            "timeout": 11
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 5,
+            "no trigger": 58
+          }
+        }
+      ],
+      "sourceManifest": "605b77c19ba6e88d0b540f2db5b1dfff55b7181aa139efc524858614ddb607b1"
+    },
+    {
+      "id": "B-random-43",
+      "seed": 43,
+      "configId": "random",
+      "hypothesis": "random",
+      "fitnessContract": "D10-v1/Balanced",
+      "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+      "status": "completed",
+      "outcome": "no-success",
+      "models": {
+        "champion": {
+          "id": "genome:2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684:de4af80a3e942b20a4df36d85308047fc303fdb184cad46cf61977e5e130086a",
+          "file": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684.f64le",
+          "size": 68376,
+          "sha256": "de4af80a3e942b20a4df36d85308047fc303fdb184cad46cf61977e5e130086a"
+        },
+        "generationBest": {
+          "id": "genome:410fb3248b8f0d02e5be9d4b5a7a897a2c8844f8e09db377c6f2d22c2e84e1cc:c4dbda77c9030ab62377c3371d40cd4dd642ad0e37dc45cfcf43685857885e91",
+          "file": "410fb3248b8f0d02e5be9d4b5a7a897a2c8844f8e09db377c6f2d22c2e84e1cc.f64le",
+          "size": 68376,
+          "sha256": "c4dbda77c9030ab62377c3371d40cd4dd642ad0e37dc45cfcf43685857885e91"
+        },
+        "prefixChampion": {
+          "id": "genome:2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684:de4af80a3e942b20a4df36d85308047fc303fdb184cad46cf61977e5e130086a",
+          "file": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684.f64le",
+          "size": 68376,
+          "sha256": "de4af80a3e942b20a4df36d85308047fc303fdb184cad46cf61977e5e130086a"
+        }
+      },
+      "regularEpisodes": 12800,
+      "chargedRegularEpisodes": 12800,
+      "auditHashes": {
+        "audit.json": "2c316cc262a2362adc0f3fa83254cbcf4c7dcd219567821d9501c3d0935c0786",
+        "prefix-8192.json": "001e40b6cf83d08f7a0586d2acad9225b024a8664fc4ecee86fbb5ce7e2e70f5"
+      },
+      "artifacts": {
+        "episodes.ndjson.gz": {
+          "size": 2454495,
+          "sha256": "59ce4e01a6215baeb01c04958b16af81fabbed34c6885a48d81be8930be21e16"
+        },
+        "generations.ndjson": {
+          "size": 268644,
+          "sha256": "6e9ada42d896c420ad9bfbbddf775180e8f3faf2d789d6bd0b83ce72137e9ab8"
+        }
+      },
+      "metrics": [
+        {
+          "file": "audit.json",
+          "episodes": 12800,
+          "generations": 100,
+          "successes": 0,
+          "successRate": 0,
+          "firstSuccessGeneration": null,
+          "firstSuccessCensored": true,
+          "fastest": null,
+          "champion": {
+            "generation": 38,
+            "slot": 100,
+            "genome": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684",
+            "score": 332.6492679330983
+          },
+          "rawTicks": 15895073,
+          "saturated": [
+            18,
+            180,
+            9990,
+            176,
+            0,
+            2
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 115.53219676294395,
+              "worst": 0,
+              "mean": 13.109526223410501,
+              "median": 0.00003834189521967346,
+              "q1": 0,
+              "q3": 12.783297325608459
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9892218335343028,
+              "D": 1.4103977572069175,
+              "layers": [
+                1.9928422648395574,
+                1.946257185631147,
+                1.8683931561342773
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 99,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 163.0117194442421,
+              "worst": 0,
+              "mean": 12.653666758933898,
+              "median": 0,
+              "q1": 0,
+              "q3": 8.363620273012344
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9896022134313613,
+              "D": 1.4105325992090227,
+              "layers": [
+                1.993026049267151,
+                1.946976167472933,
+                1.8959831610093474
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "random": 12672
+          },
+          "operators": {},
+          "mutation": {
+            "eligible": 0,
+            "selected": 0,
+            "changed": 0,
+            "large": 0,
+            "normal": 0,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 12793,
+            "timeout": 7
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 6,
+            "no trigger": 93
+          }
+        },
+        {
+          "file": "prefix-8192.json",
+          "episodes": 8192,
+          "generations": 64,
+          "successes": 0,
+          "successRate": 0,
+          "firstSuccessGeneration": null,
+          "firstSuccessCensored": true,
+          "fastest": null,
+          "champion": {
+            "generation": 38,
+            "slot": 100,
+            "genome": "2e01360ef33b0453e5dca7df366bb540947cc9e4be038a05944ce5837c0a1684",
+            "score": 332.6492679330983
+          },
+          "rawTicks": 10171968,
+          "saturated": [
+            11,
+            124,
+            6415,
+            119,
+            0,
+            1
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 115.53219676294395,
+              "worst": 0,
+              "mean": 13.109526223410501,
+              "median": 0.00003834189521967346,
+              "q1": 0,
+              "q3": 12.783297325608459
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9892218335343028,
+              "D": 1.4103977572069175,
+              "layers": [
+                1.9928422648395574,
+                1.946257185631147,
+                1.8683931561342773
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 63,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 172.97787143782136,
+              "worst": 0,
+              "mean": 10.974777660614187,
+              "median": 0,
+              "q1": 0,
+              "q3": 11.213452294311281
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.987205509338727,
+              "D": 1.4096827690437048,
+              "layers": [
+                1.9910716698035797,
+                1.9367028152437333,
+                1.9060262132252344
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "random": 8064
+          },
+          "operators": {},
+          "mutation": {
+            "eligible": 0,
+            "selected": 0,
+            "changed": 0,
+            "large": 0,
+            "normal": 0,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 8189,
+            "timeout": 3
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 6,
+            "no trigger": 57
+          }
+        }
+      ],
+      "sourceManifest": "0f6969405b9fbf83ed9aa0937e4dabe4d183f61c93b6c65a77c79bc2653d2ef3"
+    },
+    {
+      "id": "B-random-44",
+      "seed": 44,
+      "configId": "random",
+      "hypothesis": "random",
+      "fitnessContract": "D10-v1/Balanced",
+      "source": "893fcb9b47d72ace062b6a818bed165d279d5773",
+      "status": "completed",
+      "outcome": "no-success",
+      "models": {
+        "champion": {
+          "id": "genome:0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed:f1d8ab927e584298c2cd50d767c20a30cd8691d32c62d41683d663482caabbad",
+          "file": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed.f64le",
+          "size": 68376,
+          "sha256": "f1d8ab927e584298c2cd50d767c20a30cd8691d32c62d41683d663482caabbad"
+        },
+        "generationBest": {
+          "id": "genome:32c3378631d981daa01cd27e03269091311c16187e39095ae65f090a95a7bbdb:9c6bf915a431666e85f1b6bc83d88911757906e4b9a9146ef98f1a8b17dffdff",
+          "file": "32c3378631d981daa01cd27e03269091311c16187e39095ae65f090a95a7bbdb.f64le",
+          "size": 68376,
+          "sha256": "9c6bf915a431666e85f1b6bc83d88911757906e4b9a9146ef98f1a8b17dffdff"
+        },
+        "prefixChampion": {
+          "id": "genome:0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed:f1d8ab927e584298c2cd50d767c20a30cd8691d32c62d41683d663482caabbad",
+          "file": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed.f64le",
+          "size": 68376,
+          "sha256": "f1d8ab927e584298c2cd50d767c20a30cd8691d32c62d41683d663482caabbad"
+        }
+      },
+      "regularEpisodes": 12800,
+      "chargedRegularEpisodes": 12800,
+      "auditHashes": {
+        "audit.json": "8a4e0eaf74c6713f3d27e6e4bd6c625fdb5b69e82cda098b83af4fe33d03276e",
+        "prefix-8192.json": "1ed544569d0b872b5665921fe5b9d485220ec4c10849043d4817cb8d21fc6917"
+      },
+      "artifacts": {
+        "episodes.ndjson.gz": {
+          "size": 2453807,
+          "sha256": "b3483c5b8500fa00f622f192df018345d1f22e3b58245b46457cdf4fb07c47f9"
+        },
+        "generations.ndjson": {
+          "size": 268767,
+          "sha256": "f878f45f96a7489ca74e656042ab47b8c106935e6742618759f381615a39ec95"
+        }
+      },
+      "metrics": [
+        {
+          "file": "audit.json",
+          "episodes": 12800,
+          "generations": 100,
+          "successes": 0,
+          "successRate": 0,
+          "firstSuccessGeneration": null,
+          "firstSuccessCensored": true,
+          "fastest": null,
+          "champion": {
+            "generation": 16,
+            "slot": 69,
+            "genome": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed",
+            "score": 602.3111932923521
+          },
+          "rawTicks": 15942245,
+          "saturated": [
+            23,
+            208,
+            10024,
+            174,
+            0,
+            6
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 117.96002939150492,
+              "worst": 0,
+              "mean": 11.744892432454378,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9876123728764732,
+              "D": 1.4098270719760184,
+              "layers": [
+                1.9915503899222284,
+                1.9383406469784803,
+                1.882462401377704
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 99,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 128.14471877895767,
+              "worst": 0,
+              "mean": 10.15920590080486,
+              "median": 0,
+              "q1": 0,
+              "q3": 6.835302090728703
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.989652091687801,
+              "D": 1.410550279744682,
+              "layers": [
+                1.994283132314669,
+                1.9326838917187408,
+                1.8559085204874128
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "random": 12672
+          },
+          "operators": {},
+          "mutation": {
+            "eligible": 0,
+            "selected": 0,
+            "changed": 0,
+            "large": 0,
+            "normal": 0,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 12787,
+            "timeout": 13
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 3,
+            "no trigger": 96
+          }
+        },
+        {
+          "file": "prefix-8192.json",
+          "episodes": 8192,
+          "generations": 64,
+          "successes": 0,
+          "successRate": 0,
+          "firstSuccessGeneration": null,
+          "firstSuccessCensored": true,
+          "fastest": null,
+          "champion": {
+            "generation": 16,
+            "slot": 69,
+            "genome": "0c41dc396f803ca3a13c882c926c0ad4dda3de87b33596aaae664d2fa895f7ed",
+            "score": 602.3111932923521
+          },
+          "rawTicks": 10190161,
+          "saturated": [
+            14,
+            127,
+            6415,
+            116,
+            0,
+            2
+          ],
+          "firstGeneration": {
+            "generation": 0,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 117.96002939150492,
+              "worst": 0,
+              "mean": 11.744892432454378,
+              "median": 0,
+              "q1": 0,
+              "q3": 8
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9876123728764732,
+              "D": 1.4098270719760184,
+              "layers": [
+                1.9915503899222284,
+                1.9383406469784803,
+                1.882462401377704
+              ]
+            }
+          },
+          "lastGeneration": {
+            "generation": 63,
+            "evaluated": 128,
+            "validLaps": 0,
+            "successfulEpisodes": 0,
+            "lapTimesSeconds": null,
+            "progressMetres": {
+              "best": 120.6125014761434,
+              "worst": 0,
+              "mean": 14.316350732280261,
+              "median": 0,
+              "q1": 0,
+              "q3": 10.466573302977167
+            },
+            "diversity": {
+              "unique": 128,
+              "duplicates": 0,
+              "uniqueFraction": 1,
+              "D2": 1.9880684282251617,
+              "D": 1.4099888042907156,
+              "layers": [
+                1.9926500353362713,
+                1.9296288319201595,
+                1.8772813966118096
+              ]
+            }
+          },
+          "origins": {
+            "initial": 128,
+            "random": 8064
+          },
+          "operators": {},
+          "mutation": {
+            "eligible": 0,
+            "selected": 0,
+            "changed": 0,
+            "large": 0,
+            "normal": 0,
+            "clipped": 0
+          },
+          "terminalReasons": {
+            "noProgress": 8183,
+            "timeout": 9
+          },
+          "adaptation": {
+            "initial": 1,
+            "improvement": 3,
+            "no trigger": 60
+          }
+        }
+      ],
+      "sourceManifest": "94ffebb101157e0d31ed09c2969d92f13a5186a28248241b606770ee5929d3b8"
+    }
+  ],
+  "pairs": [
+    {
+      "seed": 42,
+      "episodesPerArm": 12800,
+      "evolutionSuccess": 664,
+      "randomSuccess": 0,
+      "evolutionFirst": 31,
+      "randomFirst": null,
+      "evolutionFastest": 59.663774729747736,
+      "randomFastest": null,
+      "rawTickDifference": 14588505
+    },
+    {
+      "seed": 42,
+      "episodesPerArm": 8192,
+      "evolutionSuccess": 215,
+      "randomSuccess": 0,
+      "evolutionFirst": 31,
+      "randomFirst": null,
+      "evolutionFastest": 73.74142008660284,
+      "randomFastest": null,
+      "rawTickDifference": 7643373
+    },
+    {
+      "seed": 43,
+      "episodesPerArm": 12800,
+      "evolutionSuccess": 834,
+      "randomSuccess": 0,
+      "evolutionFirst": 19,
+      "randomFirst": null,
+      "evolutionFastest": 52.26689530564939,
+      "randomFastest": null,
+      "rawTickDifference": 14260252
+    },
+    {
+      "seed": 43,
+      "episodesPerArm": 8192,
+      "evolutionSuccess": 411,
+      "randomSuccess": 0,
+      "evolutionFirst": 19,
+      "randomFirst": null,
+      "evolutionFastest": 62.251439577544886,
+      "randomFastest": null,
+      "rawTickDifference": 8142921
+    },
+    {
+      "seed": 44,
+      "episodesPerArm": 12800,
+      "evolutionSuccess": 1218,
+      "randomSuccess": 0,
+      "evolutionFirst": 39,
+      "randomFirst": null,
+      "evolutionFastest": 42.40798767734166,
+      "randomFastest": null,
+      "rawTickDifference": 15457132
+    },
+    {
+      "seed": 44,
+      "episodesPerArm": 8192,
+      "evolutionSuccess": 306,
+      "randomSuccess": 0,
+      "evolutionFirst": 39,
+      "randomFirst": null,
+      "evolutionFastest": 50.15932935578593,
+      "randomFastest": null,
+      "rawTickDifference": 8943552
+    }
+  ],
+  "milestones": [],
+  "reportedStates": {
+    "reused-historical": 1,
+    "completed": 5,
+    "not-started": 116
+  }
+}

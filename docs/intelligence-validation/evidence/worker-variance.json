@@ -1,0 +1,714 @@
+{
+  "schema": "arena.campaign-report.v1",
+  "stage": "performance",
+  "campaign": "ARENA-02D",
+  "matrix": "a3aa10f1ab2346b29d67c5e28864714d8d0c0a591c65bc09bd715dba2256e499",
+  "assignment": [
+    {
+      "id": "Benjamins-Yoga",
+      "total": {
+        "ms": 172800000,
+        "episodes": 1600000,
+        "ticks": 5000000000
+      },
+      "training": {
+        "ms": 146880000,
+        "episodes": 1600000,
+        "ticks": 4250000000
+      }
+    }
+  ],
+  "nominal": {
+    "variants": 47,
+    "slots": 122,
+    "episodes": 1512448
+  },
+  "source": {
+    "sha": "a3ed116a2e52dc47fdf65e2f650f6fb8bca704b5",
+    "sourceDiff": "",
+    "node": "v24.22.3",
+    "os": "Windows 11 Pro",
+    "cpu": "Intel(R) Core(TM) Ultra 7 255H",
+    "logicalCpus": 16,
+    "totalRam": 33820106752,
+    "power": "uncontrolled",
+    "backgroundLoad": "uncontrolled",
+    "renderer": null
+  },
+  "scalingSHA256": "c8097a5a7b37be77c86a4672019c4e693dc55063885e8cf2318f1953eaf5d071",
+  "selectedWorkers": 14,
+  "results": [
+    {
+      "workers": 1,
+      "runs": [
+        {
+          "id": "bench-0-1",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 129901.10979999998,
+          "ticksPerS": 3816.249151090779,
+          "cpuMs": 132625,
+          "saveMs": 669.181500000006,
+          "observedGcMs": 30.4222000092268,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 65498.287899999996
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 35517.5613
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 27858.074399999983
+            }
+          ]
+        },
+        {
+          "id": "bench-2-1",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 109472.60119999992,
+          "ticksPerS": 4528.393356565281,
+          "cpuMs": 111969,
+          "saveMs": 669.9794000000693,
+          "observedGcMs": 24.756300009787083,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 42995.62320000003
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 35367.576899999985
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 30198.31799999997
+            }
+          ]
+        },
+        {
+          "id": "bench-1-1",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 105060.97620000015,
+          "ticksPerS": 4718.545533560341,
+          "cpuMs": 107829,
+          "saveMs": 647.8239000000758,
+          "observedGcMs": 24.338700026273727,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 43290.173300000024
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 33332.75219999999
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 27545.37849999999
+            }
+          ]
+        }
+      ],
+      "slowAgainstMedian": -0.15726200208337304,
+      "slowAgainstFast": -0.1912234132429239,
+      "slowMinusFastMs": 24840.133599999826,
+      "generationDeltasMs": [
+        22208.11459999997,
+        2184.809100000013,
+        312.6958999999915
+      ],
+      "saveDeltaMs": 21.357599999930244,
+      "observedGcDeltaMs": 6.083499982953072
+    },
+    {
+      "workers": 2,
+      "runs": [
+        {
+          "id": "bench-2-2",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 64192.31129999994,
+          "ticksPerS": 7722.653849979078,
+          "cpuMs": 129672,
+          "saveMs": 695.6866000001319,
+          "observedGcMs": 25.11429999023676,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 27060.973399999784
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 20000.23399999994
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 16176.579099999974
+            }
+          ]
+        },
+        {
+          "id": "bench-0-2",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 58799.245200000005,
+          "ticksPerS": 8430.975573135418,
+          "cpuMs": 119703,
+          "saveMs": 638.3405999999959,
+          "observedGcMs": 26.042900033295155,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 24965.6409
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 18457.772600000026
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 14437.68299999996
+            }
+          ]
+        },
+        {
+          "id": "bench-1-2",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 55787.26059999992,
+          "ticksPerS": 8886.168538628704,
+          "cpuMs": 112250,
+          "saveMs": 630.4068999999436,
+          "observedGcMs": 27.39750000834465,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 23535.44650000008
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 17416.79740000004
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 13922.92749999999
+            }
+          ]
+        }
+      ],
+      "slowAgainstMedian": -0.08401420654252001,
+      "slowAgainstFast": -0.13093547388750948,
+      "slowMinusFastMs": 8405.050700000022,
+      "generationDeltasMs": [
+        3525.526899999706,
+        2583.436599999899,
+        2253.651599999983
+      ],
+      "saveDeltaMs": 65.27970000018831,
+      "observedGcDeltaMs": -2.283200018107891
+    },
+    {
+      "workers": 4,
+      "runs": [
+        {
+          "id": "bench-2-4",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 36000.61509999982,
+          "ticksPerS": 13770.181387817524,
+          "cpuMs": 142266,
+          "saveMs": 622.6174999999348,
+          "observedGcMs": 25.22149997204542,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 14427.091400000034
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 11681.608299999963
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 8957.913599999854
+            }
+          ]
+        },
+        {
+          "id": "bench-1-4",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 34707.662899999996,
+          "ticksPerS": 14283.157048871766,
+          "cpuMs": 135922,
+          "saveMs": 678.8845000000438,
+          "observedGcMs": 28.840900018811226,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 13591.07460000005
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 11444.453299999936
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 8716.127399999998
+            }
+          ]
+        },
+        {
+          "id": "bench-0-4",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 33811.27899999998,
+          "ticksPerS": 14661.823351905743,
+          "cpuMs": 134844,
+          "saveMs": 612.6852000000654,
+          "observedGcMs": 24.855999998748302,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 13747.561499999953
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 10777.95669999998
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 8396.61269999994
+            }
+          ]
+        }
+      ],
+      "slowAgainstMedian": -0.035914725245898116,
+      "slowAgainstFast": -0.06081385259441996,
+      "slowMinusFastMs": 2189.3360999998404,
+      "generationDeltasMs": [
+        679.5299000000814,
+        903.6515999999829,
+        561.3008999999147
+      ],
+      "saveDeltaMs": 9.932299999869429,
+      "observedGcDeltaMs": 0.36549997329711914
+    },
+    {
+      "workers": 6,
+      "runs": [
+        {
+          "id": "bench-0-6",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 30530.736900000018,
+          "ticksPerS": 16237.243196052686,
+          "cpuMs": 174937,
+          "saveMs": 647.4801999998745,
+          "observedGcMs": 29.015600010752678,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 13076.748199999915
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 9463.64989999996
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 7081.947799999965
+            }
+          ]
+        },
+        {
+          "id": "bench-2-6",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 30202.34539999999,
+          "ticksPerS": 16413.791493160003,
+          "cpuMs": 173360,
+          "saveMs": 716.5910000002477,
+          "observedGcMs": 30.036200016736984,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 12833.220200000098
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 9398.09030000004
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 6981.305200000061
+            }
+          ]
+        },
+        {
+          "id": "bench-1-6",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 27620.59620000003,
+          "ticksPerS": 17948.0195289919,
+          "cpuMs": 160406,
+          "saveMs": 648.9671000000089,
+          "observedGcMs": 30.721099972724915,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 11778.152200000011
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 8542.736900000018
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 6351.232400000095
+            }
+          ]
+        }
+      ],
+      "slowAgainstMedian": -0.010756094786563364,
+      "slowAgainstFast": -0.09531839043164358,
+      "slowMinusFastMs": 2910.140699999989,
+      "generationDeltasMs": [
+        1298.5959999999031,
+        920.9129999999423,
+        730.71539999987
+      ],
+      "saveDeltaMs": -1.486900000134483,
+      "observedGcDeltaMs": -1.7054999619722366
+    },
+    {
+      "workers": 8,
+      "runs": [
+        {
+          "id": "bench-0-8",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 31218.027300000074,
+          "ticksPerS": 15879.767008852568,
+          "cpuMs": 207657,
+          "saveMs": 757.1763000001665,
+          "observedGcMs": 32.65760000050068,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 12726.113099999959
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 9789.1544
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 7609.389499999932
+            }
+          ]
+        },
+        {
+          "id": "bench-1-8",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 27801.65670000005,
+          "ticksPerS": 17831.131624612826,
+          "cpuMs": 199922,
+          "saveMs": 703.1661000000313,
+          "observedGcMs": 29.85590000450611,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 11920.858200000017
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 8904.942900000024
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 6006.90830000001
+            }
+          ]
+        },
+        {
+          "id": "bench-2-8",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 25531.07799999998,
+          "ticksPerS": 19416.9239544057,
+          "cpuMs": 191672,
+          "saveMs": 661.0287999999709,
+          "observedGcMs": 29.811400026082993,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 11013.130699999863
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 7664.259499999927
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 5903.755600000033
+            }
+          ]
+        }
+      ],
+      "slowAgainstMedian": -0.10943582588256673,
+      "slowAgainstFast": -0.18216875926686382,
+      "slowMinusFastMs": 5686.949300000095,
+      "generationDeltasMs": [
+        1712.9824000000954,
+        2124.894900000072,
+        1705.6338999998989
+      ],
+      "saveDeltaMs": 96.14750000019558,
+      "observedGcDeltaMs": 2.8461999744176865
+    },
+    {
+      "workers": 12,
+      "runs": [
+        {
+          "id": "bench-0-12",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 30300.37890000001,
+          "ticksPerS": 16360.686499534164,
+          "cpuMs": 226546,
+          "saveMs": 804.874899999937,
+          "observedGcMs": 37.55019997060299,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 12292.229300000006
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 9573.186899999972
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 7257.666999999899
+            }
+          ]
+        },
+        {
+          "id": "bench-2-12",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 26704.71160000004,
+          "ticksPerS": 18563.578121547635,
+          "cpuMs": 230515,
+          "saveMs": 767.8118000002578,
+          "observedGcMs": 33.7168999761343,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 11013.056400000118
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 8450.339299999876
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 6171.922999999952
+            }
+          ]
+        },
+        {
+          "id": "bench-1-12",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 23156.21530000004,
+          "ticksPerS": 21408.2911899683,
+          "cpuMs": 228313,
+          "saveMs": 691.4963999999454,
+          "observedGcMs": 30.189599998295307,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 9420.665700000012
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 7493.192599999951
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 5260.573300000047
+            }
+          ]
+        }
+      ],
+      "slowAgainstMedian": -0.11866740385876728,
+      "slowAgainstFast": -0.23577802850511442,
+      "slowMinusFastMs": 7144.163599999971,
+      "generationDeltasMs": [
+        2871.563599999994,
+        2079.9943000000203,
+        1997.093699999852
+      ],
+      "saveDeltaMs": 113.37849999999162,
+      "observedGcDeltaMs": 7.360599972307682
+    },
+    {
+      "workers": 14,
+      "runs": [
+        {
+          "id": "bench-0-14",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 28895.18639999989,
+          "ticksPerS": 17156.31777339917,
+          "cpuMs": 231531,
+          "saveMs": 848.8023000000976,
+          "observedGcMs": 38.16320000588894,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 13244.29999999993
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 8822.192099999986
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 5443.891799999983
+            }
+          ]
+        },
+        {
+          "id": "bench-2-14",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 25244.287699999986,
+          "ticksPerS": 19637.511895413878,
+          "cpuMs": 238391,
+          "saveMs": 679.3755999999121,
+          "observedGcMs": 34.17119996994734,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 10592.256300000008
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 7601.443100000033
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 5960.205499999924
+            }
+          ]
+        },
+        {
+          "id": "bench-1-14",
+          "ticks": 495735,
+          "result": "6dd6b6ce2ce9f9549f103e5f87c41ea8c1d0f09584712f29c3c4541a965077e4",
+          "ms": 24096.536500000046,
+          "ticksPerS": 20572.873616089975,
+          "cpuMs": 227126,
+          "saveMs": 641.626900000032,
+          "observedGcMs": 29.319400012493134,
+          "generations": [
+            {
+              "generation": 0,
+              "ticks": 157408,
+              "ms": 11368.068400000106
+            },
+            {
+              "generation": 1,
+              "ticks": 167954,
+              "ms": 7007.8131000000285
+            },
+            {
+              "generation": 2,
+              "ticks": 170373,
+              "ms": 4700.955399999977
+            }
+          ]
+        }
+      ],
+      "slowAgainstMedian": -0.12634971961973274,
+      "slowAgainstFast": -0.16607090999765484,
+      "slowMinusFastMs": 4798.649899999844,
+      "generationDeltasMs": [
+        1876.2315999998245,
+        1814.3789999999572,
+        742.936400000006
+      ],
+      "saveDeltaMs": 207.17540000006557,
+      "observedGcDeltaMs": 8.843799993395805
+    }
+  ]
+}

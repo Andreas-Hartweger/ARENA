@@ -1,0 +1,298 @@
+{
+  "schema": "arena.inheritance-audit.v1",
+  "simulatedTicks": 0,
+  "experiments": [
+    {
+      "id": "S22-42",
+      "seed": 42,
+      "definition": "2377000094c8328b2f89a98575eda20e9b18b40b276a49ec5b4e60a54f993dea",
+      "audit": "1eabbcfe6f1f82233b036057f56e43a7afbe87492218fa175b94b11adcfdda97",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "a76240f431cd285f643c0644c3bbc9f3bfa0793c0aec31a56cc42df22f2ca831",
+      "g1Chunk": "bb041c3641d85c556b8773da11dccee995184e6858f7efbe3821a0d9c22322f5",
+      "orderedInitialGenomes": "8d931049c4d93de7e2b8e738efbab6364435934c7b1b6fac2df8473b4a5b3ec0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638462682781306,
+          "max": 0.14638471619321966,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35353479576591024,
+          "max": 0.3535464633635943,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5617094257131098,
+          "max": 0.5618812389456085,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 167.18011493946813,
+        "worst": 0,
+        "mean": 14.985159472396074,
+        "median": 0,
+        "q1": 0,
+        "q3": 10
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 3,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 63,
+      "parentRankOneBased": {
+        "best": 115,
+        "worst": 1,
+        "mean": 31.37313432835821,
+        "median": 24.5,
+        "q1": 15,
+        "q3": 44.5
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0.1,
+      "twoParents": 12,
+      "mutatedCrossovers": 12,
+      "orderedParentPairsSHA256": "58ca947aca276c3b8dd2977577edaf2ac3c439f0dad1b2ab8759d73d81602348",
+      "crossedChildrenSHA256": "4c2547c893cc0690c504961d6565b4d578e1711924777afa73732bc2df8b1e94",
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 0,
+      "firstSuccessfulGeneration": null
+    },
+    {
+      "id": "S22-43",
+      "seed": 43,
+      "definition": "e2e1c7ddba146a68be2d1cfb21b12f78c3886ae0071ee27e6e4952b1b3bba683",
+      "audit": "6ecddb9ad690e8c84f6a437d5a6e9268e8ff592136bbd6dd6745053bd3ea1e6b",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "aac9fb45f007a3fc83cbefa896db25353f6264046fa22658d4f69c4777ac14a9",
+      "g1Chunk": "634bce48d5b220747b1bf0c91feb0d65cddedd0776b37f567fa8fab569e68f2d",
+      "orderedInitialGenomes": "c81309a8735b7392c562cb72d727dd650d36c4d8ea8deac586ae83a117515ee0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638464918620617,
+          "max": 0.14638467168093094,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35352684927396855,
+          "max": 0.3535529190754061,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5618009602607481,
+          "max": 0.5614751627746563,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 163.16966545826074,
+        "worst": 0,
+        "mean": 17.959111953490826,
+        "median": 0.000047927369024591826,
+        "q1": 0,
+        "q3": 16.71492270545231
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 3,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 62,
+      "parentRankOneBased": {
+        "best": 99,
+        "worst": 1,
+        "mean": 28.956204379562045,
+        "median": 24,
+        "q1": 9,
+        "q3": 42
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0.1,
+      "twoParents": 15,
+      "mutatedCrossovers": 15,
+      "orderedParentPairsSHA256": "2f7ee7027aeec570f9ed480a80645a5ffa3d272e58f3f09b22a42ef384b9bd13",
+      "crossedChildrenSHA256": "906b2c0b8509b316481afe645c1bd946ebfaf5dc808b1eacf8b38e6093d977e4",
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 326,
+      "firstSuccessfulGeneration": 25
+    },
+    {
+      "id": "S23-42",
+      "seed": 42,
+      "definition": "9ed8c5caf4f6b33561d31ae2f50cd539942813e5f15100fc95920d63cfd8ccb5",
+      "audit": "af64117776b20fec96cafb6d785fd7c1be4d82bcd0099c8ab2b40aee24e633dd",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "a42abaf73151ac84a59b0682cb9fe48d674cbf992c4889132a6578fcb9ddb370",
+      "g1Chunk": "b9b862d214749c9919782bf8b013160078b333bdbe11aeb84f724e790311c9aa",
+      "orderedInitialGenomes": "8d931049c4d93de7e2b8e738efbab6364435934c7b1b6fac2df8473b4a5b3ec0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638462682781306,
+          "max": 0.14638471619321966,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35353479576591024,
+          "max": 0.3535464633635943,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5617094257131098,
+          "max": 0.5618812389456085,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 167.18011493946813,
+        "worst": 0,
+        "mean": 14.985159472396074,
+        "median": 0,
+        "q1": 0,
+        "q3": 10
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 3,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 63,
+      "parentRankOneBased": {
+        "best": 115,
+        "worst": 1,
+        "mean": 31.37313432835821,
+        "median": 24.5,
+        "q1": 15,
+        "q3": 44.5
+      },
+      "crossover": "neuron-wise",
+      "crossoverProbability": 0.1,
+      "twoParents": 12,
+      "mutatedCrossovers": 12,
+      "orderedParentPairsSHA256": "58ca947aca276c3b8dd2977577edaf2ac3c439f0dad1b2ab8759d73d81602348",
+      "crossedChildrenSHA256": "26519c7b97deb86b37afc614857d597f44813ef53b168607394ffc5b450a6358",
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 895,
+      "firstSuccessfulGeneration": 18
+    },
+    {
+      "id": "S23-43",
+      "seed": 43,
+      "definition": "5194b6ea8d30ae31745be77e371b455beab7b9ec5a6829c2e15e5c3062667c0f",
+      "audit": "42c4b8cc5f05cc9008c3991f9d8b9d7c390d624df323d05fa2df52a691bd7a5c",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "bcb27a6a610dcfb501f496a95525a5671e6e733217852ab50094ffabc96e834c",
+      "g1Chunk": "e969cc662aa95f26f01a80b2f2bc13fcd36a3e8609b249199f5953b954319b72",
+      "orderedInitialGenomes": "c81309a8735b7392c562cb72d727dd650d36c4d8ea8deac586ae83a117515ee0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638464918620617,
+          "max": 0.14638467168093094,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35352684927396855,
+          "max": 0.3535529190754061,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5618009602607481,
+          "max": 0.5614751627746563,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 163.16966545826074,
+        "worst": 0,
+        "mean": 17.959111953490826,
+        "median": 0.000047927369024591826,
+        "q1": 0,
+        "q3": 16.71492270545231
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 3,
+      "parentPoolSize": 128,
+      "distinctChosenParents": 62,
+      "parentRankOneBased": {
+        "best": 99,
+        "worst": 1,
+        "mean": 28.956204379562045,
+        "median": 24,
+        "q1": 9,
+        "q3": 42
+      },
+      "crossover": "neuron-wise",
+      "crossoverProbability": 0.1,
+      "twoParents": 15,
+      "mutatedCrossovers": 15,
+      "orderedParentPairsSHA256": "2f7ee7027aeec570f9ed480a80645a5ffa3d272e58f3f09b22a42ef384b9bd13",
+      "crossedChildrenSHA256": "5c07ba3ddb7e24d961840e6cafa17590984c87f89571b8a94d16dafed4644dbd",
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 210,
+      "firstSuccessfulGeneration": 30
+    }
+  ]
+}

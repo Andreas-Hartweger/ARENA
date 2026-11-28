@@ -1,0 +1,1892 @@
+{
+  "schema": "arena.research.plan.v1",
+  "baseline": {
+    "population": 128,
+    "hidden": [
+      32,
+      16
+    ],
+    "activation": "tanh",
+    "hz": 30,
+    "physicsHz": 60,
+    "profile": "Balanced",
+    "tournament": 3,
+    "parentPool": 1,
+    "eliteRate": 0.05,
+    "mutationProbability": 0.05,
+    "mutationAlpha": 0.2,
+    "largeProbability": 0.05,
+    "largeMultiplier": 5,
+    "crossoverProbability": 0,
+    "crossoverOperator": "uniform",
+    "adaptProbability": false,
+    "adaptStrength": false,
+    "stagnationWindow": 15,
+    "stagnationEpsilon": 1,
+    "adaptMultiplier": 1.5,
+    "immigrantRate": 0,
+    "rescueEnabled": false,
+    "randomSearch": false,
+    "task": "academy-standard-v1",
+    "scenarioCount": 1
+  },
+  "variants": [
+    {
+      "id": "S01",
+      "group": "Population",
+      "delta": {
+        "population": 32
+      },
+      "config": {
+        "population": 32,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S02",
+      "group": "Population",
+      "delta": {
+        "population": 64
+      },
+      "config": {
+        "population": 64,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S03",
+      "group": "Population",
+      "delta": {
+        "population": 256
+      },
+      "config": {
+        "population": 256,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S04",
+      "group": "Population",
+      "delta": {
+        "population": 512
+      },
+      "config": {
+        "population": 512,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S05",
+      "group": "Turnier",
+      "delta": {
+        "tournament": 2
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 2,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S06",
+      "group": "Turnier",
+      "delta": {
+        "tournament": 5
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 5,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S07",
+      "group": "Turnier",
+      "delta": {
+        "tournament": 8
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 8,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S08",
+      "group": "Eliten",
+      "delta": {
+        "eliteRate": 0.01
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.01,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S09",
+      "group": "Eliten",
+      "delta": {
+        "eliteRate": 0.02
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.02,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S10",
+      "group": "Eliten",
+      "delta": {
+        "eliteRate": 0.1
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.1,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S11",
+      "group": "Eliten",
+      "delta": {
+        "eliteRate": 0.2
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.2,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S12",
+      "group": "Elternpool",
+      "delta": {
+        "parentPool": 0.25
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 0.25,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S13",
+      "group": "Elternpool",
+      "delta": {
+        "parentPool": 0.5
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 0.5,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S14",
+      "group": "Mutation p",
+      "delta": {
+        "mutationProbability": 0.01
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.01,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S15",
+      "group": "Mutation p",
+      "delta": {
+        "mutationProbability": 0.02
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.02,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S16",
+      "group": "Mutation p",
+      "delta": {
+        "mutationProbability": 0.1
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.1,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S17",
+      "group": "Mutation p",
+      "delta": {
+        "mutationProbability": 0.2
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.2,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S18",
+      "group": "Mutation alpha",
+      "delta": {
+        "mutationAlpha": 0.05
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.05,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S19",
+      "group": "Mutation alpha",
+      "delta": {
+        "mutationAlpha": 0.1
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.1,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S20",
+      "group": "Mutation alpha",
+      "delta": {
+        "mutationAlpha": 0.4
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.4,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S21",
+      "group": "Mutation alpha",
+      "delta": {
+        "mutationAlpha": 0.8
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.8,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S22",
+      "group": "Crossover",
+      "delta": {
+        "crossoverProbability": 0.1,
+        "crossoverOperator": "uniform"
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0.1,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S23",
+      "group": "Crossover",
+      "delta": {
+        "crossoverProbability": 0.1,
+        "crossoverOperator": "neuron-wise"
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0.1,
+        "crossoverOperator": "neuron-wise",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S24",
+      "group": "Adaption",
+      "delta": {
+        "adaptProbability": true,
+        "adaptStrength": false
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": true,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S25",
+      "group": "Adaption",
+      "delta": {
+        "adaptProbability": false,
+        "adaptStrength": true
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": true,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S26",
+      "group": "Adaption",
+      "delta": {
+        "adaptProbability": true,
+        "adaptStrength": true
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": true,
+        "adaptStrength": true,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S27",
+      "group": "Immigrants",
+      "delta": {
+        "immigrantRate": 0.05
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0.05,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S28",
+      "group": "Immigrants",
+      "delta": {
+        "immigrantRate": 0.1
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0.1,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S29",
+      "group": "Rescue",
+      "delta": {
+        "rescueEnabled": true
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": true,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S30",
+      "group": "Large mutation",
+      "delta": {
+        "largeProbability": 0
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S31",
+      "group": "Large mutation",
+      "delta": {
+        "largeProbability": 0.1
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.1,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S32",
+      "group": "Large mutation",
+      "delta": {
+        "largeProbability": 0.2
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.2,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S33",
+      "group": "Gr\u00f6\u00dfe",
+      "delta": {
+        "hidden": [
+          16,
+          8
+        ]
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          16,
+          8
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S34",
+      "group": "Gr\u00f6\u00dfe",
+      "delta": {
+        "hidden": [
+          32,
+          32
+        ]
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          32
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S35",
+      "group": "Gr\u00f6\u00dfe",
+      "delta": {
+        "hidden": [
+          64,
+          32
+        ]
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          64,
+          32
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S36",
+      "group": "Gr\u00f6\u00dfe",
+      "delta": {
+        "hidden": [
+          128,
+          128,
+          128,
+          128
+        ]
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          128,
+          128,
+          128,
+          128
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S37",
+      "group": "Tiefe",
+      "delta": {
+        "hidden": [
+          34
+        ]
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          34
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S38",
+      "group": "Tiefe",
+      "delta": {
+        "hidden": [
+          32,
+          8,
+          8
+        ]
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          8,
+          8
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S39",
+      "group": "Tiefe",
+      "delta": {
+        "hidden": [
+          32,
+          8,
+          8,
+          8
+        ]
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          8,
+          8,
+          8
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S40",
+      "group": "Aktivierung",
+      "delta": {
+        "activation": "relu"
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "relu",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S41",
+      "group": "Aktivierung",
+      "delta": {
+        "activation": "leaky-relu"
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "leaky-relu",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S42",
+      "group": "Frequenz",
+      "delta": {
+        "hz": 10
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 10,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S43",
+      "group": "Frequenz",
+      "delta": {
+        "hz": 15
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 15,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S44",
+      "group": "Frequenz",
+      "delta": {
+        "hz": 20
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 20,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S45",
+      "group": "Frequenz",
+      "delta": {
+        "hz": 60
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 60,
+        "physicsHz": 60,
+        "profile": "Balanced",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S46",
+      "group": "Fitness",
+      "delta": {
+        "profile": "Speed"
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Speed",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    },
+    {
+      "id": "S47",
+      "group": "Fitness",
+      "delta": {
+        "profile": "Safety"
+      },
+      "config": {
+        "population": 128,
+        "hidden": [
+          32,
+          16
+        ],
+        "activation": "tanh",
+        "hz": 30,
+        "physicsHz": 60,
+        "profile": "Safety",
+        "tournament": 3,
+        "parentPool": 1,
+        "eliteRate": 0.05,
+        "mutationProbability": 0.05,
+        "mutationAlpha": 0.2,
+        "largeProbability": 0.05,
+        "largeMultiplier": 5,
+        "crossoverProbability": 0,
+        "crossoverOperator": "uniform",
+        "adaptProbability": false,
+        "adaptStrength": false,
+        "stagnationWindow": 15,
+        "stagnationEpsilon": 1,
+        "adaptMultiplier": 1.5,
+        "immigrantRate": 0,
+        "rescueEnabled": false,
+        "randomSearch": false,
+        "task": "academy-standard-v1",
+        "scenarioCount": 1
+      }
+    }
+  ],
+  "budgets": {
+    "machineHours": 48,
+    "regularTrainingEpisodes": 1600000,
+    "allPhysicsTicks": 5000000000,
+    "validationReserveHours": 7.2,
+    "validationReserveTicks": 750000000,
+    "reportHours": [
+      12,
+      24,
+      48
+    ]
+  },
+  "phases": {
+    "baseline": {
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "episodes": 12800,
+      "modes": [
+        "evolution",
+        "random"
+      ]
+    },
+    "screen": {
+      "seeds": [
+        42,
+        43
+      ],
+      "episodes": 8192
+    },
+    "confirmation": {
+      "seeds": [
+        101,
+        102,
+        103
+      ],
+      "episodes": 25600,
+      "maxConfigs": 6
+    },
+    "long": {
+      "seeds": [
+        201,
+        202
+      ],
+      "episodes": 51200,
+      "maxConfigs": 2
+    }
+  },
+  "validation": {
+    "developmentCases": 40,
+    "holdoutCases": 60,
+    "groups": [
+      20,
+      20,
+      20
+    ],
+    "groupMin": 16,
+    "totalMin": 54,
+    "maxFrozenCandidates": 3,
+    "starter": {
+      "standardLapMaxS": 75,
+      "holdoutMedianMaxS": 75
+    },
+    "performance": {
+      "standardLapMaxS": 50,
+      "holdoutMedianMaxS": 60
+    },
+    "severeContactNormalSpeedMps": 10,
+    "minCollisionFreeSuccessfulFraction": 0.9,
+    "medianGrassMaxS": 2,
+    "maxGrassS": 10,
+    "multiLapCases": 12,
+    "multiLapMin": 10,
+    "multiLapLaps": 3,
+    "multiLapLimitS": 360,
+    "recoveryCases": 18,
+    "recoveryMin": 12,
+    "recoveryGroupMin": 3,
+    "recoveryReturnS": 20,
+    "recoveryForwardM": 20,
+    "recoveryForwardS": 5
+  }
+}
