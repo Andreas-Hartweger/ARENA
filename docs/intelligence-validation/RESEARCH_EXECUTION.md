@@ -34,6 +34,8 @@ Vor der Auswahl wurden 40 Entwicklungsfälle, 60 finale Einzelfahrten, 12 Drei-R
 
 ## Screening
 
+Die größte Architektur S36 mit vier verborgenen Schichten zu je 128 Neuronen hat 81.795 Float64-Parameter. Beide Läufe schlossen 64 Generationen und je 8.192 Episoden ab. Sie erreichten 33 und 122 gültige Runden sowie 17.155 und 17.139 Fahrzeugticks je Sekunde gemessener Generationszeit. Das kleinere Netz S33 mit 4.147 Parametern erreichte 33.444 und 39.057 Ticks/s auf seinen eigenen Fahrverläufen. Bei S36 betrug die D12-Speicherschätzung 281.230.656 Byte. Die größte RSS-Stichprobe des gesamten Prozesses einschließlich Workern betrug 2.856.480.768 Byte. Im D13-Speicher blieben am Ende höchstens 187.903.993 Byte pro Versuch bei einer Quote von 1 GiB. [Messdaten, Umfang und Quelldatei-Hashes für alle sechs Läufe](evidence/architecture-costs.json)
+
 Bei S26 erhöhte die Stagnationsregel bei beiden Seeds in G59 die Mutationswahrscheinlichkeit von 0,05 auf 0,075. Der Zähler stieg von 14 auf 15, die Mutationsstärke blieb bei 0,2. Der Bericht bindet beide Zustände jedes Übergangs an die Prüfsumme der vollständigen Generationsdatei. [Gemessene Adaption](evidence/paired-adaptation.json)
 
 Die D10-Profile Balanced, Speed und Safety erreichten bei Seed 42 jeweils 215, 264 und 121 erfolgreiche Trainingsrunden. Bei Seed 43 waren es 411, 357 und 209. Alle Arme liefen auf der Standardstrecke mit je 8.192 Kandidaten. Die Berichte nennen die Fitnessverträge einzeln und vergleichen gültige Runden, Rundenzeiten, Fortschritt und Ticks in gemeinsamen Einheiten. [Speed und Balanced](evidence/paired-fitness-speed.json) · [Safety und Balanced](evidence/paired-fitness-safety.json)
