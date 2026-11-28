@@ -1,4 +1,4 @@
-import { readFileSync, mkdirSync } from 'node:fs';
+import { existsSync, readFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { Buffer } from 'node:buffer';
 import { Blob } from 'node:buffer';
@@ -16,7 +16,9 @@ export async function reuseReference(ledger, directory, entry) {
   const def = entry.definition;
   assert.equal(def.experimentId, 'B-evolution-42');
   const old = 'docs/first-evolution/evidence/reference-release',
-    proof = 'docs/intelligence-validation/evidence/historical';
+    proof = existsSync(join(directory, 'historical', 'roles.json'))
+      ? join(directory, 'historical')
+      : 'docs/intelligence-validation/evidence/historical';
   const meta = JSON.parse(readFileSync(join(old, 'run.json'), 'utf8')),
     source = JSON.parse(readFileSync(join(proof, 'roles.json'), 'utf8'));
   const { scenarios } = preflight(def.draft, digest, 16);

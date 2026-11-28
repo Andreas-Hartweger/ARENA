@@ -64,7 +64,7 @@ export async function baselineDevelopment(directory, ledger, clock, workers) {
       trainingTimes.push(receipt);
     }
   }
-  const panel = loadPanel(directory, 'development'),
+  const panel = loadPanel(directory, 'development', ledger),
     runs = [],
     pairs = [];
   for (const seed of seeds) {

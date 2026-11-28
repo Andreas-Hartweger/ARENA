@@ -26,7 +26,7 @@ const base = 'docs/intelligence-validation',
 const source = JSON.parse(
   readFileSync(join(base, 'PRE-D01_EVIDENCE.json'), 'utf8'),
 );
-const destination = resolve(base, 'evidence', 'historical'),
+const destination = resolve(process.argv[2], 'historical'),
   report = join(destination, 'roles.json');
 if (existsSync(report)) throw Error('Historical role report already published');
 const runtime = environment(),

@@ -52,6 +52,10 @@ async function validate() {
   const freeze = JSON.parse(row.data),
     unique = new Set(freeze.candidates.map((c) => c.genome));
   if (
+    hashJSON(freeze.panels) !== hashJSON(ledger.readManifest('frozen-panels'))
+  )
+    throw Error('Candidate freeze differs from the committed panels');
+  if (
     unique.size !== freeze.candidates.length ||
     !unique.size ||
     unique.size > 3
@@ -62,8 +66,8 @@ async function validate() {
   ).workers;
   const panels = {
     standard: standardPanel(),
-    holdout: loadPanel(directory, 'holdout'),
-    endurance: loadPanel(directory, 'endurance'),
+    holdout: loadPanel(directory, 'holdout', ledger),
+    endurance: loadPanel(directory, 'endurance', ledger),
     standardEndurance: standardPanel(true),
   };
   const output = [];
@@ -91,7 +95,7 @@ async function validate() {
       evidence.recovery = await evaluatePanel(
         ledger,
         clock,
-        loadPanel(directory, 'recovery'),
+        loadPanel(directory, 'recovery', ledger),
         candidate,
         workers,
       );

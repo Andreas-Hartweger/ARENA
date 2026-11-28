@@ -3,24 +3,26 @@ import { availableParallelism } from 'node:os';
 import { performance, PerformanceObserver } from 'node:perf_hooks';
 import process from 'node:process';
 import { join } from 'node:path';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { experiment, hashJSON, sha } from './manifest.mjs';
 import { runExperiment } from './coordinator.mjs';
-import { openCampaign, ActiveTime, publishJSON } from './campaign.mjs';
+import {
+  openCampaign,
+  ActiveTime,
+  publishJSON,
+  parseFlags,
+} from './campaign.mjs';
 import { spaceCheck } from './evidence.mjs';
 import { environment } from '../evolution-runtime.mjs';
 const { resources } = await import('../../src/runtime/compute.ts');
 const directory = process.argv[2],
   hardware = availableParallelism(),
   cap = resources(hardware, 'Performance').cap;
-const root = 'docs/intelligence-validation/evidence/worker-scaling.json';
-if (existsSync(root)) throw Error('Scaling report already published');
+const output = join(directory, 'worker-scaling.json');
 const runtime = environment();
 if (runtime.sourceDiff) throw Error('Benchmark requires committed code');
 const start = performance.now(),
-  ledger = openCampaign(directory, {
-    recover: process.argv.includes('--recover'),
-  }),
+  ledger = openCampaign(directory, parseFlags()),
   clock = new ActiveTime(
     ledger,
     { experimentId: 'paired-worker-benchmark' },
@@ -31,18 +33,32 @@ const start = performance.now(),
 const results = [],
   counts = [...new Set([1, 2, 4, 6, 8, 12, 16, cap].filter((n) => n <= cap))];
 try {
+  const previous = existsSync(output)
+    ? JSON.parse(readFileSync(output, 'utf8'))
+    : null;
+  const recordedRuntime = ledger.readManifest('benchmark-runtime');
+  const source = recordedRuntime ?? previous?.runtime ?? runtime;
+  if (
+    previous &&
+    (previous.hardware !== hardware ||
+      hashJSON(previous.runtime) !== hashJSON(source))
+  )
+    throw Error('Recorded benchmark runtime differs');
+  if (!previous && hashJSON(source) !== hashJSON(runtime))
+    throw Error('Resume the unfinished benchmark on its recorded runtime');
+  ledger.transaction(() => ledger.manifest('benchmark-runtime', source));
   spaceCheck(directory, 512 * 1024 ** 2);
   for (const repeat of [-1, 0, 1, 2]) {
     const order = repeat % 2 === 1 ? [...counts].reverse() : counts;
     for (const workers of order) {
       const id = 'bench-' + repeat + '-' + workers;
-      const previous = ledger.db
-        .prepare('SELECT data FROM manifests WHERE id=?')
-        .get('measurement:' + id);
-      if (previous) {
-        if (repeat >= 0) results.push(JSON.parse(previous.data));
+      const measured = ledger.readManifest('measurement:' + id);
+      if (measured) {
+        if (repeat >= 0) results.push(measured);
         continue;
       }
+      if (previous)
+        throw Error('Published benchmark is missing a measurement: ' + id);
       const def = globalThis.structuredClone(
         experiment('B-evolution-42', ledger.definition.id, workers, hardware)
           .definition,
@@ -138,15 +154,14 @@ try {
   });
   const report = {
     schema: 'arena.scaling.v1',
-    runtime,
+    runtime: source,
     work: '128 same-seed Standard Academy drivers across G0..2 per repetition, including startup, persistence and GC',
     hardware,
     rows: results,
     stats,
     workers: stats.reduce((a, b) => (a.median >= b.median ? a : b)).workers,
   };
-  publishJSON(root, report);
-  publishJSON(join(directory, 'worker-scaling.json'), report);
+  publishJSON(output, report);
   process.stdout.write(JSON.stringify(stats) + '\n');
 } finally {
   try {

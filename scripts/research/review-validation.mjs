@@ -45,10 +45,11 @@ async function review() {
     final = ledger.readManifest('final-validation');
   if (!frozen || !final || final.selectionHash !== hashJSON(frozen))
     throw Error('Completed frozen validation required');
+  assert.deepEqual(frozen.panels, ledger.readManifest('frozen-panels'));
   const panels = {
     standard: standardPanel(),
-    holdout: loadPanel(directory, 'holdout'),
-    endurance: loadPanel(directory, 'endurance'),
+    holdout: loadPanel(directory, 'holdout', ledger),
+    endurance: loadPanel(directory, 'endurance', ledger),
     standardEndurance: standardPanel(true),
   };
   const checked = [],
@@ -64,7 +65,7 @@ async function review() {
     const cfg = candidate.draft.scenarios[0],
       stored = {};
     if (data.recovery && !panels.recovery)
-      panels.recovery = loadPanel(directory, 'recovery');
+      panels.recovery = loadPanel(directory, 'recovery', ledger);
     for (const [name, p] of Object.entries(data)) {
       if (name === 'genome') continue;
       clock.pulse();

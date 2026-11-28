@@ -29,6 +29,7 @@ import { runExperiment } from './coordinator.mjs';
 import {
   evaluatePanel,
   loadCandidate,
+  loadPanel,
   standardPanel,
 } from './evaluate-panel.mjs';
 const base = mkdtempSync(join(tmpdir(), 'arena-technical-evidence-')),
@@ -48,6 +49,21 @@ try {
     spec,
     hostname(),
   );
+  const freezeCommand = ['scripts/freeze-research-panels.mjs', src];
+  execFileSync(process.execPath, freezeCommand);
+  const panelReceipts = ledger.readManifest('frozen-panels');
+  assert.deepEqual(
+    JSON.parse(readFileSync(join(src, 'panel-commitments.json'), 'utf8')),
+    panelReceipts,
+  );
+  execFileSync(process.execPath, freezeCommand);
+  assert.deepEqual(ledger.readManifest('frozen-panels'), panelReceipts);
+  assert.equal(loadPanel(src, 'development', ledger).cases.length, 40);
+  const localPanel = join(src, 'panels', 'development.json');
+  const panelBytes = readFileSync(localPanel);
+  writeFileSync(localPanel, JSON.stringify({ name: 'development', cases: [] }));
+  assert.throws(() => loadPanel(src, 'development', ledger), /changed/);
+  writeFileSync(localPanel, panelBytes);
   ledger.claim();
   const clock = new ActiveTime(ledger, { experimentId: 'qa' });
   try {

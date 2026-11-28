@@ -132,7 +132,13 @@ async function archive() {
   )) {
     if (
       name.isDirectory() &&
-      ['experiments', 'panels', 'selection', 'validation'].includes(name.name)
+      [
+        'experiments',
+        'historical',
+        'panels',
+        'selection',
+        'validation',
+      ].includes(name.name)
     )
       await walk(name.name);
     else if (name.isFile() && name.name.endsWith('.json'))

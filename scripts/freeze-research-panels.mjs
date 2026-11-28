@@ -20,17 +20,14 @@ const timer = new ActiveTime(
 try {
   const path = join(directory, 'panels');
   mkdirSync(path, { recursive: true });
-  const saved = ledger.db
-    .prepare("SELECT data FROM manifests WHERE id='panel-roots'")
-    .get();
-  const roots = saved
-    ? JSON.parse(saved.data)
-    : Object.fromEntries(
-        ['development', 'holdout', 'endurance', 'recovery'].map((name) => [
-          name,
-          randomBytes(4).readUInt32LE(),
-        ]),
-      );
+  const roots =
+    ledger.readManifest('panel-roots') ??
+    Object.fromEntries(
+      ['development', 'holdout', 'endurance', 'recovery'].map((name) => [
+        name,
+        randomBytes(4).readUInt32LE(),
+      ]),
+    );
   ledger.transaction(() => {
     ledger.assertLease();
     ledger.manifest('panel-roots', roots);
@@ -50,13 +47,13 @@ try {
     ledger.assertLease();
     ledger.manifest('frozen-panels', commits);
   });
-  publishJSON(
-    'docs/intelligence-validation/evidence/panel-commitments.json',
-    commits,
-  );
-  timer.finish();
-  ledger.release();
+  publishJSON(join(directory, 'panel-commitments.json'), commits);
   process.stdout.write(JSON.stringify(commits) + '\n');
 } finally {
-  ledger.close();
+  try {
+    timer.finish();
+    ledger.release();
+  } finally {
+    ledger.close();
+  }
 }

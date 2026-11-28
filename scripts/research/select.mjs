@@ -73,7 +73,7 @@ async function select() {
   const scale = JSON.parse(
     readFileSync(join(directory, 'worker-scaling.json'), 'utf8'),
   );
-  const development = loadPanel(directory, 'development'),
+  const development = loadPanel(directory, 'development', ledger),
     available = [],
     excluded = [];
   const eligibleSlots = [...slots];
@@ -310,12 +310,7 @@ async function select() {
       schema: 'arena.selection.v1',
       phase,
       dev: development.hash,
-      panels: JSON.parse(
-        readFileSync(
-          'docs/intelligence-validation/evidence/panel-commitments.json',
-          'utf8',
-        ),
-      ),
+      panels: ledger.readManifest('frozen-panels'),
       candidates,
       data: available,
       excluded,

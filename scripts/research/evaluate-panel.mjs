@@ -118,14 +118,9 @@ export function loadCandidate(directory, experimentId, role = 'champion') {
     throw Error('Model filename differs from fingerprint');
   return { genome, draft, report, experimentId, role };
 }
-export function loadPanel(directory, name) {
-  const commitments = JSON.parse(
-    readFileSync(
-      'docs/intelligence-validation/evidence/panel-commitments.json',
-      'utf8',
-    ),
-  );
-  if (!Object.hasOwn(commitments, name))
+export function loadPanel(directory, name, ledger) {
+  const commitments = ledger.readManifest('frozen-panels');
+  if (!commitments || !Object.hasOwn(commitments, name))
     throw Error('Unknown validation panel');
   const bytes = readFileSync(join(directory, 'panels', name + '.json')),
     panel = JSON.parse(bytes);
