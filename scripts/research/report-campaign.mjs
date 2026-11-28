@@ -9,6 +9,7 @@ import { publish, publishJSON, parseFlags } from './campaign.mjs';
 import { campaignStatus, combinedStatus } from './status.mjs';
 import { peerInputs, combinedMilestone } from './peer-inputs.mjs';
 import { physicalPrefix } from './audit-data.mjs';
+import { replicationRows } from './replication-table.mjs';
 import {
   reviewCases,
   casesCSV,
@@ -31,6 +32,7 @@ if (
       'baseline',
       'baseline-cases',
       'immigration',
+      'replications',
       'performance',
       '12',
       '24',
@@ -39,7 +41,7 @@ if (
     ].includes(stage))
 )
   throw Error(
-    'Expected campaign, baseline/baseline-cases/immigration/performance/screen configuration/evolution-table/architecture-table/12/24/48/final and output file',
+    'Expected campaign, baseline/baseline-cases/immigration/performance/screen configuration/evolution-table/architecture-table/replications/12/24/48/final and output file',
   );
 const db = new DatabaseSync(join(directory, 'research.sqlite'), {
   readOnly: true,
@@ -552,6 +554,22 @@ try {
   let report;
   if (tablePhase) {
     report = trainingTable(tablePhase);
+  } else if (stage === 'replications') {
+    const status = peers
+      ? combinedStatus(peers.roots)
+      : campaignStatus(directory);
+    const experiments = [];
+    for (const r of status.slots.filter(
+      (r) => /^[CL]\d{2}-/.test(r.id) && r.state === 'completed',
+    )) {
+      const key = 'experiment-audit:' + r.id;
+      if (
+        peers ? peers.manifest(peers.source(r.id), key) : manifest(key, false)
+      )
+        experiments.push(summarize(r.id));
+      else r.state = 'pending-audit';
+    }
+    report = casesCSV(replicationRows(experiments, status.slots));
   } else if (stage === 'performance') {
     report = { ...base, ...performanceVariation() };
   } else if (stage === 'baseline-cases') {
@@ -755,7 +773,17 @@ try {
         const group = (byPhase[slot.phase] ??= {});
         group[slot.state] = (group[slot.state] ?? 0) + 1;
       }
+      const replicationData = replicationRows(experiments, status.slots);
+      const replicationFile =
+        basename(output, extname(output)) + '-replications.csv';
+      const replicationBytes = Buffer.from(casesCSV(replicationData));
+      publish(join(dirname(output), replicationFile), replicationBytes);
       Object.assign(report, {
+        replicationTable: {
+          file: replicationFile,
+          sha256: sha(replicationBytes),
+          rows: replicationData.length,
+        },
         slots: status.slots,
         caseTable,
         screeningAgainstPairedBaseline: screenComparisons(experiments),
@@ -802,7 +830,7 @@ try {
       });
     }
   }
-  if (tablePhase) {
+  if (tablePhase || stage === 'replications') {
     publish(output, Buffer.from(report));
   } else if (existsSync(output)) {
     const before = read(output);

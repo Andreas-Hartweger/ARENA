@@ -6,6 +6,8 @@ Die 47 Konfigurationen und 122 vorgesehenen Läufe stammen aus den bytegeprüfte
 
 Die vier historischen Rollen ergeben drei verschiedene Genome. Alle 12.800 Kandidatenrecords wurden über die ursprüngliche Folge G0 bis G99 nachvollzogen. Jedes der drei gespeicherten Modellpakete wurde erneut importiert. Alle Felder der anschließenden echten Fahrt stimmten mit dem Originalrecord überein. Dafür wurden insgesamt 11.776 Fahrzeugticks berechnet. Der Serienvergleich G31 und G99 enthält die interpolierten Rundenzeiten 94,67548946895151 s und 59,663774729747736 s. [Rollen, SHA-256 und Messdaten](evidence/historical/roles.json)
 
+Die Auswertung der 18 Bestätigungs- und vier Langzeitplätze ordnet jedem vollständig auditierten Lauf seinen Seed und sein Episodenbudget zu. Die Bestätigung vergleicht jeden Finalisten mit der auf demselben Seed trainierten Referenz über je 25.600 Episoden. Im Langzeitvergleich über 51.200 Episoden dient die Referenz als Kontrolle, falls sie ausgewählt wurde. Andernfalls nennt die Tabelle den ersten Langzeitfinalisten als Vergleichspartner. Für offene Plätze bleiben die Ergebnisfelder leer. Die Spalten für Differenzen zeigen den Abstand der Trainingserfolgsquoten in Prozentpunkten und den Abstand der medianen erfolgreichen Rundenzeiten in Sekunden. Die Rollenabnahme verwendet das eingefrorene Einzelmodell und die getrennten finalen Fälle. [Gepaarte Auswertung](../../scripts/research/replication-table.mjs)
+
 ## Budget, Wiederanlauf und Daten
 
 ### Umgesetzte Schnittstellen gegenüber 02C
