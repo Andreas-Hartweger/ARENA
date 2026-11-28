@@ -20,6 +20,10 @@ Der alternative Startvertrag verwendet die Streckenstation vor der ersten Linie,
 
 Vor der Auswahl wurden 40 Entwicklungsfälle, 60 finale Einzelfahrten, 12 Drei-Runden-Fälle und 18 Recovery-Fälle erzeugt. Die effektiven Fahrzeugzustände sind paarweise verschieden. Die exakten Listen befinden sich getrennt im lokalen Kampagnenarchiv. Im Repository stehen die Inhaltszusagen. Die Auswahl liest ausschließlich die Entwicklungsliste. Die finale Auswertung fordert einen vorher eingefrorenen Kandidaten. Standard-Einzel- und Standard-Dreirundenfahrt kommen jeweils getrennt hinzu. [Eingefrorene Panels](evidence/panel-commitments.json)
 
+## Screening
+
+S01 schließt mit 32 Fahrzeugen 256 Generationen ab. Die Referenz mit 128 Fahrzeugen erreicht bei demselben Budget von 8.192 Episoden 64 Generationen. Für Seed 42 lieferte S01 185 gültige Runden gegenüber 215 in der Referenz. Für Seed 43 waren es 20 gegenüber 411. Auf Seed 43 betrug der Median der 20 gültigen S01-Runden 57,20 s, der Median der 411 Referenzrunden 82,20 s. Die Referenz erreichte den ersten erfolgreichen Generationsabschluss in beiden Paaren früher. Die Entwicklungsvalidierung beurteilt die ausgewählten Genome auf gemeinsamen Startzuständen. [Nachgerechneter Populationsvergleich](evidence/paired-population-32.json)
+
 ## Stand der Abnahme
 
 Das Abnahmeregister enthält alle 158 vorgeschriebenen Prüfpunkte und ihre 70 Entscheidungs-IDs. Der Stand „belegt“ bezieht sich auf das jeweilige Prüfziel. Physische Fahrten eines fest programmierten Prüfcontrollers sind als technische Prüfung ausgewiesen. Der tägliche Kampagnenstand unterscheidet historische Wiederverwendung, begonnene, abgeschlossene und zurückgestellte Versuche. [Abnahmeregister](ACCEPTANCE_RESULTS.csv) · [Laufregister](../../scripts/research/status.mjs)

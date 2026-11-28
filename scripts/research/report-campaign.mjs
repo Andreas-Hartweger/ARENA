@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
 import { slots, hashJSON, sha } from './manifest.mjs';
@@ -8,12 +8,16 @@ import { publishJSON } from './campaign.mjs';
 import { campaignStatus } from './status.mjs';
 
 const [directory, stage, output] = process.argv.slice(2);
+const screenConfig =
+  /^S\d{2}$/.test(stage) && slots.some((s) => s.ConfigID === stage);
 if (
   !directory ||
   !output ||
-  !['baseline', '12', '24', '48', 'final'].includes(stage)
+  (!screenConfig && !['baseline', '12', '24', '48', 'final'].includes(stage))
 )
-  throw Error('Expected campaign, baseline/12/24/48/final and output file');
+  throw Error(
+    'Expected campaign, baseline/screen configuration/12/24/48/final and output file',
+  );
 const db = new DatabaseSync(join(directory, 'research.sqlite'), {
   readOnly: true,
 });
@@ -91,6 +95,25 @@ function summarize(id) {
       mutation: total('mutation'),
       terminalReasons: total('reasons'),
       adaptation,
+      ...(stage !== 'baseline'
+        ? {
+            generationWallMs: included.reduce(
+              (sum, g) => sum + (g.durationMs ?? g.ms),
+              0,
+            ),
+            firstCommittedSuccess:
+              audit.firstSuccess === null
+                ? null
+                : {
+                    generation: audit.firstSuccess,
+                    episodes:
+                      (audit.firstSuccess + 1) * included[0].evaluations,
+                    generationWallMs: included
+                      .slice(0, audit.firstSuccess + 1)
+                      .reduce((sum, g) => sum + (g.durationMs ?? g.ms), 0),
+                  },
+          }
+        : {}),
     };
   });
   return {
@@ -112,6 +135,48 @@ function summarize(id) {
     sourceManifest: sha(readFileSync(join(folder, 'experiment.json'))),
   };
 }
+function screenComparisons(experiments) {
+  const view = (run, metric) => {
+    const times = run.id.startsWith('B-')
+      ? manifest('baseline-times:' + run.id).boundaries
+      : metric.lapTimeBoundaries;
+    const measured = times.find((row) => row.episodes === metric.episodes);
+    assert.equal(measured.validLaps, metric.successes);
+    return {
+      id: run.id,
+      source: run.source,
+      manifestSHA256: run.sourceManifest,
+      audit: run.auditHashes[metric.file],
+      population: metric.firstGeneration.evaluated,
+      generations: metric.generations,
+      successes: metric.successes,
+      validLapSeconds: measured.seconds,
+      finalMedianProgressM: metric.lastGeneration.progressMetres.median,
+      firstCommittedSuccess: metric.firstCommittedSuccess,
+      censored: metric.firstSuccessCensored,
+      generationWallMs: metric.generationWallMs,
+      ticks: metric.rawTicks,
+    };
+  };
+  const comparisons = [];
+  for (const variant of experiments.filter((r) => /^S\d{2}-/.test(r.id))) {
+    const reference = experiments.find(
+      (r) => r.id === 'B-evolution-' + variant.seed,
+    );
+    assert(reference);
+    const arm = variant.metrics.find((m) => m.file === 'audit.json');
+    const baseline = reference.metrics.find((m) => m.episodes === arm.episodes);
+    assert(baseline, 'Missing baseline at the same episode budget');
+    comparisons.push({
+      config: variant.configId,
+      seed: variant.seed,
+      episodesPerArm: arm.episodes,
+      reference: view(reference, baseline),
+      variant: view(variant, arm),
+    });
+  }
+  return comparisons;
+}
 try {
   db.exec('BEGIN');
   const header = read(join(directory, 'campaign.json')),
@@ -131,15 +196,34 @@ try {
   if (['12', '24', '48'].includes(stage)) {
     const checkpoint = manifest('report-hour-' + stage),
       stamp = Date.parse(checkpoint.stamp);
+    const boundary = db
+      .prepare(
+        "SELECT seq FROM events WHERE stamp<=? AND state IN ('elapsed','clock-uncertain') ORDER BY seq DESC LIMIT 1",
+      )
+      .get(stamp);
+    assert(boundary, 'Missing milestone time receipt');
+    const byScope = db
+      .prepare(
+        "SELECT scope,SUM(json_extract(delta,'$.ms')) ms,SUM(json_extract(delta,'$.ticks')) ticks,SUM(json_extract(delta,'$.episodes')) episodes FROM events WHERE seq<=? GROUP BY scope",
+      )
+      .all(boundary.seq);
+    for (const k of ['ms', 'ticks', 'episodes'])
+      assert.equal(
+        byScope.reduce((n, row) => n + row[k], 0),
+        checkpoint.usage.charged[k],
+        'Milestone ledger mismatch: ' + k,
+      );
     const rows = db
       .prepare(
-        "SELECT json_extract(context,'$.experimentId') id,COUNT(*) generations,SUM(json_extract(delta,'$.episodes')) committedEpisodes FROM events WHERE state='generation-committed' AND stamp<=? GROUP BY id",
+        "SELECT json_extract(context,'$.experimentId') id,COUNT(*) generations,SUM(json_extract(delta,'$.episodes')) committedEpisodes FROM events WHERE state='generation-committed' AND seq<=? GROUP BY id",
       )
-      .all(stamp);
+      .all(boundary.seq);
     report = {
       ...base,
       stamp: checkpoint.stamp,
       usage: checkpoint.usage,
+      eventSequence: boundary.seq,
+      chargedByScope: byScope,
       researchCursor: checkpoint.context,
       createdAtBoundary: checkpoint.experiments,
       generationsAtBoundary: rows.filter((r) => !r.id.startsWith('bench-')),
@@ -147,6 +231,12 @@ try {
         manifest('historical-reference', false)?.entry.hash ?? null,
       benchmarkRows: rows.filter((r) => r.id.startsWith('bench-')).length,
     };
+  } else if (screenConfig) {
+    const experiments = [42, 43].flatMap((seed) => [
+      summarize('B-evolution-' + seed),
+      summarize(stage + '-' + seed),
+    ]);
+    report = { ...base, comparisons: screenComparisons(experiments) };
   } else {
     const status = campaignStatus(directory),
       ids =
@@ -196,8 +286,54 @@ try {
         raw = manifest('final-raw-audit'),
         archive = manifest('verified-archive');
       assert.equal(raw.result.validation, hashJSON(final));
+      const phaseReports = readdirSync(directory)
+        .filter((file) => /^progress-[\w]+-[\dTZ.-]+\.json$/.test(file))
+        .sort()
+        .map((file) => {
+          const bytes = readFileSync(join(directory, file)),
+            { usage, digest, ...progress } = JSON.parse(bytes);
+          assert.equal(sha(JSON.stringify(progress)), digest);
+          return {
+            file,
+            sha256: sha(bytes),
+            phase: progress.phase,
+            source: progress.source,
+            completed: progress.completed,
+            deferred: progress.deferred,
+            stopped: progress.stopped,
+            usage,
+          };
+        });
+      const choices = ['confirmation', 'long', 'freeze'].map((target) => {
+        const key =
+          target === 'freeze' ? 'final-candidates' : 'selection:' + target;
+        const choice = manifest(key),
+          file = 'selection/' + target + '.json';
+        const bytes = readFileSync(join(directory, file));
+        assert.equal(hashJSON(JSON.parse(bytes)), hashJSON(choice));
+        return {
+          phase: target,
+          file,
+          sha256: sha(bytes),
+          panel: choice.dev,
+          evaluated: choice.data.length,
+          excluded: choice.excluded,
+          ...(choice.configs ? { configs: choice.configs } : {}),
+          rules: choice.rules ?? choice.reasons,
+          usage: choice.usage,
+        };
+      });
+      const byPhase = {};
+      for (const slot of status.slots) {
+        const group = (byPhase[slot.phase] ??= {});
+        group[slot.state] = (group[slot.state] ?? 0) + 1;
+      }
       Object.assign(report, {
         slots: status.slots,
+        screeningAgainstPairedBaseline: screenComparisons(experiments),
+        byPhase,
+        phaseReports,
+        choices,
         freeze: hashJSON(manifest('final-candidates')),
         validation: hashJSON(final),
         independentArithmetic: hashJSON(raw),
