@@ -1,0 +1,148 @@
+{
+  "schema": "arena.inheritance-audit.v1",
+  "simulatedTicks": 0,
+  "experiments": [
+    {
+      "id": "S13-42",
+      "seed": 42,
+      "definition": "1ce88e44b961160d23cd004b1b37990df24448884bcfefc1dde55bb3119c292c",
+      "audit": "d0e5802d52fac99fbea18c0f0335b164b59713e7be118ff1fac42245b12f3438",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "c95386854e355891595c339fc399f1c018e09e9a1f874a8437d1bee110f37f85",
+      "g1Chunk": "ea73cc761ce86d9e63dc6cdcc38e60d6de6570364252c397dcb26e72842391f0",
+      "orderedInitialGenomes": "8d931049c4d93de7e2b8e738efbab6364435934c7b1b6fac2df8473b4a5b3ec0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638462682781306,
+          "max": 0.14638471619321966,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35353479576591024,
+          "max": 0.3535464633635943,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5617094257131098,
+          "max": 0.5618812389456085,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 167.18011493946813,
+        "worst": 0,
+        "mean": 14.985159472396074,
+        "median": 0,
+        "q1": 0,
+        "q3": 10
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 3,
+      "parentPoolSize": 64,
+      "distinctChosenParents": 42,
+      "parentRankOneBased": {
+        "best": 53,
+        "worst": 1,
+        "mean": 15.163934426229508,
+        "median": 12,
+        "q1": 5,
+        "q3": 21
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 718,
+      "firstSuccessfulGeneration": 12
+    },
+    {
+      "id": "S13-43",
+      "seed": 43,
+      "definition": "a25bef9fc044d78cc34c18ed81fb1dc0c2212fc6f19b4f8942ff6222d4e0cc46",
+      "audit": "86699110ae6b0edd25b338abbcb21f0832fcefe6313e2ff5d4565fca9b42570a",
+      "implementation": "160db2c83a2a2ee2fb26b8da8937fd3c0d0c0551",
+      "g0Chunk": "0c2b65f459ed56a119433d66e556ef9d55254c1463175edfcd11765352f297e1",
+      "g1Chunk": "3f9b0b741b462b60badb9fa6eea8430265dccf8db4dde5ae4ac4581365c4551d",
+      "orderedInitialGenomes": "c81309a8735b7392c562cb72d727dd650d36c4d8ea8deac586ae83a117515ee0",
+      "activation": "tanh",
+      "hidden": [
+        32,
+        16
+      ],
+      "population": 128,
+      "parameters": 8547,
+      "initialLayers": [
+        {
+          "weights": 1015808,
+          "biases": 4096,
+          "zeroBiases": 4096,
+          "min": -0.14638464918620617,
+          "max": 0.14638467168093094,
+          "bound": 0.14638501094227996
+        },
+        {
+          "weights": 65536,
+          "biases": 2048,
+          "zeroBiases": 2048,
+          "min": -0.35352684927396855,
+          "max": 0.3535529190754061,
+          "bound": 0.35355339059327373
+        },
+        {
+          "weights": 6144,
+          "biases": 384,
+          "zeroBiases": 384,
+          "min": -0.5618009602607481,
+          "max": 0.5614751627746563,
+          "bound": 0.5619514869490164
+        }
+      ],
+      "g0Score": {
+        "best": 163.16966545826074,
+        "worst": 0,
+        "mean": 17.959111953490826,
+        "median": 0.000047927369024591826,
+        "q1": 0,
+        "q3": 16.71492270545231
+      },
+      "g0DistinctGenomes": 128,
+      "tournament": 3,
+      "parentPoolSize": 64,
+      "distinctChosenParents": 37,
+      "parentRankOneBased": {
+        "best": 47,
+        "worst": 1,
+        "mean": 16.959016393442624,
+        "median": 14,
+        "q1": 7,
+        "q3": 26.5
+      },
+      "crossover": "uniform",
+      "crossoverProbability": 0,
+      "twoParents": 0,
+      "mutatedCrossovers": 0,
+      "verifiedMembers": 256,
+      "completeTrainingEpisodes": 8192,
+      "successfulTrainingEpisodes": 392,
+      "firstSuccessfulGeneration": 18
+    }
+  ]
+}
