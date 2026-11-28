@@ -297,6 +297,8 @@ function screenComparisons(experiments) {
 }
 function trainingTable(phase) {
   const planned = slots.filter((s) => s.Phase === phase);
+  const architecture = phase === 'Architektur/Fitness',
+    models = new Map();
   assert.equal(planned.length, phase === 'Evolution-Screen' ? 64 : 30);
   const status = peers
     ? combinedStatus(peers.roots)
@@ -311,8 +313,35 @@ function trainingTable(phase) {
     const audit = peers
       ? peers.manifest(peers.source(id), key)
       : manifest(key, false);
-    if (audit) experiments.push(summarize(id));
-    else states.set(id, { ...state, state: 'pending-audit' });
+    if (!audit) {
+      states.set(id, { ...state, state: 'pending-audit' });
+      continue;
+    }
+    const run = summarize(id);
+    experiments.push(run);
+    if (architecture) {
+      const name = 'experiment:' + id;
+      const entry = peers
+        ? peers.manifest(peers.source(id), name)
+        : manifest(name);
+      assert.equal(hashJSON(entry.definition), entry.hash);
+      const { dimensions, activation } = JSON.parse(
+        entry.definition.modelContract,
+      );
+      const scenario = entry.definition.draft.scenarios[0];
+      assert.equal(dimensions[0], 248);
+      assert.equal(dimensions.at(-1), 3);
+      const parameters = dimensions
+        .slice(1)
+        .reduce((n, width, i) => n + width * (dimensions[i] + 1), 0);
+      assert.equal(8 * parameters, run.models.champion.size);
+      models.set(id, {
+        dimensions: dimensions.join('x'),
+        parameters,
+        activation,
+        scenario,
+      });
+    }
   }
   const paired = new Map(
     screenComparisons(experiments).map((p) => [p.variant.id, p]),
@@ -322,10 +351,21 @@ function trainingTable(phase) {
       p = paired.get(s.ExperimentID);
     const baseline = p?.reference,
       test = p?.variant;
+    const model = models.get(s.ExperimentID);
     return {
       experiment: s.ExperimentID,
       group: s.Group,
       deltaJSON: s.DeltaJSON,
+      ...(architecture
+        ? {
+            dimensions: model?.dimensions ?? null,
+            float64Parameters: model?.parameters ?? null,
+            activation: model?.activation ?? null,
+            sensorHz: model?.scenario.sensorHz ?? null,
+            decisionHz: model?.scenario.decisionHz ?? null,
+            fitnessProfile: model?.scenario.fitness ?? null,
+          }
+        : {}),
       seed: s.Seed,
       state: state.state,
       plannedEpisodes: s.EpisodeBudget,
